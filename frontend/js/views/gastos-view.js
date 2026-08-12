@@ -158,6 +158,10 @@ const GastosView = {
       })),
       emptyMsg: `Sin gastos de ${catInfo.label.toLowerCase()}. Usa "Registrar Gasto" para añadir.`
     });
+
+    // Restaurar modo de vista tras pintar la sección (por defecto "tabla" en escritorio ≥ 1024px)
+    const modo = this._vistaModo || localStorage.getItem('gastos_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+    this._setVistaModo(modo, false);
   },
 
   _renderSeccion(content, opts) {
@@ -198,16 +202,104 @@ const GastosView = {
           </div>
         </div>
         ` : ''}
-        <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-12 pb-5" style="padding-left: 14px;">
-          ${Icons.documento()} ${listName}
+        <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-12 pb-5" style="padding-left: 14px; display:flex; align-items:center; justify-content:space-between; gap:4px;">
+          <span style="display:flex; align-items:center; gap:4px;">${Icons.documento()} ${listName}</span>
+          <div class="flex gap-4">
+            <button class="btn-erp-secondary btn-sm" id="btn-gastos-vista-cards" onclick="GastosView._setVistaModo('cards')">Tarjetas</button>
+            <button class="btn-erp-secondary btn-sm" id="btn-gastos-vista-tabla" onclick="GastosView._setVistaModo('tabla')">Tabla ERP</button>
+          </div>
         </div>
-        ${recordsHtml}
+        <div id="gastos-cards-container">${recordsHtml}</div>
+        <div id="gastos-erp-table-container" class="mt-12" style="display:none;"></div>
       </div>
       <!-- Botón Flotante de Acción con viñeta -->
       <div class="fab-container" onclick="${registrarHandler}">
         <span class="fab-label">Nuevo ${registrarLabel}</span>
         <button class="fab-btn" aria-label="Añadir"><span aria-hidden="true">${Icons.fabPlus()}</span></button>
       </div>`;
+  },
+
+  // ============================================
+  // VISTA TABLA ERP (desktop)
+  // ============================================
+
+  _setVistaModo(modo, guardar = true) {
+    this._vistaModo = modo;
+    if (guardar) {
+      try { localStorage.setItem('gastos_view_mode', modo); } catch (_) {}
+    }
+
+    const btnCards = document.getElementById('btn-gastos-vista-cards');
+    const btnTabla = document.getElementById('btn-gastos-vista-tabla');
+    const contenedorCards = document.getElementById('gastos-cards-container');
+    const contenedorTabla = document.getElementById('gastos-erp-table-container');
+
+    if (btnCards && btnTabla) {
+      btnCards.style.background = modo === 'cards' ? 'var(--brand, #1F5FA8)' : 'transparent';
+      btnTabla.style.background = modo === 'tabla' ? 'var(--brand, #1F5FA8)' : 'transparent';
+    }
+
+    if (modo === 'tabla') {
+      if (contenedorCards) contenedorCards.style.display = 'none';
+      if (contenedorTabla) {
+        contenedorTabla.style.display = 'block';
+        this._renderErpTable();
+      }
+    } else {
+      if (contenedorTabla) contenedorTabla.style.display = 'none';
+      if (contenedorCards) contenedorCards.style.display = 'block';
+    }
+  },
+
+  _renderErpTable() {
+    if (!window.ErpDataTable || !this._cachedData) return;
+    const data = this._cachedData.kpis[this._currentTab];
+    if (!data) return;
+
+    const catInfo = this._CATEGORIAS.find(c => c.key === this._currentTab) || this._CATEGORIAS[0];
+
+    // records ya viene ordenado por fecha descendente; la tabla muestra TODOS
+    // los registros del tab con paginación (las tarjetas cortan a 50).
+    const tableData = data.records.map(g => ({
+      id: g.id,
+      fecha: g.fecha || '—',
+      concepto: g.concepto || g.categoria || 'Gasto',
+      categoria: g.categoria || '—',
+      zona: g.snap_zona || '—',
+      monto: g.monto || 0
+    }));
+
+    new window.ErpDataTable({
+      containerId: 'gastos-erp-table-container',
+      title: `Gastos ${this._currentTab === 'todos' ? '' : '— ' + catInfo.label}`,
+      pageSize: 15,
+      columns: [
+        {
+          key: 'fecha',
+          label: 'Fecha',
+          sortable: true,
+          render: (val) => val !== '—' ? UI.formatDate(val) : '—'
+        },
+        { key: 'concepto', label: 'Concepto', sortable: true },
+        { key: 'categoria', label: 'Categoría', sortable: true },
+        { key: 'zona', label: 'Zona', sortable: true },
+        {
+          key: 'monto',
+          label: 'Importe',
+          sortable: true,
+          align: 'right',
+          render: (val) => `<span style="font-weight:700; color:var(--c-danger);">${UI.formatCurrency(val)}</span>`
+        },
+        {
+          key: 'id',
+          label: 'Ficha',
+          sortable: false,
+          align: 'center',
+          render: (id) => `<button class="btn-erp-secondary btn-sm" onclick="ProduccionView._abrirOpcionesGasto(${id})">Ver</button>`
+        }
+      ],
+      data: tableData
+    }).render();
   },
 
   _fmt(n) {

@@ -96,11 +96,12 @@ Auditados todos los CSS, vistas, wizards, componentes transversales e iconos. Re
 > aprobadas. Estrategia de tokenización: hardcode → `var(--token)`; en el maestro
 > el token resuelve a neón (PWA sin cambios visuales) y en desktop a corporativo.
 
-### P2 — Migración a ErpDataTable (paridad ERP; ~10 vistas) — EN CURSO
-Orden: `compradores` ✅ → `proveedores` ✅ → `transportistas` ✅ → `gastos` → `historial` → `cuaderno` → `pesadas` → `contratos` → `documentos` (albaranes) → `fitosanitarios`.
+### P2 — Migración a ErpDataTable (paridad ERP) — EN CURSO
+Orden: `compradores` ✅ → `proveedores` ✅ → `transportistas` ✅ → `gastos` ✅ → `contratos` → `documentos` (albaranes) → `fitosanitarios`.
 
 - ✅ **P2-1 (2026-08-12):** compradores (solo módulo compradores; la rama contratos de esa vista se migra con `contratos-view.js`), proveedores y transportistas tienen toggle Tarjetas/Tabla ERP + `_renderErpTable()` (badges de estado/tipo, métricas de última operación/compra, cert. bienestar coloreado) y pasan a la lista de preservados del sync. `erp-overrides.css` gana `.badge-success`/`.badge-gray` standalone (el maestro solo las define compuestas con `.status-badge` — también arregla el badge de estado de animales/rebanos/informes).
-- Nota: `historial` y `pesadas` no existen como vistas propias; localizar su listado real (probablemente dentro de `cuaderno-view.js` u otra vista) en P2-2/P2-3.
+- ✅ **P2-2 (2026-08-12):** gastos (tabs por categoría; el toggle vive en la cabecera de lista de cada tab y la tabla muestra TODOS los registros paginados — las tarjetas cortan a 50).
+- **Descartadas del alcance P2** (no son listas de tarjetas de primer nivel): `historial` (no existe como vista; el historial clínico es un fragmento de `sanidad-view.js` y la bitácora es drill-down por animal), `pesadas` (no existe; los pesajes viven en bitácora/trazabilidad) y `cuaderno` (es el Cuaderno Digital oficial RD 787/2023: documento agregado para PDF, ya tabulado).
 
 ### P3 — Nativo Tauri (la promesa desktop)
 1. **Comando WinRT `Windows.Services.Store`** para Premium (sustituye GP Billing) — crítico para monetizar; la PWA no pudo (#2478).
