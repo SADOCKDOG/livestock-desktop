@@ -54,7 +54,7 @@ window.MODULE_COLORS = Object.freeze({
   '/contrato': '#1F5FA8'
 });
 
-/** Color de un módulo por ruta (fallback: lima corporativo). */
+/** Color de un módulo por ruta (fallback: azul marca ERP). */
 window.getModuleColor = function (path) {
-  return window.MODULE_COLORS[path] || '#C5FA50';
+  return window.MODULE_COLORS[path] || '#1F5FA8';
 };

@@ -126,7 +126,7 @@ const DashboardView = {
       <div class="bento-grid" style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-bottom: 24px; animation: fadeInUp 0.4s ease;">
         <div class="card" style="grid-column: span 12; margin-bottom: 0; padding: 24px;">
           
-          <div class="flex justify-between items-center mb-16 pb-8" style="border-bottom: 1px solid #222;">
+          <div class="flex justify-between items-center mb-16 pb-8" style="border-bottom: 1px solid var(--border-subtle);">
             <div>
               <h2 class="text-white font-900 text-sm uppercase tracking-wider" style="margin:0; font-family:'IBM Plex Sans Condensed', sans-serif; display:flex; align-items:center; gap:8px;">
                 <span style="color: var(--header-neon-color, var(--c-success)); font-weight:900;">|</span> REGISTRO RÁPIDO DE ACTIVIDAD
@@ -192,7 +192,7 @@ const DashboardView = {
             </div>
 
             <!-- Silos y Alimento -->
-            <div class="card-registro-quick col-span-4" onclick="App._abrirEntradaAlimentoSiloDirecto()" style="--quick-color: #4FADF5;">
+            <div class="card-registro-quick col-span-4" onclick="App._abrirEntradaAlimentoSiloDirecto()" style="--quick-color: var(--c-info);">
               <div class="quick-icon-wrapper">${Icons.fitosanitario()}</div>
               <div class="quick-text-wrapper" style="flex: 1;">
                 <span class="quick-title">Silos & Pienso</span>
@@ -202,7 +202,7 @@ const DashboardView = {
             </div>
 
             <!-- Traslado de Animales -->
-            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardTraslado()" style="--quick-color: #E8555F;">
+            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardTraslado()" style="--quick-color: var(--c-danger);">
               <div class="quick-icon-wrapper">${Icons.rotacion()}</div>
               <div class="quick-text-wrapper" style="flex: 1;">
                 <span class="quick-title">Traslado</span>
@@ -212,7 +212,7 @@ const DashboardView = {
             </div>
 
             <!-- Censo Anual -->
-            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardCenso()" style="--quick-color: #E8555F;">
+            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardCenso()" style="--quick-color: var(--c-danger);">
               <div class="quick-icon-wrapper">${Icons.historial()}</div>
               <div class="quick-text-wrapper" style="flex: 1;">
                 <span class="quick-title">Censo Anual</span>
@@ -222,7 +222,7 @@ const DashboardView = {
             </div>
 
             <!-- Pedido de Crotales -->
-            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardCrotales()" style="--quick-color: #C5FA50;">
+            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardCrotales()" style="--quick-color: var(--c-success);">
               <div class="quick-icon-wrapper">${Icons.paquete()}</div>
               <div class="quick-text-wrapper" style="flex: 1;">
                 <span class="quick-title">Pedido Crotales</span>
@@ -232,7 +232,7 @@ const DashboardView = {
             </div>
 
             <!-- Guía de Movimiento -->
-            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardGuiaMovimiento()" style="--quick-color: #C5FA50;">
+            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardGuiaMovimiento()" style="--quick-color: var(--c-success);">
               <div class="quick-icon-wrapper">${Icons.transportistas()}</div>
               <div class="quick-text-wrapper" style="flex: 1;">
                 <span class="quick-title">Guía Movimiento</span>
@@ -243,7 +243,7 @@ const DashboardView = {
 
             <!-- Albarán de Leche -->
             ${flagsModo.leche ? `
-            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardAlbaranLeche()" style="--quick-color: #4FADF5;">
+            <div class="card-registro-quick col-span-4" onclick="App._abrirWizardAlbaranLeche()" style="--quick-color: var(--c-info);">
               <div class="quick-icon-wrapper">${Icons.documento()}</div>
               <div class="quick-text-wrapper" style="flex: 1;">
                 <span class="quick-title">Albarán Leche</span>
@@ -442,7 +442,7 @@ const DashboardView = {
               const colorPrioridad = t.prioridad === 'alta' ? 'var(--c-danger)' : t.prioridad === 'media' ? 'var(--c-warning)' : 'var(--c-success)';
 
               return `
-                <div style="padding: 10px; background: #000; border-radius: 6px; border: 1px solid #222; border-left: 3px solid ${colorPrioridad};">
+                <div style="padding: 10px; background: #000; border-radius: 6px; border: 1px solid var(--border-subtle); border-left: 3px solid ${colorPrioridad};">
                   <div class="flex justify-between items-center">
                     <div style="flex: 1; min-width: 0;">
                       <div style="color: #FFF; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${t.titulo}</div>

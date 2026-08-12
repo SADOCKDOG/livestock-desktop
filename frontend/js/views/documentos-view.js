@@ -229,7 +229,7 @@ const DocumentosView = {
     return `
       ${bannerInterno}
       <div class="card p-12 mb-14 border-222 card-resumen" style="background: rgba(168,85,247,0.015); width:100%;">
-        <div class="text-xs text-white font-black uppercase tracking-wider mb-6 flex items-center gap-6"><span style="color: #4FADF5; margin-right:4px;">|</span> ${Icons.documento()} DOCUMENTOS</div>
+        <div class="text-xs text-white font-black uppercase tracking-wider mb-6 flex items-center gap-6"><span style="color: var(--c-info); margin-right:4px;">|</span> ${Icons.documento()} DOCUMENTOS</div>
         <div class="grid grid-cols-3 md:grid-cols-6 gap-4 mb-6">
           <div class="bg-dark rounded-lg p-6 text-center border border-222">
             <div class="text-[0.5rem] text-gray uppercase font-800 tracking-wider">TOTAL</div>
@@ -259,7 +259,7 @@ const DocumentosView = {
       </div>
 
       <div class="card p-12 mb-14 border-222 card-dark-gradient card-resumen pb-24" style="background: rgba(168,85,247,0.015); width:100%;">
-        <div class="section-header-theme" style="--theme-color: #4FADF5; font-weight:900;"><span style="color: #4FADF5; margin-right:4px;">|</span> ACCESOS Y ACCIONES</div>
+        <div class="section-header-theme" style="--theme-color: var(--c-info); font-weight:900;"><span style="color: var(--c-info); margin-right:4px;">|</span> ACCESOS Y ACCIONES</div>
         <div class="grid grid-cols-2 gap-10 max-w-320 mx-auto mt-10">
           <button class="widget-link-btn widget-link-btn--neon neon-warning" onclick="DocumentosView._abrirAsistenteConsulta()">
             ${Icons.buscar()}
@@ -334,7 +334,7 @@ const DocumentosView = {
 
     return `<div class="grid gap-10">
       ${filtrados.map(doc => {
-        const color = colors[doc.tipo] || '#666';
+        const color = colors[doc.tipo] || 'var(--text-d)';
         const label = labels[doc.tipo] || doc.tipo;
         const fecha = this._fmtFecha(doc.createdAt || doc.fecha);
         const esBorrador = (doc.estado === 'borrador');
@@ -635,9 +635,9 @@ const DocumentosView = {
     const doc = (this._cachedDocs || []).find(d => d.id === docId && d.tipo === tipo);
     if (!doc) { App.toastError('Documento no encontrado'); return; }
     
-    const colors = { dimoe: '#10b981', factura: '#4FADF5', certificado: '#f59e0b', dib: '#8b5cf6', crotales: '#FFFC55', albaran_carne: '#E8555F', albaran_leche: '#4FADF5', contrato: '#8b5cf6' };
+    const colors = { dimoe: 'var(--c-success)', factura: 'var(--c-info)', certificado: 'var(--c-warning)', dib: 'var(--c-purple)', crotales: 'var(--p-gold)', albaran_carne: 'var(--c-danger)', albaran_leche: 'var(--c-info)', contrato: 'var(--c-purple)' };
     const labels = { dimoe: 'DIMOE (Guía)', factura: 'Factura', certificado: 'Certificado', dib: 'DIB (Identificación)', crotales: 'Pedido Crotales', albaran_carne: 'Albarán Carne', albaran_leche: 'Albarán Leche', contrato: 'Contrato' };
-    const color = colors[doc.tipo] || '#666';
+    const color = colors[doc.tipo] || 'var(--text-d)';
     const label = labels[doc.tipo] || doc.tipo;
     const overlay = document.createElement('div');
     overlay.className = 'wizard-full-screen';

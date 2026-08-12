@@ -443,17 +443,14 @@ const AjustesView = {
   async _abrirWizardRetroiluminacion() {
     const config = await this._loadConfig();
     const colors = [
-      { name: 'Neon Lime', hex: '#C5FA50' },
-      { name: 'Neon Red', hex: '#E8555F' },
-      { name: 'Neon Blue', hex: '#4FADF5' },
-      { name: 'Neon Gold', hex: '#FFFC55' },
-      
-      
-      
-      { name: 'Neon Green', hex: '#10b981' },
-      { name: 'Neon Indigo', hex: '#8b5cf6' },
-      { name: 'Steel Grey', hex: '#B1B1B1' },
-      { name: 'White Backlit', hex: '#FFFFFF' }
+      { name: 'Lima Éxito', hex: '#CCFF00' },
+      { name: 'Rojo Peligro', hex: '#FF4444' },
+      { name: 'Azul Info', hex: '#3b82f6' },
+      { name: 'Oro Premium', hex: '#FFB300' },
+      { name: 'Verde Esmeralda', hex: '#10b981' },
+      { name: 'Violeta', hex: '#A855F7' },
+      { name: 'Gris Acero', hex: '#B1B1B1' },
+      { name: 'Blanco', hex: '#FFFFFF' }
     ];
 
     const steps = [

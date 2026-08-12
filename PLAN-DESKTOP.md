@@ -80,12 +80,21 @@ Auditados todos los CSS, vistas, wizards, componentes transversales e iconos. Re
 4. ✅ `app.js`: eliminadas las 6 refs muertas a `#nav-more-sheet` / `.more-sheet-item` / `#nav-more` + método `_toggleMenuNavegacion()` (sin llamadores).
 5. ✅ Neón neutralizado vía `css/erp-overrides.css` (carga tras styles.css, que es del maestro y no se edita): `.badge-blue` → `var(--c-info)`, `.badge-solid-orange`/`.neon-orange` → `var(--c-orange)`, `.neon-accent` → `var(--c-info)`. No se renombran clases porque el JS del maestro las emite.
 
-### P1 — Consistencia de tokens (limpieza visible)
-1. `layout.css`: quitar glow neón en logo y `#nombre-finca-header`.
-2. `styles.css` (líneas 1195/1336/1423/1446/1617/3861-3862): hardcodes → tokens.
-3. `styles.css:2448`: `✓` → SVG inline.
-4. `ajustes-view.js:446-457`: picker neón → opciones semánticas de marca.
-5. `documentos-view.js:638`, `informes-view.js` (5 paletas chart.js), `dashboard-view.js` (`--quick-color` inline), `fitosanitarios-view.js` (10+ hardcodes), `module-colors.js:59` (fallback `#C5FA50`).
+### P1 — Consistencia de tokens ✅ (completado 2026-08-12)
+1. ✅ Glow neón del header (`#app-logo`, `#header-context`, `#nombre-finca-header`) neutralizado en `erp-overrides.css`.
+2. ✅ Hardcodes de `styles.css` (`.text-blue/.text-orange`, `.border-*`, `.card-accent-*`, `.color-*`, glow de `.neon-success`) → tokens vía `erp-overrides.css`.
+3. ✅ `✓` del theme-dot → SVG mask (`erp-overrides.css`).
+4. ✅ Picker de retroiluminación (`ajustes-view.js`) → nombres semánticos sin "Neon" + hex alineados a tokens — **editado en el MAESTRO**.
+5. ✅ `documentos-view.js`, `fitosanitarios-view.js`, `dashboard-view.js` → hardcodes → `var(--token)` — **editado en el MAESTRO** y traído por sync.
+6. ✅ `informes-view.js` → 11 puntos de paletas chart.js → helper `_chartToken(token, fallback)` (canvas no acepta `var()`) — **editado en el MAESTRO** y traído por sync.
+7. ✅ `module-colors.js`: fallback `#C5FA50` → `#1F5FA8` (archivo propio del desktop).
+
+> **Decisión 2026-08-12 (David):** las limpiezas transversales que afectan a vistas
+> compartidas se aplican EN EL MAESTRO (benefician a PWA/Android y evitan
+> divergencia). El desktop las recibe vía sync. La regla "maestro read-only"
+> aplica al *pipeline* (el sync nunca escribe en el maestro), no a las ediciones
+> aprobadas. Estrategia de tokenización: hardcode → `var(--token)`; en el maestro
+> el token resuelve a neón (PWA sin cambios visuales) y en desktop a corporativo.
 
 ### P2 — Migración a ErpDataTable (paridad ERP; ~10 vistas)
 Orden: `compradores` → `proveedores` → `transportistas` → `gastos` → `historial` → `cuaderno` → `pesadas` → `contratos` → `documentos` (albaranes) → `fitosanitarios`.
@@ -114,6 +123,7 @@ Orden: `compradores` → `proveedores` → `transportistas` → `gastos` → `hi
 | 2.5 Corrección pipeline sync + `mode-config.js` generado | ✅ |
 | 3. Auditoría UI/UX completa | ✅ (ver §6) |
 | 4a. Backlog P0 (limpieza crítica) | ✅ |
-| 4b. Backlog P1–P2 (tokens + 10 vistas a ErpDataTable) | 🔲 siguiente |
+| 4b. Backlog P1 (tokens en vistas + overlay) | ✅ |
+| 4c. Backlog P2 (10 vistas a ErpDataTable) | 🔲 siguiente |
 | 5. WinRT Store + atajos + nativo (P3–P4) | 🔲 |
 | 6. MSIX Free/Premium + publicación Store (P5) | 🔲 |
