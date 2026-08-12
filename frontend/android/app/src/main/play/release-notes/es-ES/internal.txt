@@ -1,3 +1,0 @@
-- Reorganización completa del módulo Informes en 5 categorías (General, GeGan, ExPro, CoMer, Libros) alineadas con los módulos reales de la app.
-- Nuevos informes: Producción, Gastos operativos, Márgenes comerciales, Albaranes, ICA de tandas de cebo, stock de Botiquín, Guías DIMOE y pedidos de crotales.
-- Corregidos: desplazamiento de pantalla en Informe REGA y gráficos que se salían de pantalla en Explotación Láctea.
