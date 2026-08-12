@@ -37,6 +37,7 @@ $preservedList = @(
     'js\views\proveedores-view.js',  # Toggle Tarjetas/Tabla ERP
     'js\views\transportistas-view.js', # Toggle Tarjetas/Tabla ERP
     'js\views\gastos-view.js',         # Toggle Tarjetas/Tabla ERP (tabs por categoría)
+    'js\views\contratos-view.js',      # Toggle Tarjetas/Tabla ERP
     'css\design-tokens.css',         # Paleta ERP profesional
     'css\erp-sidebar.css',           # Sidebar colapsable (solo desktop)
     'css\erp-data-table.css',        # Tablas densas ERP (solo desktop)
