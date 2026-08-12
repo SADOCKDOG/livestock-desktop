@@ -1,0 +1,65 @@
+# Dependencias
+node_modules/
+dist/
+
+# Build output (generado por npm run build copiando desde la raíz)
+www/
+# Android — solo carpetas de código y configuración
+# android/ (Quitamos la exclusión general)
+android/.gradle/
+android/build/
+android/local.properties
+android/app/build/
+android/app/release/
+android/app/debug/
+android/capacitor-cordova-android-plugins/build/
+android/node_modules/
+
+# Interno / Privado — datos de usuario, backups, capturas, informes
+Private/
+.env
+*.log
+
+# Claude Code — configuración personal del asistente
+.claude/
+
+# IDEs and AI Assistants — configuración personal del editor y agentes
+.idea/
+.vscode/
+.agent/
+.artifacts/
+android/.proxyai/
+
+# Logs de sesión y herramientas ad-hoc de asistentes IA (ver repo-cleanup-2026-07)
+session-*.md
+tools/
+.claude/
+.codebuddy/
+.codex/
+.continue/
+.cursor/
+.gemini/
+.impeccable/
+.kiro/
+.opencode/
+.qoder/
+.roo/
+.trae/
+.windsurf/
+# Modo de publicación (generado por build:free / build:premium)
+js/mode-config.js
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Artefactos temporales de pruebas
+tmp/
+tmp_test/
+
+# Keystore
+android/app/*.jks
+android/app/service-account.json
+android/keystore.properties
+android/app/src/main/assets/public/js/

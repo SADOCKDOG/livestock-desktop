@@ -1,0 +1,44 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]: Sin conexión
+  - banner [ref=f3e3]:
+    - img "Livestock Manager" [ref=f3e5]
+    - generic [ref=f3e7]: Cargando...
+  - main [ref=f3e10]:
+    - generic [ref=f3e11]: Iniciando aplicación...
+    - generic [ref=f3e12]:
+      - paragraph [ref=f3e13]: El inicio está tardando más de lo esperado...
+      - button "Forzar Reinicio" [ref=f3e14] [cursor=pointer]
+  - navigation "Navegación principal escritorio" [ref=f3e15]:
+    - link "Inicio" [ref=f3e16] [cursor=pointer]:
+      - /url: "#/"
+    - link "Animales" [ref=f3e18] [cursor=pointer]:
+      - /url: "#/animales"
+    - link "Rebaños" [ref=f3e20] [cursor=pointer]:
+      - /url: "#/rebanos"
+    - link "GeGan" [ref=f3e22] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=f3e24] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=f3e26] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=f3e29] [cursor=pointer]
+  - status
+  - generic [ref=f3e32]:
+    - generic [ref=f3e33]:
+      - img "Livestock Manager" [ref=f3e34]
+      - heading "Bienvenido" [level=1] [ref=f3e35]
+      - paragraph [ref=f3e36]: Gestión ganadera profesional v4.10.1 Premium
+      - button "Primeros pasos" [ref=f3e37] [cursor=pointer]
+    - generic [ref=f3e38]:
+      - button "Importar Backup Restaura tu base de datos desde un archivo JSON" [ref=f3e39] [cursor=pointer]:
+        - generic [ref=f3e44]:
+          - generic [ref=f3e45]: Importar Backup
+          - generic [ref=f3e46]: Restaura tu base de datos desde un archivo JSON
+      - button "Nueva Finca Configura una explotación desde cero" [ref=f3e47] [cursor=pointer]:
+        - generic [ref=f3e53]:
+          - generic [ref=f3e54]: Nueva Finca
+          - generic [ref=f3e55]: Configura una explotación desde cero
+      - button "Cargar Demo CHAMORRO Explora la app con una explotación de ejemplo con datos en todos los módulos" [ref=f3e56] [cursor=pointer]:
+        - generic [ref=f3e61]:
+          - generic [ref=f3e62]: Cargar Demo CHAMORRO
+          - generic [ref=f3e63]: Explora la app con una explotación de ejemplo con datos en todos los módulos

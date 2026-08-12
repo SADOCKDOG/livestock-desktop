@@ -1,0 +1,275 @@
+HEADER
+//COMENTARIO:Andalucia SIGGAN
+  Andalucia Demo 
+  2007/03/21
+  22:43:59
+  dd/mm/yyyy
+  hh:mm:ss
+  ;
+  LOG_false
+  .
+  BT_false
+  GL_section
+END
+// ******************************************************************
+// * OS:  HHR Program Loader 3.15								
+// * HHM: HHR Manager version 3.15		
+// * DISTINTOS TIPOS DE IDENTIFICACION(BOLOCROTAL,INYECTABLE,CROTALELECTRONICO)																					
+// ******************************************************************
+TABLE                                                                                                                                                                                              
+  EID;R;1;1;1;000000000000;;
+  CROTAL;S;0;1;1;&&&&&&&&&&&&&&&;;
+  IDDATE;D;0;1;1;0000000000;;
+  VET;S;0;1;1;&&&&&&&&&&;;
+  FARM;S;0;1;1;ES############;;
+  SPECIE;G;0;1;1;##;1;
+  RAZAO;O;0;1;1;Merina,M precoz,Segur,Montes,Churra L,M Graza,Manchega,Ile de Fr,Berric,Fleich,Landsc,Charmoise,Suffolk,Romanov,Lacaune,Muflon,Awassi,Lojena,Ot Puras,Cto Mest;Merina;
+  RAZAC;O;0;1;1;Bl Celt,Bl And,Neg ser,Payoya,MurGran,Malag,Florida,Saanen,AlpinaFr,Ot Puras,Cto Mest;Bl Celt;
+  TID;O;0;1;0;BoloCrotal,Inyectable,CrotalElec;BoloCrotal; 
+  BORNDATE;D;0;1;1;0000000000;;
+  SEX;O;0;1;1;H,M;H;
+
+END
+
+
+GLOBAL
+0:O
+1:C
+END
+
+
+MESSAGE
+END
+
+
+MACRO
+
+//*******// macro NEW_REC_CROTAL OVINO//***********************************
+
+
+ begin_macro:NEW_REC_CROTALO
+	
+	 begin_action_area
+		ReadNew(EID)
+		Sorting(EID)
+		Paste(FARM)
+		Paste(VET)
+		Paste(BORNDATE)
+		Paste(SEX)
+		Paste(TID)
+		Paste(RAZAO)
+		PutGlobal(SPECIE,0)
+		FillExp(IDDATE,date())
+	end_action_area
+	begin_screen
+		PrintAnimalMark(0,0,0,EID)
+		PrintText(15,0,0,"DUP:")
+		PrintRetagging(37,0,0,EID)
+		PrintText(58,0,0,"ESP:")
+		PrintUserInfo(80,0,0,EID)
+		PrintReserved(110,0,0,EID)
+		PrintAddInfo(122,0,0,EID)
+ 		PrintCountryNumber(0,5,2,EID)        
+	 	PrintField(32,5,2,EID)
+		DrawLine(0,16,127,16)
+		
+		PrintText(0,19,1,"Cr.:")
+		EditMaskedField(23,18,1,CROTAL)
+		PrintText(0,29,1,"F.Nac:")
+		EditDateField(38,28,1,BORNDATE)
+		PrintText(0,39,1,"Sexo:")
+		EditChoiceField(38,38,1,SEX)
+		
+		DrawLine(0,50,127,50)
+		IconDelete(0,52,table,0)
+		IconFindCol(18,52,EID,0)
+		PrintText(40,59,0,"OVINO+CAMPOS b")
+		PrintText(40,52,0,"CROTAL OPCIONAL")
+	end_screen
+	begin_screen
+		PrintText(0,0,1,"Raza:")
+		EditChoiceField(30,0,1,RAZAO)
+		PrintText(0,11,1,"F.Id:")
+		EditDateField(30,11,1,IDDATE)
+		PrintText(0,22,1,"Expl:")
+		EditMaskedField(30,22,1,FARM)
+		PrintText(0,33,1,"Usu:")
+		EditMaskedField(30,33,1,VET)
+		PrintText(0,44,1,"Tipo Id:")
+		EditChoiceField(47,44,1,TID)
+		
+		DrawLine(0,56,127,56)
+		PrintText(40,59,0,"OVINO+CAMPOS a")
+	end_screen  
+	begin_control_area
+		Copy(table)
+	end_control_area
+ end_macro
+
+
+
+//*******// macro NEW_REC_CROTAL CAPRINO //***********************************
+
+
+ begin_macro:NEW_REC_CROTALC
+	
+	 begin_action_area
+		ReadNew(EID)
+		Sorting(EID)
+		Paste(FARM)
+		Paste(VET)
+		Paste(BORNDATE)
+		Paste(SEX)
+		Paste(TID)
+		Paste(RAZAC)
+		PutGlobal(SPECIE,1)
+		FillExp(IDDATE,date())
+	end_action_area
+	begin_screen
+		PrintAnimalMark(0,0,0,EID)
+		PrintText(15,0,0,"DUP:")
+		PrintRetagging(37,0,0,EID)
+		PrintText(58,0,0,"ESP:")
+		PrintUserInfo(80,0,0,EID)
+		PrintReserved(110,0,0,EID)
+		PrintAddInfo(122,0,0,EID)
+ 		PrintCountryNumber(0,5,2,EID)        
+	 	PrintField(32,5,2,EID)
+		DrawLine(0,16,127,16)
+		PrintText(0,19,1,"Cr.:")
+		EditMaskedField(23,18,1,CROTAL)
+		PrintText(0,29,1,"F.Nac:")
+		EditDateField(38,28,1,BORNDATE)
+		PrintText(0,39,1,"Sexo:")
+		EditChoiceField(38,38,1,SEX)
+		//PrintText(60,39,1,"Cebo:")
+		//EditChoiceField(97,38,1,CEBO)
+		DrawLine(0,50,127,50)
+		IconDelete(0,52,table,0)
+		//DrawRec(80,45,117,65)
+		IconFindCol(18,52,EID,0)
+		PrintText(40,59,0,"CAPRINO+CAMPOS b")
+		PrintText(40,52,0,"CROTAL OPCIONAL")
+	end_screen
+	begin_screen
+		PrintText(0,0,1,"Raza:")
+		EditChoiceField(30,0,1,RAZAC)
+		PrintText(0,11,1,"F.Id:")
+		EditDateField(30,11,1,IDDATE)
+		PrintText(0,22,1,"Expl:")
+		EditMaskedField(30,22,1,FARM)
+		PrintText(0,33,1,"Usu:")
+		EditMaskedField(30,33,1,VET)
+		PrintText(0,44,1,"Tipo Id:")
+		EditChoiceField(47,44,1,TID)
+		
+		DrawLine(0,56,127,56)
+		PrintText(40,59,0,"CAPRINO+CAMPOS a")
+	end_screen
+	begin_control_area
+		Copy(table)
+	end_control_area
+
+ end_macro
+
+//////////////////////////////////////////////////////////////////////////
+
+
+//*******// macro DATE TIME //***********************************
+
+begin_macro:DATE
+	begin_action_area
+    	end_action_area
+	begin_screen  
+        		DrawLine(0,0,127,0)
+		PrintText(0,20,2,"Hora:")
+		SetTime(40,19,2)
+		PrintText(0,35,2,"Fecha:")
+		SetDate(40,34,2)
+		DrawLine(0,56,127,56)
+		//PrintText(0,58,0,"4.1")
+	end_screen
+   	begin_control_area
+	end_control_area	
+
+end_macro
+
+
+
+//*******// macro OTROS //***********************************
+
+begin_macro:OTROS
+	begin_action_area
+    	end_action_area
+	begin_screen
+		DrawLine(0,0,127,0)
+		PrintText(0,20,2,"N. Registros:")
+	   	PrintExp(77,20,2,count(*))
+		DrawLine(0,56,127,56)
+		//PrintText(0,58,0,"5.1")
+	end_screen	
+    	begin_control_area
+	end_control_area	
+
+end_macro
+
+END
+
+
+MENU
+  M0:{Ovino,M1};{Caprino,M2};{Fecha/Hora,M3};{Otros,M4}
+  M1:NEW_REC_CROTALO
+  M2:NEW_REC_CROTALC
+  M3:DATE
+  M4:OTROS
+END
+
+
+START_SCREEN
+  begin_screen
+	DrawLine(0,6,127,6)  
+	PrintText(10,20,5,"FELIXCAN")
+	DrawLine(0,56,127,56)
+	PrintText(35,43,1,"Andalucia")
+	PrintVersion(21,58,0)
+  end_screen
+END
+ 
+
+WARNING
+  w_WAIT:Por favor/espere
+  w_UNIQUE:Este valor debe/ser unico
+  w_NOEDIT:El valor/NO es editable
+  w_NOTNULL:El valor/no puede ser nulo
+  w_LOWBATTERY:Bateria baja
+  w_CHARGEBATTERY:Bateria/cargando
+  w_NOT_FREE_MEMORY:No queda memoria
+  w_NOT_STORED:NO ALMACENADO
+  w_STORED:Almacenado
+  w_DATE_GOOD:Fecha/actualizada
+  w_DATE_NO_CHANGE:Fecha NO/actualizada 
+  w_DATE_NOT_GOOD:Fecha erronea!
+  w_TIME_GOOD:Hora/actualizada
+  w_TIME_NO_CHANGE:Hora no/actualizada
+  w_TIME_NOT_GOOD:Hora erronea
+  w_NOTAG:No se encuentra/microchip
+  w_READING:Leyendo...
+  w_SHUTOFF:Apagando
+  w_USBCONNECTED:USB/conectado
+  w_NEW_REC:Nuevo/registro
+  w_CHOICE:Elija:
+  w_FIND:Busqueda:
+  w_TAGNOTFIND:Microchip/no encontrado!
+  w_TAGEXIST:El microchip/ya existe
+  w_YES:SI
+  w_NOT:NO
+  w_ADD_REC:Nuevo/registro?
+  w_DEL_REC:Borrar/registro?
+  w_UNKNOWN_MES:Mensaje/desconocido
+  w_VALEXIST:Este valor/ya existe
+  w_BTACTIVE:BlueTooth/activado
+  w_BTNOACTIVE:BlueTooth/desactivado
+  w_ON:Encender
+  w_OFF:Apagar
+  w_MEMORY:MEMORIA:
+END

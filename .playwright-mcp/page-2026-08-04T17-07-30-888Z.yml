@@ -1,0 +1,66 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Sin conexión
+  - banner [ref=e3]:
+    - img "Livestock Manager" [ref=e5]
+    - generic [ref=e12] [cursor=pointer]:
+      - generic [ref=e13]: ES210050001234
+      - generic [ref=e14]:
+        - text: "Tipo Explo:"
+        - generic [ref=e15]: Híbrida
+  - main [ref=e16]:
+    - generic [ref=e3517]:
+      - tablist "Todas las secciones" [ref=e3518]:
+        - generic "EXPRO" [ref=e3519] [cursor=pointer]
+        - generic "LÁCTEA" [ref=e3520] [cursor=pointer]
+        - generic "SILOS" [ref=e3521] [cursor=pointer]
+        - generic "FITOSANITARIOS" [ref=e3522] [cursor=pointer]
+        - generic "FINANZAS" [ref=e3523] [cursor=pointer]
+        - generic "PROVEEDORES" [ref=e3524] [cursor=pointer]
+        - generic "TRÁMITES" [ref=e3525] [cursor=pointer]
+      - generic [ref=e3526]:
+        - generic [ref=e3527]:
+          - 'button "Anterior: PROVEEDORES" [ref=e3528] [cursor=pointer]'
+          - button "TRÁMITES" [ref=e3536] [cursor=pointer]
+          - 'button "Siguiente: EXPRO" [ref=e3545] [cursor=pointer]'
+        - listbox "Todos los submódulos":
+          - option "EXPRO"
+          - option "LÁCTEA"
+          - option "SILOS"
+          - option "FITOSANITARIOS"
+          - option "FINANZAS"
+          - option "PROVEEDORES"
+          - option "TRÁMITES" [selected]
+    - generic [ref=e3554]:
+      - generic [ref=e3555]:
+        - generic [ref=e3556]: "|"
+        - text: HUB DE GESTIÓN ADMINISTRATIVA
+      - generic [ref=e3557]:
+        - button "Guías DIMOE" [ref=e3558]
+        - button "Censo Anual" [ref=e3559]
+        - button "Crotales" [ref=e3560]
+        - button "Traslados" [ref=e3561]
+        - button "Infolac" [ref=e3562]
+        - button "Archivo" [ref=e3563]
+      - generic [ref=e3564]:
+        - generic [ref=e3571]:
+          - heading "Guías DIMOE" [level=2] [ref=e3572]
+          - paragraph [ref=e3573]: Gestión administrativa y cumplimiento normativo oficial.
+        - generic [ref=e3574]:
+          - button "Emitir Nueva Guía DIMOE" [ref=e3575] [cursor=pointer]
+          - generic [ref=e3576]:
+            - generic [ref=e3577]: "|"
+            - text: HISTORIAL DE GUÍAS
+          - generic [ref=e3578]: Sin guías emitidas
+  - navigation "Navegación principal escritorio" [ref=e18]:
+    - link "Inicio" [ref=e19] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=e33] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=e37] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=e42] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=e50] [cursor=pointer]
+  - status
+  - button "Abrir guía interactiva" [ref=e3580] [cursor=pointer]:
+    - generic [ref=e3584]: Guía

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Administración Oficial SIGGAN - Livestock Manager</title>
+    <style>
+        :root { --primary: #059669; --secondary: #34d399; --dark: #111827; --light: #f0fdf4; --border: #d1fae5; --warn: #d97706; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; color: var(--dark); margin: 0; padding: 0; background: #fff; }
+        .container { max-width: 850px; margin: 0 auto; padding: 40px; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); padding-bottom: 20px; margin-bottom: 40px; }
+        .header-text h1 { margin: 0; font-size: 1.8rem; color: var(--primary); }
+        .version { font-weight: bold; color: #666; }
+        h2 { color: var(--primary); border-left: 5px solid var(--secondary); padding-left: 15px; margin-top: 40px; }
+        h3 { color: var(--dark); margin-top: 20px; }
+        .feature-card { background: var(--light); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .alert { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 15px; margin: 15px 0; }
+        .alert strong { color: var(--warn); }
+        .badge { display: inline-block; background: var(--primary); color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 0.8em; font-weight: bold; margin-right: 6px; }
+        .badge-orange { background: var(--warn); }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th { background: var(--primary); color: #fff; padding: 10px 12px; text-align: left; }
+        td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+        tr:nth-child(even) td { background: var(--light); }
+        .step { display: flex; gap: 15px; align-items: flex-start; margin-bottom: 15px; }
+        .step-num { background: var(--primary); color: #fff; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        .footer { margin-top: 50px; text-align: center; font-size: 0.8rem; color: #888; border-top: 1px solid var(--border); padding-top: 20px; }
+        code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-text">
+                <h1>Administración Oficial SIGGAN</h1>
+                <p class="version">Livestock Manager · Compatible SIGGAN Andalucía · v4.3</p>
+            </div>
+        </header>
+
+        <p>Esta guía cubre las obligaciones reglamentarias de la explotación ganadera en Andalucía conforme al <strong>Sistema de Gestión Ganadera de Andalucía (SIGGAN)</strong>, incluyendo el Cuaderno Digital de Explotación, las notificaciones al REGA y la exportación de datos oficiales.</p>
+
+        <div class="alert">
+            <strong>Base legal:</strong> Decreto 14/2006 de la Junta de Andalucía · RD 787/2023 sobre identificación y registro bovino · Reglamento (UE) 2016/429 de sanidad animal.
+        </div>
+
+        <h2>1. El Cuaderno Digital de Explotación (SIGGAN)</h2>
+        <div class="feature-card">
+            <p>Livestock Manager actúa como <strong>Cuaderno Digital</strong> compatible con SIGGAN. Cada módulo registra automáticamente los eventos en el libro de registro oficial:</p>
+            <table>
+                <tr><th>Sección del Cuaderno</th><th>Módulo de la App</th><th>Estado</th></tr>
+                <tr><td>Censo de animales</td><td>Rebaños → Animales</td><td><span class="badge">Activo</span></td></tr>
+                <tr><td>Movimientos (altas/bajas)</td><td>Animales → Estado/Baja</td><td><span class="badge">Activo</span></td></tr>
+                <tr><td>Tratamientos sanitarios</td><td>Wizard Tratamiento</td><td><span class="badge">Activo</span></td></tr>
+                <tr><td>Reproductores y partos</td><td>Reproducción</td><td><span class="badge">Activo</span></td></tr>
+                <tr><td>Pesadas</td><td>Pesadas</td><td><span class="badge">Activo</span></td></tr>
+                <tr><td>Alimentación / piensos</td><td>Gastos (tipo: pienso)</td><td><span class="badge">Activo</span></td></tr>
+                <tr><td>Ventas y movimientos pecuarios</td><td>Comercialización</td><td><span class="badge">Activo</span></td></tr>
+                <tr><td>Notificaciones REGA</td><td>Notificaciones REGA</td><td><span class="badge">Activo</span></td></tr>
+            </table>
+        </div>
+
+        <h2>2. Código REGA de la Explotación</h2>
+        <div class="feature-card">
+            <p>El <strong>código REGA</strong> (Registro General de Explotaciones Ganaderas) identifica de forma única cada explotación. En Andalucía, el formato es:</p>
+            <p style="text-align:center; font-size: 1.3em; font-weight: bold; font-family: monospace; color: var(--primary);">ES 01 XXXX 000YYY</p>
+            <table>
+                <tr><th>Parte</th><th>Significado</th><th>Ejemplo</th></tr>
+                <tr><td><code>ES</code></td><td>País (España)</td><td>ES</td></tr>
+                <tr><td><code>01–52</code></td><td>Código de provincia (Huelva=21, Sevilla=41…)</td><td>41</td></tr>
+                <tr><td><code>XXXX</code></td><td>Número de municipio</td><td>9123</td></tr>
+                <tr><td><code>000YYY</code></td><td>Número de explotación (6 dígitos)</td><td>000001</td></tr>
+            </table>
+            <p><strong>Dónde configurarlo:</strong> Menú <em>Más → Finca → Editar</em>, campo <strong>"Código REGA"</strong>.</p>
+        </div>
+
+        <h2>3. Notificaciones al REGA</h2>
+        <div class="feature-card">
+            <p>La app registra y gestiona las <strong>notificaciones oficiales a REGA</strong> para los cambios de estado de los animales (nacimientos, muertes, bajas por venta, traslados).</p>
+
+            <h3>Cómo notificar un animal</h3>
+            <div class="step">
+                <div class="step-num">1</div>
+                <div>Ir al registro del animal (Rebaños → seleccionar animal).</div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div>Pulsar el botón <strong>"Notificar a REGA"</strong> en la ficha del animal.</div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div>Confirmar el tipo de evento: <em>nacimiento, muerte, venta, traslado entrada/salida</em>.</div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div>La app genera un <strong>número de seguimiento</strong> y guarda la notificación en el historial.</div>
+            </div>
+
+            <div class="alert">
+                <strong>Plazos legales:</strong> El plazo para comunicar al REGA es de <strong>7 días naturales</strong> desde el evento (nacimiento, muerte, movimiento). Filtre las notificaciones pendientes para no incumplir el plazo.
+            </div>
+
+            <h3>Estados de una notificación</h3>
+            <table>
+                <tr><th>Estado</th><th>Significado</th></tr>
+                <tr><td><span class="badge badge-orange">pendiente</span></td><td>Registrada localmente; aún no enviada a SIGGAN.</td></tr>
+                <tr><td><span class="badge">enviado</span></td><td>Comunicada a SIGGAN/REGA correctamente.</td></tr>
+                <tr><td><span class="badge" style="background:#dc2626">error</span></td><td>Fallo en el envío; revisar y reenviar manualmente.</td></tr>
+            </table>
+        </div>
+
+        <h2>4. Exportación de Datos REGA y SIA</h2>
+        <div class="feature-card">
+            <p>La app genera los ficheros de exportación para comunicación con las autoridades autonómicas:</p>
+            <table>
+                <tr><th>Formato</th><th>Destino</th><th>Contenido</th></tr>
+                <tr><td>CSV Censo REGA</td><td>SIGGAN / BADIGEX</td><td>Listado completo de animales con identificación, sexo, fecha nacimiento, especie y estado.</td></tr>
+                <tr><td>XML Explotación REGA</td><td>SIGGAN / BADIGEX</td><td>Datos de la explotación + censo estructurado en XML.</td></tr>
+                <tr><td>CSV Movimientos SIA</td><td>SIA / SIGGAN</td><td>Entradas y salidas de animales con fechas, origen y destino (REGA).</td></tr>
+            </table>
+            <p><strong>Cómo exportar:</strong> Menú <em>Informes → Exportar REGA/SIA</em>. El fichero se descarga automáticamente o se comparte desde Android.</p>
+            <div class="alert">
+                <strong>Nota:</strong> Los formatos son compatibles con el importador de SIGGAN (Andalucía). Para BADIGEX (Extremadura) el formato CSV es equivalente; validar con el técnico regional antes del primer envío.
+            </div>
+        </div>
+
+        <h2>5. Inspecciones y Auditorías</h2>
+        <div class="feature-card">
+            <p>Ante una inspección de la Consejería de Agricultura o de Sanidad Animal, la app facilita la documentación requerida:</p>
+            <ul>
+                <li><strong>Censo en tiempo real:</strong> Rebaños → Vista lista → ordenar por especie/estado.</li>
+                <li><strong>Historial de tratamientos:</strong> Informes → Sanitarios → Filtro por fecha.</li>
+                <li><strong>Libro de movimientos:</strong> Informes → Movimientos SIA.</li>
+                <li><strong>Contratos vigentes:</strong> Más → Contratos (compradores activos).</li>
+                <li><strong>Notificaciones REGA:</strong> Historial completo consultable en el módulo de notificaciones.</li>
+            </ul>
+            <p>El inspector puede verificar el Cuaderno Digital directamente en la pantalla del dispositivo o recibir el PDF exportado desde <em>Informes → PDF Completo</em>.</p>
+        </div>
+
+        <h2>6. Plazos de Comunicación Reglamentarios</h2>
+        <div class="feature-card">
+            <table>
+                <tr><th>Evento</th><th>Plazo (días naturales)</th><th>Sistema</th></tr>
+                <tr><td>Nacimiento</td><td>7 días</td><td>REGA / SIGGAN</td></tr>
+                <tr><td>Muerte</td><td>7 días</td><td>REGA / SIGGAN</td></tr>
+                <tr><td>Salida de la explotación (venta/traslado)</td><td>Antes del movimiento (guía previa)</td><td>REGA / SIA</td></tr>
+                <tr><td>Entrada de animales</td><td>7 días desde la llegada</td><td>REGA / SIGGAN</td></tr>
+                <tr><td>Tratamiento veterinario</td><td>Registro inmediato; conservar 5 años</td><td>Cuaderno Digital</td></tr>
+                <tr><td>Pesadas (bovino)</td><td>Obligatorio antes de venta</td><td>Cuaderno Digital</td></tr>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Livestock Manager Premium · Módulo Administración Oficial SIGGAN v4.3</p>
+            <p>Compatible con SIGGAN (Junta de Andalucía) · RD 787/2023 · Decreto 14/2006</p>
+        </div>
+    </div>
+</body>
+</html>

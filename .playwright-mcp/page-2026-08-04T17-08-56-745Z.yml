@@ -1,0 +1,134 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Sin conexión
+  - banner [ref=e3]:
+    - img "Livestock Manager" [ref=e5]
+    - generic [ref=e12] [cursor=pointer]:
+      - generic [ref=e13]: ES210050001234
+      - generic [ref=e14]:
+        - text: "Tipo Explo:"
+        - generic [ref=e15]: Híbrida
+  - main [ref=e16]:
+    - generic [ref=e3833]:
+      - tablist "Todas las secciones" [ref=e3834]:
+        - generic "LECHE" [ref=e3835] [cursor=pointer]
+        - generic "CARNE" [ref=e3836] [cursor=pointer]
+        - generic "COMPRADORES" [ref=e3837] [cursor=pointer]
+        - generic "CONTRATOS" [ref=e3838] [cursor=pointer]
+        - generic "TRANSPORTISTAS" [ref=e3839] [cursor=pointer]
+      - generic [ref=e3840]:
+        - generic [ref=e3841]:
+          - 'button "Anterior: CONTRATOS" [ref=e3842] [cursor=pointer]'
+          - button "TRANSPORTISTAS" [ref=e3850] [cursor=pointer]
+          - 'button "Siguiente: LECHE" [ref=e3861] [cursor=pointer]'
+        - listbox "Todos los submódulos":
+          - option "LECHE"
+          - option "CARNE"
+          - option "COMPRADORES"
+          - option "CONTRATOS"
+          - option "TRANSPORTISTAS" [selected]
+    - generic [ref=e3870]:
+      - heading "| LOGÍSTICA Y TRANSPORTISTAS" [level=1] [ref=e3871]:
+        - generic [ref=e3872]: "|"
+        - text: LOGÍSTICA Y TRANSPORTISTAS
+      - generic [ref=e3873]: Flota de transporte ganadero calificado y cisternas
+    - generic [ref=e3875]:
+      - generic [ref=e3876]:
+        - generic [ref=e3877]: CONTRATO EXPIRA PRONTO
+        - button "GESTIONAR ➔" [ref=e3880]
+      - generic [ref=e3881]: CONTRATO Nº CT-2026-001 EXPIRA EL 19/08/2026 (15 DÍAS RESTANTES)
+    - generic [ref=e3882]:
+      - generic [ref=e3883]:
+        - generic [ref=e3884]:
+          - generic [ref=e3892]:
+            - heading "LOGÍSTICA Y TRANSPORTISTAS" [level=2] [ref=e3893]
+            - paragraph [ref=e3894]: Flota de transporte ganadero calificado y control de certificados.
+          - generic [ref=e3895]:
+            - generic [ref=e3896]:
+              - text: "Total Flota:"
+              - strong [ref=e3897]: "2"
+            - generic [ref=e3898]:
+              - text: "Activos:"
+              - strong [ref=e3899]: "2"
+        - button "Nuevo Transportista" [ref=e3901] [cursor=pointer]
+      - generic [ref=e3903]:
+        - generic [ref=e3904]: "| ACTIVIDAD LOGÍSTICA"
+        - generic [ref=e3906]:
+          - generic [ref=e3907]:
+            - generic [ref=e3908]: Mar 2026
+            - generic [ref=e3910]: "0"
+          - generic [ref=e3911]:
+            - generic [ref=e3912]: Abr 2026
+            - generic [ref=e3914]: "0"
+          - generic [ref=e3915]:
+            - generic [ref=e3916]: May 2026
+            - generic [ref=e3918]: "0"
+          - generic [ref=e3919]:
+            - generic [ref=e3920]: Jun 2026
+            - generic [ref=e3922]: "0"
+          - generic [ref=e3923]:
+            - generic [ref=e3924]: Jul 2026
+            - generic [ref=e3926]: "0"
+          - generic [ref=e3927]:
+            - generic [ref=e3928]: Ago 2026
+            - generic [ref=e3930]: "0"
+      - generic [ref=e3931]:
+        - generic [ref=e3932]:
+          - generic [ref=e3933]: "|"
+          - text: RESUMEN DE TRANSPORTISTAS
+        - generic [ref=e3939]:
+          - generic [ref=e3940]:
+            - generic [ref=e3941]: Total Transportistas
+            - strong [ref=e3947]: "2"
+          - generic [ref=e3948]:
+            - generic [ref=e3949]: Transportistas Activos
+            - strong [ref=e3952]: "2"
+          - generic [ref=e3953]:
+            - generic [ref=e3954]: Inactivos
+            - strong [ref=e3958]: "0"
+      - generic [ref=e3959]:
+        - generic [ref=e3960]: "|"
+        - text: LISTA DE TRANSPORTISTAS
+      - generic [ref=e3966]:
+        - searchbox "Buscar por nombre, NIF o matrícula..." [ref=e3968]
+        - combobox [ref=e3969]:
+          - option "Todos" [selected]
+          - option "Activos"
+          - option "Inactivos"
+      - generic [ref=e3970]:
+        - generic [ref=e3971] [cursor=pointer]:
+          - generic [ref=e3972]:
+            - generic [ref=e3973]: Logística Láctea Extremeña
+            - generic [ref=e3975]: B21098769 · 5678EFG
+            - generic [ref=e3984]:
+              - generic [ref=e3985]: Sin certificado
+              - generic [ref=e3988]: "Desinsect.: 32d"
+              - generic [ref=e3991]: Termoneutral
+          - generic [ref=e3994]:
+            - generic [ref=e3995]: Activo
+            - generic [ref=e3998]: Ficha ->
+        - generic [ref=e4000] [cursor=pointer]:
+          - generic [ref=e4001]:
+            - generic [ref=e4002]: Transportes Ganaderos del Sur SL
+            - generic [ref=e4004]: B32109878 · 1234BCD
+            - generic [ref=e4013]:
+              - generic [ref=e4014]: "Bienestar: sin vencimiento"
+              - generic [ref=e4017]: "Desinsect.: 37d"
+          - generic [ref=e4020]:
+            - generic [ref=e4021]: Activo
+            - generic [ref=e4024]: Ficha ->
+        - generic [ref=e4026]:
+          - generic [ref=e4027]: Nuevo Transportista
+          - button "Añadir" [ref=e4028] [cursor=pointer]
+  - navigation "Navegación principal escritorio" [ref=e18]:
+    - link "Inicio" [ref=e19] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=e33] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=e37] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=e42] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=e50] [cursor=pointer]
+  - status
+  - button "Abrir guía interactiva" [ref=e4032] [cursor=pointer]:
+    - generic [ref=e4036]: Guía

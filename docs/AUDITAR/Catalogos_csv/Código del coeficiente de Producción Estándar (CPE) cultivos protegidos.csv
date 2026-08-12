@@ -1,0 +1,6 @@
+"Condición 1: cultivo protegido";"Condición 2: código del CPE";"Condición 3: tipo de cultivo";"Código CPE Cultivo Protegido";"Categoría del CPE Cultivo Protegido"
+"Sistema de cultivo 2,3,4,19,23,24,25,26,27,28,33 o Uso SIGPAC  IV";"SOC_CLND046";;"SOC_CLND082";"Flores y plantas ornamentales (excepto viveros) cultivadas en invernadero o en abrigo alto accesible"
+"Sistema de cultivo 2,3,4,19,23,24,25,26,27,28,33 o Uso SIGPAC  IV";"SOC_CLND044";"Cultivos permanentes";"SOC_CLND084";"Cultivos permanentes cultivados en invernadero o en abrigo alto accesible"
+"Sistema de cultivo 2,3,4,19,23,24,25,26,27,28,33 o Uso SIGPAC  IV";"SOC_CLND044";"Distinto de Cultivos permanentes";"SOC_CLND081";"Hortalizas frescas (incluidos melones) y fresas cultivadas en invernadero o en abrigo alto accesible"
+"Sistema de cultivo 2,3,4,19,23,24,25,26,27,28,33 o Uso SIGPAC  IV";"Distinto de SOC_CLND044 y SOC_CLND046";"Hortícola";"SOC_CLND081";"Hortalizas frescas (incluidos melones) y fresas cultivadas en invernadero o en abrigo alto accesible"
+"Sistema de cultivo 2,3,4,19,23,24,25,26,27,28,33 o Uso SIGPAC  IV";"Distinto de SOC_CLND044 y SOC_CLND046";"Cultivos permanentes";"SOC_CLND084";"Cultivos permanentes cultivados en invernadero o en abrigo alto accesible"

@@ -1,0 +1,41 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Sin conexión
+  - banner [ref=e3]:
+    - img "Livestock Manager" [ref=e5]
+    - generic [ref=e7]: Cargando...
+  - main [ref=e10]:
+    - generic [ref=e11]: Iniciando aplicación...
+  - navigation "Navegación principal escritorio" [ref=e12]:
+    - link "Inicio" [ref=e13] [cursor=pointer]:
+      - /url: "#/"
+    - link "Animales" [ref=e15] [cursor=pointer]:
+      - /url: "#/animales"
+    - link "Rebaños" [ref=e17] [cursor=pointer]:
+      - /url: "#/rebanos"
+    - link "GeGan" [ref=e19] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=e21] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=e23] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=e26] [cursor=pointer]
+  - status
+  - generic [ref=e29]:
+    - generic [ref=e30]:
+      - img "Livestock Manager" [ref=e31]
+      - heading "Bienvenido" [level=1] [ref=e32]
+      - paragraph [ref=e33]: Gestión ganadera profesional v4.10.1 Premium
+      - button "Primeros pasos" [ref=e34] [cursor=pointer]
+    - generic [ref=e35]:
+      - button "Importar Backup Restaura tu base de datos desde un archivo JSON" [ref=e36] [cursor=pointer]:
+        - generic [ref=e41]:
+          - generic [ref=e42]: Importar Backup
+          - generic [ref=e43]: Restaura tu base de datos desde un archivo JSON
+      - button "Nueva Finca Configura una explotación desde cero" [ref=e44] [cursor=pointer]:
+        - generic [ref=e50]:
+          - generic [ref=e51]: Nueva Finca
+          - generic [ref=e52]: Configura una explotación desde cero
+      - button "Cargar Demo CHAMORRO Explora la app con una explotación de ejemplo con datos en todos los módulos" [ref=e53] [cursor=pointer]:
+        - generic [ref=e58]:
+          - generic [ref=e59]: Cargar Demo CHAMORRO
+          - generic [ref=e60]: Explora la app con una explotación de ejemplo con datos en todos los módulos

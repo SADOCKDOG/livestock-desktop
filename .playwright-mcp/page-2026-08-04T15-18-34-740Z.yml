@@ -1,0 +1,265 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e2]: Sin conexión
+  - banner [ref=f2e3]:
+    - img "Livestock Manager" [ref=f2e5]
+    - generic [ref=f2e11] [cursor=pointer]:
+      - generic [ref=f2e12]: ES210050001234
+      - generic [ref=f2e13]:
+        - text: "Tipo Explo:"
+        - generic [ref=f2e14]: Híbrida
+    - dialog "Accesos rápidos" [ref=f2e16]:
+      - generic [ref=f2e17]:
+        - link "Inicio" [ref=f2e18] [cursor=pointer]:
+          - /url: "#/"
+        - link "Animales" [ref=f2e24] [cursor=pointer]:
+          - /url: "#/animales"
+        - link "Rebaños" [ref=f2e30] [cursor=pointer]:
+          - /url: "#/rebanos"
+        - link "Ganadería" [ref=f2e35] [cursor=pointer]:
+          - /url: "#/ganaderia"
+        - link "ExPro" [ref=f2e40] [cursor=pointer]:
+          - /url: "#/explotacion"
+        - link "CoMer" [ref=f2e48] [cursor=pointer]:
+          - /url: "#/comercializacion"
+        - link "Zonas" [ref=f2e54] [cursor=pointer]:
+          - /url: "#/zonas"
+        - link "Instalaciones" [ref=f2e60] [cursor=pointer]:
+          - /url: "#/instalaciones"
+        - link "Saneamientos" [ref=f2e66] [cursor=pointer]:
+          - /url: "#/saneamientos"
+        - link "Subexplotaciones" [ref=f2e71] [cursor=pointer]:
+          - /url: "#/subexplotaciones"
+        - link "Botiquín" [ref=f2e76] [cursor=pointer]:
+          - /url: "#/botiquin"
+        - link "Compradores" [ref=f2e81] [cursor=pointer]:
+          - /url: "#/compradores"
+        - link "Proveedores" [ref=f2e87] [cursor=pointer]:
+          - /url: "#/proveedores"
+        - link "Logística" [ref=f2e93] [cursor=pointer]:
+          - /url: "#/transportistas"
+        - link "Gastos" [ref=f2e101] [cursor=pointer]:
+          - /url: "#/gastos"
+        - link "Informes" [ref=f2e106] [cursor=pointer]:
+          - /url: "#/informes"
+        - link "Alertas 10" [ref=f2e111] [cursor=pointer]:
+          - /url: "#/alertas"
+          - generic [ref=f2e116]:
+            - text: Alertas
+            - generic [ref=f2e117]: "10"
+        - link "Cuaderno" [ref=f2e118] [cursor=pointer]:
+          - /url: "#/cuaderno"
+        - link "Manuales" [ref=f2e124] [cursor=pointer]:
+          - /url: "#/manuales"
+        - link "Importar RFID" [ref=f2e130] [cursor=pointer]:
+          - /url: "#/importar-rfid"
+        - link "Ajustes" [ref=f2e136] [cursor=pointer]:
+          - /url: "#/ajustes"
+  - main [ref=f2e142]:
+    - generic [ref=f2e144]:
+      - tablist "Todas las secciones" [ref=f2e145]:
+        - generic "ANIMALES" [ref=f2e146] [cursor=pointer]
+        - generic "REBANOS" [ref=f2e147] [cursor=pointer]
+        - generic "PATRIMONIO" [ref=f2e148] [cursor=pointer]
+        - generic "ZONAS" [ref=f2e149] [cursor=pointer]
+        - generic "SANIDAD" [ref=f2e150] [cursor=pointer]
+      - generic [ref=f2e151]:
+        - generic [ref=f2e152]:
+          - 'button "Anterior: SANIDAD" [ref=f2e153] [cursor=pointer]'
+          - button "ANIMALES" [ref=f2e160] [cursor=pointer]
+          - 'button "Siguiente: REBANOS" [ref=f2e169] [cursor=pointer]'
+        - listbox "Todos los submódulos":
+          - option "ANIMALES" [selected]
+          - option "REBANOS"
+          - option "PATRIMONIO"
+          - option "ZONAS"
+          - option "SANIDAD"
+    - generic [ref=f2e181]:
+      - heading "| Censo de Animales" [level=1] [ref=f2e182]
+      - generic [ref=f2e183]: Control de crotales, altas, bajas e inventario
+    - generic [ref=f2e184]:
+      - generic [ref=f2e185]:
+        - generic [ref=f2e186]:
+          - generic [ref=f2e192]:
+            - heading "CENSO DE ANIMALES" [level=2] [ref=f2e193]
+            - paragraph [ref=f2e194]: Control individual, registro de crotales, altas y bajas de la explotación.
+          - generic [ref=f2e195]:
+            - generic [ref=f2e196]:
+              - text: "Total Censo:"
+              - strong [ref=f2e197]: "9"
+            - generic [ref=f2e198]:
+              - text: "Activos:"
+              - strong [ref=f2e199]: "8"
+        - button "Nuevo Animal" [ref=f2e201] [cursor=pointer]
+      - generic [ref=f2e203]:
+        - generic [ref=f2e204]:
+          - generic [ref=f2e205]: RESUMEN DEL CENSO
+          - button "Ocultar resumen" [ref=f2e209] [cursor=pointer]
+        - generic:
+          - generic [ref=f2e212]:
+            - generic [ref=f2e213]: Vacas
+            - strong [ref=f2e214]: "5"
+          - generic [ref=f2e215]:
+            - generic [ref=f2e216]: Ovejas
+            - strong [ref=f2e217]: "4"
+          - generic [ref=f2e218]:
+            - generic [ref=f2e219]: Activos
+            - strong [ref=f2e220]: "8"
+          - generic [ref=f2e221]:
+            - generic [ref=f2e222]: Vendidos
+            - strong [ref=f2e223]: "1"
+      - generic [ref=f2e224]: Lista de Animales
+      - generic [ref=f2e228]:
+        - searchbox "Buscar por crotal, raza o rebaño..." [ref=f2e230]
+        - combobox [ref=f2e231]:
+          - option "Todas" [selected]
+          - option "Vacas"
+          - option "Ovejas"
+          - option "Cabras"
+          - option "Cerdos"
+      - generic [ref=f2e232]:
+        - link "ES123456789012 Vacas · Frisona Vacas Frisonas 5 AÑOS 580 kg Producción ACTIVO Ficha" [ref=f2e233] [cursor=pointer]:
+          - /url: "#/animal?id=1"
+          - generic [ref=f2e234]:
+            - generic [ref=f2e235]: ES123456789012
+            - generic [ref=f2e237]: Vacas · Frisona
+            - generic [ref=f2e242]:
+              - generic [ref=f2e243]: Vacas Frisonas
+              - generic [ref=f2e246]:
+                - generic [ref=f2e249]: "5"
+                - text: AÑOS
+              - generic [ref=f2e250]: 580 kg
+              - generic [ref=f2e253]: Producción
+          - generic [ref=f2e257]:
+            - generic [ref=f2e258]: ACTIVO
+            - generic [ref=f2e260]: Ficha
+        - link "ES123456789013 Vacas · Frisona Vacas Frisonas 6 AÑOS 620 kg Producción ACTIVO Ficha" [ref=f2e264] [cursor=pointer]:
+          - /url: "#/animal?id=2"
+          - generic [ref=f2e265]:
+            - generic [ref=f2e266]: ES123456789013
+            - generic [ref=f2e268]: Vacas · Frisona
+            - generic [ref=f2e273]:
+              - generic [ref=f2e274]: Vacas Frisonas
+              - generic [ref=f2e277]:
+                - generic [ref=f2e280]: "6"
+                - text: AÑOS
+              - generic [ref=f2e281]: 620 kg
+              - generic [ref=f2e284]: Producción
+          - generic [ref=f2e288]:
+            - generic [ref=f2e289]: ACTIVO
+            - generic [ref=f2e291]: Ficha
+        - link "ES123456789014 Vacas · Frisona Vacas Frisonas 4 AÑOS 510 kg Producción ACTIVO Ficha" [ref=f2e295] [cursor=pointer]:
+          - /url: "#/animal?id=3"
+          - generic [ref=f2e296]:
+            - generic [ref=f2e297]: ES123456789014
+            - generic [ref=f2e299]: Vacas · Frisona
+            - generic [ref=f2e304]:
+              - generic [ref=f2e305]: Vacas Frisonas
+              - generic [ref=f2e308]:
+                - generic [ref=f2e311]: "4"
+                - text: AÑOS
+              - generic [ref=f2e312]: 510 kg
+              - generic [ref=f2e315]: Producción
+          - generic [ref=f2e319]:
+            - generic [ref=f2e320]: ACTIVO
+            - generic [ref=f2e322]: Ficha
+        - link "ES123456789015 Vacas · Frisona Terneros Cebo 1 AÑO 180 kg Recría ACTIVO Ficha" [ref=f2e326] [cursor=pointer]:
+          - /url: "#/animal?id=4"
+          - generic [ref=f2e327]:
+            - generic [ref=f2e328]: ES123456789015
+            - generic [ref=f2e330]: Vacas · Frisona
+            - generic [ref=f2e337]:
+              - generic [ref=f2e338]: Terneros Cebo
+              - generic [ref=f2e341]:
+                - generic [ref=f2e344]: "1"
+                - text: AÑO
+              - generic [ref=f2e345]: 180 kg
+              - generic [ref=f2e348]: Recría
+          - generic [ref=f2e352]:
+            - generic [ref=f2e353]: ACTIVO
+            - generic [ref=f2e355]: Ficha
+        - link "ES123456789016 Vacas · Frisona Terneros Cebo 1 AÑO 195 kg Recría VENDIDO Ficha" [ref=f2e359] [cursor=pointer]:
+          - /url: "#/animal?id=5"
+          - generic [ref=f2e360]:
+            - generic [ref=f2e361]: ES123456789016
+            - generic [ref=f2e363]: Vacas · Frisona
+            - generic [ref=f2e370]:
+              - generic [ref=f2e371]: Terneros Cebo
+              - generic [ref=f2e374]:
+                - generic [ref=f2e377]: "1"
+                - text: AÑO
+              - generic [ref=f2e378]: 195 kg
+              - generic [ref=f2e381]: Recría
+          - generic [ref=f2e385]:
+            - generic [ref=f2e386]: VENDIDO
+            - generic [ref=f2e388]: Ficha
+        - link "ES654321098765 Ovejas · Merina Ovejas Merinas 4 AÑOS 55 kg Madres ACTIVO Ficha" [ref=f2e392] [cursor=pointer]:
+          - /url: "#/animal?id=6"
+          - generic [ref=f2e393]:
+            - generic [ref=f2e394]: ES654321098765
+            - generic [ref=f2e396]: Ovejas · Merina
+            - generic [ref=f2e401]:
+              - generic [ref=f2e402]: Ovejas Merinas
+              - generic [ref=f2e405]:
+                - generic [ref=f2e408]: "4"
+                - text: AÑOS
+              - generic [ref=f2e409]: 55 kg
+              - generic [ref=f2e412]: Madres
+          - generic [ref=f2e416]:
+            - generic [ref=f2e417]: ACTIVO
+            - generic [ref=f2e419]: Ficha
+        - link "ES654321098766 Ovejas · Merina Ovejas Merinas 3 AÑOS 52 kg Madres ACTIVO Ficha" [ref=f2e423] [cursor=pointer]:
+          - /url: "#/animal?id=7"
+          - generic [ref=f2e424]:
+            - generic [ref=f2e425]: ES654321098766
+            - generic [ref=f2e427]: Ovejas · Merina
+            - generic [ref=f2e432]:
+              - generic [ref=f2e433]: Ovejas Merinas
+              - generic [ref=f2e436]:
+                - generic [ref=f2e439]: "3"
+                - text: AÑOS
+              - generic [ref=f2e440]: 52 kg
+              - generic [ref=f2e443]: Madres
+          - generic [ref=f2e447]:
+            - generic [ref=f2e448]: ACTIVO
+            - generic [ref=f2e450]: Ficha
+        - link "ES654321098767 Ovejas · Merina Ovejas Merinas 4 AÑOS 58 kg Madres ACTIVO Ficha" [ref=f2e454] [cursor=pointer]:
+          - /url: "#/animal?id=8"
+          - generic [ref=f2e455]:
+            - generic [ref=f2e456]: ES654321098767
+            - generic [ref=f2e458]: Ovejas · Merina
+            - generic [ref=f2e463]:
+              - generic [ref=f2e464]: Ovejas Merinas
+              - generic [ref=f2e467]:
+                - generic [ref=f2e470]: "4"
+                - text: AÑOS
+              - generic [ref=f2e471]: 58 kg
+              - generic [ref=f2e474]: Madres
+          - generic [ref=f2e478]:
+            - generic [ref=f2e479]: ACTIVO
+            - generic [ref=f2e481]: Ficha
+        - link "ES654321098768 Ovejas · Merina Ovejas Merinas 2 AÑOS 60 kg Cebo ACTIVO Ficha" [ref=f2e485] [cursor=pointer]:
+          - /url: "#/animal?id=9"
+          - generic [ref=f2e486]:
+            - generic [ref=f2e487]: ES654321098768
+            - generic [ref=f2e489]: Ovejas · Merina
+            - generic [ref=f2e496]:
+              - generic [ref=f2e497]: Ovejas Merinas
+              - generic [ref=f2e500]:
+                - generic [ref=f2e503]: "2"
+                - text: AÑOS
+              - generic [ref=f2e504]: 60 kg
+              - generic [ref=f2e507]: Cebo
+          - generic [ref=f2e511]:
+            - generic [ref=f2e512]: ACTIVO
+            - generic [ref=f2e514]: Ficha
+  - navigation "Navegación principal" [ref=f2e518]:
+    - link "Inicio" [ref=f2e519] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=f2e524] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=f2e526] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=f2e531] [cursor=pointer]:
+      - /url: "#/comercializacion?tab=leche"
+    - button "Más" [ref=f2e538]
+  - status

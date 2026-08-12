@@ -1,0 +1,454 @@
+{
+  "fechaAuditoria": "2026-08-07",
+  "versionApp": "1.3.0+ (ver APP_INFO.version en runtime)",
+  "vistasAuditadas": 12,
+  "rutasYpestañas": {
+    "ajustes": "#/ajustes",
+    "sistema": "#/sistema?tab=interfaz|seguridad|auditoria",
+    "documentos": "#/documentos",
+    "cuadernoDigital": "#/cuaderno-digital",
+    "trazabilidad": "#/trazabilidad/:animalId",
+    "subexplotaciones": "#/subexplotaciones",
+    "subexplotacionDetalle": "#/subexplotacion?index=:index",
+    "agenda": "#/agenda",
+    "patrimonio": "#/patrimonio (o embebido en #/explotacion?tab=patrimonio)",
+    "gastos": "#/gastos (o embebido en #/explotacion?tab=gastos)",
+    "instalaciones": "#/instalaciones",
+    "instalacionDetalle": "#/instalacion?index=:index",
+    "importadorRFID": "#/importar-rfid",
+    "manuales": "#/manuales"
+  },
+  "funcionalidadesPrincipalesPorVista": {
+    "ajustes": {
+      "descripcion": "Vista central de configuración y gestión administrativa v1.3.0",
+      "secciones": [
+        {
+          "nombre": "Sistema y Seguridad",
+          "elementos": ["Estado seguridad (backup auto/manual)", "Tema visual OLED/Light", "Acento global (oro/azul/verde/rojo/índigo/lima/steel)", "Opacidad banners", "Versión app + animales en BD", "Botón 'Gestionar Sistema' → #/sistema"]
+        },
+        {
+          "nombre": "Finca Activa",
+          "elementos": ["Nombre, REGA, CCAA, animales", "Badge 'EXPLOTACIÓN DE LIDIA' si corresponde", "Botones: Editar Datos (WizardFinca), Zonas/Parcelas"]
+        },
+        {
+          "nombre": "Mis Fincas (Multi-finca)",
+          "elementos": ["Listado con REGA, especies, badge LIDIA", "Botón 'Activar' por finca", "Botón 'Nueva Finca' (solo Premium)", "Free: 1 finca; Premium: ilimitadas"]
+        },
+        {
+          "nombre": "ADSG y Sanidad",
+          "elementos": ["Listado ADSG con código, veterinario, colegiado", "Editar y Nueva ADSG (wizard prompt)"]
+        },
+        {
+          "nombre": "Objetivos de Explotación",
+          "elementos": ["GMD (kg/día)", "Fertilidad (%)", "Persistentes en appConfig"]
+        },
+        {
+          "nombre": "Especies y Razas",
+          "elementos": ["CRUD especies personalizadas", "Añadir/Eliminar especie"]
+        },
+        {
+          "nombre": "Configuración de Alertas",
+          "elementos": ["Alertas Sanitarias (def: true)", "Alertas Trazabilidad (def: true)", "Alertas PAC (def: true)", "Más: ADSG, INCOLAC, Contratos"]
+        },
+        {
+          "nombre": "Guías Interactivas",
+          "elementos": ["Toggle habilitado (config.guides.enabled)", "Reiniciar todas las guías (limpia seen/dismissed)"]
+        },
+        {
+          "nombre": "Ayuda y Soporte",
+          "elementos": ["Manual de Usuario (overlay iframe manual/index.html)"]
+        },
+        {
+          "nombre": "Wizard Retroiluminación (avanzado)",
+          "elementos": ["Componentes: Marco, Laterales, Botones, Tarjetas", "Color marco: dinámico vs fijo (paleta 9 colores)", "Transparencia banners (slider)", "Haz de luz: intensidad + color dinámico/fijo", "Botón FAB: color + intensidad"]
+        }
+      ]
+    },
+    "configSistema": {
+      "descripcion": "Módulo integral Configuración del Sistema, Seguridad y Auditoría v1.0.0",
+      "tabs": [
+        {
+          "id": "interfaz",
+          "label": "INTERFAZ",
+          "elementos": [
+            "Modo Oscuro OLED (toggle)",
+            "Paleta Modo Claro: Arena/Gris/Oliva/Beige (solo si temaOscuro=false)",
+            "Textos de contexto (toggle mostrarContextos)",
+            "Retroiluminación: Marco Principal, Haces Laterales, Botones, Tarjetas (checks directos + link a Wizard Avanzado)",
+            "Formato fecha: DD/MM/AAAA (es-ES) vs MM/DD/AAAA (en-US)",
+            "Moneda: Euro (€) vs Dólar ($)",
+            "Color acento global: 8 opciones (gold, blue, green, red, indigo, lime, steel, purple)"
+          ]
+        },
+        {
+          "id": "seguridad",
+          "label": "SEGURIDAD",
+          "elementos": [
+            "Info sistema: versión, motor DB (IndexedDB vDB_VERSION), fincas, animales",
+            "Copias de seguridad: Exportar (App.exportBackup), Importar (App.importBackup)",
+            "Backup automático al cerrar sesión (toggle config.autoBackup)",
+            "Mantenimiento: Limpiar Caché (AjustesView._limpiarCache)"
+          ]
+        },
+        {
+          "id": "auditoria",
+          "label": "AUDITORÍA",
+          "elementos": [
+            "Registro de actividad filtrado: tipo='auditoria' OR rectificado OR anulado OR motivo incluye 'anulacion'",
+            "Orden: más reciente primero (últimos 50)",
+            "Colores por tipo: anulado=rojo, rectificado=ámbar, otro=info",
+            "Muestra: motivo, fecha, descripción, motivo rectificación/anulación"
+          ]
+        }
+      ]
+    },
+    "documentos": {
+      "descripcion": "Vista de documentos legales: DIMOE, facturas, certificados, DIB, Pedidos Crotales v1.1.0",
+      "tiposDocumentoUnificados": [
+        "dimoe (movimientos_ganado tipo salida/entrada)",
+        "factura (documentos_legales tipo factura)",
+        "certificado (documentos_legales tipo certificado)",
+        "dib (documentos_legales tipo dib)",
+        "crotales (pedidos_crotales)",
+        "albaran_carne (comercializacion_carne)",
+        "albaran_leche (comercializacion_leche)",
+        "contrato (contratos_compra)"
+      ],
+      "pestañasFiltro": ["todos", "dimoe", "factura", "certificado", "dib", "crotales"],
+      "accionesPrincipales": [
+        "Exportar Todo → XLSX (DocumentosView._exportDocs)",
+        "Consultar/Imprimir → modal con 10 tipos de documento",
+        "Filtro rápido en lista (últimos 5 + 'ver más')"
+      ],
+      "listaDocumentos": {
+        "badgeEstado": "Borrador (amarillo) vs Presentado (verde) vs Activo/Inactivo (contratos)",
+        "acuseManual": "Pendiente con días (rojo ≥15d, ámbar ≥7d, gris <7d) o registrado (verde)",
+        "accionesPorFila": [
+          "Borrador: Editar Borrador (abre wizard correspondiente)",
+          "Presentado: Imprimir PDF (DocumentViewer.show)",
+          "Siempre: Guardar acuse (modal), Ver Detalle (overlay)"
+        ]
+      },
+      "generacionPDF": {
+        "dimoe": "WizardGuiaMovimiento.generarDocumento(finca, mov)",
+        "crotales": "WizardCrotales.generarPDF(finca, pedido, id)",
+        "albaran_carne/leche": "AlbaranesVentasView._imprimirDoc",
+        "contrato": "PDF específico con tabla precios",
+        "resto": "PDF genérico con DocumentViewer.show"
+      },
+      "bannerInternoSIGGAN": "Modo interno SIGGAN: genera docs y sube manualmente; registra acuse para trazabilidad"
+    },
+    "cuadernoDigital": {
+      "descripcion": "Cuaderno Digital de Explotación Ganadera (RD 787/2023) v1.0.0",
+      "seccionesObligatorias": [
+        "1. Datos de la Explotación (REGA, CEA, NIF, ADSG, Contrato Lácteo, INFOLAC, etc.)",
+        "2. Censo Actual por especie (total, hembras, machos, categorías)",
+        "3.b Libro de Registro SIGGAN: Entradas, Salidas, Nacimientos, Muertes (año en curso)",
+        "3. Movimientos y Eventos (eventos totales, bajas año, expediciones)",
+        "4. Registro Sanitario (tratamientos totales, en supresión, detalle con motivo/vía/receta/vet)",
+        "4.b Campañas de Saneamiento (ADSG) oficiales",
+        "5. Registro Reproductivo (cubriciones/celos, gestaciones, partos)",
+        "6. Producción (Leche total L, Carne kg canal)",
+        "7. Resumen Económico (Ingresos Carne/Leche €)",
+        "8. Transportistas (nombre, NIF, matrícula, certificado bienestar)"
+      ],
+      "exportaciones": [
+        "PDF Completo (html2pdf + DocumentViewer/share pattern con progreso)",
+        "CSV SIGGAN (8 secciones: Identificación, Censo, Entradas, Salidas, Nacimientos, Muertes, Tratamientos, Saneamientos) — separador ; con BOM UTF-8",
+        "Imprimir (abre vista imprimible modal, genera PDF y comparte)"
+      ],
+      "navegacionRapida": "Anclas a cada sección (Censo, Movimientos, Sanidad, Repro, Producción, Económico)",
+      "kpisCabecera": ["Censo total", "Partos", "Tratamientos en supresión", "Ventas totales"]
+    },
+    "trazabilidad": {
+      "descripcion": "Panel de Trazabilidad 360°: Timeline completo del ciclo de vida animal v4.0",
+      "fuentesDatos": [
+        "Animal (Animales.get)",
+        "Rebaño (Rebanos.get)",
+        "Finca activa",
+        "Sanitarios (animalId + rebanoId)",
+        "Pesajes (produccion_carne por animalId)",
+        "Eventos (registro_eventos por entidad_id)",
+        "Reproducción (reproduccion_eventos por animalId)",
+        "Ventas (comercializacion_carne por animalId)"
+      ],
+      "timelineEventos": [
+        {
+          "tipo": "nacimiento",
+          "icon": "animales",
+          "detalle": "Crotal, DIB, Especie, Raza, Variedad, Peso inicial, Sexo, Categoría, Procedencia"
+        },
+        {
+          "tipo": "sanitario",
+          "icon": "sanidad",
+          "detalle": "Tipo tratamiento, Producto, Motivo (catálogo CCAA), Vía, Nº animales, Lote, Caducidad, Supresión carne (rojo), Prohibido leche, Veterinario+colegiado, Nº receta"
+        },
+        {
+          "tipo": "reproduccion",
+          "icon": "según subtipo (celo/IA/gestación/parto/aborto/diagnóstico)",
+          "detalle": "Fecha, Resultado (Positivo/Negativo con color), Observaciones"
+        },
+        {
+          "tipo": "pesaje",
+          "icon": "balanza",
+          "detalle": "Peso (kg verde), Tipo pesaje"
+        },
+        {
+          "tipo": "evento",
+          "icon": "según motivo (importación/expetición/control/baja)",
+          "detalle": "Motivo, Notas, Valor+unidad, Condición corporal"
+        },
+        {
+          "tipo": "venta",
+          "icon": "paquete",
+          "detalle": "Comprador, NIF, Fecha sacrificio, Peso vivo/canal, Rendimiento, Matadero, Nº Albarán, DIMOE, Transportista, SEUROP (badge gold), IVA, Vet autorización"
+        }
+      ],
+      "ordenacion": "Ascendente por fecha (más antiguo primero)",
+      "kpisRapidos": ["Pesajes", "Tratamientos", "Reproducción", "Eventos"],
+      "exportacionPDF": "Genera tabla con cabecera finca/animal + timeline completo, usa html2pdf + share pattern"
+    },
+    "subexplotaciones": {
+      "descripcion": "Gap 'Subexplotación' SIGGAN: subdivisión por especie (REGA + especie + clasificación zootécnica) v1.0.0",
+      "modelo": "Capa ADITIVA y OPCIONAL en finca.subexplotaciones[] — una especie puede ignorarlo y usar finca.tipo_explotacion/sistema_explotacion",
+      "listado": "Cards por subexplotación: especie (nombre_display), tipo explotación, sistema, censo actual / capacidad máx",
+      "detalleEdicion": {
+        "campos": ["Tipo explotación (REGA - catálogo CCAA)", "Sistema productivo (catálogo CCAA)", "Capacidad máxima (cab.)", "Notas"],
+        "guardado": "Fincas.save(finca) con subexplotaciones[index] actualizado",
+        "exitGuard": "Confirmación si hay cambios sin guardar"
+      },
+      "creacionWizard": {
+        "pasoUnico": "Especie disponible (no usada aún), Tipo explotación, Sistema, Capacidad máx",
+        "validacion": "Especie obligatoria"
+      },
+      "anulacion": "Soft delete: sub.anulada=true, sub.anuladaEn=ISO, se conserva histórico"
+    },
+    "agenda": {
+      "descripcion": "Vista central de planificación: tareas, recordatorios y alertas v1.0.0",
+      "filtros": {
+        "modulo": ["todos", "gegan", "rebanos", "silos", "sanidad", "carnico", "lacteos", "contratos"],
+        "estado": ["pendiente", "completada"]
+      },
+      "carrucelSubmodulosSticky": "Tabs horizontales con colores por módulo (oro/naranja/info/púrpura/verde/info)",
+      "listaTareas": {
+        "badgePrioridad": "Alta=rojo, Media=ámbar, Baja=verde",
+        "indicadores": "Alerta (🔔 pulsante), Vencida (rojo VENCIDA)",
+        "acciones": "Completar (OK), Editar (WizardTarea), Eliminar"
+      },
+      "widgetEmbebible": "renderWidget(container, moduloId) → muestra 3 tareas pendientes con botón OK rápido",
+      "nuevaTarea": "WizardTarea.open({ onComplete: () => render() })"
+    },
+    "patrimonio": {
+      "descripcion": "Patrimonio y Ganadería unificados (GeGan): censo/lotes finca + ICA por Tanda de Cebo v1.0.0",
+      "kpisCabecera": ["Total cabezas", "Valor estimado patrimonio (€) = cabezas × peso medio × 3.20 €/kg"],
+      "kpiGrid": ["Censo Total", "Lotes/Rebaños", "Valor Estimado (ámbar)", "ICA (verde ≤6, ámbar ≤8, rojo >8)", "Coste/kg Ganancia (ámbar)"],
+      "ICA_DosNiveles": {
+        "nivel1_CierreLote": "Periodo principal definitivo: desde entrada (movimiento tipo entrada SIGGAN o fecha_constitución/primer pesaje) hasta salida (venta matadero). Fórmula: kg pienso / kg ganancia peso vivo. Origen 'tanda' (SIGGAN) o 'lote' (fallback).",
+        "nivel2_ControlMensual": "Últimos 6 meses naturales. Ganancia atribuida al mes por incrementos entre pesajes consecutivos. Detecta desviaciones (>20% sobre media) en rojo."
+      },
+      "panelICA": {
+        "cierreTanda": "Nombre, origen (tanda·SIGGAN/lote), Nº animales, entrada→salida/EN CURSO, kg ganados, ICA coloreado, estado CERRADO/ABIERTO, coste/kg",
+        "controlMensual": "Barras verticales por mes (altura = ICA), color por eficiencia, desviados en rojo, media período"
+      },
+      "lotesActivos": "Listado rebaños con especie, tipo, zona, cabezas activas, link 'Ver ficha →' a #/rebano?id=",
+      "accesosDirectos": "Animales, Rebaños, Zonas (widget-link-btn neon-info)",
+      "registrarPesaje": "App._abrirAsistenteProduccion('carne', { origen_modulo: 'patrimonio' })"
+    },
+    "gastos": {
+      "descripcion": "Vista Gastos con tabs por Categoría Contable v2.0.0 (espejo de gastos-view.js)",
+      "categorias": [
+        { "key": "todos", "icon": "documento", "color": "púrpura" },
+        { "key": "Alimentacion", "icon": "paquete", "color": "ámbar" },
+        { "key": "Sanidad", "icon": "sanidad", "color": "rojo" },
+        { "key": "Fitosanitarios", "icon": "sanidad", "color": "verde" },
+        { "key": "Electricidad", "icon": "info", "color": "azul" },
+        { "key": "Personal", "icon": "compradores", "color": "naranja" },
+        { "key": "Amortizacion", "icon": "transportistas", "color": "púrpura" }
+      ],
+      "evolucionMensual": "Últimos 6 meses, barras horizontales coloreadas (rojo >70%, ámbar >40%, verde ≤40%)",
+      "balanceGlobal": "Filas por categoría (icon + label + total € color categoría) + TOTAL GENERAL GASTOS (rojo)",
+      "tabsSticky": "gasto-tabs con scroll-shadow-container + badge 'deslizar ➔'",
+      "listaPorCategoria": {
+        "kpis": "Total € (rojo), Registros (info)",
+        "cards": "App._cardRegistro: título=concepto, subtítulo=fecha | zona | categoría, valor=importe color categoría, badge 'Ficha ->' amarillo",
+        "registrar": "FAB 'Nuevo Gasto' → App._abrirFormularioGasto()",
+        "editar": "ProduccionView._abrirOpcionesGasto(id)"
+      }
+    },
+    "instalaciones": {
+      "descripcion": "Instalaciones/Edificaciones de la finca (finca.instalaciones[]) v1.0.0 — PLAN-MEJORA-SIGGAN.md punto 5",
+      "catalogoTipos": "instalaciones_tipo (id, nombre, codigo_siex)",
+      "listado": "Cards: tipo (nombre catálogo), detalles (superficie m² · plazas · volumen m³), metadata código SIEX",
+      "detalleEdicion": {
+        "campos": ["Tipo (select catálogo oficial)", "Superficie m²", "Plazas alojamiento", "Volumen m³ (silos/depósitos)", "Notas"],
+        "guardado": "Fincas.save con instalaciones[index] actualizado",
+        "exitGuard": "Confirmación si cambios sin guardar"
+      },
+      "creacionWizard": "Paso único: Tipo + Superficie + Plazas + Volumen + Notas, validación tipo obligatorio",
+      "anulacion": "Soft delete: inst.anulada=true, inst.anuladaEn=ISO"
+    },
+    "importadorRFID": {
+      "descripcion": "UI importación masiva Excel (lectores RFID UniTransfer/Rumisoft / LiveStock legacy) v1.0.0",
+      "motor": "js/importador-rfid.js",
+      "flujo": [
+        "1. Seleccionar archivo (.xlsx, .xls, .csv)",
+        "2. Analizar: leer headers/filas, detectar tipo automáticamente",
+        "3. Si ambiguo → selector manual de tipo",
+        "4. Importar con progreso (actual/total)",
+        "5. Resultado: ok/total + lista errores (fila, mensaje) hasta 100"
+      ],
+      "tiposImportacion": "ImportadorRFID.TIPOS (pesadas, producción leche, tratamientos, partos, etc.)",
+      "requisito": "Animales deben estar dados de alta con crotal",
+      "refresh": "EventBus.emit('dashboard:refresh') tras importación exitosa"
+    },
+    "manuales": {
+      "descripcion": "Lista manuales de usuario, visualiza en app y exporta PDF v1.1.0",
+      "catalogo": "18 manuales predefinidos (_MANUALES array)",
+      "manualesPrincipales": [
+        "Manual Usuario General (index.html, dorado)",
+        "Ejemplo Ovino Carne (ejemplo-ovino-carne.html, marrón)",
+        "Ejemplo Ovino Leche (ejemplo-ovino-leche.html, azul)",
+        "Registros Producción (registros-produccion.html, púrpura)",
+        "Comercialización (manual-comercializacion.html, marrón)",
+        "Pesadas (manual-pesadas.html, marrón)",
+        "Control Lechero (manual-control-lechero.html, azul)",
+        "Gastos (manual-gastos.html, ámbar)",
+        "Compradores (manual-compradores.html, rojo)",
+        "Proveedores (manual-proveedores.html, verde)",
+        "Transportistas (manual-transportistas.html, info)",
+        "Animales y Rebaños (manual-animales-rebanos.html, dorado)",
+        "Contratos (manual-contratos.html, púrpura)",
+        "Sanitarios (manual-sanitarios.html, rojo)",
+        "Reproducción (manual-reproduccion.html, rosa)",
+        "Cuaderno Digital (manual-cuaderno-digital.html, verde)",
+        "Trazabilidad 360° (manual-trazabilidad.html, púrpura)",
+        "Informes Premium (manual-informes-analitica.html, dorado)",
+        "Gestión Documental DIMOE (manual-gestion-documental.html, info)"
+      ],
+      "visualizacion": "Overlay iframe (wizard-full-screen) con header fijo 'Volver'",
+      "exportacionPDF": "html2pdf desde fetch/Capacitor Filesystem (assets), fix rutas imágenes manual/img/, share nativo Capacitor/navigator.share/fallback descarga"
+    }
+  },
+  "elementosUIClave": {
+    "formulariosComplejos": [
+      "WizardFinca (edición finca principal desde Ajustes)",
+      "Wizard Retroiluminación (4 pasos: componentes, color marco, haz luz, botón FAB)",
+      "Wizard Nueva Subexplotación (especie + tipo REGA + sistema + capacidad)",
+      "Wizard Nueva Instalación (tipo catálogo + métricas + notas)",
+      "WizardTarea (Agenda)",
+      "WizardCrotales / WizardGuiaMovimiento / VentaMasivaWizard / AlbaranLecheWizard (desde Documentos)",
+      "ImportadorRFID (3 pasos: archivo → tipo → progreso → resultado)"
+    ],
+    "badgesEstado": {
+      "finca": "ACTIVA (verde lima border+bg) vs botón Activar",
+      "explotacionLidia": "Badge rojo 'EXPLOTACIÓN DE LIDIA'",
+      "documentos": "Borrador (ámbar), Presentado (verde), Activo/Inactivo contratos (verde/rojo)",
+      "animales": "Activo/Vendido/Baja (patrón Dashboard: viñeta retroiluminada)",
+      "tareasAgenda": "Prioridad Alta/Media/Baja (rojo/ámbar/verde), Alerta (🔔 pulsante), Vencida (rojo)",
+      "subexplotaciones": "Anulada (soft delete, no visible en listado)",
+      "instalaciones": "Anulada (soft delete)"
+    },
+    "wizardFinca": "Invocado desde AjustesView._editarFincaPrincipal() → window.WizardFinca.editar()",
+    "carruselSubmodulosSticky": [
+      "AgendaView: tabs horizontales módulos (oro/naranja/info/púrpura/verde/info) anclados bajo header",
+      "GastosView: gasto-tabs con scroll-shadow-container + badge 'deslizar ➔'",
+      "DocumentosView: modal 'Consultar/Imprimir' con grid 2×5 de tipos documento"
+    ],
+    "cardRegistro": "Componente unificado App._cardRegistro(icon, title, subtitle, metadata, color, onClick) usado en Subexplotaciones, Instalaciones, Patrimonio (lotes), Gastos, Documentos",
+    "fabFlotante": "Patrón consistente: fab-container + fab-label + fab-btn (Icon.fabPlus()) en Ajustes, Documentos, Cuaderno, Subexplotaciones, Instalaciones, Gastos, Patrimonio",
+    "documentViewer": "Patrón único para PDFs (nunca window.open/print): DocumentViewer.show({id, title, html, filename, shareTitle}) → Capacitor Share / navigator.share / descarga blob",
+    "exitGuard": "App.setExitGuard(() => View._confirmSalirEdicion()) en Subexplotaciones, Instalaciones, Documentos (acuse), Patrón: _guardado flag + Confirm.confirm('Salir sin guardar')"
+  },
+  "integracionSIGGAN_BADIGEX": {
+    "tramites": [
+      {
+        "nombre": "Guía Movimiento (DIMOE)",
+        "origen": "movimientos_ganado (tipo entrada/salida)",
+        "camposSIGGAN": ["numero_guia", "rega_origen", "rega_destino", "explotacion_contraparte", "motivo (sacrificio/pastoreo/...)", "especie", "num_animales", "crotales[]", "tipo_operador_destino (matadero/explotacion/...)", "transportista", "matricula", "fecha", "desinsectacion_certificada", "desinfeccion_numero_talon/fecha", "veterinario_autorizante", "estado_tramite (borrador/presentado)", "fecha_presentacion", "numero_registro_oficial", "acuse_recibo"],
+        "pdf": "WizardGuiaMovimiento.generarDocumento",
+        "autoSeedDemo": "Inyecta GS-2025-0451 (oficial) y GS-2026-0922 (borrador) en finca CHAMORRO"
+      },
+      {
+        "nombre": "Declaración Censal",
+        "origen": "Cuaderno Digital → Sección 2 Censo + 3.b Libro SIGGAN (Entradas/Salidas/Nacimientos/Muertes)",
+        "exportacion": "CSV SIGGAN 8 secciones (Identificación, Censo, Entradas, Salidas, Nacimientos, Muertes, Tratamientos, Saneamientos)"
+      },
+      {
+        "nombre": "Pedido Crotales",
+        "origen": "pedidos_crotales",
+        "campos": ["numero_seguimiento", "fecha_pedido", "especie", "cantidad", "tipo (plástico/...)", "adsg_nombre", "estado (borrador/...)", "acuse_manual"],
+        "pdf": "WizardCrotales.generarPDF"
+      },
+      {
+        "nombre": "Saneamientos ADSG",
+        "origen": "saneamientos (campañas oficiales)",
+        "campos": ["fecha", "campana (catálogo CCAA)", "num_examinados/examinados", "num_positivos/positivos", "calificacion"],
+        "ubicacion": "Cuaderno Digital → Sección 4.b + Patrimonio ICA (consumos silo)"
+      },
+      {
+        "nombre": "Albaranes Carne/Leche",
+        "origen": "comercializacion_carne / comercializacion_leche",
+        "pdf": "AlbaranesVentasView._imprimirDoc",
+        "trazabilidad": "Vinculados a movimientos_ganado (DIMOE) y animales"
+      },
+      {
+        "nombre": "Contratos",
+        "origen": "contratos_compra",
+        "campos": ["numero_contrato", "fecha_inicio", "tipo (carne/leche/mixto)", "activo", "precios[] (producto, precio_unitario, unidad)", "condiciones", "iva_pct"]
+      }
+    ],
+    "modoInterno": "Banner en Documentos: 'Genera la documentación desde Livestock Manager y sube los ficheros a SIGGAN/BADIGEX de forma manual. Registra aquí el número de acuse o justificante recibido para mantener la trazabilidad interna.'"
+  },
+  "flagsFreePremium": {
+    "modelo": "Compra única 'premium_unlock' en Play; release oficial = Private/build-and-upload.ps1 (variante FREE); versionCode 512",
+    "límitesEnModelo": "Siempre en .save() (PremiumLimitPattern), verificado por PremiumQA.runAll()",
+    "restriccionesFree": [
+      "1 finca máxima (Ajustes: botón 'Nueva Finca' oculto si isFree)",
+      "Backup/restore: interfaz presente en ConfigSistema pero validación en modelo",
+      "Sync cloud: no implementado (pendiente)",
+      "Banner FREE persistente en Ajustes (gradiente ámbar, botón ACTUALIZAR A PREMIUM → PurchaseManager.purchase())"
+    ],
+    "funcionesPremium": "Fincas ilimitadas, backup automático, todas las vistas completas, exportaciones sin límite"
+  },
+  "estados": {
+    "finca": {
+      "activa": "Fincas.getActiveId() → Fincas.get(id), badge verde 'ACTIVA' en listado Mis Fincas",
+      "inactiva": "Botón 'Activar' en listado",
+      "lidia": "Boolean explotacion_lidia → badge rojo 'EXPLOTACIÓN DE LIDIA' en Ajustes y Documentos"
+    },
+    "documentos": {
+      "porTipo": "dimoe, factura, certificado, dib, crotales, albaran_carne, albaran_leche, contrato",
+      "estadoTramite": "borrador, presentado, activo/inactivo (contratos)",
+      "acuseManual": "Pendiente (con días: rojo ≥15, ámbar ≥7, gris <7) o Registrado (verde)"
+    },
+    "alertas": {
+      "prioridad": "Alta (rojo), Media (ámbar), Baja (verde) — en Agenda tareas",
+      "supresionSanidad": "Siempre visibles en Sanidad (ModoContextoHelper: alertas supresión siempre visibles)",
+      "configurables": "alertSanidad, alertTrazabilidad, alertPAC, alertADSG, alertINCOLAC, alertContratos (toggles en Ajustes)"
+    },
+    "subexplotaciones": "anulada: true/false (soft delete, conserva histórico)",
+    "instalaciones": "anulada: true/false (soft delete)",
+    "animales": "activo, vendido, baja, muerto (badge estado en tarjetas)"
+  },
+  "datosDemoChamorro": {
+    "finca": "Nombre incluye 'CHAMORRO' o flag demo=true",
+    "configuracionPrecargada": [
+      "REGA: ES210050001234",
+      "CCAA: Extremadura (BADIGEX)",
+      "ADSG: nombre + código + veterinario + colegiado + teléfono + NIF vet",
+      "Contrato Lácteo + INFOLAC",
+      "Especies: Vacas, Ovejas (catálogo razas 163 razas, DB v16)",
+      "Subexplotaciones por especie (si multi-especie)",
+      "Instalaciones (tipos catálogo oficial SIEX)",
+      "Rebaños, zonas, animales con crotales ES + 12 dígitos",
+      "Movimientos SIGGAN auto-seed: GS-2025-0451 (sacrificio, oficial, acuse REG-OFF-8472) y GS-2026-0922 (pastoreo, borrador)",
+      "Tratamientos sanitarios con supresiones",
+      "Pesajes, reproducción, ventas carne/leche",
+      "Gastos por categorías contables",
+      "Transportistas con certificado bienestar",
+      "Compradores y contratos",
+      "Saneamientos oficiales (campañas CCAA)"
+    ],
+    "validacionGuias": "GeGan 36/38, CoMer 40/42, ExPro 52/55 (vs 53/55 Android, 1 target por datos demo) — CERRADA 2026-08-04"
+  }
+}

@@ -1,0 +1,42 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Sin conexión
+  - banner [ref=e3]:
+    - img "Livestock Manager" [ref=e5]
+    - generic [ref=e12] [cursor=pointer]:
+      - generic [ref=e13]: ES210050001234
+      - generic [ref=e14]:
+        - text: "Tipo Explo:"
+        - generic [ref=e15]: Híbrida
+  - main [ref=e16]:
+    - generic [ref=e4040]:
+      - tablist "Todas las secciones" [ref=e4041]:
+        - generic "ANIMALES" [ref=e4042] [cursor=pointer]
+        - generic "REBANOS" [ref=e4043] [cursor=pointer]
+        - generic "PATRIMONIO" [ref=e4044] [cursor=pointer]
+        - generic "ZONAS" [ref=e4045] [cursor=pointer]
+        - generic "SANIDAD" [ref=e4046] [cursor=pointer]
+      - generic [ref=e4047]:
+        - generic [ref=e4048]:
+          - 'button "Anterior: PATRIMONIO" [ref=e4049] [cursor=pointer]'
+          - button "ZONAS" [ref=e4057] [cursor=pointer]
+          - 'button "Siguiente: SANIDAD" [ref=e4066] [cursor=pointer]'
+        - listbox "Todos los submódulos":
+          - option "ANIMALES"
+          - option "REBANOS"
+          - option "PATRIMONIO"
+          - option "ZONAS" [selected]
+          - option "SANIDAD"
+    - generic [ref=e4078]:
+      - heading "| Zonas y Parcelas" [level=1] [ref=e4079]
+      - generic [ref=e4080]: Ubicación de rebaños, UGM, carga ganadera y PAC
+  - navigation "Navegación principal escritorio" [ref=e18]:
+    - link "Inicio" [ref=e19] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=e33] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=e37] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=e42] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=e50] [cursor=pointer]
+  - status

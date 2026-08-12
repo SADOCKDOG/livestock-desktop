@@ -1,0 +1,28 @@
+"Código SIEX";"Descripción";"Tipo";Fecha de alta;Fecha de modificación;Fecha de baja
+"1";"Cambio de titularidad";"De la explotación";30/06/2023;;
+"2";"Desistimiento";"De la explotación";30/06/2023;;
+"3";"Fusión de explotaciones";"De la explotación";30/06/2023;;
+"4";"Baja de oficio";"De la explotación";30/06/2023;;
+"5";"Anulación por error";"De la explotación";30/06/2023;23/06/2026;
+"6";"Incidencia en controles";"Del cultivo";30/06/2023;;
+"7";"Cambio a aprovechamiento";"Del cultivo";30/06/2023;;
+"8";"Anulación por error";"Del cultivo";30/06/2023;23/06/2026;
+"9";"Cambio de geometría";"De la DGC";30/06/2023;;
+"10";"Venta";"De la DGC";30/06/2023;;
+"11";"Arrendamiento a un tercero";"De la DGC";30/06/2023;;
+"12";"Finalización del arrendamiento";"De la DGC";30/06/2023;;
+"13";"Incidencia en controles";"De la DGC";30/06/2023;;
+"14";"Anulación por error";"De la DGC";30/06/2023;23/06/2026;
+"15";"Baja de oficio";"Del cultivo";30/06/2023;;
+"16";"Baja de oficio";"De la DGC";30/06/2023;;
+"17";"Cese en la actividad agraria";"De la explotación";03/07/2025;;
+"18";"Fallecimiento del titular";"De la explotación";03/07/2025;;
+"19";"Por aplicación normativa o resolución judicial";"De la explotación";03/07/2025;;
+"20";"A petición del titular";"De la explotación";23/06/2026;;
+"21";"A petición del titular";"Del cultivo";23/06/2026;;
+"22";"Baja del cultivo por baja de la DGC";"Del cultivo";23/06/2026;;
+"23";"A petición del titular";"De la DGC";23/06/2026;;
+"24";"Anulación por error";"Del aprovechamiento";23/06/2026;;
+"25";"A petición del titular";"Del aprovechamiento";23/06/2026;;
+"26";"Baja del aprovechamiento por baja de la DGC";"Del aprovechamiento";23/06/2026;;
+"27";"Baja de oficio";"Del aprovechamiento";23/06/2026;;

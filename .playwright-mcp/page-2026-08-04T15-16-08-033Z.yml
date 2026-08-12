@@ -1,0 +1,22 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]: Sin conexión
+  - banner [ref=f1e3]:
+    - img "Livestock Manager" [ref=f1e5]
+    - generic [ref=f1e12] [cursor=pointer]:
+      - generic [ref=f1e13]: ES210050001234
+      - generic [ref=f1e14]:
+        - text: "Tipo Explo:"
+        - generic [ref=f1e15]: Híbrida
+  - main [ref=f1e16]:
+    - generic [ref=f1e297]: Cargando...
+  - navigation "Navegación principal" [ref=f1e270]:
+    - link "Inicio" [ref=f1e271] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=f1e273] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=f1e277] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=f1e282] [cursor=pointer]:
+      - /url: "#/comercializacion?tab=leche"
+    - button "Más" [ref=f1e289]
+  - status

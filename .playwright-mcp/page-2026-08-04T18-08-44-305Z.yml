@@ -1,0 +1,21 @@
+- generic [active] [ref=f8e1]:
+  - banner [ref=f8e2]:
+    - img "Livestock Manager" [ref=f8e4]
+    - generic [ref=f8e6]: Cargando...
+  - main [ref=f8e9]:
+    - generic [ref=f8e10]: Iniciando aplicación...
+  - navigation "Navegación principal escritorio" [ref=f8e11]:
+    - link "Inicio" [ref=f8e12] [cursor=pointer]:
+      - /url: "#/"
+    - link "Animales" [ref=f8e14] [cursor=pointer]:
+      - /url: "#/animales"
+    - link "Rebaños" [ref=f8e16] [cursor=pointer]:
+      - /url: "#/rebanos"
+    - link "GeGan" [ref=f8e18] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=f8e20] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=f8e22] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=f8e25] [cursor=pointer]
+  - status

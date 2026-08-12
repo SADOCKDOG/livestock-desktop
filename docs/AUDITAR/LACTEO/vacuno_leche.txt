@@ -1,0 +1,2563 @@
+Código de
+Buenas Prácticas
+Ganaderas
+para la
+Producción Sostenible
+en Andalucía
+Código de Buenas Prácticas Ganaderas para
+la Producción Sostenible en Andalucía
+
+Código Vacuno de Leche
+
+Informe Técnico 10-08-2082v00
+
+Realizado para la Asociación para el
+Desarrollo Rural del Litoral de la Janda
+
+Elaborado por Citagro S.A.
+
+Diseño gráfico por Gokiburi
+
+Sevilla, Mayo de 2010
+
+Colabora: Augusto Gómez Cabrera
+             Catedrático del Departamento de Producción Animal de la Universidad de Córdoba
+            Manuel Sánchez Rodríguez
+             Profesor Titular del Departamento de Producción Animal de la Universidad de Córdoba
+            María del Carmen García Moreno
+Índice
+
+Capítulo 01                                                                   Pág. 6
+Presentación y objetivos del CBPGS de Vacuno de Leche                         Pág. 6
+
+         1.1 Objetivos                                                        Pág. 8
+                                                                              Pág. 8
+Capítulo 02                                                                   Pág. 9
+Situación del Vacuno de Leche en Andalucía                                    Pág. 11
+
+         2.1 Datos del sector                                                 Pág. 12
+         2.2 Razas autóctonas
+         2.3 Caracterización de los sistemas de explotación                   Pág. 14
+                                                                              Pág. 14
+Capítulo 03                                                                   Pág. 18
+Ganadería y sostenibilidad                                                    Pág. 20
+
+Capítulo 04                                                                   Pág. 24
+Gestión técnica y administrativa de las explotaciones. Identificación animal  Pág. 25
+del Vacuno de Leche                                                           Pág. 25
+
+         4.1 Gestión administrativa de las explotaciones de Vacuno de Leche
+         4.2 Identificación del Vacuno de Leche
+         4.3 Certificación de Producción Integrada y Ecológica
+
+Capítulo 05
+Alimentación del Vacuno de Leche
+
+         5.1 Requisitos mínimos
+         5.2 Prácticas recomendadas
+Capítulo 06                                                 Pág. 28
+El ordeño en el Vacuno de Leche                             Pág. 28
+                                                            Pág. 29
+         6.1 Requisitos mínimos
+         6.2 Prácticas recomendadas                         Pág. 34
+                                                            Pág. 34
+Capítulo 07                                                 Pág. 35
+Reproducción y mejora genética del Vacuno de Leche
+                                                            Pág. 38
+         7.1 Requisitos mínimos                             Pág. 38
+         7.2 Prácticas recomendadas                         Pág. 41
+
+Capítulo 08                                                 Pág. 44
+Sanidad. Normas de bioseguridad y condiciones higiénicas    Pág. 45
+                                                            Pág. 49
+         8.1 Requisitos mínimos
+         8.2 Prácticas recomendadas                         Pág. 50
+                                                            Pág. 50
+Capítulo 09                                                 Pág. 50
+Protección y bienestar animal
+
+         9.1 Requisitos mínimos
+         9.2 Prácticas recomendadas
+
+Capítulo 10
+Instalaciones. Condiciones ambientales, diseño, usos, etc.
+
+         10.1 Requisitos mínimos
+         10.2 Prácticas recomendadas
+Capítulo 11                                             Pág. 54
+Transporte y sacrificio de animales                     Pág. 54
+                                                        Pág. 57
+           11.1 Requisitos mínimos
+           11.2 Prácticas recomendadas                  Pág. 58
+                                                        Pág. 58
+Capítulo 12                                             Pág. 59
+Gestión y manejo de residuos
+                                                        Pág. 60
+           12.1 Requisitos mínimos                      Pág. 60
+           12.2 Prácticas recomendadas                  Pág. 61
+
+Capítulo 13                                             Pág. 62
+Formación, capacitación e información de los titulares  Pág. 62
+de explotación y asalariados. Seguridad en el trabajo   Pág. 62
+                                                        Pág. 63
+           13.1 Requisitos mínimos                      Pág. 63
+           13.2 Prácticas recomendadas                  Pág. 64
+                                                        Pág. 64
+Capítulo 14                                             Pág. 64
+Legislación aplicable                                   Pág. 65
+                                                        Pág. 65
+           14.1 Alimentación
+           14.2 Reproducción y mejora genética
+           14.3 Ordeño
+           14.4 Sanidad
+           14.5 Protección y bienestar animal
+           14.6 Instalaciones
+           14.7 Transporte y sacrificio de animales
+           14.8 Gestión y manejo de residuos
+           14.9 Formación
+
+Fuente: Citagro
+Presentación y
+objetivos del CBPGS
+de Vacuno de Leche
+
+Este Código de Buenas Prácticas Ganaderas Sostenibles               Objetivos
+pretende ser un documento orientativo para que los ga-
+naderos y técnicos de explotaciones de vacuno de leche              Los objetivos de este Código de Buenas Prácticas
+de Andalucía, conozcan un repertorio de Buenas Prácticas            Ganaderas para las explotaciones de vacuno de leche
+que les faciliten gestionar su explotación realizando un            en Andalucía son:
+manejo compatible con el medio ambiente, en el marco
+de una gestión económicamente sostenible.                                Ser una herramienta eficaz para la aplicación de
+                                                                       la nueva reglamentación en materia de higiene de
+Se trata de poner a disposición del sector una herramienta             los alimentos, así como para el control de la segu-
+que aporte recomendaciones que, no sólo apuesten por                   ridad alimentaria en las explotaciones de vacuno
+el cumplimiento de la normativa vigente, sino que garan-               de leche.
+ticen la idoneidad y sostenibilidad de su modelo de pro-
+ducción. En este sentido, este Código de Buenas Prácticas,               Recomendar prácticas ganaderas que permitan
+si bien no tiene carácter obligatorio, sí que recoge una               garantizar la sostenibilidad ambiental.
+serie de recomendaciones que voluntariamente podrían
+llevarse a efecto en las explotaciones ganaderas.                        Establecer las medidas a adoptar en relación con
+                                                                       la higiene de los piensos, instalaciones, ganado,
+Este Código de Buenas Prácticas Ganaderas está dirigido                agua de consumo para los animales, sanidad, así
+a ganaderos y profesionales del sector que estén direc-                como con control de vectores y agentes patógenos
+tamente implicados en el manejo y gestión de explota-                  que garanticen la bioseguridad en las explotaciones.
+ciones de vacuno de leche de Andalucía, así como al res-
+to de agentes relacionados con el asesoramiento técnico                  Establecer una serie de recomendaciones para
+e incluso la supervisión de la administración.                         ser aplicadas durante la práctica diaria de la gestión
+                                                                       en las explotaciones ganaderas, y así dar un ade-
+La razón de ser de este código es ofrecer la posibilidad               cuado cumplimiento de lo establecido en la norma-
+de producir alimentos de calidad a través de sistemas                  tiva comunitaria en materia de higiene en el sector
+de producción sostenibles de sanidad y bienestar animal.               primario.
+
+                                                                         Orientar al ganadero sobre las medidas que debe
+                                                                       tomar para el manejo de las explotaciones respecto
+                                                                       al medio ambiente y procurar la conservación de
+                                                                       la biodiversidad por el mantenimiento de razas
+                                                                       autóctonas.
+
+                                                                         Elaborar un código por y para el propio sector,
+                                                                       como un instrumento útil para el propietario y los
+                                                                       trabajadores de las explotaciones de vacuno de
+                                                                       leche de Andalucía.
+
+Pág. 06 | 01 Presentación y objetivos del CBPGS de Vacuno de Leche
+Fuente: Asociación de Frisona Andaluza
+                                           Situación del Vacuno
+                                           de Leche en Andalucía
+
+                                           Datos del sector
+
+                                                                      Según el Anuario de Estadística Agroalimentaria 2006
+                                                                      del Ministerio de Agricultura, Pesca y Alimentación,
+                                                                      Andalucía representa el 8% del total de las vacas de
+                                                                      ordeño de España. (MAPYA 2006)
+                                                                      Según esta misma fuente, en Andalucía se produjeron
+                                                                      482.910 miles de litros de leche de vaca en el año
+                                                                      2005, siendo Córdoba, Sevilla y Cádiz, a las que corres-
+                                                                      ponden, junto a Granada, las mayores producciones.
+                                                                      Así, el censo de hembras en ordeño en Andalucía para
+                                                                      ese mismo año asciende a 90.120 cabezas.
+
+                                      Fuente: Citagro
+Pág. 08 | 02 Situación del Vacuno de Leche en Andalucía
+        Existencias    Producción
+        de vacas en    de leche de
+        ordeño (nº de  vaca (miles
+        animales)      de litros)
+
+Huelva                              Córdoba                    Jaén
+  19
+ 196                                 35.403                   12.114
+                                    177.525                    7.710
+
+        Sevilla                                               Granada      Almería
+
+        14.233                                                  90.517      90.220
+        109.159                                                 27.524      30.450
+
+        Cádiz                       Málaga                Total Andalucía
+
+          12.943                     2.599                        90.120
+          95.517                    28.389                        482.910
+
+        Distribución del número de vacas de ordeño en Andalucía.
+        Fuente: Anuario de Estadística Agroalimentaria 2006, MAPYA
+        (datos de diciembre de 2005)
+
+Razas autóctonas                                          por su mayor capacidad de adaptación, también sería
+                                                          posible la utilización de las razas antes mencionadas.
+Teniendo en cuenta que este Código de Buenas Prác-
+ticas Ganaderas pretende ser un documento de referen-     Como aptitud mixta tenemos otras tres: Parda, Nor-
+cia para la puesta en práctica de acciones encaminadas    manda y Simmental (también conocida como Fleckvieh-
+a garantizar la sostenibilidad de las explotaciones ga-   Simmental). Estas razas se emplean para la producción
+naderas, se pretende que la actividad ganadera se rea-    mixta, es decir, son tan aptas para la producción de
+lice sobre la base de un manejo adecuado de animales,     leche como para la de carne, estando muy distribuida
+que procederán de razas de aptitud lechera o mixta,       por España la raza Fleckvieh por su aptitud lechera,
+si bien las primeras son las que están genéticamente      a la hora de criar los terneros, pero sin perder la ca-
+especializadas en la producción de leche, pero teniendo   pacidad de producir carne.
+en cuenta que estarán mas o menos adaptadas según
+la región en la que las explotemos. La raza lechera       Según la Orden APA/661/2006, de 3 de marzo, por la
+principalmente explotada y más distribuida mundial-       que se actualiza el Catálogo Oficial de Razas de Gana-
+mente es la raza Frisona, pero existen otras razas de     do de España, las razas de ganado de la especie bovina
+aptitud lechera como son: Jersey, Guernsey y Ayrshire     existentes en España se clasifican de la siguiente forma:
+cuyos censos también son significativos a nivel mundial.
+Aunque en Andalucía la más extendida sea la Frisona                        Situación del Vacuno de Leche en Andalucía 02 | Pág. 09
+                                      Fuente: Citagro     Frisona
+
+      Razas autóctonas de fomento (originarias de         Como se indicó anteriormente, las principal raza de
+    España y con censo y organización en expansión)       actitud láctea explotada en Andalucía es la raza Friso-
+    entre las que se encuentran la Asturiana de los       na. Sus producciones medias de leche oscilan entre
+    Valles, Avileña Negra Ibérica, Lidia, Morucha, Pire-  6.000 y 12.000 litros de leche en una lactación de
+    naica, Retinta y Rubia Gallega.                       300 días. A continuación se detallan algunas carac-
+                                                          terísticas de la raza:
+      Razas autóctonas de protección especial (origi-
+    narias de España pero que se encuentran en grave           También llamada Holstein, es originaria de los
+    regresión o en trance de desaparición) como la           Países Bajos. Actualmente es una de las razas mas
+    Albera, Alistana-Sanabresa, Asturiana de la Mon-         empleada en explotaciones de producción de leche.
+    taña, Avileña-Negra Ibérica (variedad Bociblanca),
+    Berrenda en Colorado, Berrenda en Negro, Betizu,           El peso al nacer es aproximadamente 40 kg, pu-
+    Blanca Cacereña, Bruna de los Pirineos, Cachena,         diendo alcanzar las vacas Holstein un peso de 600
+    Caldéela, Canaria, Cárdena Andaluza, Frieiresa,          kg, mientras que los toros alcanzan los 700 kg.
+    Limiá, Mallorquina, Marismeña, Menorquina, Mon-
+    china, Murciana-Levantina, Negra Andaluza, Paju-           En cada país se ha procurado adaptar la raza a
+    na, Palmera, Sayaguesa, Serrana Negra, Terreña           las condiciones locales, orientando la crianza hacia
+    Tudanca y Vianesa.                                       diferentes objetivos. Así han surgido subrazas y
+                                                             tipos "criollos" que difieren del estándar en tamaño
+      Razas españolas: Blonda de Aquitania, Charolesa,       y requerimientos, lo que repercute en los rendi-
+    Fleckvieh, Frisona, Limusina, Parda y Parda de           mientos promedio de producción de leche y carne.
+    Montaña.
+                                                                                                Fuente: Citagro
+    De las enumeradas en el catalogo, solo las razas
+    Fleckvieh (aptitud mixta), Frisona y Parda, están                   La gestión de esta raza la lleva a cabo la
+    específicamente orientadas a la producción de leche.                Asociación de Frisona Andaluza (AFA)
+                                                                        C/ Del Desarrollo,9 (Parque Empresarial)
+Pág. 10 | 02 Situación del Vacuno de Leche en Andalucía                 C.P. 11407, Jerez de la Frontera (Cádiz).
+                                                                        Tlf. y Fax: 956/153310
+                                                                        afandaluza@terra.es
+Caracterización                                            Estabulación fija: El animal permanece in-
+de los sistemas                                            movilizado en un cubículo la mayor parte
+de explotación                                             del tiempo. Algunas características de este
+                                                           sistema son las siguientes:
+Antes de describir los diferentes sistemas de explota-
+ción, es conveniente hacer mención, aunque sea de           Plazas individuales para cada animal, en
+una forma breve, a las cualidades más sobresalientes       las que se encuentran inmovilizados.
+que posee el ganado vacuno:
+                                                            El animal se alimenta y bebe siempre en
+     La vaca de leche está considerada como un ru-         la plaza.
+   miante de gran tamaño especializado en la produc-
+   ción de leche.                                           Las labores de manejo se realizan en el
+                                                           lugar donde se encuentra el ganado.
+     Se alimentan de recursos naturales que no pue-
+   den ser aprovechados directamente por los huma-          La disposición más adecuada es la de dos
+   nos, como son los pastos y forrajes.                    filas, cabeza con cabeza y un pasillo central
+                                                           de alimentación, con comedero corrido a
+     La vaca de leche, en cuanto a su clasificación taxo-  ras de suelo y bebederos automáticos cada
+   nómica, pertenece al orden de los artiodáctilos         dos plazas. Por la parte de atrás de las vacas
+   (dedos pares), al suborden de los rumiantes, familia    se colocan los fosos de recogida de deyec-
+   de los bóvidos y los animales que actualmente son       ciones. Los pasillos laterales son de manejo
+   criados pertenecen a la especie Bos taurus.             y ordeño in situ, lo que requiere una insta-
+                                                           lación fija de conducciones aéreas de vacío
+     La vaca lechera por excelencia es la raza Frisona.    y recogida de leche, con tomas a espacios
+                                                           regulares.
+     Según la legislación vigente se denomina como
+   vaca lechera a la hembra de bovino que se ordeña         La estabulación fija con sala de ordeño:
+   como mínimo una vez al día durante al menos             es una variante de la anterior, con la ventaja
+   200 días consecutivos.                                  de facilitar el manejo y permitir a los anima-
+                                                           les hacer cierto ejercicio. El trazado deber
+Los tipos de sistemas de explotación de vacuno de          permitir liberar simultáneamente a un grupo
+leche podrían ser clasificados en función, en primer       homogéneo de animales para realizar el
+lugar, de la existencia de pastoreo o no y, en su caso,    ordeño en la sala.
+del tipo de pastoreo realizado, y en segundo lugar
+del tipo de estabulación, ya sea fija o libre. Mediante     Estabulación libre: Es aquel sistema en el
+esta clasificación puede definirse el grado de intensi-     que el animal permanece en un recinto
+ficación de los sistemas.                                   cerrado, y tiene plena movilidad para deam-
+                                                            bular de unas zonas a otras de dicho recinto.
+En la mayoría de las explotaciones de ganado vacuno         Este sistema es el más común dentro de las
+lechero en Andalucía, los animales se encuentran es-        ex-plotaciones de ganado vacuno lechero.
+tabulados. El animal no sale a pastar y se le suministra
+el forraje en verde directamente en el pesebre, o bien        La estabulación libre con cubículos: es
+no existe ningún tipo de aprovechamiento de pasto           una variante, en la que la zona de descanso
+verde y la ración se compone únicamente de alimentos        se divide en cubículos, el número de cubí-
+de volumen y concentrados.                                  culos puede ser un 10-15% que el número
+                                                            de vacas. Las filas de cubículos constituyen
+Dentro de este tipo de sistemas de producción se dis-       el eje longitudinal de la nave y la sala de
+tinguen dos modelos:                                        ordeño se encuentra anexa a la zona de
+                                                            estabulación. Los comederos y bebederos
+                                                            se colocarán en las dos paredes laterales
+                                                            más largas.
+
+                                                                        Situación del Vacuno de Leche en Andalucía 02 | Pág. 11
+Fuente: Citagro
+Ganadería y
+sostenibilidad
+
+Según el Informe de la Comisión Mundial sobre el
+Medio Ambiente y el Desarrollo: Nuestro Futuro
+Común, el Desarrollo Sostenible se entiende como
+aquél que permite "satisfacer nuestras necesidades
+actuales sin comprometer la capacidad de las genera-
+ciones futuras para satisfacer las suyas".
+
+Bajo este prisma, la Producción Ganadera Sostenible
+se presenta como una alternativa más allá de la gana-
+dería convencional, con la vocación de posibilitar la
+realización de una ganadería viva y duradera, respe-
+tuosa con el entorno, rentable para el que la practica
+y capaz de atender las demandas sociales.
+
+En este sistema, los métodos biológicos, químicos y
+cualesquiera otras técnicas de producción, son cuida-
+dosamente elegidos y equilibrados, teniendo en cuenta
+la protección del medio ambiente, el bienestar de los
+animales, la rentabilidad de las explotaciones y las
+exigencias de los consumidores en lo relativo a calidad
+y seguridad alimentaria.
+
+La producción ganadera sostenible no rechaza las téc-
+nicas ganaderas clásicas, sino que las utiliza de forma
+combinada con otras prácticas innovadoras. Esta inte-
+gración de recursos conduce a un sistema de producción
+más racional, más respetuoso con el entorno natural
+y, en definitiva, más sostenible.
+
+                                                         Ganadería y sostenibilidad 03 | Pág. 13
+Fuente: Asociación de Frisona Andaluza
+
+Gestión técnica y                                                        Documentación y requisitos dependientes de las
+administrativa de                                                      Oficinas Comarcales Agrarias (OCAs):
+las explotaciones.
+Identificación animal                                                      > Libro de Registro de Explotación.
+del Vacuno de Leche
+                                                                           > Alta en el Registro General de Explotaciones
+Gestión Administrativa                                                     Ganaderas (REGA).
+de las explotaciones
+de vacuno de leche                                                         > Alta en el Sistema de Información de Gestión
+                                                                           Ganadera (SIGGAN).
+Como documentación administrativa necesaria para
+el desarrollo de la actividad ganadera se consideran:                      > Tener los animales identificados correctamente.
+
+     Documentación exigida por el propio Ayunta-                    A continuación se resumen todos aquellos documentos
+    miento del municipio donde se desarrolle la acti-               y registros de obligado cumplimiento que se deben
+    vidad ganadera.                                                 efectuar en las explotaciones, así como aquellos que
+                                                                    ayudarán a cumplir las obligaciones de la normativa
+Pág. 14 | 04 Gestión técnica y administrativa de las explotaciones  vigente.
+                Identificación animal del Vacuno de Leche
+                                                                    Guía de Origen y Sanidad Pecuaria
+
+                                                                    Documento sanitario que acredita el cumplimiento
+                                                                    de los requisitos señalados en el Capítulo I del Decreto
+                                                                    55/1998, de 10 de marzo, por el que se establecen los
+                                                                    requisitos sanitarios aplicables al movimiento y trans-
+                                                                    porte de ganado y otros animales vivos, y cuyo modelo
+                                                                    se incluye como Anexo II en dicho Decreto. La Guía
+                                                                    deberá acompañar en todo momento a los animales,
+                                                                    y tendrá una vigencia de cinco días naturales a contar
+                                                                    desde la fecha de su expedición, y para el movimiento y
+                                                                    transporte de animales vivos que se realice en Andalucía.
+
+                                                                    Además, los animales con objeto de traslado a sacrificio
+                                                                    procedentes de explotaciones incluidas en Agrupacio-
+                                                                    nes de Defensa Sanitaria, deberán acompañarse tam-
+                                                                    bién de las autorizaciones de traslado para sacrificio
+                                                                    de animales procedentes de ADS, que se incluyen en
+                                                                    el Anexo VIII del Decreto 55/98.
+Asimismo, para el traslado de ani-
+males con objeto de sacrificio obli-
+gatorio se incluirán, además de los
+documentos anteriores, las autori-
+zaciones de traslado de animales
+objeto de sacrificio obligatorio
+(Anexos VI y VII del mencionado
+Decreto).
+
+Libro de registro de la explotación
+Tendrá un formato aprobado por
+la administración y que será apor-
+tado por la Oficina Comarcal Agra-
+ria (OCA) a la que pertenezca la
+explotación. Así, será responsabi-
+lidad del ganadero realizar las si-
+guientes anotaciones:
+
+                                                                                                       Gestión técnica y administrativa de las explotaciones 04 | Pág. 15
+                                                                                                                    Identificación animal del Vacuno de Leche
+        1             2              3                  4                  5                6                         8
+                                                                                                      7
+   Censo antes     Gestión     Hoja de balan-     Hoja de actuali-   Hoja de balan-   Hoja de actua-
+   del 1 de marzo  estiércol/  ce del censo de    zación de ani-     ce del censo de  lización de     Hoja de          Hoja de control
+                   purines     animales repro-    males reproduc-    animales no      animales no     incidencias en   e inspecciones
+                               ductores y recría  tores y recría de  reproductores    reproductores   indentificación
+                               de novillas        novillas                                            - recrotalación
+
+1
+2
+3
+
+4
+5
+6
+
+Pág. 16 | 04 Gestión técnica y administrativa de las explotaciones
+                 Identificación animal del Vacuno de Leche
+7
+8
+
+   Fuente: Citagro
+
+   Registro general de explotaciones ganaderas             Medicamentos veterinarios
+
+   Es de obligado cumplimiento que el titular registre     Los tratamientos veterinarios realizados a los animales,
+   su explotación en el REGA, y los cambios que sean       de acuerdo con el Real Decreto 348/2000, han de ser
+   necesarios han de realizarse en un plazo máximo de      registrados obligatoriamente, con las siguientes ano-
+   un mes con posterioridad a que se hayan producido.      taciones:
+
+   Productos utilizados en alimentación animal                  Por parte del titular de la explotación: la fecha
+                                                              de administración, la afección a tratar (naturaleza
+   Se debe guardar y registrar la información correspon-      del tratamiento), los animales que se tratan, identi-
+   diente a la entrada de piensos en la explotación. Esta     ficación del tratamiento, la dosificación, número
+   información se podrá obtener de las facturas y alba-       de receta y proveedor.
+   ranes emitidos por parte de los proveedores, así como
+   de las etiquetas de identificación de los piensos.           Por parte del veterinario que prescribe los medi-
+                                                              camentos: la fecha de administración, la afección
+   La información mínima que se deberá registrar será:        a tratar (naturaleza del tratamiento), animales
+                                                              que se tratan, duración del tratamiento y vía de
+        Identificación del proveedor del pienso               administración, la dosificación, tiempo de espera
+      recepcionado.                                           y número de colegiado con su firma. Actualmente
+                                                              no existe un libro único de registro para medica-
+        Fecha de entrada en la explotación.                   mentos veterinarios. Cada Comunidad Autónoma
+                                                              emite su propio modelo, por lo que no ha quedado
+        Número de albarán.                                    reflejado ningún documento como modelo.
+
+        Denominación del pienso.                                Gestión técnica y administrativa de las explotaciones 04 | Pág. 17
+                                                                             Identificación animal del Vacuno de Leche
+        Número de lote del pienso.
+
+        Cantidad.
+                                                                    Fuente: Citagro
+
+Recetas                                                                              Fuente: Citagro
+
+Los Reales Decretos 109/1995 y 1749/1998 establecen                 Identificación
+la obligatoriedad de conservar copia de la receta de                del vacuno
+los medicamentos administrados a los animales
+durante tres años.                                                  Todos los bovinos europeos nacidos después de enero
+                                                                    de 1998 se encuentran identificados mediante dos
+Entradas de biocidas                                                crotales auriculares y un Documento de Identificación
+                                                                    o "pasaporte". Por otra parte, todos los nacimientos
+De cara a la trazabilidad, será recomendable que se                 y muertes de animales son comunicados por los
+lleve un registro de productos medicamentosos y                     productores a la autoridad competente.
+biocidas (insecticidas, rodenticidas, desifectantes).
+                                                                    A partir de enero del año 2000, el reglamento (CE)
+A continuación se muestran algunos de los datos                     1760/2000 del Parlamento Europeo y del Consejo de
+necesarios para tener la información registrada:                    17 de Julio de 2000, que deroga el Reglamento CE
+                                                                    820/97, establece un sistema de identificación y
+     Identificación del proveedor                                   registro de los animales de la especie bovina. En éste
+                                                                    además de los requisitos mencionados anteriormente,
+     Fecha de compra                                                se introdujeron nuevas exigencias en materia de iden-
+                                                                    tificación y registro del ganado, relativas a las notifica-
+     Número de albarán                                              ciones a la autoridad competente de cualquier entrada
+                                                                    o salida de animales de la explotación, con el fin de
+     Sustancia activa                                               completar en la base de datos nacional de identifica-
+                                                                    ción y registro de los bovinos todo el historial y los
+     Cantidad                                                       movimientos de todos los vacunos que componen
+                                                                    nuestra cabaña.
+     Número de lote
+                                                                    Por ello los documentos de identificación, para los
+Registro de tratamientos y control de calidad del                   animales nacidos a partir de enero de 2000, cuentan
+agua utilizada para los animales                                    con un nuevo formato, con más datos y constan, al
+                                                                    menos, de dos ejemplares: uno que acompañará al
+Será necesario realizar periódicamente (según el                    animal cuando abandone la explotación, y otro que
+origen del agua y el consumo) análisis al agua de la                permanecerá siempre en poder del ganadero o, en su
+explotación utilizada para la bebida de los animales                caso, de la autoridad competente y que será base
+y la limpieza de la sala de ordeño. Debe controlarse                para solicitar todas las ayudas al sector vacuno.
+que los valores microbiológicos del agua de la sala se
+encuentren por debajo de los límites establecidos. Así,             Los documentos de identificación son expedidos por
+se recomienda al menos analizarla una vez al año.                   la autoridad competente, y recogen los datos persona-
+                                                                    lizados del propietario del animal y de la explotación
+Los resultados de dichos análisis se conservarán al                 en la que reside. Por lo tanto, cuando el animal cambia
+menos durante dos años.                                             de explotación, el nuevo propietario deberá solicitar
+
+En los casos en los que, una vez realizado el análisis
+de control del agua utilizada para bebida de los ani-
+males, se compruebe que es necesario realizar algún
+tratamiento, será recomendable dejar constancia de
+la fecha en la que se realiza, el producto que se utilice,
+el número de lote del mismo, la dosis, así como del
+período de garantía que ofrece dicho tratamiento.
+
+Pág. 18 | 04 Gestión técnica y administrativa de las explotaciones
+                Identificación animal del Vacuno de Leche
+                       Fuente: Citagro
+
+Fuente: Asociación de
+  Frisona Andaluza
+
+un nuevo documento. La expedición tendrá lugar         PARTE MACHO
+en los catorce días siguientes a la notificación
+del nacimiento o de la entrada en la explotación.       Dígito de control para  PARTE HEMBRA
+                                                        detectar errores en el
+Cuando nazca un animal se deberán seguir los           tratamiento mecanizado                     Indicativo de la
+siguientes pasos de cara a su identificación y                                                Comunidad Autónoma
+registro:                                                    de los códigos
+                                                                (1 dígito)                           (2 dígitos)
+     Colocar los dos crotales y notificar el naci-
+   miento del animal a la autoridad competente         Número determinado por                   Número de serie
+   en el plazo de veintisiete días tras el nacimiento  la autoridad competente                     (4 dígitos)
+   (podrá ampliarse el plazo de colocación de los
+   crotales para el ganado extensivo de ciertas                 (1 dígito)
+   razas).
+                                                       Identificación del
+     Se deberá anotar el nacimiento en su Libro        país de nacimiento
+   de Registro.
+                                                            (2 dígitos)
+     La autoridad competente le expedirá el Do-
+   cumento de Identificación con todos sus datos,                               Número de manejo
+   los de la explotación y los del animal que ha                                     (4 dígitos)
+   sido identificado.
+
+Las marcas auriculares serán asignadas a la explo-
+tación, distribuidas y colocadas en los animales
+del modo que determine la autoridad competente.
+
+En el caso de que una explotación posea animales
+nacidos antes del 1 de enero de 2000:
+
+     Si los animales están identificados con dos
+   crotales numéricos iguales y disponen de un
+   Documento de Identificación del antiguo for-
+   mato se deberán canjear estos documentos
+   por los de nuevo formato.
+
+     Si los animales están identificados con un solo
+   crotal de sistema alfanumérico, y no disponen
+   de Documento de Identificación, se deberá
+   solicitar Documentos de Identificación para
+   estos animales.
+
+                                                       Gestión técnica y administrativa de las explotaciones 04 | Pág. 19
+                                                                   Identificación animal del Vacuno de Leche
+Fuente: Citagro
+
+Certificación de                                                    gativos, de acuerdo con las demandas y exigencias
+Producción Integrada                                                de la sociedad actual en materia de conservación del
+y Ecológica                                                         medio ambiente, calidad y seguridad de los alimentos
+                                                                    así como bienestar y sanidad animal.
+A pesar de que este Código de Buenas Prácticas Gana-
+deras trata de servir de marco de referencia para rea-              En la actualidad aún no existe un Reglamento Especí-
+lizar una manejo productivo sostenible en las explota-              fico que regule la Producción Integrada específica-
+ciones de ganado vacuno de leche, existen una serie                 mente para ganaderías de vacuno de leche, estando
+de normativas que establecen unos requisitos de obli-               pendiente su publicación. De carácter general, sí existe
+gado cumplimiento y que pueden ser certificables                    un Reglamento Específico de Ganadería Integrada en
+por diferentes mecanismos. Dentro de este tipo se                   Andalucía, que fue aprobado mediante la ORDEN de
+han de destacar dos de ellas: la Producción Integrada               29 de noviembre de 2005.
+y la Producción Ecológica.
+                                                                    Dicha Orden establece las condiciones mínimas que
+Producción Integrada                                                sobre manejo zootécnico, sanitario y agroambiental
+                                                                    han de cumplir las explotaciones ganaderas que deseen
+La Producción Ganadera Integrada es una modalidad                   ser registradas y certificadas como Explotaciones de
+de producción sostenible que tiene como objetivo                    Ganadería Integrada en Andalucía.
+modernizar la gestión global de la explotación gana-
+dera, sobre la base de prácticas de manejo que utilicen             Estas condiciones mínimas se refieren a la base terri-
+al máximo los recursos y los mecanismos de producción
+naturales, potenciando los aspectos más positivos de
+la ganadería y limitando los más desfavorables o ne-
+
+Pág. 20 | 04 Gestión técnica y administrativa de las explotaciones
+                Identificación animal del Vacuno de Leche
+Fuente: Citagro
+
+torial de la explotación, el régimen alimenticio de los   ción de productos cárnicos de ganado vacuno, ovino,
+animales, el aprovechamiento racional de recursos         caprino y porcino.
+propios, la base genética y los cuidados sanitarios de
+los animales, las instalaciones y prácticas zootécnicas,  Como se puede observar, hasta ahora, ha sido la pro-
+el manejo del estiércol y los residuos así como la for-   ducción de carne la opción predominante en la publi-
+mación del personal, suponiendo un incremento de          cación de Reglamentos Específicos de Producción In-
+las exigencias legales ya establecidas con el fin de      tegrada. Sin embargo, es previsible que en los próximos
+conseguir un mejor desarrollo de la actividad ganadera.   meses aparezcan nuevos Reglamentos más orientados
+                                                          a las explotaciones de aptitud lechera.
+Posteriormente a la aprobación de dicho Reglamento
+General, también se han publicado en Andalucía otros      Las explotaciones que deseen realizar producción in-
+Reglamentos Específicos para la Producción Integrada      tegrada deben inscribirse en el SIGGAN (Sistema de
+de Vacuno de Carne, Porcino Extensivo en Dehesa y         Identificación y Gestión Ganadera) como ocurre con
+Ovino de Carne, todos ellos aprobados mediante            el resto de explotaciones ganaderas. Se trata de una
+ORDEN de 12 de julio de 2006.                             base de datos de identificación y registro en Andalucía,
+                                                          que se utiliza fundamentalmente para el registro de
+Además, recientemente, se ha publicado la ORDEN           explotaciones ganaderas, la identificación de animales
+de 19 de septiembre de 2007, por la que se aprueba        y el control de sus movimientos.
+el Reglamento Específico de Producción Integrada de
+Andalucía para las industrias de obtención y elabora-           Gestión técnica y administrativa de las explotaciones 04 | Pág. 21
+                                                                             Identificación animal del Vacuno de Leche
+           Principios básicos de la Ganadería Ecológica
+
+Ganadería  Animales en pastoreo                                     Alimentación suficiente
+Ecológica  sometidos a manejo ecológico                             y equilibrada basada
+                                                                    en pastos y forrajes
+           Suplementos naturales producidos                         Carga adecuada
+           bajo normas ecológicas                                   No sobrepastoreo
+
+           Manejo que garantice el bienestar                        Crianza en libertad
+           animal
+                                                                    Alojamiento higiénico
+           La prevención base de la salud                           y adecuado
+
+           Curación con medicina natural                            Trato cuidadoso
+           y homeopatía
+                                                                    Razas locales
+
+Producción Ecológica                                                ganadera ecológica es una actividad que se concibe
+                                                                    ligada a los sistemas agrícolas, el uso de pastizales y
+La producción ecológica de alimentos se refiere a sis-              áreas naturales, por lo cual se concibe que la ganadería
+temas de producción agrícola, ganadera y de elabo-                  ecológica es una actividad ligada al suelo. Las explota-
+ración de productos agroalimentarios que pretende                   ciones sin suelo no cumplen las normas ecológicas de
+producir alimentos suficientes, libres de contaminantes             dicho Reglamento.
+químicos, de alto valor nutricional y organoléptico,
+producidos en sistemas que protejan y mejoren el                    Los principios básicos de la ganadería ecológica se pueden
+medio ambiente, que respeten el bienestar animal,                   esquematizar tal y como se muestra en la figura / esquema
+reduzcan los costes de producción y permitan obtener                "Principios básicos de la Ganadería Ecológica".
+una renta suficiente a los ganaderos y agricultores.
+                                                                    ¿Quién certifica?
+En Europa el sector de la agricultura ecológica está
+regulado, por el Reglamento CEE 2092/91, de aplicación              El Reglamento CEE 2092/91 establece que cada estado
+en todos los estados miembros. Este reglamento, sobre               miembro debe tener un sistema de control de la pro-
+"la producción agrícola ecológica y su indicación en                ducción ecológica administrado por una o más enti-
+los productos agrarios y alimenticios" define los sis-              dades de control, públicas y/o privadas, autorizadas
+temas de certificación a implantar. En España este                  para ello por la autoridad competente. En España, las
+Reglamento se aplica por el Decreto 1852/93, y en                   competencias para definir el sistema de certificación
+Andalucía mediante el Decreto 166/2003.                             de la producción ecológica recaen en las Comunidades
+                                                                    Autónomas.
+Los sistemas de producción ganaderos, fueron recogidos              En Andalucía, la autoridad competente es, desde el
+por los principios ecológicos mediante el Reglamento
+(CE) 1804/1999, donde se establece que la producción
+
+Pág. 22 | 04 Gestión técnica y administrativa de las explotaciones
+                Identificación animal del Vacuno de Leche
+año 2003, la Consejería de Agricultura y              Declaración                     Nueva
+Pesca de la Junta de Andalucía, quien además          (solicitud)                documentación
+de realizar una supervisión directa sobre las    Revisión Documental
+certificadoras, exige que éstas se encuentren                               No conforme
+acreditadas por la Entidad Nacional de Acre-
+ditación (ENAC) conforme a la norma EN-          Auditoría Inicial
+45011 sobre requisitos generales para entida-
+des que realizan la certificación de productos.      Informe de auditoría                               y/o                       El proceso continúa
+                                                     acciones correctoras
+¿Cómo se certifica?                                                         Nuevas acciones
+                                                          del operador         corregidas
+El modo de llevar a cabo este control, deno-          Evaluación por la
+minado "Evaluación de conformidad por            Comisión de Certificación
+auditoría" o "Certificación por tercera parte",
+supone que es una entidad ajena al operador      Decisión de la Comisión    No conforme
+la que evalúa la conformidad de los procedi-         de Certificación
+mientos llevados a cabo por el mismo, res-                                                                El proceso no continúa
+pecto al Reglamento CEE 2092/91.                 Conforme
+
+El proceso de certificación empieza cuando        Licencia de Operador y
+el operador solicita información a la certifi-   Certificado del Producto*
+cadora. Ésta le envía un cuestionario que
+debe ser cumplimentado y remitido a la em-         Auditorías de            Expediente archivado
+presa auditora, junto a la documentación         control periódicas
+pertinente. Una vez comprobada la docu-
+mentación se designará un inspector que se       El certificado de producto puede no emitirse hasta
+encargará de llevar a cabo la verificación de    cumplido un año desde la presentación de la declaración
+los datos mediante una visita inicial.
+
+Una vez que se decida iniciar la actividad
+ecológica y se ha tramitado la inscripción
+en un organismo de control de certificación,
+los animales y las tierras donde pasten, debe
+pasar un período durante el cual se adapten
+al nuevo sistema productivo. A este período
+se le denomina como "Período de Conver-
+sión". Durante este tiempo se deben seguir
+las normas de las producciones ecológicas
+a pesar de no poder vender los productos
+como tal.
+
+Este período puede oscilar entre 1 ó 2 años,
+dependiendo del manejo y del historial que
+tenga la finca. Habrá que tener en cuenta
+que para que los productos que se obtengan
+de los animales puedan ser vendidos como
+Productos Ecológico, los animales de los que
+provengan deben de haber vivido bajo las
+normas de la producción ecológica durante
+un tiempo mínimo.
+
+                                                 Gestión técnica y administrativa de las explotaciones 04 | Pág. 23
+                                                             Identificación animal del Vacuno de Leche
+                                                               Alimentación
+                                                               del Vacuno
+                                                               de Leche
+
+                       Fuente: Asociación de Frisona Andaluza  El ganadero es responsable de la alimentación de su
+Pág. 24 | 05 Alimentación del Vacuno de Leche                  rebaño. En muchos casos él mismo produce y conserva
+                                                               una parte de los alimentos. Para garantizar la seguridad
+                                                               del ganado y del producto ante el consumidor debe
+                                                               asegurarse transparencia, trazabilidad y respeto de
+                                                               la normativa.
+
+                                                               La alimentación del ganado constituye una etapa fun-
+                                                               damental en el proceso de producción. Se debe ges-
+                                                               tionar de forma óptima suministrando a los animales
+                                                               alimentos y agua de calidad y en cantidad adecuadas.
+
+                                                               Esta práctica tiene consecuencias positivas en los resul-
+                                                               tados técnicos y económicos de la explotación. La ali-
+                                                               mentación del ganado implica la aplicación de conoci-
+                                                               mientos sobre producción, conservación y características
+                                                               de los alimentos, fisiología animal, legislación, seguridad
+                                                               sanitaria o bienestar animal. La realización de esta
+                                                               actividad de forma correcta pone de manifiesto el alto
+                                                               grado de profesionalidad del ganadero.
+
+                                                               Además, para garantizar la sostenibilidad de la explo-
+                                                               tación, la actividad ganadera debería tender a favore-
+                                                               cer la fertilidad natural de la tierra y la conservación
+                                                               y mejora de la biodiversidad, evitándose en la medida
+                                                               de lo posible los signos de erosión, contaminación o
+                                                               sobrepastoreo. Así, habría que prestar especial atención
+                                                               a la infrautilización de los recursos pascícolas, para
+                                                               disminuir el riesgo de incendios y degradación de los
+                                                               pastos.
+Requisitos mínimos                                                              Fuente: GDR Litoral de la Janda - Innogan
+
+A continuación se extraen algunos de los requisitos           Conseguir una evacuación regular de todos los ele-
+mínimos que deben cumplir las explotaciones ganade-         mentos que puedan suponer una posible fuente de
+ras extraídos de la reglamentación aplicable identifi-      contaminación así como de los residuos y el estiércol.
+cada con anterioridad.
+                                                              El personal encargado de la alimentación y ma-
+     Asegurarse del uso de piensos compuestos que           nipulación de los animales contará con las aptitudes,
+   cumplen la legislación.                                  conocimientos y competencias necesarios para llevar
+                                                            a cabo su tarea.
+     Asegurar el suministro adecuado de piensos a
+   los animales.                                                    Fuente: Legislación Vigente.
+
+     Prevenir el uso de alimentos en mal estado o        Prácticas recomendadas
+   que puedan suponer un riesgo para los animales.
+                                                         De forma general se recomiendan las siguientes
+     Contar con suficiente cantidad de agua limpia       prácticas:
+   y potable a la que los animales tengan libre acceso.
+                                                              Es necesario asegurarse que los alimentos com-
+     Se procede a una correcta manipulación de los          prados no presenten riesgos microbiológicos, físicos
+   alimentos, haciendo uso para ello de maquinarias         o químicos para los animales y para la leche.
+   y utensilios adecuados.
+                                                              Comprobar las etiquetas y albaranes de los ali-
+     El diseño, construcción y ubicación de los equipos     mentos comprados, en cada una de las compras
+   suministradores de pienso y agua debe ser tal que        que se hagan, verificando fundamentalmente que
+   se reduzca al máximo el riesgo de contaminación          se trate de piensos para rumiantes y que no contengan
+   de los alimentos y el agua a consumir los animales.      sustancias o productos no autorizados.
+
+     Almacenar correctamente los piensos medicados            Archivar las etiquetas de los alimentos comprados
+   y los no medicados de tal forma que se evite el uso      durante tres años.
+   indebido de estos piensos por los animales.
+                                                              Podrán llevarse a cabo análisis de los alimentos
+     Almacenar adecuadamente las semillas evitando          comprados, en el caso de que sea necesario, y archi-
+   para ello su acceso por parte de los animales.           varlos durante el tiempo de utilización de los mismos.
+
+     Limpieza frecuente de los comederos y bebederos          Los alimentos que se producen dentro de la pro-
+   de forma que permanezcan en buenas condiciones           pia explotación contarán con una calidad adecuada
+   de higiene.
+                                                                                      Alimentación del Vacuno de Leche 05 | Pág. 25
+     Proceder a la limpieza periódica tanto de los ve-
+   hículos de transporte como del equipo de alimen-
+   tación, especialmente después de su uso para pien-
+   sos medicados.
+
+     Mantener una separación adecuada entre los
+   productos químicos de limpieza y esterilización y
+   el almacén de piensos y alimentos de los animales.
+
+     Evitar la contaminación cruzada biológica del
+   estiércol permitiendo períodos de descanso durante
+   el pastoreo del ganado y respetando los periodos
+   de suspensión durante la aplicación de sustancias
+   químicas en campo.
+y no contendrán agentes externos contaminantes.             incremento de peso que debe desembocar en el
+                                                            momento del secado con una condición corporal
+ Si es necesario se analizarán los alimentos obte-          de aproximadamente 3,5.
+nidos en la propia explotación, archivándose los
+resultados de los mismos durante el tiempo que           Secado:
+se utilice este alimento.
+
+ Se manejan los alimentos con maquinaria y uten-         Es un período necesario para que las vacas descansen
+silios adecuados.                                        y se recuperen para afrontar con garantías la siguiente
+                                                         etapa de lactación. Durante estos dos meses los tejidos
+ Cuando el agua no provenga
+de la red pública, se realizarán                                                 secretores se recuperarán para la
+análisis al menos una vez al                                                     siguiente lactación.
+año, conservando los mismos
+al menos dos años.                                                                 Supresión total de los concen-
+                                                                                 trados.
+
+El manejo en la alimentación del                                                        Aportar una ración de forrajes
+animal deberá ser distinto en cada                                                     de volumen con bajo valor nu-
+una de las fases del período pro-                                                      tritivo.
+ductivo de la vaca: Preparto - Pico
+de Lactación; Pico de Lactación                                                         Vigilar el aporte de calcio para
+- Inicio de recuperación de reser-                                                     evitar posibles hipocalcemia o
+vas; Recuperación de reservas; y                                                       fiebre vitularia.
+Secado.
+                                                                                       En la ración de las vacas de leche
+Pre-parto - Pico de lactación:                                                         de alta producción se deberán tener
+                                                                                       en cuenta aspectos tales como:
+
+En esta fase las necesidades del                                                        Contenido mínimo en fibra pa-
+animal van a ser máximas y su                                                          ra favorecer los procesos ruminales.
+
+capacidad de ingestión será limi-                                                      Son necesarios alimentos de vo-
+
+tada. Abarca desde unos 15-21días                                                      lumen con altas densidades nu-
+
+antes del parto hasta el pico alcan-           Fuente: Asociación de Frisona Andaluza  tritivas y baja capacidad de llenado.
+
+zado en lactación, que se suele                                                En explotaciones donde se lleve
+alcanzar dentro de los dos pri-                          a cabo estabulación libre el forraje se suministrará
+meros meses después del parto.                           de forma restringida en los comederos. Estará for-
+
+Iniciar el aporte de concentrados.                       mada por henos, silos, pajas y diversos subproductos
+
+ Iniciar el aporte de la base forrajera propia de        fibrosos como son pulpas de remolacha o cítricos,
+las vacas en producción.                                 semilla de algodón, cascarilla, etc.
+
+ Conseguir que la vaca tenga unas pérdidas de             Los alimentos concentrados equilibrarán la base
+peso menores a 65 Kg y que se consiga un pico de         forrajera, permitiendo cubrir las necesidades de man-
+lactación máximo.                                        tenimiento y unas mínimas de producción de leche.
+
+                                                         Además de la base forrajera y los concentrados
+
+Pico de Lactación - Inicio de recuperación de reservas:  las necesidades de producción se cubrirán con
+
+ Aportar la cantidad suficiente de alimento para         piensos de producción a razón de 1 Kg de concen-
+satisfacer sus necesidades nutricionales.                trado, por cada 2 o 2,5 litros de leche producida,
+                                                         dependiendo de la calidad del pienso. Estos piensos
+
+ Utilizar la harina de soja como concentrado rico        están elaborados a base de cereales, subproductos,
+en proteínas.                                            tortas de oleaginosas, y de correctores minero-
+                                                         vitamínicos.
+ Aporte de un pienso de producción que garantice
+un equilibrio adecuado entre energía y proteínas.         Incorporar subproductos como la pulpa de remo-
+                                                         lacha deshidratada, semilla entera de algodón o
+
+Recuperación de reservas:                                bagazo de cervecería a la dieta del animal, debido
+     Aporte de alimento que provoque un notable          a sus altas concentraciones nutritivas y su aporte
+                                                         de fibra digestible.
+
+Pág. 26 | 05 Alimentación del Vacuno de Leche
+Para evitar un consumo elevado de concentrados,              Alimentación de los Sementales
+debe tenerse en cuenta:                                           Aporte de una base forrajera formada básica-
+
+     Que el aporte de concentrados se haga de forma             mente por henos, pajas, silos y subproductos (semilla
+   separada, se espaciará su ingestión a lo largo del           algodón, cascarillas, etc).
+   día y se les suministrará en poca cantidad.
+                                                                  Complementar el aporte de forraje con alimentos
+     Que se evite en la medida de lo posible la ingestión       concentrados.
+   en elevadas cantidades en cortos períodos de tiempo.
+                                                                  Durante la reproducción poseen unas necesida-
+     Que en la medida de lo posible se aporten con              des energéticas superiores, cubiertas con un aporte
+   los forrajes, o al menos precedidos de una ración            extra de alimentos.
+   de forraje. La cantidad de materia seca que debe
+   proceder de los alimentos de volumen depende de                  Fuente: "Guía de Prácticas Correctas de Higiene para el Vacuno
+   la producción siendo así:                                        de Leche". Ministerio de Agricultura, Pesca y Alimentación.
+                                                                    Fuente: "Sistemas Ganaderos en el siglo XXI"
+       > En vacas de 6.000 a 7.000 litros lactación (20-            Universidad de Sevilla.
+       25 l./día), el 50-60% de la materia seca total.
+                                                                                    Fuente: GDR Litoral de la Janda - Innogan
+       > En vacas de más de 8.000 litros lactación (más
+       de 30 l./diarios) el 35-40% materia seca total.
+
+Alimentación de las Novillas
+
+     Las raciones suministradas deberán ser de gran
+   calidad, existiendo una gran concentración de
+   nutrientes.
+
+     Aporte de forraje completado con una cantidad
+   de pienso de complemento en función de la calidad
+   del forraje:
+
+       > En caso de forrajes de buena calidad (0,7 UFL)
+       suministrar entre 0,5 y 1 Kg de concentrado al día.
+
+       > En el caso de forrajes de baja calidad suministrar
+       aproximadamente 4 Kg al día de concentrado.
+
+Producción Ecológica                                            piensos de arranque o iniciación que se le suminis-
+                                                                traran a la cría procedieran de cultivo ecológico.
+     Los piensos y forrajes empleados para la ali-
+   mentación deben ser ecológicos, preferentemen-                 El alimento básico estará constituido de forra-
+   te de la misma finca inscrita y cuando no sea                jes comunes, frescos (hierba), secos (heno, pasto
+   posible de otras también inscritas como ecológicas.          o paja) o ensilados en un 60% como mínimo.
+
+     Está expresamente prohibida la alimentación                  Se autoriza la alimentación con piensos en
+   forzada.                                                     reconversión, pero sólo en un porcentaje máximo
+                                                                del 30%, que puede alcanzar el 60% si proceden
+     El alimento básico de los terneros será la leche           de la misma granja inscrita.
+   natural, o a lo sumo de una nodriza, debiéndose
+   alimentar de esta forma durante un período                En algunos casos se permite la inclusión de cierta
+   mínimo que será de 3 meses.                               cantidad de alimentos convencionales.
+
+     Está prohibido el destete precoz ni aunque los
+
+                                                             Alimentación del Vacuno de Leche 05 | Pág. 27
+El ordeño en el
+Vacuno de Leche
+
+                                                         Fuente: Asociación de Frisona Andaluza
+
+El objetivo fundamental de una explotación de ganado          Además de ser locales de fácil limpieza y desin-
+vacuno lechero, es obtener una leche de calidad, por        fección, los que se destinan al ordeño o al almacén
+ello el ordeño es la etapa clave en el proceso de pro-      de la leche, deberán disponer de:
+ducción. Para conseguir este fin, las condiciones hi-
+giénico sanitarias y las pautas seguidas durante el             > Sistemas de abastecimiento de agua potable
+ordeño, son fundamentales.                                      apropiados y suficientes.
+
+Deben adoptarse las medidas apropiadas para realizar            > Suelos y paredes que permitan una limpieza
+un ordeño que respete la salud de las vacas y su                fácil.
+bienestar, así como las buenas condiciones de trabajo
+para el ordeñador. Para evitar el deterioro de la leche         > Suelos que permitan drenar fácilmente líquidos
+se tomarán las medidas oportunas.                               y garanticen la eliminación de desechos.
+
+Requisitos mínimos                                              > Accesorios y equipos de fácil limpieza y desin-
+                                                                fección.
+Higiene de la explotación
+                                                                > Sistemas que garanticen una correcta venti-
+ Mantener las instalaciones en buenas condiciones               lación e iluminación.
+de limpieza, higiene, alojamiento y salubridad para
+los animales.                                                   > Una distancia adecuada de cualquier fuente
+                                                                de contaminación, como pueden ser estercoleros
+Pág. 28 | 06 El ordeño en el Vacuno de Leche                    o servicios.
+
+                                                         Los locales que se destinen al almacenamiento de la
+                                                         leche, dispondrán de un equipo que permita su ade-
+                                                         cuado enfriamiento, estarán protegidos de animales
+                                                         dañinos y permanecerán separados de los locales que
+                                                         acojan a las vacas.
+     En el caso de que se utilice un sistema de ordeño         Si la recogida de la leche se efectúa diariamente,
+   móvil, éste deberá:                                       deberá enfriarse a una temperatura igual o inferior
+                                                             a 8ºC, y de 6ºC cuando la recogida no sea diaria.
+       > Situarse sobre un suelo limpio de excrementos
+       u otros desechos.                                       Los utensilios empleados, los recipientes que ha-
+                                                             yan estado en contacto con la leche y las instala-
+       > Estar construido y acabado de forma que per-        ciones de ordeño mecánico deberán limpiarse y
+       mita mantener limpias las superficies interiores.     desinfectarse una vez finalizado el ordeño.
+
+       > Garantizar la protección de la leche durante          Los materiales e instrumentos empleados en el
+       todo el tiempo que sea utilizado.                     ordeño, deben estar fabricados con un material
+                                                             liso, fácil de lavar y desinfectar y resistente a la
+       > Contar con un abastecimiento de agua potable        corrosión.
+       apropiado y suficiente.
+                                                               Las personas encargadas de realizar el ordeño y
+     Todos aquellos animales que padezcan, o se sos-         la manipulación de la leche cruda deben usar ropa
+   peche que padecen una enfermedad, deberán ser             limpia y apropiada, lavarse las manos antes del
+   aislados correctamente.                                   ordeño y mantenerlas limpias durante dicha tarea.
+                                                             Para ello contarán con las instalaciones apropiadas
+Higiene del ordeño                                           cerca del lugar de ordeño.
+
+     Realización de un ordeño higiénico, garantizando                Fuente: Legislación Vigente.
+   especialmente:
+                                                          Prácticas recomendadas
+       > Que los pezones se encuentren limpios antes
+       de iniciar la operación.                           El ordeño es la etapa clave en el proceso de producción
+                                                          en una explotación lechera. Las condiciones higiénico
+       > Un control de la leche procedente de cada        sanitarias y pautas de ordeño deben garantizar la pro-
+       una de las vacas, que permita detectar posibles    ducción de una leche de calidad y una imagen de ex-
+       anomalías organolépticas o fisicoquímicas, bien    plotación adecuada. Se deben tomar las medidas apro-
+       por medio del ordeñador o por otro método          piadas para ordeñar respetando la salud de las vacas
+       que obtenga resultados similares.                  y su bienestar, así como garantizar buenas condiciones
+                                                          de trabajo para el ordeñador.
+       > Que no se destine al consumo humano leche
+       que presente anomalías, o procedente de ani-       Algunas de las pautas a seguir durante el ordeño son
+       males que presenten síntomas evidentes de en-      las siguientes:
+       fermedades en la ubre.
+                                                               Se realiza cada paso de la rutina de ordeño con
+       > La identificación de vacas que hayan sido tra-      cuidado y sin traumas para la vaca.
+       tadas, y puedan transmitir residuos de medica-
+       mentos a la leche, y que la leche obtenida no           Se utiliza un sistema adecuado y seguro para
+       sea destinada a consumo humano, sin que finalice      separar la leche no apta para el consumo humano
+       el plazo de seguridad.                                (leche de animales enfermos o en tratamiento).
+
+     Una vez realizado el ordeño colocar la leche de                                     El ordeño en el Vacuno de Leche 06 | Pág. 29
+   forma inmediata en un lugar limpio.
+
+     La leche no deberá superar los 10ºC de tempera-
+   tura durante su transporte a los lugares de trata-
+   miento y/o de transformación.
+Pre-ordeño:                                                  deberá realizarse, primero enjuagando con agua
+                                                             fría, a continuación lavar con agua caliente y
+     Mantener limpios a los animales, sobre todo las         detergente, y por último escurrir todas las partes
+   ubres.                                                    del equipo. Además, deberán eliminarse con
+                                                             frecuencia los depósitos de cal con un producto
+     Palpación y observación de las ubres que                ácido adecuado.
+   permitan detectar posibles signos de mamitis.
+                                                                                 Fuente: Asociación de Frisona Andaluza
+     Lavar los pezones con agua tibia, y secarlos con
+   toallas individuales. También podrán limpiarse con          Limpieza y desinfección de los recipientes que
+   toallas que estén impregnadas con una solución            están en contacto con la leche, después de cada
+   desinfectante.                                            ordeño.
+
+     Realizar un control de las vacas que permita              Tomar muestras de leche para su análisis, al
+   detectar enfermedades que puedan transmitirse             menos dos veces al mes.
+   al hombre.
+                                                               Mantener un registro actualizado con los
+     Vigilar el estado de salud general de las vacas y       resultados de las analíticas, y archivarlos durante
+   que no presenten heridas en las ubres.                    tres años.
+                                                          Mantenimiento y control
+Ordeño:
+                                                               Renovar todas aquellas piezas que hayan sufrido
+     Colocar con cuidado las pezoneras y practicar           deterioros (pezoneras, tubos elásticos, etc) según
+   un ordeño rápido y completo, evitando realizar
+   "sobre ordeños".
+
+     Se eliminarán los primeros chorros de leche
+   extraídos.
+
+     Realizar un control exhaustivo de la leche, de
+   forma que se evite la presencia de fibras y coágulos.
+
+     Rociar los pezones con un desinfectante
+   autorizado una vez acabado el ordeño.
+
+     Retirar las pezoneras correctamente, una vez
+   cortado el vacío.
+
+     Impedir que las vacas se tumben después del
+   ordeño.
+
+     En vacas de alta especialización lechera, el
+   número óptimo de ordeños son dos (mañana y
+   tarde).
+
+     El intervalo óptimo entre dos ordeños será de
+   doce horas.
+
+Post-ordeño:
+
+     La limpieza del equipo de ordeño y refrigeración
+
+Pág. 30 | 06 El ordeño en el Vacuno de Leche
+   las indicaciones del fabricante. Deberán conservarse   pudiéndose contratar los servicios de personal
+   las facturas o albaranes de las mismas, hasta al       especializado, que disponga de la tecnología
+   menos su reposición.                                   adecuada para detectar los posibles defectos que
+                                                          puedan originarse en la maquinaria de ordeño.
+     Utilizar productos de limpieza y desinfección
+   autorizados. Deben estar correctamente                  Es fundamental la higiene en el ordeño, para
+   etiquetados.                                           ello:
+
+     El uso de los productos químicos se hará siguiendo      > Lavar la ubre con solución desinfectante.
+   sus instrucciones de uso, impidiendo que de alguna        > Recoger los primeros chorros de leche, no
+   forma puedan llegar a mezclarse con la leche o            mezclarlos con el resto de la leche, ni arrojarlos
+   puedan contaminarla.                                      al suelo del establo.
+                                                             > Introducir las pezoneras en un cubo con
+     Mantener en condiciones de uso e higiénico-             solución desinfectante, antes de colocárselas a
+   sanitarias adecuadas, los equipos de ordeño y de          otra vaca, ó al menos realizar dicha operación
+   refrigeración de la leche, según normativa del            cuando pase de una vaca sana a otra enferma.
+   fabricante.                                               > Debe evitarse el ordeño en seco.
+
+     Verificar diariamente el buen funcionamiento                                         Fuente: Citagro
+   del equipo de ordeño.
+                                                                                    El ordeño en el Vacuno de Leche 06 | Pág. 31
+     Comprobar diariamente el buen funcionamiento
+   del tanque, en particular el tiempo que tarda en
+   alcanzar la temperatura de refrigeración y el
+   mantenimiento del mismo.
+
+     Se deberá llevar a cabo una revisión con carácter
+   anual de la maquinaria de ordeño, por parte de
+   un técnico autorizado. Además, deberán conservarse
+   las fichas de revisión firmadas por el técnico, hasta
+   su actualización, así como los justificantes de las
+   posibles reposiciones que hayan podido realizarse.
+
+     Archivar las fichas técnicas y de seguridad de los
+   productos utilizados.
+
+Control de la Mamitis
+
+La Prueba de California es el método más eficaz para
+el diagnóstico rápido de la mamitis, y el más utilizado
+en los países de la Unión Europea.
+
+A continuación se muestran algunas normas para el
+control de la mamitis:
+
+     Semanalmente, se realizará la "Prueba de
+   California" a todas las vacas, tratándose la
+   enfermedad en el momento de su detección.
+
+     Realizar una revisión periódica de la ordeñadora,
+En la Prueba de California (CMT) se utiliza un reactivo    CALIDAD DE LECHE. MÍNIMA CALIDAD EXIGIDA
+que penetra en las células presentes en la leche (en       SEGÚN NORMATIVA VIGENTE:
+mayor o menor concentración según el mayor o menor
+grado de lesión existente originado por cualquier infla-   - CSS (células somáticas) < 400.000 CC. Relacionadas
+mación o infección), haciéndolas estallar y exponién-      con las mamitis.
+dolas a un colorante. Cuanto mayor sea el daño se
+producirá una mayor inflamación e infección, y por         - Bacterias < 100.000 CC. Relacionadas con la higiene
+lo tanto, se apreciará una mayor reacción en las células   del sistema de ordeño y el funcionamiento del tanque
+a través de un cambio en la consistencia (de fluída a      de frío.
+viscosa). La prueba se llevará a cabo mezclando el
+reactivo con la leche en una paleta de plástico blanco     - Ausencia de inhibidores relacionados con los trata-
+con 4 compartimientos, donde se depositan de 2 a 3         mientos a animales, a los que por circunstancias no
+ml de leche y la misma cantidad de reactivo, mezclán-      se les retira la leche y pasa al tanque.
+dolos suavemente, y debiendo hacer la lectura en
+unos 10 segundos, pudiéndose dar estas circunstacias:      Mamitis o Mastitis
+
+1. Detectamos una reacción o lectura negativa              La mamitis es una inflamación de la mama producida
+cuando al mezclar el reactivo                                                    por distintas causas, que afectan
+con la leche no hay cambios                                                      en mayor o menor medida el
+en la textura ni naturaleza                                                      aspecto de la le-che, a la
+de la leche.                                                                     producción y al futuro del animal
+                                                                                 en la explotación.
+
+2. Cuando existe una leve                                            Tipos:
+viscosidad que desaparece
+antes de los 10 seg, disminuye                                       1.- CLÍNICAS
+aproximadamente el 5% de
+la producción de esa glándula.                                       Las que se ven producidas o causa-
+                                                                     das por E. Coli, Pseudomonas, S.
+3. Positiva 1: cuando reac-                   Fuente: Citagro        Aureus (Mamitis Gangrenosa), Mi-
+ciona transformándose en                                             coplasmas, E. Agalactiae,... Existen
+viscosa, casi como aceite,                                           distintos grados de mamitis clínicas.
+disminuye un 10 % la produc-
+ción de esa glándula.                                                Grado 1:
+4. Positiva 2: cuando reac-
+ciona y cambia a una textura                                         Etiología: E.Coli, Pseudomonas.
+muy viscosa como gel, dismi-
+nuye un 15% la producción                                            Poco contagiosas: Germen del
+de leche.                                                            tracto digestivo, camas
+                                                                     contaminadas. Equipos de ordeño
+5. Positiva 3: cuando el gel                                         mal lavados, e insta-laciones
+se pega a la paleta disminuyendo el 20% de la
+producción.                                                húmedas.
+
+Al detectar el pH de la leche se podrá escoger el tipo     Aparece en animales en pico de producción preferente-
+de antibiótico para el tratamiento.                        mente muy productores.
+                                                           Sintomatología: Aparicion brusca, gran inflamación
+Si no se consigue parar el proceso patológico de inflama-  de la amma que estará muy caliente, decaimiento y
+ción e infección podría originarse una mastitis clínica.   deshidratación, fiebre (>39,5 ºC). Leche normal en
+
+Pág. 32 | 06 El ordeño en el Vacuno de Leche
+principio, cambiado en pocas horas a "agüilla", sin       Medidas específicas según el germen implicado, y según
+grumos o escasos. Leche normal pasando rápidamente       el tipo de mamitis en consecuencia.
+a negruzca en caso de Pseudomonas.
+                                                          Aislamiento de animales con síntomas de enfer-
+Grados 2 y 3                                             medad en caso de Mamitis clínica.
+
+Producida por S. Aureus (Grado 2),                                              Eliminación de aquellos animales
+y además por Micoplasma, E Aga-                                               considerados irreversibles (nódulos
+lactiae,etc. en el grado 3. Es la                                             en ubres, atrofias de pechos...).
+Mamitis Gangrenosa. Las causas
+y las consecuencias son las mismas                                             Tratamientos veterinarios en las
+que en la forma subclínica, salvo                                             mamitis clínicas y subclínicas.
+que aquí se manifiestan y nos en-
+contramos con los síntomas.                                                   Todas estas patologías se pueden
+                                                                              prevenir mediante el control de los
+2.- SUBCLíNICAS                                                               factores predisponentes que condu-
+                                                                              cen a ellas: Sistema Inmune de la
+Contagiosas, responsables de los                                              vaca, Higiene, Manejo, Ordeño y
+altos recuentos celulares en tan-                                             Control de los microorganismos.
+que. A mayor RCS, mayor porcentaje
+de ubres infectadas, mayor pérdida                                            Los tratamientos para combatir las
+de producción. Suponen hasta el                                               mamitis y los gérmenes que las pro-
+80% de las pérdidas por mamitis                                               ducen son muy específicos y cuentan
+no clínica. El estado del animal                                              con un protocolo de actuación.
+es normal, y no existe alteración                                             Estos tratamientos aquí reseñados
+en la naturaleza de la leche. En                                              son muy generales y sólo tienen el
+ocasiones hay pérdida unilateral                                              objetivo de informar levemente.
+de tejido mamario.
+                                                                              Microorganismos productores de
+                                                                              mamitis:
+
+Los principales gérmenes           Fuente: Citagro        Gérmenes oportunistas que pueblan
+implicados son los Estafilococos.                        las ubres, manos del ordeñador, camas,
+                                                         instalaciones de ordeño.
+
+Viven y se multiplican en el entorno del animal (ubres,  El principal punto de contacto es la sala de ordeño.
+piel, mucosas...).
+
+Transmisión de ubres infectadas a sanas en el ordeño.     Un germen contagioso puede infectar hasta 14 va-
+Predominio a la cronicidad (suele pasar a la forma       cas ordeñadas en ese mismo punto. La lesión del esfín-
+clínica aguda gangrenosa).                               ter del pezón facilita la entrada en la ubre (sobreordeño,
+
+Diagnóstico: Análisis de tanque y de muestras CMT        entrada de aire, desajuste de vacío o pulsación, etc).
+(Test Mamitis California) y eliminación bacteriana
+intermitente.                                             El baño de pezones con solución yodada elimina los
+                                                         gérmenes circundantes al esfínter.
+
+Tratamiento de las Mamitis: Colectivo.                   Fuente: "Guía de Prácticas Correctas de Higiene para el Vacuno
+                                                         de Leche". Ministerio de Agricultura, Pesca y Alimentación.
+ Medidas encaminadas a mejorar causas predispo-
+nentes. Lucha y Control general.                         Fuente: "Cuaderno de la Explotación del Vacuno de Leche".
+                                                         Caja Duero
+
+                                                         El ordeño en el Vacuno de Leche 06 | Pág. 33
+Reproducción y
+mejora genética del
+Vacuno de Leche
+
+                                                                   Requisitos mínimos
+
+El estro o celo precede a la ovulación. Suele tener una            Si los ganaderos han inscrito a su ganadería en alguna
+duración media de 18 horas y se manifiesta con un                  de las Asociaciones de Criadores de las diferentes razas
+comportamiento atípico del animal (permite la monta,               que existen en Andalucía, tendrán las siguientes res-
+montan a otras vacas, intranquilidad, acercamiento                 ponsabilidades:
+al macho, etc). El macho alcanza la pubertad a los 10
+meses aproximadamente, mientras que las hembras                         Deberán colaborar con los programas de valora-
+la alcanzan normalmente a los 11 ó 12 meses, aunque                   ción genética de reproductores que establezcan
+ésta dependerá notablemente del estado de nutrición                   las organizaciones de criadores oficialmente reco-
+del animal y de la raza, pudiendo aparecer hasta a los                nocidas o sus federaciones.
+22 meses en animales muy desnutridos. Las vacas
+lecheras normalmente son cubiertas a la edad de 15                      Realizar el control de todas las reproductoras de
+meses, ya que cubriciones más tempranas disminuyen                    su explotación inscritas en el libro genealógico y
+la vida útil del animal y más tardías disminuyen el                   que se encuentren en producción.
+numero medio de crías por vaca.
+                                                                        Someter a los animales a controles inscritos en
+Para favorecer la sostenibilidad de la explotación, a                 el libro genealógico de la raza y debidamente iden-
+pesar de tener en cuenta los parámetros reproductivos                 tificados según se disponga en la normativa vigente.
+de las vacas, el manejo de los animales debe ir encami-
+nado a favorecer los ciclos naturales de reproducción.                  Permitir el acceso a la explotación de los servicios
+                                                                      oficiales de su comunidad autónoma acreditados
+Algunos de los parámetros reproductivos del vacuno                    para realizar la inspección del controlador autori-
+de leche mas significativos son los que se muestran                   zado o del personal del centro autonómico de con-
+a continuación:                                                       trol lechero, debidamente acreditado, en cualquier
+                                                                      momento y sin previo aviso.
+ La duración de la gestación es de 9 meses.
+                                                                        Las incidencias de altas, bajas, cubriciones, servi-
+ El intervalo entre partos debe acercarse a 12-13 meses.              cios de inseminación artificial, partos, cambios en
+                                                                      los horarios de ordeño, transferencias de embriones,
+ La duración de la lactación es de 10-11 meses.                       secados y/o cualquier otro dato, deberán ser comu-
+
+Pág. 34 | 07 Reproducción y mejora genética en el Vacuno de Leche
+   nicados al controlador autorizado, a iniciativa pro-     Detección de celos
+   pia o previa petición del centro autonómico de
+   control lechero. Deberán registrarse dichos datos             El más eficaz es el de la utilización de un macho
+   en un soporte documental o informático.                     recelo, aunque su manejo es complicado.
+
+     Debe estarse al corriente de pago de las cuotas             Otro método puede ser la observación directa del
+   exigidas en el control lechero oficial, si las hubiera,     rebaño durante al menos tres veces diarias durante
+   en el porcentaje mínimo que establezca el esquema           veinte minutos para identificar a aquellas hembras
+   de selección para cada raza.                                que monten o dejen montar.
+
+     Las reproductoras deberán inseminarse con se-               La comprobación del celo debe realizarse en el
+   mentales jóvenes en prueba.                                 momento de la inseminación mediante observación
+                                                               directa del vestíbulo vaginal, debiendo estar éste
+          Fuente: Legislación Vigente.                         enrojecido por la existencia de una mucosidad
+                                                               estral fluida y clara.
+Prácticas recomendadas
+                                                            Cubrición de las vacas
+Inducción y Sincronización de celos:
+                                                            La primera cubrición de las vacas suele realizarse a los
+     Sobrealimentación previa a la cubrición o "flu-        14 o 15 meses meses de edad cuando tienen un peso
+   shing": Consiste en un incremento de la dieta su-        de 2/3 el peso adulto (aproximadamente 400 Kg).
+   ministrada a los animales unas semanas antes de
+   la cubrición (2 semanas) y después de ella (2 se-        Para la cubrición de las vacas existen dos métodos:
+   manas). Con esta técnica es posible aumentar las
+   tasas de fecundidad debido a un incremento del                Monta natural: Supone un mayor coste, y un me-
+   número de ovulaciones. Además disminuye la mor-             nor control de enfermedades que el método que se
+   talidad embrionaria y produce un aumento en la              menciona a continuación.
+   prolificidad.
+                                                                 Inseminación artificial: Es una técnica amplia-
+     Métodos hormonales: Empleo de progesterona,               mente utilizada en explotaciones muy tecnificadas.
+   sobre todo de análogos, los progestágenos (MAP,             Consiste en depositar en el aparato genital de una
+   FGA, Norgestomet), administrándose a través de              hembra el semen recolectado de un macho, con
+   esponjas vaginales. También se utilizan las prosta-         la ayuda del instrumental apropiado. El momento
+   glandinas o sus análogos, cuya administración               óptimo de realización en vacas es a las 12-24 horas
+   tiene lugar mediante dos inyecciones separadas              después del inicio del estro, lo que en la práctica
+   en un intervalo de 11 días.                                 se traduce en que si se observa el celo por la mañana
+                                                               se insemina por la tarde, y las que muestran el celo
+                                                               por la tarde son inseminadas a la mañana siguiente.
+
+                                                            Se utiliza la inseminación recto-vaginal o de fijación
+                                                            cervical: se inserta la mano enguantada y lubricada
+                                                            con gelatina en el recto de la vaca; se localiza y agarra
+                                                            el cérvix. La pistola de inseminación se introduce por
+
+                                                                Reproducción y mejora genética en el Vacuno de Leche 07 | Pág. 35
+la vagina hasta contactar con el cérvix, con ayuda de              A continuación se describen las principales técnicas
+la mano del recto se guía hasta la abertura del cérvix             de diagnóstico de gestación:
+y después con movimientos oscilantes se lleva la punta
+del catéter a través del conducto cervical; el semen                    Inspección clínica de la hembra. Se trata de ob-
+se inyecta lentamente al final del cérvix.                            servar en la hembra unos signos típicos de la ges-
+La inseminación artificial presenta ventajas de tipo                  tación: no aparición de celos, predisposición al en-
+sanitario, genéticas, económicas, de manejo y control.                grasamiento, ampliación del abdomen en su tercio
+Al ser una técnica que se apoya en la sincronización                  inferior derecho, cambios en la mama, etc.
+de celos, presenta unas ventajas adicionales, relacionadas
+fundamentalmente con la posibilidad de formar lotes                     Palpación o exploración rectal. Consiste en una
+de animales en igual estado productivo. Esta formación                exploración del aparato genital femenino:
+de lotes posibilita entre otros el racionamiento en la
+alimentación y mejor distribución de mano de obra.                        > A los 45 días se realiza una búsqueda directa
+Los principales inconvenientes que presenta son la                        del feto.
+necesidad de mano de obra entrenada para realizarla,
+así como la posible trasmisión de enfermedades no                         > Palpación de las arterias uterinas, se compri-
+detectadas mediante el semen.                                             men con la palma de la mano contra el íleon,
+                                                                          la ligera compresión revela una sensación vibrá-
+Diagnóstico de la gestación                                               til, es más seguro hacia el cuarto mes.
+Una vez cubierta la vaca, se deben emplear métodos
+que permitan detectar la gestación lo más rápido po-                      > Búsqueda de modificaciones ováricas, exáme-
+sible, y evitar retrasos en la reproducción, eliminando                   nes sucesivos cada 21 días hasta el segundo
+en la medida de lo posible los períodos de incertidumbre.                 mes, con el fin de detectar el cuerpo lúteo sobre
+                                                                          la superficie ovárica.
+                                      Fuente: Citagro
+Pág. 36 | 07 Reproducción y mejora genética en el Vacuno de Leche       Diagnóstico por ecografía: la sonda del ecógrafo
+                                                                      se introduce en el recto.
+
+                                                                        Búsqueda de secreciones luteales: consiste en la
+                                                                      detectar la presencia de hormonas producidas en
+                                                                      el cuerpo lúteo de la hembra.
+
+                                                                        Diagnóstico basado en la búsqueda de secrecio-
+                                                                      nes embrionarias. A diferencia con la técnica ante-
+                                                                      rior, ésta constituye una prueba indudable de
+                                                                      preñez. Se busca:
+
+                                                                          > PSPB (proteína B), que en la vaca se puede
+                                                                          detectar a partir del día 30 de gestación.
+
+                                                                          > Sulfato de estrona: se detecta en leche o
+                                                                          plasma en la vaca a partir del día 115 de gestación.
+
+                                                                        En la actualidad la técnica más rápida y que per-
+                                                                      mite obtener detecciones más precoces es el uso
+                                                                      de la ecografía. Es necesario un buen entrenamiento
+                                                                      previo para poder interpretar las imágenes obte-
+                                                                      nidas, y su mayor desventaja es el alto coste de
+                                                                      los aparatos.
+
+                                                                        Fuente: "Sistemas Ganaderos en el siglo XXI". Universidad de Sevilla
+Fuente: Asociación de Frisona Andaluza
+
+Producción Ecológica                                     meses para terneros y que cumplan las normas
+                                                         tras el destete.
+ La reproducción deberá basarse en métodos na-
+turales, aunque se autoriza la inseminación artificial.  > Animales convencionales para renovación o
+Todas las otras formas de reproducción artificial o      reconstitución del rebaño, en caso de elevada
+asistida están prohibidas.                               mortalidad de animales causada por enfermedad
+                                                         o catástrofe.
+ Se han de seleccionar las razas o estirpes teniendo
+en cuenta su adaptación al entorno, su vitalidad y       > Animales convencionales para reposición (hem-
+su resistencia a la enfermedades.                        bras nulíparas hasta una cantidad máxima anual
+                                                         del 10% del ganado adulto y machos conven-
+ Los animales que constituyen la ganadería deben         cionales destinados a la reproducción, aunque
+proceder de explotaciones ecológicas y haber cum-        deberán cumplir las normas tras su entrada en
+plido las normas desde su nacimiento, aunque se          la explotación).
+permiten ciertas excepciones si no se dispone de
+animales ecológicos, con la autorización previa de
+la autoridad de control:
+
+   > Los animales que ya estaban presentes en la
+   unidad cuando comenzó su reconversión.
+
+   > Los animales convencionales que se introduzcan
+   para constituir por primera vez el rebaño o ga-
+   nadería con un tiempo máximo de vida de 6
+
+                                                         Reproducción y mejora genética en el Vacuno de Leche 07 | Pág. 37
+                                        Sanidad. Normas
+                                        de bioseguridad y
+                                        condiciones higiénicas
+
+                                        La sanidad animal es el punto básico en cualquier cla-
+                                        se de explotación animal para la obtención de rendi-
+                                        mientos satisfactorios. Un desarrollo del rebaño bovino
+                                        en condiciones precarias de sanidad y alimentación,
+                                        puede provocar descensos importantes en la produc-
+                                        ción de leche. La diferencia de salud entre fincas se
+                                        debe en gran proporción al resultado de buenas prác-
+                                        ticas de nutrición y manejo de los animales y en me-
+                                        nor grado a problemas de enfermedades infecciosas.
+                                        Una correcta nutrición del rebaño se ve reflejada en
+                                        una menor incidencia y gravedad de estas infecciones.
+
+                                        Requisitos mínimos
+
+                                            Los animales deberán mantenerse en buen estado
+                                           sanitario.
+
+                                             Las instalaciones deben revisarse periódicamente
+                                           con el fin de evitar la aparición de enfermedades.
+
+                                             Se debe colaborar con la administración en los
+                                           controles efectuados por la misma.
+
+                                             Deberá contarse con los medios necesarios para
+                                           aplicar con garantías de seguridad, las medidas sa-
+                                           nitarias obligatorias establecidas para luchar, contro-
+                                           lar o erradicar las enfermedades de los animales.
+
+Fuente: Asociación de Frisona Andaluza
+ El titular de la Dirección General de la Producción   de manejo que permitan realizar pruebas de diag-
+Agraria, podrá disponer que se realicen, con carácter  nóstico de enfermedades.
+obligatorio, pruebas para el diagnóstico de otras
+enfermedades, en la proporción, especies animales       Se prohíbe el traslado de animales desde o hacia
+y ámbito territorial que se determinen, cuando se      explotaciones que no cumplan con los requisitos
+dé alguna de las siguientes circunstancias:            obligatorios en materia de vacunaciones y diag-
+                                                       nóstico de enfermedades.
+   > Exista riesgo sanitario o se
+   puedan derivar restricciones                                         No se deberán abandonar animales
+   comerciales por la existencia                                      que se estén bajo su responsabilidad,
+   de la enfermedad.                                                  o sus cadáveres.
+
+   > Aparezca la misma en terri-                                        Control de todos los medios rela-
+   torios epidemiológicamente                                         cionados con la sanidad de los ani-
+   conectados.                                                        males, como son entre otros los ali-
+                                                                      mentos y los productos zoosanitarios.
+   > Una ADSG esté efectuando,
+   sobre todos los ganaderos in-                                        Cuando en una explotación sea ne-
+   tegrados en la misma, un pro-                                      cesario reponer animales se deberá
+   grama de control y erradicación                                    hacer con vacas de una calificación
+   de una enfermedad concreta                                         sanitaria igual o superior.
+   en uno o más términos munici-
+   pales limítrofes.                                                    Llevar a cabo el diagnóstico de en-
+                                                                      fermedades previsto en los Programas
+ Se deberá notificar la presencia                                     Nacionales de Erradicación de Enfer-
+de animales enfermos y de los                                         medades para Brucelosis y Tubercu-
+abortos producidos en la explota-                                     losis Bovina.
+ción, en un plazo no superior a
+tres días naturales.
+
+Una vez notificada de forma
+
+oficial la presencia de la enferme-                                              Brucelosis Bovina
+
+dad, los animales que se conside-                                                El agente causal ha sido tradicional-
+
+ren afectados y reaccionantes po-                                                mente Brucella abortus, aunque cada
+
+sitivos, se sacrificarán en un plazo                                             vez con mas frecuencia se aísla Bru-
+
+máximo de un mes.                     Fuente: GDR Litoral de la Janda - Innogan  cella mellitensis en casos clínicos
+                                                                                 de Brucelosis Bovina. La principal
+ El sacrificio tendrá lugar en la
+explotación o en matadero sani-                                                  fuente de infección son las hembras
+tario, teniendo en cuenta que de-
+ben ser instalaciones autorizadas                                                preñadas, que al parir o abortar, expul-
+de transformación o eliminación,
+acompañados del documento de                                                     sarán grandes cantidades de Brucellas
+transporte.
+                                                                                 con el feto, el líquido amniótico, las
+
+                                                                                 membranas fetales y los exudados
+
+                                                                                 vaginales. La vía de penetración más
+
+                                                       importante es el tracto gastrointestinal por ingestión
+
+ La OCA correspondiente de cada zona, será la          de leche, pastos, forrajes y aguas contaminadas.
+encargada de autorizar el traslado de un rebaño        Además, las vacas poseen la costumbre de lamer mem-
+completo a una explotación vacía, una vez que          branas fetales, fetos y terneros recién nacidos, que
+verifique en la misma, la presencia de instalaciones   contienen todos ellos gran número de Brucella y
+
+                                                       Sanidad. Normas de bioseguridad y condiciones higiénicas 08 | Pág. 39
+constituyen una fuente de infección muy importante.                       los mismos, quedando prohibida la utilización de
+Las vacas infectadas, después de abortar o parir, eliminan                tratamientos y la profilaxis vacunal salvo determi-
+Brucella con la leche durante semanas, meses o años.                      nadas excepciones que se contemplan en este pro-
+                                                                          grama. Siempre que exista un grave riesgo para la
+Las principales medidas del programa de erradicación                      salud, repercusiones para la salud pública u otra
+son las siguientes:                                                       razón de índole sanitaria, a criterio de las autorida-
+                                                                          des competentes, se podrá ampliar el sacrificio,
+     Pruebas de detección de animales positivos (a                        procediendo a realizar el vaciado sanitario de la
+   partir de los 12 meses) y posterior sacrificio de los                  explotación.
+   mismos, quedando prohibida la utilización de tra-
+   tamientos y la profilaxis vacunal salvo determinadas                     Otras medidas implementadas, han consistido en
+   excepciones que se contemplan en este programa.                        instaurar medidas profilácticas sobre las explota-
+   Siempre que exista un grave riesgo para la salud,                      ciones donde se han detectado bovinos reaccio-
+   repercusiones para la salud pública u otra razón                       nantes positivos, implicando tanto a las instalacio-
+   de índole sanitaria, a criterio de las autoridades                     nes como a los pastos y un control exhaustivo de
+   competentes, se podrá ampliar el sacrificio, proce-                    los movimientos y reposición de estas explotaciones,
+   diendo a realizar el vaciado sanitario de la explotación.              así como la intensificación de las pruebas diagnós-
+                                                                          ticas para elevar con la mayor brevedad posible
+     Otras medidas implementadas, han consistido en                       su calificación sanitaria.
+   instaurar medidas profilácticas sobre las explota-
+   ciones donde se han detectado bovinos reaccionan-                        Todas estas medidas deben ser necesariamente
+   tes positivos, implicando tanto a las instalaciones                    complementadas, para que sean efectivas, por prác-
+   como a los pastos y un control exhaustivo de los                       ticas adecuadas de manejo aplicables a la prevención
+   movimientos y reposición de estas explotaciones,                       y el control de otras enfermedades infecto-contagiosas.
+   así como la intensificación de las pruebas diagnós-
+   ticas para elevar con la mayor brevedad posible                     Lengua azul
+   su calificación sanitaria.                                          Está producida por un virus que pertenece a la familia
+                                                                       Reoviridae, género orbivirus, transmitido por insectos.
+Tuberculosis Bovina                                                    Se caracteriza por la aparición de congestión, edema
+Es una enfermedad infectocontagiosa que afecta al                      y hemorragias en el animal afectado. Los signos clínicos
+ganado produciendo un cuadro crónico, que genera                       pueden no aparecer hasta 60-80 días después de la
+pérdidas económicas por muerte o sacrificio de los                     infección, siendo los síntomas más comunes fiebre,
+animales, y menor productividad y valoración de la                     leucopenia, miositis y salivación. Actualmente es obli-
+leche. El principal agente etiológico de la tuberculosis               gatoria la vacunación frente a Lengua Azul de los
+es Mycobacterium bovis, y cada vez más frecuentemen-                   animales de las especies ovina y bovina mayores de
+te Mycobacterium caprae, que afecta tanto a las ca-                    tres meses incluidos dentro de las zonas restringidas:
+bras como a los bovinos. Las vías de infección más                     Serotipo 1 del virus en zona restringida S-1, y Serotipos
+importantes en el bovino son la aérea y la vía digestiva.              1 y 4 en zona restringida S-1-4 (Ver anexos Orden
+Con menor importancia se describen las vías congénita,                 MAPA Lengua Azul vigente).
+genital y cutánea.
+                                                                       El cumplimiento de los programas de saneamiento
+Las principales medidas del programa de erradicación                   es obligatorio para poder percibir las ayudas econó-
+son las siguientes:                                                    micas de la PAC (Prima Ovino-Caprino).
+
+     Pruebas de detección de animales positivos (a                           Fuente: Legislación Vigente.
+   partir de las 6 semanas) y posterior sacrificio de
+
+Pág. 40 | 08 Sanidad. Normas de bioseguridad y condiciones higiénicas
+                                                        hasta obtener resultados de los controles que se
+                                                        les realice.
+
+Prácticas                                                Realizar una limpieza y desinfección adecuadas
+recomendadas                                            del establo y de los equipos tras la aparición de
+                                                        una enfermedad.
+
+                                                         Se almacenarán los productos de limpieza y des-
+                                                        infección en un lugar seguro.
+
+                                                        Si fuese necesario, se aislarán animales enfermos
+
+El buen estado sanitario del rebaño es la base de la    o sospechosos en una zona habilitada, el tiempo
+prevención de enfermedades en general y en particular   necesario hasta comprobar su estado sanitario.
+
+ayuda a preservar la salud de los animales y del ser     Los productos empleados en la limpieza y desin-
+humano y además satisface al ganadero. Para ello se     fección serán los autorizados y se seguirán las ins-
+tomarán las medidas adecuadas para evitar la difusión   trucciones de la etiqueta.
+de enfermedades contagiosas al personal de la explo-
+
+tación y a los consumidores. De esta forma se evitará    Establecer un plan de diagnóstico y control de
+la difusión de enfermedades contagiosas entre animales  mamitis. Uno de los métodos más eficaces para el
+de la granja, cuyas consecuencias pueden acarrear
+desastrosos resultados económicos                                       diagnóstico rápido de la mamitis, es
+y zootécnicos para la explotación.                                      la realización quincenal de la Prueba
+                                                                        de California. Consiste en colocar
+
+Hay que tener, por tanto, una visión                            un reactivo en contacto con la leche,
+
+integral de la sanidad en nuestra ex-                           y valorar dos aspectos:
+
+plotación, con medidas adecuadas de                             > Viscosidad: En caso de leves ma-
+
+manejo que nos eviten la aparición                              mitis se producirá una simple pre-
+
+de enfermedades concretas. Algunas                              cipitación, mientras que en casos de
+
+de estas pautas son:                                            mamitis graves se formará un gel
+
+Vigilar regularmente el estado                                  viscoso (semejante a una clara de
+
+de salud de las vacas y su aspecto                              huevo).
+
+general. Sobre todo, si se aprecian                             > El color que toma el gel: En el ca-
+
+toses o mucosidad nasal, diarreas                               so de una leche en buenas condicio-
+
+o heces muy blandas acompaña-                                   nes tomará una coloración gris perla-
+
+das de fiebre, hembras con flujo                                violeta. En cambio en una leche que
+
+del aparato genital o hembras que                               proceda de un animal enfermo, toma
+
+presenten inflamaciones de ubres.                               un color rojo violeta intenso según
+
+Limitar la entrada de ganado                                    la gravedad del proceso mamítico.
+
+procedente de otras explotaciones                               Asistencia veterinaria al menos
+
+y en el caso de que se produzca,                                una vez al año, que valore el estado
+
+llevar a cabo la verificación de su                             sanitario del ganado.
+
+documento de identificación y la       Fuente: Citagro          Establecer una pauta de vacuna-
+
+correspondencia con el crotal, de                                       ciones y desparasitaciones en el re-
+su documentación sanitaria de                           baño, adaptada a la situación sanitaria de la gana-
+
+traslado, notificar el hecho a la autoridad compe-      dería.
+tente y mantener aislados los animales en una
+
+zona apropiada al menos durante una semana o
+
+                                                        Sanidad. Normas de bioseguridad y condiciones higiénicas 08 | Pág. 41
+Algunas de las enfermedades más frecuentes en las                      nodepresión y favorece que se agrave los procesos
+explotaciones, son las siguientes:                                     respiratorios) y pudiendo provocar diarreas. También
+                                                                       provoca problemas de aborto y nacimiento de terneros
+Enterotoxemias                                                         débiles y malformaciones congénitas. Las hembras
+En el ganado bovino el agente causante de este gran                    también pueden tener infecciones que provoquen el
+grupo de enfermedades es el Clostridium perfringens,                   nacimiento de los terneros API (Animales Persistente-
+que en función de la toxina que elabore será de uno                    mente Infectados) porque reconocen al virus como
+de los siguientes tipos: Cl. Perfringens A, Cl. Perfringens            propio y no responden inmunitariamente a él.
+B, Cl. Perfringens C, Cl. P. D y Cl. P. E. Dependiendo
+del tipo de Clostridio que afecte al animal, generará                  Virus Parainfluenza 3
+uno u otro cuadro patológico o cuadros muy distintos                   Este tipo de virus suele ocasionar rinitis y faringitis
+entre si (enfermedad del riñón pulposo, disentería,                    más a menudo que cuadros como laringotraqueítis,
+enteritis hemorrágica y gangrena gaseosa, enteritis                    bronquitis y neumonía.
+necrotica del ternero, etc.).
+                                                                       Coronavirus, rotavirus y E. Coli
+Edema Maligno                                                          Provocan cuadros patológicos a nivel de digestivo.
+Producida por Clostridium septicum. El microorganismo                  Entrada oral y después se dirigirán al intestino delgado.
+penetra en la piel del animal a través de heridas y                    El Rotavirus queda en yeyuno e íleon y el coronavirus,
+prolifera, dando lugar a inflamaciones intermusculares                 además, colon y recto. A nivel intestinal destruyen las
+que se hunden al presionarlas y que, al abrirlas, supuran              células apicales de las microvellosidades intestinales,
+un material gelatinoso-sanguinolento. Aparece sinto-                   destruyendo toda la zona. En condiciones normales,
+matología típica de las infecciones como fiebre alta,                  se renuevan por células de la cripta. Estas células di-
+inapetencia, etc.                                                      gerirán los nutrientes. Por la destrucción producida
+                                                                       por Rotavirus y Coronavirus no hay un ritmo o volumen
+IBR                                                                    suficiente para renovar esas células. El animal no po-
+Infección causada por un herpesvirus (BHV - 1). Es un                  drá digerir los nutrientes de la leche y hay un incre-
+herpesvirus que, aparte de provocar un cuadro respira-                 mento de disacáridos en la luz, lo que provoca un in-
+torio, también da cuadros genitales (exantema coital),                 cremento de presión osmótica, absorbiendo y retenien-
+cuadros abortivos, cuadros conjuntivales, cuadros de                   do agua que atraviesa las paredes intestinales, dando
+tipo nervioso por meningoencefalitis, cuadro febril                    lugar a diarrea en consecuencia e hipovolemia y aci-
+generalizado en animales jóvenes, etc. Sobre todo se                   dosis, pudiendo provocar shock hipovolémico y muerte.
+localiza en las vías respiratorias altas, y causa un pro-              La diferencia entre los dos virus está en la intensidad
+ceso agudo.                                                            y la localización.
+
+DVB-MD. Diarrea Vírica Bovina                                          Pasteurella
+Es causada por un pestivirus, afectando a las mucosas                  Provoca cuadros infecciosos a nivel respiratorio llegan-
+respiratoria e intestinal, dando lugar a un cuadro res-                do a causar neumonías. Una vez asentada y debilitado
+piratorio (por sí mismo y porque contribuye a la inmu-                 el sistema inmune, pueden ingresar otras bacterias
+                                                                       oportunistas (Moraxella, etc.).
+Pág. 42 | 08 Sanidad. Normas de bioseguridad y condiciones higiénicas
+                        Fuente: Asociación de Frisona Andaluza         Producción Ecológica
+
+SRB: Síndrome Respiratorio Bovino                                        En ganadería ecológica es fundamental la preven-
+Conjunto de síntomas o cuadro respiratorio provocado                   ción de las enfermedades mediante las prácticas
+por varios agentes causales (virus, bacterias y micoplas-              adecuadas. Para ello se procurará:
+mas) que actuan simultáneamente afectando la mucosa
+del tracto digestivo.                                                      > Emplear las razas o estirpes más rústicas o
+                                                                           adaptadas a las condiciones locales.
+Clamidiasis y Salmonelosis
+En caso de estar presentes en la explotación provocarán                    > Alimentación adecuada procedente de cultivo
+cuadros abortivos. La inmunización tiene como objeto                       ecológico.
+la prevención y control de las clamidiosis y los abortos
+producidos por Chalamydia psittact (bedsoniosis, aborto                    > Ejercicio y acceso regular a pastos.
+enzoótico) y por Salmonella abortus (aborto paratífico).
+Primovacunación: dos dosis separadas 20 a 25 días.                         > Mantener una densidad adecuada de animales,
+Vacunación de recuerdo: una sola dosis cada 12 meses.                      evitando la sobrecarga en los pastos o el hacina-
+                                                                           miento en los corrales y alojamientos.
+      Fuente: "Guía de Prácticas Correctas de Higiene para el Vacuno
+      de Leche". Ministerio de Agricultura, Pesca y Alimentación.        Se podrán emplear productos homeopáticos, oli-
+                                                                       goelementos y productos fitoterapéuticos, como
+                                                                       extractos y esencias de plantas.
+
+                                                                         En el caso de que un animal cayera enfermo, y si
+                                                                       la utilización de los productos del punto anterior
+                                                                       no resultara eficaz, podrán utilizarse medicamentos
+                                                                       veterinarios alopáticos, de síntesis química o antibió-
+                                                                       ticos, pero sólo como tratamiento curativo. Se hará
+                                                                       bajo la responsabilidad de un veterinario, se identi-
+                                                                       ficará individualmente al animal o animales tratados,
+                                                                       y se comunicará tal circunstancia a la autoridad
+                                                                       de control. El tiempo de espera será el doble del
+                                                                       establecido con carácter general. Si un animal re-
+                                                                       cibe más de dos tratamientos en un año habrá de
+                                                                       volver a pasar un periodo de reconversión.
+
+                                                                         La utilización de estos medicamentos veterinarios
+                                                                       alopáticos, de síntesis química o antibióticos, está
+                                                                       prohibida en cambio como tratamiento preventivo.
+
+                                                                         Está prohibida también la utilización de sustancias
+                                                                       artificiales destinadas a estimular el crecimiento o
+                                                                       la producción, u hormonas o sustancias similares
+                                                                       para el control de la reproducción, tanto administra-
+                                                                       das como medicamento como añadidas en el pienso.
+
+                                                                         Se permiten en cambio las vacunas y otros trata-
+                                                                       mientos veterinarios que fueran obligatorios en
+                                                                       virtud de la legislación nacional o comunitaria.
+
+                                                                      Sanidad. Normas de bioseguridad y condiciones higiénicas 08 | Pág. 43
+Fuente: Asociación de Frisona Andaluza
+
+                Protección y                El bienestar animal es un concepto al que hasta hace
+                bienestar animal            relativamente pocos años no se le daba toda la impor-
+                                            tancia que se merecía. Sin embargo en los últimos
+Pág. 44 | 09 Protección y bienestar animal  años se ha dado un giro importante en la política ani-
+                                            mal a nivel europeo como consecuencia de varios mo-
+                                            tivos de diferente índole: sociales, científicos y econó-
+                                            micos.
+
+                                            A nivel social se ha incrementado la sensibilización
+                                            social con los animales, por la que se rechazan las
+                                            muestras de abuso y maltrato a los animales sin motivo
+                                            alguno. Por otro lado, a nivel científico se ha dedicado
+                                            un esfuerzo importante al estudio del comportamiento
+                                            animal, así como al manejo de los animales y al estrés
+                                            ocasionado como consecuencia de un mal manejo
+                                            con grandes repercusiones económicas.
+
+                                            El bienestar animal es un término difícil de definir de-
+                                            bido a varios motivos, entre otros debido a la imposibi-
+                                            lidad de cuantificarlo, pero la mayoría de las definicio-
+                                            nes coinciden no sólo en garantizar que los animales
+                                            no padezcan dolores, sufrimientos ni daños inútiles,
+                                            sino también en procurar que el animal tenga las ne-
+                                            cesidades básicas cubiertas en lo referente a alimen-
+                                            tación, agua, cuidados, etc.
+
+                                            Los animales de producción se ven sometidos a cuatro
+                                            situaciones que pueden afectar claramente su bienestar:
+                                            mantenimiento, manejo, transporte y sacrificio y en
+                                            este sentido la legislación ha ido encaminada a cubrir
+                                            estos aspectos.
+Requisitos mínimos
+
+La normativa europea con referencia al bienestar ani-       El bienestar animal también ha sufrido un impulso
+mal comenzó a desarrollarse a partir del último cuarto      importante en los últimos años a raíz del programa
+del siglo pasado, concretamente en el año 1976 a            de acción propuesto por la Unión Europea en la Agenda
+través del Convenio europeo de
+10 de marzo y en el que se reco-                                                    2000, al vincular el cumplimiento
+gen las normas mínimas sobre                                                        de una serie de medidas al cobro
+protección de animales en explo-                                                    de ayudas económicas. De esta
+taciones ganaderas.                                                                 forma, se verán beneficiadas
+                                                                                    aquellas explotaciones agrarias
+El protocolo del Tratado de Ams-                                                    que cumplan con los requisitos
+terdam (1997) constituye la base                                                    mínimos establecidos en la nor-
+de la normativa europea en ma-                                                      mativa medioambiental, de hi-
+teria de bienestar animal y en                                                      giene y bienestar animal, al no ver-
+dicho protocolo se reconocen                                                        se reducidas o anuladas las ayudas
+aspectos fundamentales como                                                         que pueden percibir de la PAC.
+son la sensibilidad de los anima-
+les y la necesidad de tener en                                                      En este sentido se enumeran a
+cuenta el bienestar animal en la                                                    continuación las medidas que se
+formulación de política agrícola,                                                   deben adoptar en las explotacio-
+de transporte, investigación y                                                      nes ganaderas para recibir las
+mercado interior.                                                                   ayudas directas de la PAC:
+
+La última medida adoptada por       Fuente: Citagro
+la Unión Europea ha sido la cons-
+titución de un plan de acción
+comunitario sobre protección y
+bienestar de los animales para
+el periodo 2006-2010, que pre-
+tende conseguir la protección y
+el bienestar animal no sólo en
+su territorio sino en el resto del
+mundo. Para ello se ha propuesto
+mejorar la legislación vigente,
+a la vez que se introducen con-
+ceptos nuevos como son los indi-
+cadores de bienestar y se hace
+especial hincapié en la formación
+del personal.
+
+La normativa de bienestar animal en animales de
+producción se puede dividir en tres fases del proceso
+productivo: la explotación, el transporte y el sacrificio.
+
+                                                            Protección y bienestar animal 09 | Pág. 45
+  ¿Qué se
+debe hacer?
+
+En relación al personal los animales deben ser cuida- proporcionar el espacio adecuado para sus necesidades
+
+dos por un número suficiente de personal que tenga     fisiológicas y etológicas, en base a la experiencia y
+
+la capacidad, los conocimientos y la competencia pro-  conocimientos científicos.
+
+fesional adecuados.                                    En cuanto a los materiales de construcción de los
+
+Inspecciones diarias, como mínimo, de los animales     edificios y establos que se deben utilizar, éstos serán
+
+en criaderos, cuyo bienestar dependa de una frecuente  aptos para entrar en contacto con los animales y por
+
+atención humana. Si los animales son criados o mante- tanto no les serán perjudiciales, además de poder lim-
+
+nidos en otros sistemas deberán ser inspeccionados     piarse y desinfectarse a fondo.
+
+en intervalos tales que impidan su                                  La construcción y mantenimiento de
+sufrimiento.                                                       los establos y accesorios con los que los
+
+Para realizar estas inspecciones de                                animales son atados, será tal que no pre-
+
+forma completa y en cualquier mo-                                  sente bordes afilados ni ocasione heridas
+
+mento es necesario disponer de ilumi-                              a los animales.
+
+nación apropiada, ya sea fija o móvil.                             Las condiciones ambientales (circula-
+
+Se debe aportar un tratamiento                                     ción de aire, nivel de polvo, temperatura,
+
+apropiado inmediato a todo animal                                  humedad relativa, concentración de ga-
+
+que parezca enfermo o herido, y se                                 ses) deben mantenerse de forma que
+
+consultará a un veterinario en caso                                los niveles que alcancen no perjudiquen
+
+de que el animal no responda a estos        Fuente: Asociación de  a los animales.
+cuidados. Los animales heridos o enfer-       Frisona Andaluza
+mos deberán ser aislados en lugares                                 Respecto a los equipos automáticos
+apropiados, en caso necesario.                                     o mecánicos, aquellos que sean indis-
+                                                                   pensables para la salud y el bienestar
+
+Respecto a la documentación, se                                    de los animales se inspeccionarán míni-
+
+exige al propietario o criador de los                              mo una vez al día. En caso de que exis-
+
+animales llevar un registro del trata-                             tan deficiencias, éstas se deben subsanar
+
+miento médico al que los animales                                  inmediatamente, y si no fuera posible,
+
+han sido sometidos, además del núme-                               se deben tomar las medidas adecuadas
+
+ro de animales muertos que aparece                                 para proteger la salud y el bienestar de
+
+en cada inspección.                                                los animales.
+
+Dichos registros se deben mantener                                 En caso de que la salud y el bienestar
+
+durante un mínimo de tres años y en         Fuente: Asociación de  de los animales dependan de un sistema
+caso de que la autoridad competente           Frisona Andaluza     de ventilación artificial, se debe disponer
+
+los solicite deben ponerse a su                                    de sistema de emergencia apropiado
+
+disposición.                                                       (apertura de ventanas u otros), que ase-
+
+ En caso de que el animal se encuentre atado, encade-  gure la renovación de aire suficiente para proteger la
+nado o retenido continua o regularmente, se le debe    salud y el bienestar de los animales en caso de que el
+
+Pág. 46 | 09 Protección y bienestar animal
+sistema falle, además se dispondrá de un sistema de                     Fuente: Citagro
+alarma en caso de avería, que debe revisarse regular-
+mente.                                                    Fuente: Asociación de Frisona Andaluza
+                                                                           Protección y bienestar animal 09 | Pág. 47
+ En cuanto a la alimentación animal, ésta debe ser
+sana, adecuada a su edad y especie y en cantidad su-
+ficiente para mantener un buen estado de salud y sa-
+tisfacer sus necesidades de nutrición. A su vez, las ne-
+cesidades fisiológicas deben ser consideradas respecto
+a las experiencias adquiridas.
+
+ Los animales tendrán acceso a los alimentos a inter-
+valos adecuados atendiendo a sus necesidades fisioló-
+gicas, y en función de los conocimientos productivos
+y científicos adquiridos.
+
+ Los animales tendrán acceso a una cantidad sufi-
+ciente de agua de adecuada calidad o podrán satisfacer
+su ingesta de líquidos por otros medios.
+
+ La construcción y ubicación de los equipos de sumi-
+nistro de alimentos y agua, será tal que se minimice
+la contaminación de los alimentos y del agua.
+
+ Se deben mantener los animales en buenas condi-
+ciones higiénico-sanitarias, realizando los tratamientos
+obligatorios oportunos y aportando la asistencia vete-
+rinaria que el animal necesite.
+
+ Proporcionar el alojamiento adecuado.
+
+ Facilitar la alimentación necesaria para su normal
+desarrollo.
+
+ Cuidar al animal y protegerlo de las posibles agresio-
+nes, situaciones de peligro, incomodidades y molestias
+que otras personas o animales les puedan ocasionar.
+¿Qué no se
+debe hacer?
+
+Limitar la libertad de movimientos, de forma que se indebidas para su cuidado y atención.
+
+cause sufrimiento o daño innecesariamente.               Mutilar los animales con fines estéticos o sin utilidad
+
+Mantener a los animales alojados en edificios en la excepto si son prácticas veterinarias necesarias.
+
+oscuridad de forma permanente. Exponer a los animales                                   Sacrificar los animales sin reunir
+a la luz artificial sin interrupción                                                   las garantías necesarias establecidas
+adecuada. Si la luz natural dispo-                                                     por la legislación.
+nible es insuficiente para satisfa-
+
+cer las necesidades fisiológicas y                                                      Atar o encadenar a los animales
+etológicas de los animales, se fa-                                                     de forma permanente.
+cilitará iluminación artificial ade-
+cuada.                                                                                  Donar animales con fines publici-
+                                                                                       tarios o como premio, recompensa
+ Suministrar a los animales otra                                                       o regalo por adquisiciones de natura-
+sustancia distinta del alimento,                                                       leza distintas a la de los animales.
+excepto que tengan fines tera-
+péuticos o profilácticos o para                                                         Vender los animales a personas me-
+tratamiento zootécnico, a no ser                                                       nores de dieciséis años y a incapacita-
+que los estudios científicos o la                                                      dos sin la debida autorización por parte
+experiencia adquirida demuestren                                                       de la persona que tenga la patria po-
+que la sustancia no resulta perju-                                                     testad, custodia o tutela de los mismos.
+
+dicial para la salud o el bienestar                                                     La venta ambulante de los anima-
+del animal.                                                                            les fuera de los mercados o ferias
+
+Utilizar procedimientos de cría                                                        autorizadas.
+
+que ocasionen o puedan ocasio-                                                         Administrar sustancias a los ani-
+nar sufrimientos o heridas a cual-
+                                            Fuente: GDR Litoral de la Janda - Innogan  males que puedan causarles sufri-
+quiera de los animales. Aunque                                                         miento o daños innecesarios u otras
+
+no se excluye que puedan emplearse                                                     sustancias no autorizadas, aunque
+determinados procedimientos que puedan causar
+sufrimiento o heridas de poca importancia o momen- sean para aumentar el rendimiento en competición.
+
+táneos, o que puedan requerir intervención sin proba-     Dejar a los animales en lugares donde no sea posible
+bilidad de causar un daño duradero siempre que estén     su control y vigilancia.
+permitidos por las disposiciones nacionales.
+                                                          Administrar, inocular o aplicar fármacos sin contar
+ Maltratar o agredir físicamente a los animales o so-    con la prescripción o supervisión del veterinario. Sumi-
+meterlos a cualquier otra práctica que les cause sufri-  nistrar o aplicar los medicamentos de forma errónea
+mientos o daños injustificados.                          o no tener en cuenta los efectos colaterales o inde-
+
+Abandonar a los animales.                                seados que supongan un sufrimiento injustificable
+                                                         para los animales.
+
+ Mantener a los animales en instalaciones inade-         Fuente: Legislación Vigente.
+cuadas respecto a aspectos higiénico-sanitarios o
+
+Pág. 48 | 09 Protección y bienestar animal
+Prácticas recomendadas                                    y los cubos se sustituirán por tetinas, así como el
+                                                          suministro ad libitum de la leche.
+Las recomendaciones se van a establecer en base a
+tres apartados que son: Alimentación, Salud animal          Evitar cualquier tipo de estrés originado por
+y Calidad del cuidado humano. En todos estos apartados    ruidos molestos.
+ya se han recomendado prácticas más específicas, pero
+en éste en concreto se pretenden resaltar aquellas que      Fuente: "Guía de Practicas Correctas de Higiene del Vacuno de
+están relacionadas con el bienestar animal.                 Leche". Ministerio de Agricultura, Pesca y Alimentación
+
+Alimentación                                              Producción Ecológica
+
+     Aportación de una dieta equilibrada.                  Todos los animales deberán tener acceso a zo-
+                                                          nas al aire libre o a zonas abiertas de ejercicio
+     Utilización de un sistema de distribución del ali-   cubiertas de vegetación, a menos que las condi-
+   mento adecuado, que garantice la ingestión de la       ciones atmosféricas o fisiológicas del animal no
+   cantidad necesaria de alimento, que satisfaga sus      lo permitan.
+   necesidades.
+                                                           Los alojamientos deberán proporcionar al ani-
+Salud                                                     mal adecuada libertad de movimientos con espa-
+                                                          cio suficiente para garantizar su bienestar y co-
+     Utilizar un protocolo veterinario que incluya la     modidad, fácil acceso a la alimentación y al agua,
+   aplicación de un sedante, de anestesia local y de      y niveles de circulación de aire, temperatura,
+   antiinflamatorios, en el caso de realizar descornados  iluminación, humedad relativa, polvo y gas no
+   en animales pequeños.                                  perjudiciales.
+
+     Adecuación del tipo de suelo para evitar daños        El alojamiento no es obligatorio si las condiciones
+   en las pezuñas de los animales.                        climáticas posibilitan la vida del animal al aire libre.
+
+     Mantener en estado higiénico las camas de las         Los mamíferos deberán disponer de una zona
+   vacas.                                                 cómoda, lisa, limpia y seca para que el animal
+                                                          pueda descansar, debiendo contener una cama
+Calidad del cuidado humano                                de paja u otro material natural adecuado. Al me-
+                                                          nos la mitad de la superficie deberá ser terreno
+     En épocas de fuerte calor: proporcionar buenas       firme, sin listones ni rejilla.
+   sombras, refrigerar con agua a los animales (prefe-
+   rible utilizar agua pulverizada a nebulizada) y mo-     Se prohíbe el alojamiento en habitáculos indi-
+   dificar el manejo de la alimentación (aumentar la      viduales.
+   concentración energética de la ración y aportar la
+   comida a las horas más frescas).                        Los alojamientos, recintos, equipo y utensilios
+                                                          deberán limpiarse y desinfectarse conveniente-
+     En casos en los que haya que inyectar, buscar        mente. Para ello sólo se podrán emplear los si-
+   siempre zonas que no interfieran con la movilidad      guientes productos: jabón de potasa y sosa, agua
+   de los animales.                                       y vapor, lechada de cal, cal, cal viva, hipoclorito
+                                                          sódico (lejía líquida), sosa cáustica, potasa cáus-
+     Para evitar problemas de falta de expresión en       tica, peróxido de hidrógeno (agua oxigenada),
+   el comportamiento natural de los animales, menores     esencias naturales de plantas, ácidos cítrico, pa-
+   ganancias de peso y mayor propensión a las enfer-      racético, fórmico, láctico, oxálico y acético, al-
+   medades (estos dos últimos muy relacionados al         cohol, ácidos nítrico y fosfórico (sólo en equipos
+   tipo de leche utilizada y al manejo), a la hora de     de lechería), formaldehido y carbonato de sodio.
+   realizar la separación de los terneros de las madres
+   justo después del nacimiento, se mantendrá al ter-                                  Protección y bienestar animal 09 | Pág. 49
+   nero entre cuatro días a dos semanas con las madres
+Instalaciones.
+Condiciones ambientales,
+diseños, usos, etc.
+
+Las instalaciones deben estar diseñadas de manera que                     Fuente: Citagro
+conformen una unidad funcional y que faciliten en
+gran medida las labores a realizar en las explotaciones,
+lo que favorecerá tanto la comodidad de los animales
+como la de los operarios, debiéndose además lograr
+todo ello a un coste razonable. La tendencia actual
+en nuestra comunidad, es la explotación en sistemas
+de estabulación libre donde los animales permanecen
+confinados en un recinto cerrado pero con total movi-
+lidad dentro del mismo y a través de las distintas de-
+pendencias existentes.
+
+Requisitos mínimos                                                        Prácticas recomendadas
+
+  Las salas de ordeño y la lechería deben estar separa-                   Las necesidades de espacio y de diseño van a venir
+das del resto de zonas de la explotación, sobre todo                      determinadas fundamentalmente por los requerimien-
+de lugares de reposo y estercoleros. Los materiales em-                   tos productivos del rebaño. El número y tipo de los
+pleados en su construcción han de ser de fácil limpieza                   animales explotados, la producción de leche, el manejo
+y desinfección.                                                           de la alimentación y los residuos generados son los
+                                                                          factores que determinan el diseño de una explotación
+  En la lechería y la sala de ordeño debe contarse con                    funcional. En segundo lugar se tendrán en cuenta las
+un abastecimiento de agua suficiente, que permita la                      operaciones de manejo necesarias, la mano de obra
+desinfección de los equipos e instalaciones, así como                     requerida para llevarlas a cabo y el equipamiento ne-
+la del personal encargado de realizar el ordeño.                          cesario que vendrá condicionado por las dos anteriores.
+
+  Las explotaciones contarán con zonas donde alber-                       Atendiendo a las tareas anteriormente descritas para
+gar los animales enfermos.                                                un funcionamiento adecuado de la explotación, se
+                                                                          considerarán las siguientes áreas: área de alojamientos,
+  La ventilación debe ser la adecuada, de forma que                       área de alimentación y área de ordeño.
+se evite la concentración de gases perjudiciales, exce-
+siva humedad y permita el control de la temperatura
+de la instalación.
+
+      Fuente: Legislación Vigente.
+
+Pág. 50 | 10 Instalaciones. Condiciones ambientales, diseños, usos, etc.
+Fuente: Citagro                                          Fuente: GDR Litoral de la Janda - Innogan
+
+Área de alojamientos                                          La superficie techada necesaria será como mí-
+                                                            nimo de 5-6 m2 por animal.
+La función principal es la de albergar a todos los ani-
+males, de forma que favorezca su bienestar, minimice          La orientación adecuada para los techados es
+la influencia que pueda tener el clima y facilite las       la este-oeste.
+actividades que se lleven a cabo en el mismo. Dentro
+de esta área existirán distintos corrales que permitan        Los comederos y bebederos deben estar lo más
+la separación de los animales en distintos lotes pro-       cerca posible, aunque nunca dentro del corral de
+ductivos: alojamiento de toros, novillas, y pequeños.       descanso, siendo recomendables que sean techados.
+
+Dentro del área de alojamientos se distinguen distin-    Zonas de ejercicio:
+tas zonas:
+                                                              Las zonas de ejercicio son descubiertas, deam-
+Zonas de reposo:                                            bulando el animal libremente.
+
+      Deben ser un lugar tranquilo que permitan               De fácil acceso y limpieza, y favorecer el acceso
+   descansar al animal.                                     a otras dependencias.
+
+     Zona generalmente cubierta.                              Zonas de tierra compactada y con buen drenaje
+                                                            que evite encharcamientos.
+     Debe estar limpia, seca y confortable.
+                                                              Pendientes que permitan la evacuación de resi-
+     Deberán ser de fácil limpieza y acceso.                duos líquidos y sólidos.
+
+     Contarán con cubículos individuales donde el        Otras zonas son: lugares para albergar animales pe-
+   animal pueda estar echado de forma independiente.     queños y machos (si los hay), así como zonas de ais-
+                                                         lamiento para animales enfermos (lazareto), para
+     Se recomienda una altura mínima del techo de        hembras que estén de parto o procedente de otras
+   3 metros, y el tipo de material ideal una chapa       explotaciones (cuarentena). Además también existi-
+   de metal pintada en blanco. En zonas de baja          rán mangas de manejo o mangadas.
+   precipitación éste puede ser sustituido por una
+   malla de sombreo.                                       Instalaciones. Condiciones ambientales, diseños, usos, etc. 10 | Pág. 51
+Área y equipos de alimentación                                            Área de Ordeño
+
+La constituyen los comederos y bebederos, que estarán                          Contará con un corral de espera donde los ani-
+integrados en el área de alojamientos, así como los                          males van a esperar hasta que son ordeñados.
+almacenes, que estarán situados aparte de forma
+que faciliten las labores de alimentación.                                     Existen diferentes salas de ordeño, las más co-
+                                                                             munes son las de espina de pescado, en las que
+Comederos                                                                    los animales se sitúan a modo de espinas de pes-
+                                                                             cado con respecto al foso de ordeño. Son las más
+     Orientación adecuada. En zonas de veranos ca-                           comunes, aunque existen otras como las de para-
+   lurosos la mejor orientación es la este-oeste, apro-                      lelo, tipo tándem y rotativas o carrusel.
+   vechándose mejor la sombra durante las horas
+   de mayor radiación.                                                         Limpieza y desinfección diarias con un deter-
+                                                                             gente alcalino de los elementos que entren en
+     Protegidos del sol, la lluvia y los vientos dominantes.                 contacto con la leche.
+
+     Fácil acceso para la distribución de alimento y                           Revisión anual del sistema generador de vacío,
+   limpieza de los mismos.                                                   controles del manómetro y regulación de pulsadores.
+
+     Espacio suficiente (60-70 cm por vaca), que                               Realizar la sustitución de los filtros o limpieza
+   evite al máximo la competencia entre ellos.                               en su caso.
+
+Bebederos                                                                      Cambio de las pezoneras cada seis meses y anu-
+                                                                             almente para todas aquellas juntas de goma que
+     Además de los mencionados anteriormente                                 se puedan deteriorar.
+   para los comederos, contarán con:
+                                                                               La lechería debe estar aislada del resto de espa-
+     Una situación próxima a los comederos, sin es-                          cios para evitar la contaminación de la leche.
+   tar situados en líneas con ellos.
+                                                                               El tanque de leche debe estar dimensionado en
+     En lugares bien drenados para evitar encharca-                          función de los litros de leche que se produzcan
+   mientos.                                                                  diariamente y de la frecuencia de recogida (diaria
+                                                                             o cada dos días).
+     Disponer de un caudal suficiente para que va-
+   rios animales puedan beber a la vez.
+
+     Existencia de depósitos de reserva para afrontar
+   posibles faltas de abastecimiento de agua.
+
+Almacén de alimento
+
+     Situados de forma que se faciliten las tareas de
+   alimentación.
+
+     Para los alimentos concentrados se emplearán
+   construcciones techadas y cerradas con solera de
+   hormigón para evitar la humedad.
+
+     Para alimentos de volumen se emplearán super-
+   ficies techadas con cerramientos o sin ellos, o sim-
+   ples apilamientos de las pacas.
+
+Pág. 52 | 10 Instalaciones. Condiciones ambientales, diseños, usos, etc.
+                                                                                   Producción Ecológica
+
+                                                                                    Las superficies mínimas de alojamiento, tanto
+                                                                                   cubiertas como al aire libre (corrales o parque)
+                                                                                   para el ganado bovino son las siguientes:
+
+                                                                                    Vaca     Superficie    Superficie
+                                                                                   lechera    aire libre    cubierta
+                                                                                            (m2/ cabeza)  (m2/ cabeza)
+
+                                                                                                 4,5            6
+
+                                                                                    Los alojamientos deberán proporcionar al ani-
+                                                                                   mal adecuada libertad de movimientos con es-
+                                                                                   pacio suficiente para garantizar su bienestar y
+                                                                                   comodidad, fácil acceso a la alimentación y al
+                                                                                   agua, y niveles de circulación de aire, tempera-
+                                                                                   tura, iluminación, humedad relativa, polvo y gas
+                                                                                   no perjudiciales.
+
+                            Fuente: GDR Litoral de la Janda - Innogan               El alojamiento no es obligatorio si las condi-
+                                                                                   ciones climáticas posibilitan la vida del animal
+Condiciones ambientales                                                            al aire libre.
+
+               Temperaturas                                            Humedades    Los mamíferos deberán disponer de una zona
+                     (ºC)                                               relativas  cómoda, lisa, limpia y seca para que el animal
+                                                                                   pueda descansar, debiendo contener una cama
+               Óptimas Críticas Óptimas Críticas                                   de paja u otro material natural adecuado. Al
+                                                                                   menos la mitad de la superficie deberá ser terreno
+                                                                                   firme, sin listones ni rejilla.
+
+   Vacuno      10-15  -5º/25º                                                       Se prohíbe el alojamiento en habitáculos indi-
+   lechero     18-20                                                               viduales.
+   Ternero     15-18
+hasta 1 mes    10-17  Recién nacidos:                                               Los alojamientos, recintos, equipo y utensilios
+Ternero hasta  10-15         13º                                                   deberán limpiarse y desinfectarse conveniente-
+   3 meses                                                                         mente. Para ello sólo se podrán emplear los si-
+Ternero hasta         Con 1 mes:              70-80%                               guientes productos: jabón de potasa y sosa, agua
+  12 meses            8º                                                           y vapor, lechada de cal, cal, cal viva, hipoclorito
+Ternero más                                                                        sódico (lejía líquida), sosa cáustica, potasa cáus-
+de 12 meses           A partir de                                                  tica, peróxido de hidrógeno (agua oxigenada),
+                        200 kg                                                     esencias naturales de plantas, ácidos cítrico,
+                                                                                   paracético, fórmico, láctico, oxálico y acético,
+                      -5º/25º                                                      alcohol, ácidos nítrico y fosfórico (sólo en equipos
+                                                                                   de lechería), formaldehido y carbonato de sodio.
+Fuente: "Sistemas Ganaderos en el siglo XXI"
+Universidad de Sevilla.
+
+                                                                                   Instalaciones. Condiciones ambientales, diseños, usos, etc. 10 | Pág. 53
+Transporte
+y sacrificio
+de animales
+
+Requisitos mínimos                                         Comunicar a la OCA los movimientos de ganado
+                                                          que se produzcan en la explotación. Desde la ex-
+     Se debe establecer y regular un Registro General     plotación de origen se comunicará la salida de los
+    de Movimientos de Ganado (REMO), en el que se         animales y desde la de destino su entrada. Para di-
+    incluyen los movimientos de animales dentro del       cho movimiento han de expedirse los correspon-
+    territorio nacional, especificando los animales in-   dientes documentos y autorizaciones de traslado;
+    dividuales implicados en los mismos. Este registro    según el tipo de movimiento (vida, sacrificio o sa-
+    incluirá al menos los datos siguientes:               crificio obligatorio) estos se podran solicitar en la
+                                                          ADSG a la que pertenecen los animales, en la OCA
+       > Datos de la explotación de origen y destino:     o a través de los veterinarios incluidos en el direc-
+       Código de la explotación, País de origen y des-    torio de veterinarios.
+       tino en el caso de importaciones/exportaciones
+       y entradas/salidas desde otros países de la Unión   Realizar la comunicación en el plazo máximo de
+       Europea.                                           siete días desde que tenga lugar el evento o en
+                                                          función de las características de un movimiento
+       > Datos del movimiento de animales: fecha de       se pueda establecer otro plazo inferior.
+       salida, fecha de llegada, especie, número de ani-
+       males, identificación individual de los animales,   Todos los movimientos deberán estar amparados
+       código del medio de transporte, número de au-      por un documento de movimiento que recogerá
+       torización del transportista, si procede, número   los mismos datos del REMO (datos de la explotación
+       de identificación del certificado sanitario de     de origen y de destino, datos del movimiento de
+       origen asociado al movimiento, si procede, fe-     los animales y conformidades de los titulares de
+       cha de identificación del certificado sanitario    las explotaciones de origen y de destino).
+       de origen asociado al movimiento, código de
+       identificación del movimiento e indicación so-      Este documento acompañará a los animales has-
+       bre si el movimiento tiene carácter de trashu-     ta la finalización del movimiento en la explotación
+       mancia (si/no).                                    de destino. Es la "Guia de Origen y Sanidad Pecuaria".
+
+Pág. 54 | 11 Transporte y sacrificio de animales           El titular de la explotación de origen del movi-
+                                                          miento, hará llegar una copia de cada documento
+                                                          de movimiento al transportista y el original al titu-
+                                                          lar de la explotación de destino o al nuevo poseedor
+                                                          de los animales. Además debe conservar una copia
+                                                          del documento de movimiento durante al menos
+                                                          tres años desde la fecha en que se produjo el mismo.
+ Para identificar los movimientos de ganado en         Los animales pequeños cuyo ombligo no haya
+el REMO, las Oficinas Comarcales Agrarias (OCAs)      cicatrizado tampoco podrán ser transportados.
+asignarán a cada movimiento un código que garan-
+tice su identificación de forma única. Este código    Conformidad de los vehículos
+vendrá determinado por el código de la comunidad
+autónoma donde se encuentre ubicada la explota-        Viajes de menos de 8 horas:
+ción de origen del movimiento, en el caso de Anda-
+lucía el código será el 01, seguido de 16 dígitos.       > Espacio suficiente entre sus cabezas y el piso
+En el caso de las comunidades autónomas (caso            superior.
+de Andalucía) cuyo código de identificación comien-
+ce por cero, este no se tendrá en cuenta y la longi-     > No deberá existir la posibilidad de que los
+tud total del código REMO asignado por las mismas        animales se escapen.
+será de 17 dígitos.
+                                                         > El diseño de los vehículos debe hacerse de
+ Se considerarán no aptos para el transporte aque-       tal forma que no exista riesgo alguno de que
+llos animales que se encuentren enfermos o heridos.      se produzcan heridas o sufrimientos evitables.
+Un animal se considerará enfermo o gravemente
+herido cuando sea incapaz de moverse por sí mismo        > El suelo deberá estar cubierto de paja, o al
+sin sufrir, o tenga una herida grave.                    menos que exista un sistema de absorción de
+                                                         las deyecciones.
+ Tampoco son aptos apara el transporte animales
+en estado avanzado de gestación que puedan parir         > Para la carga y descarga deberán utilizarse
+durante el transporte, además de aquellos animales       puentes, rampas o pasarelas.
+que hayan parido 48 horas antes de iniciarse el
+transporte.                                              > Los vehículos deben garantizar la protección
+                                                         de los animales contra las inclemencias del
+                                                         tiempo y las grandes variaciones climáticas.
+
+                                                         > No transportar los animales en los ejes.
+
+                                                                              Transporte y sacrificio de animales 11 | Pág. 55
+Viajes de mas de 8 horas:                             viajes largos, los animales podrá viajar más de ocho
+
+> El lecho de paja será obligatorio.                  horas, siempre que se respeten los siguientes intervalos
+                                                      de suministro de agua y alimentos y los tiempos de
+
+> El camión deberá transportar una cantidad           descanso:
+
+de alimentos suficientes para los animales.           Animales no destetados:
+
+> El vehículo deberá tener un sistema de ven-              Primera fase de transporte: 9 horas como máxi-
+tilación que pueda utilizarse tanto cuando el            mo. Con una hora de descanso, suministrándoles
+camión esté parado como cuando esté en mo-               como mínimo agua.
+vimiento. Antes de iniciar el viaje se deberá
+
+asegurar que los ventiladores funcionen correc-                     Segunda fase de transporte: 9 horas como máxi-
+tamente. Si no existiera ventilación mecánica,                     mo. Tendrán 24 horas de descanso, se descargará
+habría que tomar las medidas necesarias para                       a las vacas y se les suministrará comida y agua.
+que en el camión hubiese una temperatura
+
+comprendida entre 5 y 30 ºC.                                       Animales adultos:
+Para ello deberán estar provisto
+
+de un sistema de control de                                        Primera fase de transporte: 14 horas
+
+temperatura.                                                       como máximo. Con una hora de des-
+
+> Deberán existir tabiques mó-                                     canso como mínimo, con suministro
+viles para repartir los animales                                   de agua.
+
+por tipo, tamaño y en cantidad                                     Primera fase de transporte: 14 horas
+
+razonable.                                                         como máximo. Tendrán 24 horas de
+
+> En todo momento deberá ser                                       descanso, se descargará a los animales
+posible el acceso a los animales                                   y se les suministrará comida y agua.
+
+para poder inspeccionarlos y
+
+prestarles todos los cuidados                     Fuente: Citagro  Densidad
+necesarios.
+
+> El camión deberá disponer                                         La superficie mínima establecida por
+bebederos adaptados a la espe-
+cie bovina. Además deberán te-                                     la actual Directiva Europea para un
+                                                                   bovino de 325 Kg es de 0,95 m2.
+
+ner un capacidad acorde con
+
+las necesidades de las vacas, y                                    Condiciones de transporte
+estar provisto de un dispositivo
+
+que permita la conexión con                                        Para evitar que los animales se aplas-
+
+una toma de agua en las para-                                      ten, se peleen o tengan miedo, nor-
+
+das. La cantidad de agua a apor-                                   malmente se separarán por especie,
+
+tar en una vaca adulta es de 40                                    sexo y tamaño.
+
+litros diarios. Los bebederos de-                 Fuente: Citagro   Los adultos deberán estar separados
+berán disponer de tetinas que                                      de los jóvenes, excepto las crías que
+les permitan chupar.                                               viajen con las madres.
+
+Intervalos de suministro de agua, de alimento y                     Los machos adultos deberán estar separados de
+tiempo de descanso                                                 las hembras.
+
+Si el vehículo dispone de instalaciones que permitan                Los sementales deberán estar separados unos de
+                                                                   otros.
+
+Pág. 56 | 11 Transporte y sacrificio de animales
+ Los animales deberán poder estar de pie en su
+posición natural y tener suficiente espacio para
+tumbarse.
+
+ Si los animales están atados deberán poder ali-
+mentarse, tumbarse y beber. No deberá atarse a los
+animales por los cuernos ni por los anillos nasales.
+
+ Los medios de transporte de animales, salvo de
+animales domésticos, deberán estar autorizados,
+al igual que la empresa propietaria, por la Junta
+de Andalucía, cumplir las condiciones higiénico-
+sanitarias y de protección animal establecidas por
+la reglamentación, así como llevar los rótulos
+indicativos que proceda en cada circunstancia.
+
+ Los conductores deberán llevar a bordo del vehí-
+culo la pertinente documentación de traslado.
+
+      Fuente: Legislación Vigente.
+
+Prácticas recomendadas
+
+Al ser la legislación con los requisitos exigidos en el
+transporte de animales, no se considera necesario re-
+comendar ninguna práctica adicional, más allá de las
+contempladas en la legislación.
+
+  Producción Ecológica
+
+    Se deberá reducir al mínimo el estrés en los ani-
+  males, cargándolos y descargándolos con precau-
+  ción y sin emplear ningún sistema de estimulación
+  eléctrica ni tranquilizantes alopáticos.
+
+                                                              Fuente: Citagro
+                                                         Transporte y sacrificio de animales 11 | Pág. 57
+                                           Fuente: Asociación de Frisona Andaluza
+
+Gestión y manejo                                        Requisitos mínimos
+de residuos
+                                                             La gestión de residuos se hará de forma que no
+Las explotaciones ganaderas deben asegurarse un ade-       ponga en peligro la salud humana, protegiendo el
+cuado manejo y gestión de los residuos generados           medio ambiente, y no cause molestias a lugares
+durante la producción, evitando de esa forma posibles      cercanos en forma de olores y ruidos desagradables.
+daños medioambientales en el entorno que le rodea,
+así como para presentar una imagen positiva ante los         Mantener en condiciones de higiene y seguridad
+consumidores y contribuir al sostenimiento de la po-       los residuos que se permanezcan en la explotación.
+blación rural al frenar la degradación de los recursos
+naturales.                                                   Cuando los residuos no sean gestionados en la
+                                                           propia explotación, serán entregados a un gestor
+                                                           autorizado para su posterior eliminación.
+
+                                                             El abandono de residuos está totalmente prohibi-
+                                                           do, así como toda mezcla o disolución que impida
+                                                           o dificulte de gestión.
+
+                                                             Debe evitarse en la medida de lo posible la elimi-
+                                                           nación de los residuos, siempre y cuando éstos
+                                                           sean potencialmente reciclables o valorizables.
+
+                                                                   Fuente: Legislación Vigente.
+
+Pág. 58 | 12 Gestión y manejo de residuos
+Fuente: Citagro
+
+Prácticas recomendadas                                       Los envases vacíos de productos químicos no vol-
+                                                           verán a utilizarse.
+A lo largo del presente código se han ido estableciendo
+recomendaciones relacionadas con este punto, sin             En caso de muerte de un animal, aislar el cadáver
+embargo a continuación se detallan otras prácticas         del resto de animales y comunicarlo para la recogida.
+adicionales:
+                                                             Fuente: "Guía de Prácticas Correctas de Higiene para el Vacuno
+     Vigilar la acumulación de residuos en la cama de        de Leche". Ministerio de Agricultura, Pesca y Alimentación.
+   los animales.
+                                                          Producción Ecológica
+     El almacén de residuos contará con unas dimen-
+   siones adecuadas.                                       Para evitar la contaminación del subsuelo por
+                                                          nitratos y otros elementos nocivos la cantidad
+     Empleo de suelos enrejillados que permiten la        máxima de estiércol por superficie utilizada no
+   recogida del estiércol de una forma más cómoda.        deberá exceder del equivalente a 170 kg de ni-
+                                                          trógeno por hectárea. Esta cifra se ha calculado
+     Limpieza de los residuos generados mediante una      que corresponde a las deyecciones de 2 vacas por
+   pala o una arrastradera traccionada por un tractor.    hectárea.
+
+     El estiércol podrá utilizarse como moneda de          En la superficie utilizada se podrá computar la
+   cambio con los agricultores de las explotaciones       de otras explotaciones agrarias ecológicas que,
+   cercanas, por algún tipo de material (paja, casca-     aunque no sean del mismo titular, empleen ese
+   rillas, etc) para utilizarlas en la zona de descanso.  estiércol en su fertilización. El estiércol se alma-
+                                                          cenará de forma que no contamine el subsuelo.
+     No abandonar las bolsas de plástico, sacos u otros
+   envases o embalajes en el entorno.                                                    Gestión y manejo de residuos 12 | Pág. 59
+                                                                        Formación, capacitación
+                                                                        e información de los
+                                                                        titulares de la explotación
+                                                                        y asalariados.
+                                                                        Seguridad en el trabajo.
+
+                                                                        El personal de la explotación además de ser competente
+                                                                        en su trabajo y de tener la formación y experiencia
+                                                                        adecuada para llevar a cabo sus tareas, debe conocer
+                                                                        y cumplir con las normas de higiene de la explotación.
+                                                                        Esto supone una ventaja ya que se consiguen optimizar
+                                                                        los rendimientos técnicos y económicos al reducir los
+                                                                        posibles errores ocasionados por un manejo incorrecto
+                                                                        del ganado.
+
+                      Fuente: GDR Litoral de la Janda - Innogan         Requisitos mínimos
+Pág. 60 | 13 Formación, capacitación e información de los titulares de
+                                                                             Los trabajadores en contacto con los animales
+                la explotación y asalariados. Seguridad en el trabajo.     deben encontrarse en buen estado de salud, estar
+                                                                           sanos, aseados y debe utilizar la ropa de trabajo
+                                                                           adecuada para su puesto.
+
+                                                                             El número de empleados será el adecuado para
+                                                                           cubrir las necesidades de la explotación.
+
+                                                                             El propietario de la explotación debe asegurarse
+                                                                           de que los trabajadores y sus representantes son
+                                                                           informados acerca de las señalizaciones de segu-
+                                                                           ridad y salud en el trabajo.
+Fuente: GDR Litoral de la Janda - Innogan
+
+ En esta formación se incluirá el significado de       Prácticas recomendadas
+las señales, sobre todo de los mensajes verbales y
+gestuales así como los comportamientos a adoptar            Las personas que padezcan enfermedades conta-
+dependiendo de estas señales.                             giosas no deben realizar el ordeño.
+
+ Los lugares de trabajo deben cumplir con las dis-          El ordeñador se lavará las manos y brazos con
+posiciones de seguridad y salud que cubren aspectos       agua potable antes de cada ordeño y cada vez que
+como son las condiciones constructivas, el orden,         sea necesario durante el proceso de ordeño.
+la limpieza y el mantenimiento, la señalización, las
+instalaciones de servicio o protección, las condicio-       El ordeñador usará ropa limpia para ordeñar.
+nes ambientales, la iluminación, los servicios hi-
+giénicos y locales de descanso, y el material y los         Si el ordeñador posee heridas abiertas no podrá
+locales de primeros auxilios.                             llevar a cabo el ordeño.
+
+ La utilización de los lugares de trabajo no debe           Los responsables de ordeñar a las vacas recibirán
+causar riesgos para la seguridad y salud de los tra-      periódicamente cursos de formación y transmitirán
+bajadores o al menos, estos riesgos deben reducirse       la información a los demás.
+al mínimo.
+                                                            Mientras se lleve a cabo el ordeño no se podrá
+  Fuente: Legislación Vigente.                            fumar, beber, ni comer.
+
+                                                            Debe llevarse un registro actualizado de los or-
+                                                          deñadores.
+
+                                                             Fuente: "Guía de Prácticas Correctas de Higiene para el Vacuno
+                                                             de Leche". Ministerio de Agricultura, Pesca y Alimentación.
+
+                                                           Formación, capacitación e información de los titulares 13 | Pág. 61
+                                                             de explotación y asalariados. Seguridad en el trabajo
+Legislación
+aplicable
+
+Alimentación                                              Reproducción y
+                                                          mejora genética
+ Reglamento CEE 178/2002 del Parlamento Europeo
+y del Consejo de 28 de Enero de 2002, por el que se        Real Decreto 368/2005, de 8 de abril, es el que se
+establecen los principios y los requisitos generales de   regula actualmente el control oficial del rendimiento
+la legislación alimentaria, se crea la Autoridad Europea  lechero para la evaluación genética en las especies
+de Seguridad Alimentaria y se fijan procedimientos        bovina, ovina y caprina.
+relativos a la seguridad.
+                                                           CORRECCIÓN de errores del Real Decreto 368/2005,
+ Real Decreto 140/2003, de 7 de febrero, por el que       de 8 de abril, por el que se regula el control oficial
+se establecen los criterios sanitarios de la calidad del  del rendimiento lechero para la evaluación genética
+agua para consumo humano.                                 en las especies bovina, ovina y caprina.
+
+ Real Decreto 465/2003, de 24 de abril, sobre sus-                              Fuente: GDR Litoral de la Janda - Innogan
+tancias indeseables en alimentación animal.
+
+ Orden PRE/3074/2003, de 5 de noviembre, por la
+que se modifica el anexo del Real Decreto 465/2003,
+de 25 de abril, sobre las sustancias indeseables en la
+alimentación animal.
+
+ Orden PRE/1422/2004, de 20 de mayo, por la que
+se modifica el anexo del Real Decreto 465/2003, de
+25 de abril, sobre las sustancias indeseables en la ali-
+mentación animal.
+
+ Real Decreto 2178/2004, de 12 de noviembre, por
+el que se prohíbe utilizar determinadas sustancias de
+efecto hormonal y tirostático y sustancias beta-ago-
+nistas de uso en la cría de ganado.
+
+ Reglamento CE nº 183/2005 del Parlamento Europeo
+y del Consejo, de 12 de enero de 2005, por el que se
+fijan requisitos en materia de higiene de los piensos.
+
+ Real Decreto 1144/2006, de 6 de octubre, por el que
+se regulan las condiciones de aplicación de la normativa
+comunitaria en materia de higiene de los piensos.
+
+Pág. 62 | 14 Legislación aplicable
+Ordeño                                                      Sanidad
+
+ Directiva 92/46/CEE del Consejo de 16 de junio, por         Real Decreto 2611/1996 de 20 de diciembre, y sus
+la que se establecen las condiciones sanitarias aplicables  modificaciones en el Real Decreto 1716/2000 de 13
+a la producción y comercialización de leche cruda, le-      de octubre y Real Decreto 51/2004 de 20 de diciembre,
+che tratada térmicamente y productos lácteos.               por el que se regulan los programas nacionales de
+                                                            erradicación de enfermedades de los animales.
+ Real Decreto 1679/1994, de 22 de julio, por el que
+se establece las condiciones sanitarias aplicables a         Real Decreto 1749/1998 de 31 de julio, por el que
+producción y comercialización de leche cruda, leche         se establecen las medidas de control a determinadas
+tratada térmicamente y productos lácteos.                   sustancias y sus residuos en animales vivos y sus
+                                                            productos.
+ Reglamento CEE 852/2004 del Parlamento Europeo
+y del Consejo, de 29 de abril de 2004, relativo a la hi-     Real Decreto 348/2000, de 10 de marzo, por el que
+giene de los productos alimenticios.                        se incorpora al ordenamiento jurídico la Directiva
+                                                            98/58/CE relativa a la protección de los animales en
+ Corrección de errores del Reglamento CEE 853/2004          las explotaciones ganaderas.
+del Parlamento Europeo y del Consejo, de 29 de abril
+de 2004, por el que se establecen normas específicas         Real Decreto 3454/2000, de 22 de diciembre, por el
+de higiene de los alimentos de origen animal.               que se establece y regula el Programa Integral coordi-
+                                                            nado de vigilancia y control de las encefalopatías es-
+                                                            pongiformes transmisibles de los animales.
+
+                                                             Reglamento 999/2001, del Parlamento Europeo y
+                                                            del Consejo, de 22 de mayo de 2001, por el que se
+                                                            establecen disposiciones para la prevención, el control
+                                                            y la erradicación de determinadas encefalopatías
+                                                            espongiformes transmisibles.
+
+                                                             Ley 8/2003, de 24 de abril, de sanidad animal.
+
+                                                             Orden de 29 de noviembre de 2004, por la que se
+                                                            desarrollan las normas de ejecución de los programas
+                                                            nacionales de vigilancia, prevención, control y erradi-
+                                                            cación de las enfermedades de los animales en Andalucía.
+
+                                                                                                         Legislación aplicable 14 | Pág. 63
+Fuente: Citagro
+
+Protección y                                           Transporte y
+bienestar animal                                       sacrificio de animales
+
+  Real Decreto 348/2000, de 10 de marzo, por el que     Real Decreto 1041/1997, de 27 de Junio, por el que
+se incorpora al ordenamiento jurídico la Directiva     se establecen las normas relativas a la protección de
+98/58/CE, relativa a la protección de los animales en  los animales en el transporte.
+las explotaciones ganaderas.
+                                                        Decreto 55/1998, de 10 de marzo, por el que se es-
+ Ley 11/2003, de 24 de noviembre, de protección de     tablecen los requisitos sanitarios aplicables al movi-
+los animales de Andalucía.                             miento y transporte de ganado y otros animales vivos.
+
+Instalaciones                                           Real Decreto 1716/2000, de 13 de octubre, sobre
+                                                       normas sanitarias para el intercambio intracomunitario
+ La legislación aplicable en materia de instalaciones  de animales de las especies bovina y porcina.
+ya ha sido mencionada en otros apartados, funda-
+mentalmente en el apartado de ordeño.                   Decreto 179/2003, de 17 de junio, por el que se mo-
+                                                       difica el Decreto 55/1998, de 10 de marzo, por el que
+Pág. 64 | 14 Legislación aplicable                     se establecen los requisitos sanitarios aplicables al mo-
+                                                       vimiento y transporte de ganado y otros animales vivos.
+Fuente: Citagro
+
+ Reglamento (CE) nº 1/2005 del Consejo, de 22 de           Gestión y
+diciembre de 2004, relativo a la protección de los ani-    manejo de residuos
+males durante el transporte y las operaciones conexas
+y por el que se modifican las Directivas 64/432/CEE         Ley 10/1998, de 21 de Abril, de Residuos.
+y 93/119/CE y el Reglamento CE nº 1255/97.
+                                                           Formación
+ Decreto 287/2005, de 27 de diciembre, por el que
+se modifica el Decreto 55/1998, de 10 de marzo, por         Ley 31/1995, de 8 de noviembre de prevención de
+el que se establecen los requisitos sanitarios aplicables  riesgos laborales.
+al movimiento y transporte de ganado y otros animales
+vivos.                                                      Real Decreto 486/1997, de 14 de abril, por el que
+                                                           se establecen las disposiciones mínimas de seguridad
+ Real Decreto 728/2007, de 13 de junio, se establece       y salud en los lugares de trabajo.
+y regula el Registro general de movimientos de ganado.
+                                                                                                       Legislación aplicable 14 | Pág. 65
+

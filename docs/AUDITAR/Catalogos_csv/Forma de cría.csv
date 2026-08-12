@@ -1,0 +1,33 @@
+"Código";"Descripción";Fecha de baja
+"00";"Producción ecológica";
+"01";"Campera";
+"02";"En suelo";
+"03";"En jaula";
+"04";"Sistema extensivo en gallinero";15/01/2022
+"05";"Gallinero con salida libre";15/01/2022
+"06";"Granja al aire libre";15/01/2022
+"07";"Granja de cría en libertad";15/01/2022
+"08";"Cerrado";09/04/2025
+"09";"Abierto";09/04/2025
+"10";"Mixto";09/04/2025
+"11";"Jaulas / cercados / corrales";
+"12";"Estanques";
+"13";"Tanques / canales";
+"14";"Sistema cerrado (recirculación)";
+"15";"Sistema abierto moluscos";
+"16";"Centros de depuración/expedición";
+"17";"Zona de cría de moluscos";
+"18";"Estanques en tierra";
+"19";"Sistema cerrado en tierra (recirculación)";
+"20";"Instalación de investigación";
+"21";"Instalación de cuarentena";
+"22";"Otros";
+"23";"Lagunas / cercados / corrales";
+"24";"En jaula clásica";15/01/2022
+"25";"En jaula acondicionada";15/01/2022
+"26";"Extensivo en interior";
+"27";"Campero";
+"28";"Campero tradicional";
+"29";"Campero en total libertad";
+"30";"Cría ecológica";
+"31";"Gallinero en interior";

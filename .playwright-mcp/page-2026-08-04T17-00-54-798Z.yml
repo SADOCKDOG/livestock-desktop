@@ -1,0 +1,152 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Sin conexión
+  - banner [ref=e3]:
+    - img "Livestock Manager" [ref=e5]
+    - generic [ref=e12] [cursor=pointer]:
+      - generic [ref=e13]: ES210050001234
+      - generic [ref=e14]:
+        - text: "Tipo Explo:"
+        - generic [ref=e15]: Híbrida
+  - main [ref=e16]:
+    - generic [ref=e1539]:
+      - tablist "Todas las secciones" [ref=e1540]:
+        - generic "LECHE" [ref=e1541] [cursor=pointer]
+        - generic "CARNE" [ref=e1542] [cursor=pointer]
+        - generic "COMPRADORES" [ref=e1543] [cursor=pointer]
+        - generic "CONTRATOS" [ref=e1544] [cursor=pointer]
+        - generic "TRANSPORTISTAS" [ref=e1545] [cursor=pointer]
+      - generic [ref=e1546]:
+        - generic [ref=e1547]:
+          - 'button "Anterior: TRANSPORTISTAS" [ref=e1548] [cursor=pointer]'
+          - button "LECHE" [ref=e1558] [cursor=pointer]
+          - 'button "Siguiente: CARNE" [ref=e1567] [cursor=pointer]'
+        - listbox "Todos los submódulos":
+          - option "LECHE" [selected]
+          - option "CARNE"
+          - option "COMPRADORES"
+          - option "CONTRATOS"
+          - option "TRANSPORTISTAS"
+    - generic [ref=e1575]:
+      - button "Registrar Retirada" [ref=e1577] [cursor=pointer]
+      - generic [ref=e1580]:
+        - heading "| CONTRATOS Y ENTREGAS LÁCTEAS" [level=1] [ref=e1581]:
+          - generic [ref=e1582]: "|"
+          - text: CONTRATOS Y ENTREGAS LÁCTEAS
+        - generic [ref=e1583]: Control de cisternas, analíticas y albaranes de leche
+    - generic [ref=e1585]:
+      - generic [ref=e1586]:
+        - generic [ref=e1587]: CONTRATO EXPIRA PRONTO
+        - button "GESTIONAR ➔" [ref=e1590]
+      - generic [ref=e1591]: CONTRATO Nº CT-2026-001 EXPIRA EL 19/08/2026 (15 DÍAS RESTANTES)
+    - generic [ref=e1593]:
+      - generic [ref=e1594]:
+        - generic [ref=e1600]:
+          - heading "BALANCE COMERCIAL LÁCTEO" [level=2] [ref=e1601]
+          - paragraph [ref=e1602]: Registro de albaranes de entrega, liquidaciones y control de calidad.
+        - generic [ref=e1603]:
+          - generic [ref=e1604]:
+            - text: Total Litros
+            - generic [ref=e1605]: 5800 L
+          - generic [ref=e1606]:
+            - text: Cisternas Cargadas
+            - generic [ref=e1607]: "3"
+      - generic [ref=e1609]:
+        - generic [ref=e1610]:
+          - generic [ref=e1611]:
+            - generic [ref=e1612]: "|"
+            - text: BALANCE LÁCTEO
+          - button [ref=e1616] [cursor=pointer]
+        - generic [ref=e1619]:
+          - generic [ref=e1620]:
+            - generic [ref=e1621]: Total Litros
+            - strong [ref=e1622]: 5800 L
+          - generic [ref=e1623]:
+            - generic [ref=e1624]: Cisternas Cargadas
+            - strong [ref=e1625]: "3"
+          - generic [ref=e1626]:
+            - generic [ref=e1627]: Alimentación Período
+            - strong [ref=e1628]: 0 €
+          - generic [ref=e1629]:
+            - generic [ref=e1630]: MOFA Real (Neto)
+            - strong [ref=e1631]: 4215 €
+      - generic [ref=e1632]:
+        - generic [ref=e1633]:
+          - generic [ref=e1634]: "| LISTA DE ENTREGAS"
+          - generic [ref=e1638]:
+            - generic [ref=e1639] [cursor=pointer]:
+              - generic [ref=e1640]:
+                - generic [ref=e1641]: "Cisterna: 5678EFG"
+                - generic [ref=e1647]:
+                  - generic [ref=e1648]: 30/07/2026
+                  - generic [ref=e1649]: ·
+                  - generic [ref=e1650]: 1940 L
+                  - generic [ref=e1651]: ·
+                  - generic [ref=e1652]: Grasa 6.1%
+                  - generic [ref=e1654]: ·
+                  - generic [ref=e1655]: Prot. 5%
+              - generic [ref=e1656]:
+                - generic [ref=e1657]: VALIDADO
+                - generic [ref=e1660]: FICHA
+            - generic [ref=e1664] [cursor=pointer]:
+              - generic [ref=e1665]:
+                - generic [ref=e1666]: "Cisterna: 5678EFG"
+                - generic [ref=e1672]:
+                  - generic [ref=e1673]: 20/07/2026
+                  - generic [ref=e1674]: ·
+                  - generic [ref=e1675]: 2010 L
+                  - generic [ref=e1676]: ·
+                  - generic [ref=e1677]: Grasa 6.4%
+                  - generic [ref=e1679]: ·
+                  - generic [ref=e1680]: Prot. 5.3%
+              - generic [ref=e1681]:
+                - generic [ref=e1682]: VALIDADO
+                - generic [ref=e1685]: FICHA
+            - generic [ref=e1689] [cursor=pointer]:
+              - generic [ref=e1690]:
+                - generic [ref=e1691]: "Cisterna: 5678EFG"
+                - generic [ref=e1697]:
+                  - generic [ref=e1698]: 10/07/2026
+                  - generic [ref=e1699]: ·
+                  - generic [ref=e1700]: 1850 L
+                  - generic [ref=e1701]: ·
+                  - generic [ref=e1702]: Grasa 6.2%
+                  - generic [ref=e1704]: ·
+                  - generic [ref=e1705]: Prot. 5.1%
+              - generic [ref=e1706]:
+                - generic [ref=e1707]: VALIDADO
+                - generic [ref=e1710]: FICHA
+        - generic [ref=e1715]:
+          - generic [ref=e1716]: Producción Mensual de Leche
+          - generic [ref=e1717]:
+            - generic [ref=e1718]:
+              - generic [ref=e1719]: Mar
+              - generic [ref=e1722]: "0"
+            - generic [ref=e1723]:
+              - generic [ref=e1724]: Abr
+              - generic [ref=e1727]: "0"
+            - generic [ref=e1728]:
+              - generic [ref=e1729]: May
+              - generic [ref=e1732]: "0"
+            - generic [ref=e1733]:
+              - generic [ref=e1734]: Jun
+              - generic [ref=e1737]: "0"
+            - generic [ref=e1738]:
+              - generic [ref=e1739]: Jul
+              - generic [ref=e1742]: "5800"
+            - generic [ref=e1743]:
+              - generic [ref=e1744]: Ago
+              - generic [ref=e1747]: "0"
+          - generic [ref=e1748]: "Últimos 6 meses: Mar 2026 • Abr 2026 • May 2026 • Jun 2026 • Jul 2026 • Ago 2026"
+  - navigation "Navegación principal escritorio" [ref=e18]:
+    - link "Inicio" [ref=e19] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=e33] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=e37] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=e42] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=e50] [cursor=pointer]
+  - status
+  - button "Abrir guía interactiva" [ref=e1749] [cursor=pointer]:
+    - generic [ref=e1753]: Guía

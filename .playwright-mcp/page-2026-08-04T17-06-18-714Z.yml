@@ -1,0 +1,157 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Sin conexión
+  - banner [ref=e3]:
+    - img "Livestock Manager" [ref=e5]
+    - generic [ref=e12] [cursor=pointer]:
+      - generic [ref=e13]: ES210050001234
+      - generic [ref=e14]:
+        - text: "Tipo Explo:"
+        - generic [ref=e15]: Híbrida
+  - main [ref=e16]:
+    - generic [ref=e2188]:
+      - tablist "Todas las secciones" [ref=e2189]:
+        - generic "ANIMALES" [ref=e2190] [cursor=pointer]
+        - generic "REBANOS" [ref=e2191] [cursor=pointer]
+        - generic "PATRIMONIO" [ref=e2192] [cursor=pointer]
+        - generic "ZONAS" [ref=e2193] [cursor=pointer]
+        - generic "SANIDAD" [ref=e2194] [cursor=pointer]
+      - generic [ref=e2195]:
+        - generic [ref=e2196]:
+          - 'button "Anterior: PATRIMONIO" [ref=e2197] [cursor=pointer]'
+          - button "ZONAS" [ref=e2205] [cursor=pointer]
+          - 'button "Siguiente: SANIDAD" [ref=e2214] [cursor=pointer]'
+        - listbox "Todos los submódulos":
+          - option "ANIMALES"
+          - option "REBANOS"
+          - option "PATRIMONIO"
+          - option "ZONAS" [selected]
+          - option "SANIDAD"
+    - generic [ref=e2226]:
+      - heading "| Zonas y Parcelas" [level=1] [ref=e2227]
+      - generic [ref=e2228]: Ubicación de rebaños, UGM, carga ganadera y PAC
+    - generic [ref=e2229]:
+      - generic [ref=e2230]:
+        - generic [ref=e2231]:
+          - generic [ref=e2237]:
+            - heading "ZONAS Y PARCELAS" [level=2] [ref=e2238]
+            - paragraph [ref=e2239]: Gestión de ubicaciones, carga ganadera, UGM y rotación de pastos.
+          - generic [ref=e2240]:
+            - generic [ref=e2241]:
+              - text: "Total Zonas:"
+              - strong [ref=e2242]: "4"
+            - generic [ref=e2243]:
+              - text: "Ocupación:"
+              - strong [ref=e2244]: 9 cab.
+        - button "Nueva Zona" [ref=e2246] [cursor=pointer]
+      - generic [ref=e2248]:
+        - generic [ref=e2249]:
+          - generic [ref=e2250]: Ocupación Global
+          - button "Ocultar resumen" [ref=e2254] [cursor=pointer]
+        - generic [ref=e2258]:
+          - generic [ref=e2259]: Cabezas / Aforo
+          - strong [ref=e2260]: 9 / 610 (1%)
+      - generic [ref=e2263]:
+        - generic [ref=e2264]: ✕ ALERTA DE SOBREPASTOREO ACTIVO (>1.0 UGM/ha)
+        - paragraph [ref=e2267]: El aforo ecológico máximo permitido para pastoreo extensivo ha sido superado en las siguientes parcelas. Se recomienda rotar los lotes o rebaños para evitar la degradación del pasto.
+        - generic [ref=e2269]:
+          - generic [ref=e2270]: Cercado de Cebo 1ha (1 ha)
+          - generic [ref=e2271]: 2,00 UGM/ha
+        - button "⇄ Sugerir Rotación Preventiva" [ref=e2273] [cursor=pointer]
+      - generic [ref=e2274]: LISTA DE ZONAS
+      - generic [ref=e2278]:
+        - generic [ref=e2279] [cursor=pointer]:
+          - generic [ref=e2280]:
+            - generic [ref=e2281]: Parcela Norte 42ha
+            - generic [ref=e2283]: Pasto · 42 ha
+            - generic [ref=e2285]:
+              - generic [ref=e2286]: "Carga: 3,0 UGM"
+              - generic [ref=e2287]: 3 / 200 (2%)
+            - generic [ref=e2290]:
+              - generic [ref=e2291]: "PAC: ES-AN-21005-001"
+              - generic [ref=e2295]: "Agua: 150m"
+              - generic [ref=e2299]: 0,07 UGM/ha
+              - generic [ref=e2301]: Vacas
+            - generic [ref=e2306]:
+              - generic [ref=e2307]:
+                - generic [ref=e2308]: Vacas Frisonas
+                - generic [ref=e2310]: Láctea
+              - generic [ref=e2311]:
+                - generic [ref=e2312]: "3"
+                - generic [ref=e2314]: FICHA
+            - button "⇄ Rotar Lote / Rebaño" [ref=e2319]
+          - generic [ref=e2320]:
+            - generic [ref=e2321]: Infrautilizada
+            - generic [ref=e2323]: Ficha ->
+        - generic [ref=e2325] [cursor=pointer]:
+          - generic [ref=e2326]:
+            - generic [ref=e2327]: Parcela Sur 28ha
+            - generic [ref=e2329]: Barbecho · 28 ha
+            - generic [ref=e2331]:
+              - generic [ref=e2332]: "Carga: 0,0 UGM"
+              - generic [ref=e2333]: 0 / 150 (0%)
+            - generic [ref=e2335]:
+              - generic [ref=e2336]: "PAC: ES-AN-21005-002"
+              - generic [ref=e2340]: "Agua: 300m"
+              - generic [ref=e2344]: 0,00 UGM/ha
+          - generic [ref=e2346]:
+            - generic [ref=e2347]: Infrautilizada
+            - generic [ref=e2349]: Ficha ->
+        - generic [ref=e2351] [cursor=pointer]:
+          - generic [ref=e2352]:
+            - generic [ref=e2353]: Pastos Este 15ha
+            - generic [ref=e2355]: Pasto · 15 ha
+            - generic [ref=e2357]:
+              - generic [ref=e2358]: "Carga: 0,6 UGM"
+              - generic [ref=e2359]: 4 / 250 (2%)
+            - generic [ref=e2362]:
+              - generic [ref=e2363]: "PAC: ES-AN-21005-003"
+              - generic [ref=e2367]: "Agua: 80m"
+              - generic [ref=e2371]: 0,04 UGM/ha
+              - generic [ref=e2373]: Ovejas
+            - generic [ref=e2378]:
+              - generic [ref=e2379]:
+                - generic [ref=e2380]: Ovejas Merinas
+                - generic [ref=e2382]: Cárnica
+              - generic [ref=e2383]:
+                - generic [ref=e2384]: "4"
+                - generic [ref=e2386]: FICHA
+            - button "⇄ Rotar Lote / Rebaño" [ref=e2391]
+          - generic [ref=e2392]:
+            - generic [ref=e2393]: Infrautilizada
+            - generic [ref=e2395]: Ficha ->
+        - generic [ref=e2397] [cursor=pointer]:
+          - generic [ref=e2398]:
+            - generic [ref=e2399]: Cercado de Cebo 1ha
+            - generic [ref=e2401]: Pasto · 1 ha
+            - generic [ref=e2403]:
+              - generic [ref=e2404]: "Carga: 2,0 UGM"
+              - generic [ref=e2405]: 2 / 10 (20%)
+            - generic [ref=e2408]:
+              - generic [ref=e2409]: "PAC: ES-AN-21005-004"
+              - generic [ref=e2413]: "Agua: 10m"
+              - generic [ref=e2417]: 2,00 UGM/ha
+              - generic [ref=e2419]: Vacas
+            - generic [ref=e2424]:
+              - generic [ref=e2425]:
+                - generic [ref=e2426]: Terneros Cebo
+                - generic [ref=e2428]: Cárnica
+              - generic [ref=e2429]:
+                - generic [ref=e2430]: "2"
+                - generic [ref=e2432]: FICHA
+            - button "⇄ Rotar Lote / Rebaño" [ref=e2437]
+          - generic [ref=e2438]:
+            - generic [ref=e2439]: Infrautilizada
+            - generic [ref=e2441]: Ficha ->
+  - navigation "Navegación principal escritorio" [ref=e18]:
+    - link "Inicio" [ref=e19] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=e33] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=e37] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=e42] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=e50] [cursor=pointer]
+  - status
+  - button "Abrir guía interactiva" [ref=e2443] [cursor=pointer]:
+    - generic [ref=e2447]: Guía

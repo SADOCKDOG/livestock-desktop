@@ -1,0 +1,26 @@
+- generic [active] [ref=f26e1]:
+  - generic [ref=f26e2]: Sin conexión
+  - banner [ref=f26e3]:
+    - img "Livestock Manager" [ref=f26e5]
+    - generic [ref=f26e12] [cursor=pointer]:
+      - generic [ref=f26e13]: ES210050001234
+      - generic [ref=f26e14]:
+        - text: "Tipo Explo:"
+        - generic [ref=f26e15]: Híbrida
+  - main [ref=f26e16]:
+    - generic [ref=f26e17]: Iniciando aplicación...
+  - navigation "Navegación principal escritorio" [ref=f26e18]:
+    - link "Inicio" [ref=f26e19] [cursor=pointer]:
+      - /url: "#/"
+    - link "Animales" [ref=f26e24] [cursor=pointer]:
+      - /url: "#/animales"
+    - link "Rebaños" [ref=f26e29] [cursor=pointer]:
+      - /url: "#/rebanos"
+    - link "GeGan" [ref=f26e33] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=f26e37] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=f26e42] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=f26e50] [cursor=pointer]
+  - status

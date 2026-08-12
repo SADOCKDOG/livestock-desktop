@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Comercial y de Socios - Livestock Manager v4.3 SIGGAN</title>
+    <style>
+        :root { --primary: #10b981; --bg: #0a0a0a; --card: #171717; --text: #e5e5e5; --border: #2d2d2d; --warn: #f59e0b; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 40px; }
+        .header { display: flex; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
+        .logo { height: 80px; margin-right: 20px; }
+        h1 { color: var(--primary); margin: 0; }
+        h2 { color: var(--primary); margin-top: 30px; }
+        .module-card { background: var(--card); border-radius: 12px; padding: 25px; margin-bottom: 25px; border-left: 5px solid var(--primary); }
+        .siggan-card { background: #0d2818; border-radius: 12px; padding: 25px; margin-bottom: 25px; border-left: 5px solid #34d399; }
+        .screenshot { width: 100%; max-width: 400px; border-radius: 8px; border: 1px solid #333; margin: 15px 0; display: block; }
+        .badge { background: #10b98122; color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.9em; font-weight: bold; }
+        .badge-siggan { background: #34d39922; color: #34d399; padding: 4px 12px; border-radius: 20px; font-size: 0.9em; font-weight: bold; }
+        .alert { background: #1c1500; border: 1px solid #92400e; border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+        .alert strong { color: var(--warn); }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th { background: #10b98133; color: var(--primary); padding: 10px 12px; text-align: left; }
+        td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+        code { background: #262626; padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #34d399; }
+        footer { margin-top: 50px; font-size: 0.8em; color: #737373; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="Logo-app.png" class="logo" alt="Logo">
+        <div>
+            <h1>Gestión Comercial y Stakeholders</h1>
+            <p>Compradores, Proveedores, Transportistas y Contratos · <span class="badge-siggan">Compatible SIGGAN v4.3</span></p>
+        </div>
+    </div>
+
+    <div class="module-card">
+        <h2><span class="badge">VENTAS</span> Ventas y Comercialización</h2>
+        <p>Registro de transacciones comerciales con cálculo automático de IVA y retenciones (REAGP). Cada venta genera un movimiento pecuario oficial en el Cuaderno Digital SIGGAN.</p>
+        <img src="img/comercial.png" class="screenshot" alt="Pantalla Comercial">
+    </div>
+
+    <div class="module-card">
+        <h2><span class="badge">SOCIOS</span> Compradores y Proveedores</h2>
+        <p>Directorio centralizado de agentes externos. Cada ficha almacena datos de contacto, CIF y tipo de operador para la trazabilidad SIGGAN.</p>
+        <div style="display: flex; gap: 10px;">
+            <img src="img/compradores.png" class="screenshot" style="max-width: 200px;" alt="Compradores">
+            <img src="img/proveedores.png" class="screenshot" style="max-width: 200px;" alt="Proveedores">
+        </div>
+        <p>El campo <strong>CIF/NIF</strong> es validado automáticamente con el algoritmo oficial español (Luhn modificado). Un CIF inválido bloquea el guardado para garantizar la integridad de los datos ante SIGGAN.</p>
+    </div>
+
+    <div class="siggan-card">
+        <h2><span class="badge-siggan">SIGGAN</span> Tipos de Operador — Clasificación Oficial</h2>
+        <p>Cada comprador, proveedor y transportista debe clasificarse con su <strong>tipo de operador oficial</strong> según el registro REGA/SIGGAN:</p>
+
+        <h3 style="color: #34d399; margin-top: 20px;">Compradores</h3>
+        <table>
+            <tr><th>Tipo Operador</th><th>Descripción</th><th>Ejemplo</th></tr>
+            <tr><td><code>matadero</code></td><td>Matadero autorizado REGA</td><td>Matadero Municipal de Sevilla</td></tr>
+            <tr><td><code>quesería</code></td><td>Industria láctea (leche)</td><td>Lácteos La Serena SA</td></tr>
+            <tr><td><code>intermediario</code></td><td>Tratante o corredor</td><td>Ganados del Oeste SL</td></tr>
+            <tr><td><code>cooperativa</code></td><td>Cooperativa ganadera</td><td>Coop. Ganadera del Sur</td></tr>
+        </table>
+
+        <h3 style="color: #34d399; margin-top: 20px;">Proveedores</h3>
+        <table>
+            <tr><th>Tipo Operador</th><th>Descripción</th></tr>
+            <tr><td><code>fabricante_pienso</code></td><td>Fábrica de piensos autorizada</td></tr>
+            <tr><td><code>veterinario</code></td><td>Clínica/farmacia veterinaria</td></tr>
+            <tr><td><code>proveedor_equipos</code></td><td>Maquinaria e instalaciones</td></tr>
+            <tr><td><code>servicio_agronomo</code></td><td>Asesoría agrícola</td></tr>
+        </table>
+
+        <h3 style="color: #34d399; margin-top: 20px;">Transportistas</h3>
+        <p>Los transportistas requieren además:</p>
+        <ul>
+            <li><strong>Matrícula del vehículo:</strong> Obligatoria en la guía de movimiento.</li>
+            <li><strong>Autorización de transporte de ganado (ATG):</strong> Número oficial de la Consejería.</li>
+            <li><strong>Desinsectación:</strong> Fecha de última desinsectación y vencimiento (caduca a los 90 días).</li>
+        </ul>
+        <div class="alert">
+            <strong>Obligación SIGGAN:</strong> Sin autorización de transporte (ATG) vigente, la app bloquea el registro del movimiento pecuario.
+        </div>
+    </div>
+
+    <div class="module-card">
+        <h2><span class="badge">CONTRATOS</span> Contratos y Liquidación</h2>
+        <p>Vincule cada comprador con un contrato activo. El sistema aplica automáticamente:</p>
+        <ul>
+            <li>Tipos de IVA (General 21% o REAGP 10%).</li>
+            <li>Porcentajes de retención del IRPF.</li>
+            <li>Precios pactados por kg vivo o canal.</li>
+            <li>Código REGA del comprador para la guía de movimiento.</li>
+        </ul>
+    </div>
+
+    <div class="siggan-card">
+        <h2><span class="badge-siggan">SIGGAN</span> Trazabilidad Comercial — Flujo Oficial</h2>
+        <p>Cada venta de ganado sigue este flujo reglamentario integrado en la app:</p>
+        <ol>
+            <li><strong>Selección de lote:</strong> Animales verificados con aptitud SIA (sin período de supresión activo).</li>
+            <li><strong>Asignación de transportista:</strong> Con ATG vigente y desinsectación al día.</li>
+            <li><strong>Documento ICA:</strong> Impreso desde la app con los datos del movimiento pecuario.</li>
+            <li><strong>Guía Sanitaria:</strong> Referencia oficial del movimiento; firmada por veterinario responsable.</li>
+            <li><strong>Notificación REGA:</strong> La app registra automáticamente la baja de los animales vendidos.</li>
+            <li><strong>Liquidación:</strong> Factura calculada según el contrato activo del comprador.</li>
+        </ol>
+    </div>
+
+    <footer>
+        &copy; 2026 Livestock Manager Premium · Módulo Comercial v4.3 · Compatible SIGGAN (Andalucía)
+    </footer>
+</body>
+</html>
