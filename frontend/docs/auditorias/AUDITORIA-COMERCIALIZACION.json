@@ -1,0 +1,386 @@
+{
+  "auditoria_modulo_comercializacion": {
+    "fecha_auditoria": "2026-08-07",
+    "archivos_auditados": [
+      "js/views/comercializacion-view.js",
+      "js/views/compradores-view.js",
+      "js/views/proveedores-view.js",
+      "js/views/transportistas-view.js",
+      "js/views/contratos-view.js",
+      "js/views/albaranes-ventas-view.js",
+      "js/views/wizards/wizard-venta-masiva.js",
+      "js/views/wizards/wizard-gasto.js"
+    ],
+    "version_modulo": "v3.0.0 - v4.2.0"
+  },
+
+  "1_rutas_pestanas": {
+    "principal": "#/comercializacion",
+    "submodulos_carrusel": [
+      { "key": "leche", "label": "LECHE", "icon": "Icons.leche()", "color": "var(--c-info)", "requiere_flag": "leche" },
+      { "key": "carne", "label": "CARNE", "icon": "Icons.carne()", "color": "var(--c-success)", "requiere_flag": "carne" },
+      { "key": "compradores", "label": "COMPRADORES", "icon": "Icons.compradores()", "color": "var(--c-purple)", "requiere_flag": "siempre" },
+      { "key": "contratos", "label": "CONTRATOS", "icon": "Icons.documento()", "color": "var(--c-purple)", "requiere_flag": "siempre" },
+      { "key": "transportistas", "label": "TRANSPORTISTAS", "icon": "Icons.transportistas()", "color": "var(--c-pink)", "requiere_flag": "siempre" }
+    ],
+    "vistas_independientes": [
+      "#/compradores (lista, detalle #/comprador?id=X, formulario)",
+      "#/proveedores (lista, detalle #/proveedor?id=X, formulario)",
+      "#/transportistas (lista, detalle, formulario en overlay)",
+      "#/contratos (lista, detalle/edición #/contrato?id=X, formulario)",
+      "#/albaranes-ventas (historial integrado con tabs Todo/Leche/Carne)"
+    ],
+    "navegacion": "Carrusel circular de submódulos anclado bajo header (PR #123), color fijo amarillo (--c-warning) para todo CoMer"
+  },
+
+  "2_funcionalidades_principales": {
+    "ventas_carne": {
+      "wizard_venta_masiva": "5 pasos completos",
+      "pasos": [
+        "1. Selección animales con análisis aptitud: control supresión fichero, edad mínima por especie, DIB obligatorio bovinos, gestación hembras >90 días",
+        "2. Trazabilidad logística: fecha sacrificio, matadero destino, documento ICA, guía sanitaria, declaración fitosanitaria colectiva (180 días)",
+        "3. Datos económicos: peso vivo, peso canal, precio €/kg canal, gasto transporte, gasto matanza",
+        "4. Liquidación y cliente: comprador registrado (obligatorio), IVA%, retención REAGP%, clasificación SEUROP lote, contrato activo vinculado",
+        "5. Logística y autorización: transportista con ATG y desinsectación vigente, autorización veterinaria (nombre, colegiado, fecha)"
+      ],
+      "post_venta_automatico": [
+        "Genera registro en comercializacion_carne por animal",
+        "Crea movimiento oficial inter-explotación SIGGAN/BADIGEX obligatorio (tipo salida, motivo matadero)",
+        "Genera DIMOE como documento legal (DIMOE-ALBARÁN)",
+        "Cambia estado animal a 'vendido'",
+        "Registra evento en registro_eventos (expedición)",
+        "Genera albarán PDF imprimible",
+        "Genera factura si hay precio unitario (si no, precio pendiente de fijar)",
+        "Actualiza contadores albarán/factura (meta.contador_albaran, contador_factura)"
+      ]
+    },
+    "entregas_leche": {
+      "wizard_albaran_leche": "Referenciado 6 pasos (AlbaranLecheWizard, no auditado en archivos)",
+      "campos_clave": [
+        "Fecha recogida, matrícula cisterna, cantidad litros, temperatura",
+        "Laboratorio: grasa%, proteína%, células somáticas, gérmenes, antibióticos/inhibidores",
+        "Estado analítica: PENDIENTE/APTO/CONFORME/RECHAZADO/ALERTA",
+        "Número INFOLAC, compradora láctea, contrato vinculado"
+      ]
+    },
+    "dimension_integracion": {
+      "DIMOE": "Generado automático en venta masiva como 'documentos_legales' tipo 'dimoe', número DIMOE-{ALBARÁN}",
+      "Liquidaciones": "Calculadas en wizard al cierre (Liquidacion.calcular con peso canal, precio, gastos, IVA, retención)",
+      "Contratos_compra": "Tabla de precios pactados multi-producto (€/kg, €/L, €/UD, €/CAB), IVA%, retención%, fechas vigencia, alertas vencimiento 30d",
+      "Movimientos_SIGGAN": "Obligatorios al cerrar venta (Movimientos.save), incluyen REGA origen/destino, tipo operador, guía, ICA, desinsectación, CCAA"
+    },
+    "analitica_gastos": {
+      "wizard_gasto": "2 pasos: 1) Datos económicos (proveedor, concepto, monto, categoría), 2) Imputación normativa (rebaño/zona obligatorios según categoría + control fitosanitario si aplica)",
+      "categorias": ["Alimentación", "Sanidad", "Fitosanitarios", "Electricidad", "Personal", "Amortización"],
+      "imputacion_obligatoria": {
+        "Alimentacion/Sanidad": "Rebaño (snap_zona, snap_especie, snap_tipo)",
+        "Fitosanitarios/Electricidad": "Zona",
+        "resto": "Gasto general finca"
+      },
+      "control_normativo_fitosanitarios": "Registro producto, dosis aplicada, plazo seguridad días, apto comercialización (bloquea si NO)"
+    },
+    "kpis_balance_comercial": {
+      "carne": [
+        "Peso Canal (kg) total",
+        "Animales Vendidos (cuenta)",
+        "Rendimiento Promedio (%)",
+        "Ingreso Bruto (€) - color slate",
+        "Margen Neto Real (€) = Ingreso - Transporte - Matanza - color success"
+      ],
+      "leche": [
+        "Total Litros",
+        "Cisternas Cargadas",
+        "Alimentación Período (€) - color danger",
+        "MOFA Real Neto (€) = Ingresos leche - Gastos alimentación período - color success"
+      ],
+      "graficos_rendimiento": "Barras últimos 6 meses (peso/ingreso carne, litros leche, rendimiento %)"
+    }
+  },
+
+  "3_flujos_wizards": {
+    "wizard_venta_masiva": {
+      "archivo": "js/views/wizards/wizard-venta-masiva.js",
+      "pasos_detalle": [
+        {
+          "num": 1,
+          "titulo": "ANÁLISIS DE APTITUD",
+          "color_tema": "var(--c-success)",
+          "acciones": [
+            "Lista todos los animales activos (estado='activo')",
+            "Check supresión sanitaria (Trazabilidad.checkSupresion con timeout 3s)",
+            "Gate edad mínima: bovino 12m, ovino/caprino 6m, porcino 3m",
+            "Gate DIB obligatorio bovinos",
+            "Gate gestación hembras: diagnóstico positivo >90d = bloqueo",
+            "Tabla con checkbox selección, resumen aptos/bloqueados con motivos"
+          ],
+          "validacion": "Mínimo 1 animal apto seleccionado"
+        },
+        {
+          "num": 2,
+          "titulo": "TRAZABILIDAD LOGÍSTICA",
+          "color_tema": "var(--p-gold)",
+          "campos": [
+            "Fecha sacrificio (date)",
+            "Matadero destino (text, requerido)",
+            "Documento ICA (text, requerido)",
+            "Guía sanitaria Nº (text, requerido)",
+            "Declaración fitosanitaria colectiva (checkbox, requerido)"
+          ],
+          "validacion": "ICA + Guía + Fitosanitaria obligatorios"
+        },
+        {
+          "num": 3,
+          "titulo": "DATOS ECONÓMICOS",
+          "color_tema": "var(--c-success)",
+          "campos": [
+            "Peso vivo (kg, number)",
+            "Peso canal (kg, number, verde)",
+            "Precio €/kg canal (number step 0.01, oro)",
+            "Transporte € (number)",
+            "Matanza € (number)"
+          ],
+          "validacion": "Peso canal < Peso vivo; warning si precio=0"
+        },
+        {
+          "num": 4,
+          "titulo": "LIQUIDACIÓN Y CLIENTE",
+          "color_tema": "var(--c-info)",
+          "campos": [
+            "Selector comprador activo (requerido, carga contrato activo carne)",
+            "Info comprador: nombre, NIF, estado, contrato vigente con IVA/retención/fecha fin",
+            "IVA% y Retención% (pre-llenado desde contrato)",
+            "Clasificación SEUROP lote (text: U-2, R, O...)"
+          ],
+          "validacion": [
+            "Comprador obligatorio y activo",
+            "Comprador con REGA destino válido (ESXXXXXXXXXXXX)",
+            "Tipo operador destino en {matadero, operador_comercial, tratante, cebadero}",
+            "Contrato activo carne obligatorio"
+          ]
+        },
+        {
+          "num": 5,
+          "titulo": "LOGÍSTICA Y AUTORIZACIÓN",
+          "color_tema": "var(--c-purple)",
+          "campos": [
+            "Selector transportista activo (requerido, valida ATG, desinsectación vigente)",
+            "Info transportista: nombre, NIF, matrícula",
+            "Autorización veterinaria: nombre, nº colegiado, fecha (requeridos)"
+          ],
+          "validacion": [
+            "Veterinario + colegiado obligatorios",
+            "Transportista con ATG y desinsectación vigente (no vencida)"
+          ]
+        }
+      ]
+    },
+    "wizard_gasto": {
+      "archivo": "js/views/wizards/wizard-gasto.js",
+      "pasos_detalle": [
+        {
+          "num": 1,
+          "titulo": "DATOS ECONÓMICOS",
+          "color_tema": "var(--p-gold)",
+          "campos": [
+            "Proveedor (select, opcional)",
+            "Concepto/Factura (text, requerido, uppercase)",
+            "Monto total € (number step 0.01, requerido, >0)",
+            "Categoría contable (select: Alimentación, Sanidad, Fitosanitarios, Electricidad, Personal, Amortización)"
+          ],
+          "validacion": "Concepto + Monto > 0"
+        },
+        {
+          "num": 2,
+          "titulo": "IMPUTACIÓN Y NORMATIVA",
+          "color_tema": "var(--c-info)",
+          "logica_condicional": {
+            "Alimentacion/Sanidad": "Selector rebaño OBLIGATORIO (carga snap_zona/snap_especie/snap_tipo)",
+            "Fitosanitarios/Electricidad": "Selector zona OBLIGATORIA",
+            "Personal/Amortizacion": "Gasto general finca (sin imputación)"
+          },
+          "control_normativo_fitosanitarios": [
+            "Registro producto (text)",
+            "Dosis aplicada (text)",
+            "Plazo seguridad días (number ≥0)",
+            "Apto comercialización (select: SÍ/NO) — si NO bloquea comercialización"
+          ],
+          "validacion": "Rebaña/Zona requerida según categoría"
+        }
+      ]
+    }
+  },
+
+  "4_elementos_ui_clave": {
+    "kpis_financieros": {
+      "carne": ["Peso Canal", "Animales Vendidos", "Rendimiento Promedio", "Ingreso Bruto", "Margen Neto Real (ingreso - transporte - matanza)"],
+      "leche": ["Total Litros", "Cisternas Cargadas", "Alimentación Período", "MOFA Real Neto"],
+      "estilo": "Card-registro con toggle expandible (App.toggleResumen), colores semánticos (success=positivo, danger=negativo, warning=atención, info=neutro)"
+    },
+    "tablas_precios_contratos": {
+      "formato": "Grid 4 columnas: Producto | Precio € | Unidad (kg/L/UD/CAB) | Eliminar",
+      "dinamico": "Añadir filas en wizard contrato, validar producto+precio>0",
+      "unidades": ["kg", "L", "unidad", "cabeza"]
+    },
+    "badges_tipo_comprador": {
+      "carnico": { "label": "cárnico", "color_texto": "var(--c-danger)", "color_borde": "rgba(255,68,68,0.3)", "bg": "rgba(255,68,68,0.1)" },
+      "lactico": { "label": "lácteo", "color_texto": "var(--c-info)", "color_borde": "rgba(59,130,246,0.3)", "bg": "rgba(59,130,246,0.1)" },
+      "hibrido": { "label": "híbrido", "color_texto": "var(--c-success)", "color_borde": "rgba(204,255,0,0.3)", "bg": "rgba(204,255,0,0.1)" }
+    },
+    "badges_estado": {
+      "ventas_albaranes": {
+        "borrador": "var(--c-warning)",
+        "presentado": "var(--c-success)",
+        "validado": "var(--c-info)",
+        "rechazado": "var(--c-danger)",
+        "anulado": "var(--c-danger)"
+      },
+      "entidades": {
+        "activo": "var(--c-success) / verde",
+        "inactivo": "var(--c-danger) / rojo / #6b7280"
+      },
+      "transportista_certificados": {
+        "bienestar_vigente": "var(--c-success)",
+        "bienestar_proximo_30d": "var(--c-warning)",
+        "bienestar_caducado": "var(--c-danger)",
+        "sin_certificado": "var(--c-danger)"
+      },
+      "fitosanitario": {
+        "apto_comercializacion_si": "var(--c-success)",
+        "apto_comercializacion_no": "var(--c-danger)"
+      }
+    },
+    "card_registro_estandar": {
+      "uso": "Todas las listas (compradores, proveedores, transportistas, contratos, albaranes, animales)",
+      "estructura": {
+        "icon": "Izquierda título",
+        "title": "Principal (nombre, nº contrato, nº albarán)",
+        "subtitle": "Secundario (NIF, ciudad, comprador, fechas)",
+        "metadata": "Fila inferior (fecha, cantidad, importe, última operación)",
+        "rightSide": "Badges estado/tipo (arriba derecha)",
+        "content": "Detalle expandible (contratos vinculados, condiciones, precios, certificados)",
+        "footerRight": "Etiqueta 'Ficha ->' amarillo estándar (borde #FFD700, bg rgba(255,215,0,0.1))",
+        "footerLeft": "Acciones contextuales (Editar si borrador, Imprimir si confirmado)",
+        "onClick": "Navegación a detalle"
+      }
+    },
+    "graficos_rendimiento": "Barras CSS puras (últimos 6 meses), altura proporcional al máximo, colores success/warning/danger según valor",
+    "carrusel_submodulos": "Sticky bajo header (z-index 900), overflow clip, wrapper mb-14, indicador activo centrado (PR #123)",
+    "fabs_flotantes": "Todos con etiqueta lateral (fab-label) y botón circular (fab-btn), posicionados fixed bottom-right z-50",
+    "alertas_contratos": "Banner amarillo pulsing arriba del contenido si contratos expiran ≤30 días, botón 'GESTIONAR ➔' navega a pestaña contratos"
+  },
+
+  "5_integracion_siggan_badigex": {
+    "datos_maestros_obligatorios": {
+      "REGA": "Formato normalizado ESXXXXXXXXXXXX (14 chars), validado regex ^[A-Z]{2}\\d{12}$",
+      "tipo_operador_SIGGAN": [
+        "matadero", "industria_lactea", "operador_comercial", "tratante",
+        "cebadero", "piensos", "sanitario", "maquinaria", "proveedor_servicios"
+      ],
+      "tipo_operador_lacteo_Q": [
+        "primer_comprador", "centro_operacion", "centro_descarga",
+        "intermediario", "transportista"
+      ],
+      "CCAA": ["andalucia", "extremadura"]
+    },
+    "movimiento_oficial_obligatorio": {
+      "trigger": "Al cerrar venta masiva (cada animal)",
+      "tipo": "salida",
+      "motivo": "matadero",
+      "campos_SIGGAN": [
+        "rega_origen (finca)",
+        "rega_destino (comprador, validado)",
+        "tipo_operador_destino (comprador)",
+        "explotacion_contraparte",
+        "numero_guia (oficial)",
+        "especie + num_animales + crotales (15 dígitos ISO 11784)",
+        "transportista: id, nombre, matrícula, ATG, desinsectación vigente",
+        "fecha, comunidad_autonoma, estado_tramite='presentado'",
+        "notas: 'Venta comercial {ALBARÁN} · DIMOE DIMOE-{ALBARÁN}'"
+      ],
+      "validaciones_bloqueantes": [
+        "REGA destino válido",
+        "Transportista con ATG + desinsectación no vencida",
+        "Comprador tipo operador en {matadero, operador_comercial, tratante, cebadero}",
+        "Contrato activo vigente"
+      ]
+    },
+    "documentos_generados": {
+      "ICA": "Código documento identificación canal animal (entrada manual)",
+      "Guia_Sanitaria": "Nº guía oficial (entrada manual)",
+      "DIMOE": "Documento Identificación Movimiento Orden Expedición - auto-generado al cerrar venta",
+      "Albaran": "PDF imprimible (Trazabilidad.generarEstructuraAlbaran + App.imprimirAlbaran)",
+      "Factura": "PDF si hay precio (Liquidacion.calcular + App.imprimirFactura)",
+      "Albaran_INFOLAC": "Leche - nº INFOLAC + laboratorio"
+    },
+    "trazabilidad_animal": {
+      "crotal": "15 dígitos ISO 11784 (equino microchip implementado acde2fa)",
+      "especies": "bovino, ovino, caprino, porcino, equino (catálogo 163 razas DB v16)",
+      "rebanos_lotes": "Snapshots zona/especie/tipo al cierre para ICA lote"
+    }
+  },
+
+  "6_flags_free_premium": {
+    "modo_contexto": {
+      "helper": "ModoContextoHelper.getFlags()",
+      "flags": { "leche": "true|false", "carne": "true|false" },
+      "alcance": "POR FINCA (no global)",
+      "afecta": "Submódulos visibles en carrusel CoMer (leche/carne), tipos contrato permitidos, tipos venta/entrega"
+    },
+    "limites_modelo": {
+      "regla": "Límites Free/Premium SIEMPRE en el modelo (.save()), nunca solo en vista/wizard",
+      "verificacion": "PremiumQA.runAll() los verifica",
+      "ejemplos_sospechosos": [
+        "Número máx fincas",
+        "Número máx animales",
+        "Número máx gastos",
+        "Número máx contratos",
+        "Número máx compradores/proveedores/transportistas"
+      ]
+    },
+    "build_model": {
+      "compra_unica": "premium_unlock en Play Store",
+      "release_oficial": "Private/build-and-upload.ps1 (variante FREE)",
+      "versionCode": "512 actual, 523 próximo (onboarding 3 pilares validado)"
+    }
+  },
+
+  "7_estados": {
+    "ventas_carne": {
+      "estados": ["borrador", "presentado", "validado", "rechazado", "anulado"],
+      "estado_defecto": "presentado",
+      "editable": "Solo 'borrador' permite edición (botón Editar en lista y detalle)"
+    },
+    "entregas_leche": {
+      "estados": ["borrador", "presentado", "validado", "rechazado"],
+      "estado_analitica": ["PENDIENTE", "APTO/CONFORME/CORRECTO/EXITOSO/VÁLIDO", "ALERTA/CRÍTICO/RECHAZADO/INCORRECTO/FALLIDO", "ANTIBIÓTICOS=POSITIVO (rojo)"],
+      "editable": "Solo 'borrador' permite edición"
+    },
+    "contratos_compra": {
+      "estados": ["ACTIVO (activo !== false)", "INACTIVO (activo === false)", "VENCIDO (fecha_fin < hoy)", "PRÓXIMO A VENCER (≤30 días)"],
+      "acciones": "Anular (eliminar) desde formulario edición"
+    },
+    "entidades_comerciales": {
+      "compradores": "activo (true/false) - filtro activa/inactiva/todos",
+      "proveedores": "activo (true/false) - filtro activa/inactiva/todos",
+      "transportistas": "activo (true/false) + certificados (bienestar, desinsectación, termoneutral) - filtro activa/inactiva/todos"
+    },
+    "gastos": {
+      "anulado": "boolean (excluido de cálculos MOFA/balance)"
+    }
+  },
+
+  "8_datos_demo_chamorro": {
+    "finca": "CHAMORRO (finca.demo=true o nombre incluye 'CHAMORRO')",
+    "ajustes_auto_demo": {
+      "contrato_carne": "CT-2026-001 ajustado a expirar en 15 días si no hay contratos venciendo pronto",
+      "trigger": "Al renderizar ComercializacionView, setTimeout 100ms recarga hash"
+    },
+    "precarga_poblacion_inicial": {
+      "compradores": 3,
+      "transportistas": 2,
+      "contratos": 2,
+      "ventas_carne_y_leche": "Precargadas (validación guías PWA: GeGan 36/38, CoMer 40/42, ExPro 52/55)"
+    },
+    "validacion_guías": "CERRADA 2026-08-04, spec en VALIDACION-GUIAS-DEMO-CHAMORRO.md"
+  }
+}

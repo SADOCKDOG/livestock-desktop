@@ -1,0 +1,41 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e2]: Sin conexión
+  - banner [ref=f4e3]:
+    - img "Livestock Manager" [ref=f4e5]
+    - generic [ref=f4e7]: Cargando...
+  - main [ref=f4e10]:
+    - generic [ref=f4e11]: Iniciando aplicación...
+  - navigation "Navegación principal escritorio" [ref=f4e12]:
+    - link "Inicio" [ref=f4e13] [cursor=pointer]:
+      - /url: "#/"
+    - link "Animales" [ref=f4e15] [cursor=pointer]:
+      - /url: "#/animales"
+    - link "Rebaños" [ref=f4e17] [cursor=pointer]:
+      - /url: "#/rebanos"
+    - link "GeGan" [ref=f4e19] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=f4e21] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=f4e23] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=f4e26] [cursor=pointer]
+  - status
+  - generic [ref=f4e29]:
+    - generic [ref=f4e30]:
+      - img "Livestock Manager" [ref=f4e31]
+      - heading "Bienvenido" [level=1] [ref=f4e32]
+      - paragraph [ref=f4e33]: Gestión ganadera profesional v4.10.1 Premium
+      - button "Primeros pasos" [ref=f4e34] [cursor=pointer]
+    - generic [ref=f4e35]:
+      - button "Importar Backup Restaura tu base de datos desde un archivo JSON" [ref=f4e36] [cursor=pointer]:
+        - generic [ref=f4e41]:
+          - generic [ref=f4e42]: Importar Backup
+          - generic [ref=f4e43]: Restaura tu base de datos desde un archivo JSON
+      - button "Nueva Finca Configura una explotación desde cero" [ref=f4e44] [cursor=pointer]:
+        - generic [ref=f4e50]:
+          - generic [ref=f4e51]: Nueva Finca
+          - generic [ref=f4e52]: Configura una explotación desde cero
+      - button "Cargar Demo CHAMORRO Explora la app con una explotación de ejemplo con datos en todos los módulos" [ref=f4e53] [cursor=pointer]:
+        - generic [ref=f4e58]:
+          - generic [ref=f4e59]: Cargar Demo CHAMORRO
+          - generic [ref=f4e60]: Explora la app con una explotación de ejemplo con datos en todos los módulos

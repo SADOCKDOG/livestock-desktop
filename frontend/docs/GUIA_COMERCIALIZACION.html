@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Módulo Comercial SIGGAN - Livestock Manager</title>
+    <style>
+        :root { --primary: #d97706; --secondary: #d4a373; --dark: #111827; --light: #f9fafb; --border: #e5e7eb; --siggan: #059669; --siggan-bg: #f0fdf4; --siggan-border: #d1fae5; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.6; color: var(--dark); margin: 0; padding: 0; background: #fff; }
+        .container { max-width: 850px; margin: 0 auto; padding: 40px; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); padding-bottom: 20px; margin-bottom: 40px; }
+        .logo { height: 60px; }
+        .header-text { text-align: right; }
+        .header-text h1 { margin: 0; font-size: 1.8rem; color: var(--primary); }
+        .version { font-weight: bold; color: #666; }
+        h2 { color: var(--primary); border-left: 5px solid var(--secondary); padding-left: 15px; margin-top: 40px; }
+        h2.siggan { color: var(--siggan); border-left: 5px solid var(--siggan); }
+        .feature-card { background: var(--light); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .siggan-card { background: var(--siggan-bg); border: 1px solid var(--siggan-border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .screenshot { width: 100%; max-width: 400px; display: block; margin: 20px auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid var(--border); }
+        .badge-siggan { display: inline-block; background: var(--siggan); color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 0.8em; font-weight: bold; }
+        .alert { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+        .alert strong { color: #d97706; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th { background: #d9770620; padding: 8px 12px; text-align: left; color: var(--primary); }
+        td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+        .footer { margin-top: 50px; text-align: center; font-size: 0.8rem; color: #888; border-top: 1px solid var(--border); padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="data:image/png;base64,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\n" alt="Logo" class="logo">
+            <div class="header-text">
+                <h1>Módulo de Comercialización</h1>
+                <p class="version">Livestock Manager v4.3 Premium &nbsp;<span class="badge-siggan">Compatible SIGGAN</span></p>
+            </div>
+        </header>
+
+        <p>El módulo comercial centraliza la gestión de ventas, contratos con mataderos y transportistas, asegurando que cada salida de ganado cumpla con la normativa de seguridad alimentaria.</p>
+
+        <h2>1. Gestión de Entidades</h2>
+        <div class="feature-card">
+            <p>Antes de registrar una venta, debe configurar sus socios comerciales en el menú <strong>"Más"</strong>:</p>
+            <ul>
+                <li><strong>Compradores:</strong> Mataderos, tratantes o clientes finales.</li>
+                <li><strong>Proveedores:</strong> Suministradores de pienso, farmacia o servicios.</li>
+                <li><strong>Transportistas:</strong> Crucial para la trazabilidad SIGGAN. Debe incluir nombre, NIF, <strong>matrícula del vehículo</strong>, autorización de transporte de ganado (ATG) y fecha de última desinsectación.</li>
+            </ul>
+        </div>
+
+        <h2>2. Contratos y Liquidación</h2>
+        <div class="feature-card">
+            <p>Vincule cada comprador con un contrato activo. El sistema aplicará automáticamente:</p>
+            <ul>
+                <li>Tipos de IVA (General o REAGP).</li>
+                <li>Porcentajes de retención.</li>
+                <li>Precios pactados por kg vivo o canal.</li>
+            </ul>
+        </div>
+
+        <h2>3. El Asistente de Venta Masiva (Industrial)</h2>
+        <p>Este es el corazón del módulo comercial. Valida en tiempo real que los animales seleccionados sean aptos para consumo humano.</p>
+        <div class="screenshot-placeholder">📸 CAPTURA: Selección de Lote con semáforo de aptitud SIA</div>
+
+        <p><strong>Campos Críticos de Trazabilidad:</strong></p>
+        <table>
+            <tr><th>Campo</th><th>Importancia</th></tr>
+            <tr><td>Documento ICA</td><td>Obligatorio para la entrada en matadero.</td></tr>
+            <tr><td>Guía Sanitaria</td><td>Referencia oficial del movimiento pecuario.</td></tr>
+            <tr><td>Vet. Responsable</td><td>Garantiza la supervisión facultativa de la expedición.</td></tr>
+        </table>
+
+        <h2 class="siggan">4. Cumplimiento SIGGAN en Ventas</h2>
+        <div class="siggan-card">
+            <p>Cada venta registrada en la app genera automáticamente los registros necesarios para el Cuaderno Digital SIGGAN (Andalucía):</p>
+            <table>
+                <tr><th>Dato requerido por SIGGAN</th><th>Dónde se registra en la app</th></tr>
+                <tr><td>Código REGA del comprador (matadero/intermediario)</td><td>Ficha del comprador → campo REGA</td></tr>
+                <tr><td>Identificación de animales vendidos (crotal/DIB)</td><td>Asistente venta masiva → lista de animales</td></tr>
+                <tr><td>Fecha y hora del movimiento</td><td>Generada automáticamente al confirmar la venta</td></tr>
+                <tr><td>Matrícula del vehículo de transporte</td><td>Ficha del transportista → campo matrícula</td></tr>
+                <tr><td>ATG del transportista</td><td>Ficha del transportista → campo autorización</td></tr>
+                <tr><td>Referencia de la guía sanitaria</td><td>Formulario de venta → campo "Guía Sanitaria"</td></tr>
+                <tr><td>Veterinario responsable</td><td>Formulario de venta → campo "Vet. Responsable"</td></tr>
+                <tr><td>Notificación de baja al REGA</td><td>Generada automáticamente al cerrar la venta</td></tr>
+            </table>
+            <div class="alert">
+                <strong>Exportación SIA:</strong> Puede generar el fichero CSV de movimientos para SIGGAN/SIA desde <em>Informes → Exportar Movimientos SIA</em>. Este fichero es el que debe subir al portal de la Consejería de Agricultura de Andalucía.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 Livestock Manager Premium v4.3 · Módulo Comercial · Compatible SIGGAN (Andalucía)</p>
+            <p>Base legal: RD 787/2023 · Decreto 14/2006 · Reglamento (UE) 2016/429</p>
+        </div>
+    </div>
+</body>
+</html>

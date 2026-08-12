@@ -1,0 +1,344 @@
+{
+  "fechaAuditoria": "2026-08-07",
+  "modulo": "Sanidad y Reproducción",
+  "archivosAuditados": [
+    "js/views/sanidad-view.js",
+    "js/views/botiquin-view.js",
+    "js/views/fitosanitarios-view.js",
+    "js/views/saneamientos-view.js",
+    "js/views/wizards/wizard-tratamiento.js",
+    "js/views/wizards/wizard-vacunacion.js",
+    "js/views/bitacora-animal-view.js",
+    "js/views/margen-animal-view.js"
+  ],
+
+  "1_rutasYpestanas": {
+    "#/sanidad": {
+      "vista": "SanidadView",
+      "descripcion": "Módulo único de Sanidad/Veterinaria: libro de tratamientos, periodos de supresión SIGGAN, historial clínico y vacunaciones",
+      "contenido": "Alertas de supresión activas + Histórico clínico veterinario + Vacunaciones (Libro ADSG)",
+      "modoAcceso": "Pestaña en GanaderiaView + Vista completa con buscador y FAB"
+    },
+    "#/botiquin": {
+      "vista": "BotiquinView",
+      "descripcion": "Inventario de medicamentos/vacunas de la finca (gestión interna de stock, no exigida por SIGGAN)",
+      "contenido": "Lista de productos (stock, lotes, caducidades) + Detalle con movimientos entrada/consumo + FEFO",
+      "modoAcceso": "Ruta independiente con FAB 'Nuevo Producto'"
+    },
+    "#/fitosanitarios": {
+      "vista": "FitosanitariosView",
+      "descripcion": "Cuaderno de Campo Fitosanitario y tratamientos de parcelas (RD 787/2023)",
+      "contenido": "KPIs (inversión, aplicaciones, zonas) + Historial fitosanitarios + Export PDF Libro Oficial + FAB Nuevo",
+      "modoAcceso": "Ruta bajo pestaña Explotación (#/expro), render en expro-tab-content o app-content"
+    },
+    "#/saneamientos": {
+      "vista": "SaneamientosView",
+      "descripcion": "Campañas oficiales de saneamiento ganadero (modelo js/saneamientos.js)",
+      "contenido": "Lista campañas con calificación, examinados/positivos, restricción movimientos + Detalle editable + Wizard creación",
+      "modoAcceso": "Ruta independiente, usa ComunidadesService para catálogos"
+    },
+    "detalle": {
+      "/botiquin-producto?id=": "Detalle producto botiquín con historial movimientos",
+      "/saneamiento?id=": "Detalle campaña saneamiento editable",
+      "/animal?id=:id/bitacora": "Bitácora animal: Comentarios, Condición Corporal, Reubicaciones"
+    }
+  },
+
+  "2_funcionalidadesPrincipales": {
+    "libroTratamientos": {
+      "archivo": "js/sanitarios.js (modelo) + sanidad-view.js (vista) + wizard-tratamiento.js",
+      "caracteristicas": [
+        "Cálculo centralizado de periodos de supresión (calcularSupresion) — única fuente de verdad",
+        "Enriquecimiento automático: enSupresionCarne, enSupresionLeche, diasRestantes, fechaFin, prohibidoLeche (INDEFINIDO)",
+        "Alertas de supresión SIEMPRE VISIBLES (requisito modo-explotación flags): card con gradiente rojo, animate-pulse, badge SUPRESIÓN CARNE/LECHE, días restantes o PROHIBIDO",
+        "Historial clicable con card-registro: badge estado (ESPERA X DÍAS / Sin supresión / SUPRESIÓN PERMANENTE), color danger/success",
+        "Edición/borrado inline via modal (guardado en Sanitarios.save/delete)",
+        "Filtro buscador por medicamento, tipo, crotal, veterinario",
+        "Vacunaciones integradas (Libro ADSG) con estado ABIERTA/CERRADA, cierre trazable, anulación trazable",
+        "Calculadora de dosis (peso × dosis mg/kg ÷ concentración mg/mL = mL)"
+      ]
+    },
+    "botiquin": {
+      "archivo": "js/botiquin.js (modelo) + botiquin-view.js",
+      "caracteristicas": [
+        "Gestión interna de stock (productos + lotes), NO condiciona SIGGAN",
+        "Lotes con caducidad, cantidad, precio, proveedor, factura",
+        "Consumo FEFO (First Expired First Out) automático en wizard consumo",
+        "Entrada de stock opcional vinculada a compra (precio, proveedor, factura) — equivalente INGVAC.DAT legacy",
+        "Alertas visuales: STOCK BAJO, CADUCADO, CADUCA EN X DÍAS",
+        "Historial movimientos (entrada/consumo) con trazabilidad a tratamiento/vacunación origen",
+        "Anulación suave (anulado=true, conservado para auditoría)"
+      ]
+    },
+    "saneamientosADSG": {
+      "archivo": "js/saneamientos.js (modelo) + saneamientos-view.js",
+      "caracteristicas": [
+        "Campañas oficiales ADSG/BADIGEX: Brucelosis, Tuberculosis, Listeriosis, etc. (catálogo CS)",
+        "Campos: campaña, fecha, próxima actuación, veterinario + nº colegiado, ADSG, especie",
+        "Resultados: nº examinados, nº positivos, nº tubo, sexo",
+        "Calificación sanitaria oficial (catálogo CS): sin_calificar, calificado, etc. con colores",
+        "Restricción de movimientos (checkbox + motivo) — crítica para trazabilidad",
+        "Wizard creación con validación (positivos ≤ examinados)",
+        "Anulación trazable (conserva histórico)"
+      ]
+    },
+    "fitosanitarios": {
+      "archivo": "fitosanitarios-view.js (usa gastos_ganaderia cat='Fitosanitarios')",
+      "caracteristicas": [
+        "Cuaderno de campo RD 787/2023",
+        "Control normativo: registro producto, dosis aplicada, plazo seguridad (días), apto comercialización",
+        "Cálculo automático período seguridad: badge COMPLETADO (verde) vs BLOQUEADO (rojo animate-pulse)",
+        "Export PDF Libro Fitosanitario Oficial via InformesView",
+        "Integración con GastoWizard para alta/edición (categoría Fitosanitarios por defecto)"
+      ]
+    }
+  },
+
+  "3_flujosDeTrabajoWizards": {
+    "wizardTratamiento": {
+      "archivo": "js/views/wizards/wizard-tratamiento.js",
+      "pasos": 2,
+      "paso1_datosMedicamento": {
+        "campos": [
+          "Selección Catálogo Sanitario (agrupado por categoría) + 'Otro (Ingreso manual)'",
+          "Medicamento/Principio activo (autollenado del catálogo o manual)",
+          "Espera Carne (días) — autollenado del catálogo",
+          "Espera Leche (días) — autollenado; si prohibidoLeche=true → 999 + alerta PROHIBIDO EN LACTACIÓN",
+          "Fecha aplicación + Hora (opc.)",
+          "Destinatario: animal individual O 'TODOS LOS ANIMALES DEL REBAÑO (TRATAMIENTO MASIVO)'",
+          "Opcional: Descontar de botiquín (producto + cantidad)",
+          "Calculadora dosis integrada (peso, dosis mg/kg, concentración mg/mL → mL)"
+        ],
+        "validaciones": [
+          "Medicamento obligatorio",
+          "Si vincula botiquín → cantidad obligatoria > 0"
+        ],
+        "autollenadoCatalogo": "CatalogoSanitario.obtenerMedicamento(id) → retiroCarneDias, retiroLecheDias, prohibidoLeche, principioActivo, categoria"
+      },
+      "paso2_libroTratamientosSIGGAN": {
+        "campos": [
+          "Motivo/Diagnóstico (catálogo CS: getMotivosTratamiento)",
+          "Dosificación (texto libre ej: '1 ml/50kg')",
+          "Duración (días, default 1)",
+          "Aplicado por: titular / veterinario reproducción / ADSG / otro personal",
+          "Fecha fin tratamiento",
+          "Nº animales tratados",
+          "Vía administración (catálogo CS: getViasAdministracion)",
+          "Nº lote medicamento + Caducidad",
+          "Veterinario prescriptor (nombre + nº colegiado) — default ADSG finca",
+          "Nº Receta / Prescripción oficial"
+        ],
+        "validaciones": "Ninguna explícita en paso 2 (solo paso 1)"
+      },
+      "guardado": "Sanitarios.save(finalData) → retorna tratamientoId; si botiquín vinculado → Botiquin.consumir() con origenTipo='tratamiento'"
+    },
+    "wizardVacunacion": {
+      "archivo": "js/views/wizards/wizard-vacunacion.js",
+      "pasos": 2,
+      "paso1_cabeceraTipos": {
+        "campos": [
+          "Rebaño (selector)",
+          "Fecha",
+          "Veterinario",
+          "Tipos de vacuna (máx. 4, dinámicos): Tipo/Nombre, Lote, Dosis, Nombre comercial",
+          "Opcional por tipo: Descontar de botiquín (producto + cantidad)",
+          "Observaciones"
+        ],
+        "validaciones": [
+          "Rebaño obligatorio",
+          "Al menos 1 tipo de vacuna con nombre",
+          "Si tipo vinculado a botiquín → cantidad obligatoria > 0",
+          "Máximo 4 tipos (constante Vacunaciones.MAX_TIPOS_VACUNA)"
+        ]
+      },
+      "paso2_animalesVacunados": {
+        "modos": [
+          "POR CATEGORÍA (agregado): selector categoría (catálogo CS por especie) + cantidad",
+          "ANIMALES INDIVIDUALES: multi-select de animales del rebaño"
+        ],
+        "camposComunes": [
+          "Animales totales censo (opc.)",
+          "% Censo vacunado: PARCIAL / 100% (COMPLETA)"
+        ],
+        "validaciones": "Al menos 1 animal o categoría vacunada"
+      },
+      "guardado": "Vacunaciones.save(finalData) → vacunacionId; por cada tipo con botiquín → Botiquin.consumir(origenTipo='vacunacion')"
+    }
+  },
+
+  "4_elementosUIClave": {
+    "alertasSupresion": {
+      "implementacion": "SanidadView.renderAlertasSupresion()",
+      "siempreVisibles": true,
+      "comportamiento": "Se inyectan ANTES del historial en cualquier vista huésped (Ganadería, Carne, Explotación)",
+      "estilo": "card con gradiente rojo oscuro, animate-pulse, border-left 4px solid danger, box-shadow rojo",
+      "badge": "SUPRESIÓN CARNE (naranja/rojo) / SUPRESIÓN LECHE (rojo) — fondo rgba(danger,0.15), border danger 0.3, glow",
+      "contenido": "Medicamento, Animal (crotal dorado), Fecha aplicada, Días restantes o PROHIBIDO (indefinidoLeche), Advertencia legal"
+    },
+    "badgesEstado": {
+      "historialTratamientos": {
+        "SIN_SUPRESIÓN": "color purple, texto 'Sin supresión'",
+        "EN_SUPRESIÓN_CARNE": "color danger, texto 'ESPERA X DÍAS (CARNE)'",
+        "EN_SUPRESIÓN_LECHE": "color danger, texto 'ESPERA X DÍAS (LECHE)'",
+        "AMBAS": "color danger, texto 'ESPERA X DÍAS (CARNE/LECHE)'",
+        "PROHIBIDO_LECHE_INDEFINIDO": "color danger, texto 'SUPRESIÓN PERMANENTE'"
+      },
+      "vacunaciones": {
+        "ABIERTA": "color info, badge 'ABIERTA'",
+        "CERRADA": "color success, badge 'CERRADA'",
+        "ANULADA": "filtrada en lista (no se muestra)"
+      },
+      "botiquin": {
+        "STOCK_BAJO": "color danger, badge STOCK BAJO en metadata",
+        "CADUCADO": "color danger, badge CADUCADO",
+        "CADUCA_PROXIMO": "color warning, badge CADUCA EN X DÍAS",
+        "NORMAL": "color moduleColor (info)"
+      },
+      "fitosanitariosPeriodoSeguridad": {
+        "COMPLETADO_APTO": "background rgba(--c-success,0.1), color success, border success 0.25, texto 'PERÍODO DE SEGURIDAD COMPLETADO (APTO)'",
+        "BLOQUEADO": "background rgba(danger,0.1), color danger, border danger 0.25, animate-pulse, texto 'EN PERÍODO DE SEGURIDAD (BLOQUEADO HASTA DD/MM/AAAA)'",
+        "SIN_PLAZO": "gris, 'SIN PLAZO DE SEGURIDAD REQUERIDO'"
+      },
+      "saneamientosCalificacion": "badge con color del catálogo CS (calif.color), fondo color+20%, border color+60%"
+    },
+    "timeline": {
+      "bitacoraAnimalView": "3 secciones tarjeteadas con scroll interno (max-h 260px): Comentarios (fecha + texto), Condición Corporal (fecha + peso + BCS/9 destacado info), Reubicaciones (fecha + descripción)",
+      "botiquinDetalle": "Historial movimientos cronológico descendente: ENTRADA (verde +) / CONSUMO (rojo -), fecha, vinculado a tratamiento/vacunación #, coste/factura/proveedor si entrada"
+    },
+    "cardRegistro": "Patrón estándar App._cardRegistro(): icon, title, subtitle (crotal dorado), metadata (chips), badge derecha superior, color dinámico, onClick navegación"
+  },
+
+  "5_integracionSIGGAN_BADIGEX": {
+    "libroTratamientosOficial": {
+      "normativa": "RD 1749/1998 + SIGGAN (Andalucía) / BADIGEX (Extremadura)",
+      "camposCubiertosWizard": [
+        "Medicamento/Principio activo",
+        "Tiempos de espera: Carne (días) y Leche (días o INDEFINIDO/prohibido)",
+        "Motivo/Diagnóstico (catálogo oficial CS.getMotivosTratamiento)",
+        "Dosificación y duración",
+        "Vía administración (catálogo oficial CS.getViasAdministracion)",
+        "Nº animales, lote medicamento, caducidad",
+        "Veterinario prescriptor (nombre + nº colegiado)",
+        "Nº Receta/Prescripción oficial",
+        "Aplicado por (titular, vet reproducción, ADSG, otro)",
+        "Fecha inicio y fin tratamiento"
+      ],
+      "calculoSupresion": "Única fuente de verdad en SanidadView.calcularSupresion() — usado por todas las vistas (Ganadería, Carne, Explotación, Sanidad, Bitácora, Informes)"
+    },
+    "tiemposEspera": {
+      "carne": "Días enteros, 0 = sin espera. Fecha fin = fecha aplicación + días. En supresión si fechaFin > hoy.",
+      "leche": "Días enteros o INDEFINIDO (prohibidoLeche=true → 999 días, badge PROHIBIDO, alerta permanente). Si prohibidoLeche → NO SE PUEDE DESTINAR LECHE A CONSUMO HUMANO.",
+      "flagsModoExplotacion": "ModoContextoHelper.getFlags() → {leche: bool, carne: bool} POR FINCA. Filtra alertas: opts.tipo 'carne'|'leche'|null",
+      "colorAlertaCarne": "Verde lima (--c-success) — según spec modo-explotación flags"
+    },
+    "campañasADSG": {
+      "catalogo": "ComunidadesService.getCampanasSaneamiento() — campañas oficiales por comunidad",
+      "calificaciones": "ComunidadesService.getCalificacionesSanitarias() — valores oficiales con color",
+      "especies": "ComunidadesService.getEspeciesAutorizables()",
+      "ADSG": "Campo texto libre para nombre de la Agrupación de Defensa Sanitaria Ganadera",
+      "restriccionMovimientos": "Campo crítico: si true → bloquea guías de movimiento (integración pendiente/documentada)"
+    },
+    "vacunacionesADSG": {
+      "modeloJerarquico": "Una Vacunación = cabecera + hasta 4 Tipos de Vacuna (lote, dosis, nombre comercial)",
+      "animales": "Modo agregado (categoría + cantidad) o individual (lista animales)",
+      "censo": "Animales totales + % vacunado (100% = COMPLETA)",
+      "libroOficial": "Cumple registro ADSG/SIGGAN"
+    },
+    "fitosanitariosRD787": {
+      "controlNormativo": "Registro producto, dosis aplicada, plazo seguridad días, apto comercialización",
+      "periodoSeguridad": "Calculado automáticamente: fecha aplicación + plazo → badge APTO/BLOQUEADO",
+      "exportPDF": "Libro Fitosanitario Oficial via InformesView._ejecutarExportarPDFSeccion('fitosanitario')"
+    }
+  },
+
+  "6_flagsFreePremium": {
+    "modelo": "Límites en modelo (.save()), nunca solo en vista/wizard (premium-limit-pattern.md)",
+    "verificacion": "PremiumQA.runAll() los verifica",
+    "limitesIdentificados": {
+      "sanitarios": "No hay límite explícito en código revisado (Sanitarios.save sin controle de cuota)",
+      "vacunaciones": "No hay límite explícito en código revisado",
+      "botiquin": "No hay límite de productos/lotes",
+      "saneamientos": "No hay límite de campañas",
+      "fitosanitarios": "Almacenados como gastos categoría 'Fitosanitarios' — sin límite propio",
+      "bitacoraAnimal": "Comentarios ilimitados (registro_eventos)",
+      "margenAnimal": "Cálculo para todos los animales de la finca"
+    },
+    "nota": "El patrón Premium se aplica en otros módulos (ej. animales, partos) pero en Sanidad/Reproducción no se observan guards PremiumQA en los .save() de estos archivos. Verificar en js/sanitarios.js, js/vacunaciones.js, js/botiquin.js, js/saneamientos.js, js/margen-animal.js el método .save()"
+  },
+
+  "7_estados": {
+    "tratamientoSupresion": [
+      "ACTIVO (sin supresión): enSupresion=false, badge 'Sin supresión', color purple",
+      "EN_SUPRESIÓN_CARNE: enSupresionCarne=true, diasRestantesCarne>0, badge 'ESPERA X DÍAS (CARNE)', color danger",
+      "EN_SUPRESIÓN_LECHE: enSupresionLeche=true, diasRestantesLeche>0, badge 'ESPERA X DÍAS (LECHE)', color danger",
+      "EN_SUPRESIÓN_AMBAS: ambas true, badge 'ESPERA X DÍAS (CARNE/LECHE)', color danger",
+      "SUPRESIÓN_PERMANENTE_LECHE: prohibidoLeche=true, indefinidoLeche=true, badge 'SUPRESIÓN PERMANENTE', color danger, alerta PROHIBIDO siempre visible"
+    ],
+    "vacunacion": [
+      "ABIERTA: cerrada=false, anulada=false, badge 'ABIERTA', color info",
+      "CERRADA: cerrada=true, anulada=false, badge 'CERRADA', color success (no editable, solo anular)",
+      "ANULADA: anulada=true, filtrada en listas, conservada para auditoría"
+    ],
+    "botiquin": [
+      "NORMAL: stock > mínima, caducidad > 30 días o sin caducidad",
+      "STOCK_BAJO: cantidadActual ≤ cantidadMínima, badge 'STOCK BAJO', color danger",
+      "CADUCA_PRONTO: 0 < díasCaducidad ≤ 30, badge 'CADUCA EN X DÍAS', color warning",
+      "CADUCADO: díasCaducidad < 0, badge 'CADUCADO', color danger",
+      "ANULADO: anulado=true, oculto en lista principal, conservado histórico"
+    ],
+    "saneamiento": [
+      "ACTIVO/PENDIENTE: sin anular, con calificación según catálogo",
+      "CON_RESTRICCION_MOVIMIENTOS: restriccion_movimientos=true, badge rojo 'RESTRICCIÓN DE MOVIMIENTOS ACTIVA'",
+      "ANULADO: anulada=true, conservado histórico"
+    ],
+    "fitosanitarioPeriodoSeguridad": [
+      "SIN_PLAZO: plazoSeguridadDias=0 o null",
+      "COMPLETADO_APTO: hoy >= fechaFinPlazo, badge verde APTO",
+      "BLOQUEADO_EN_PLAZO: hoy < fechaFinPlazo, badge rojo animate-pulse BLOQUEADO HASTA fecha"
+    ],
+    "margenAnimal": [
+      "RENTABLE: margenNeto >= 0, color success",
+      "NO_RENTABLE: margenNeto < 0, color danger"
+    ]
+  },
+
+  "8_datosDemoChamorro": {
+    "validacionCerrada": "2026-08-04 (pwa-guias-demo-chamorro.md)",
+    "resultados": {
+      "GeGan": "36/38 guías válidas",
+      "CoMer": "40/42 guías válidas",
+      "ExPro": "52/55 guías válidas (vs 53/55 Android, 1 target por datos demo)"
+    },
+    "spec": "VALIDACION-GUIAS-DEMO-CHAMORRO.md en Private/",
+    "bugCerrado": "await disponible() corregido en PR #116",
+    "datosPrecargados": {
+      "tratamientos": "Incluidos en datos demo para validar alertas supresión, historial, wizards",
+      "vacunaciones": "Incluidas con tipos múltiples, estados ABIERTA/CERRADA, animales por categoría/individual",
+      "botiquin": "Productos con lotes, caducidades, stock variado para probar alertas FEFO",
+      "saneamientos": "Campañas con calificaciones, examinados/positivos, restricciones",
+      "fitosanitarios": "Registros con período seguridad completado y en curso",
+      "bitacoraAnimal": "Comentarios, cond. corporal (pesajes con BCS), reubicaciones",
+      "margenAnimal": "Animales con costes/ingresos para ranking"
+    },
+    "nota": "Datos demo son finca 'Chamorro' — usados en validación guías PWA y testing manual. No son datos de producción."
+  },
+
+  "notasAdicionales": {
+    "patronesCodigo": [
+      "SanidadView.calcularSupresion() = única fuente verdad (antes triplicado en Ganadería/Carne/Híbrido)",
+      "Botiquin FEFO implementado tanto en wizard consumo (auto) como en detalle (visual)",
+      "WizardManager patrón estándar: steps[content, onRender, onChange, validate], onComplete async",
+      "ModalManager para edición inline (tratamientos, vacunaciones, botiquín, saneamientos)",
+      "App._cardRegistro() componente unificado para listas clicables",
+      "ComunidadesService catálogos centralizados (vias, motivos, campañas, calificaciones, especies, categorías)",
+      "Exit guards (App.setExitGuard) en formularios de edición para evitar pérdida datos",
+      "Botiquin y Vacunaciones/Tratamientos desacoplados: stock opcional, no condiciona guardado SIGGAN"
+    ],
+    "deudaTecnica": [
+      "Flags Free/Premium no verificados en .save() de modelos sanitarios (revisar js/sanitarios.js, js/vacunaciones.js, js/botiquin.js, js/saneamientos.js, js/margen-animal.js)",
+      "Restricción movimientos en saneamientos no bloquea aún guías de movimiento (integración pendiente)",
+      "Fitosanitarios usa gastos_ganaderia cat='Fitosanitarios' — no modelo dedicado",
+      "BitacoraAnimalView solo lectura + comentarios; edición cond. corporal vía Pesajes, reubicaciones vía Traslados"
+    ]
+  }
+}

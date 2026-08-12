@@ -1,0 +1,5 @@
+"Código CPE";"Descripción CPE";"Código Clase (Regímenes de calidad)";"Descripción Clase (Regímenes de calidad)";"Código CPE viticultura";"Categoría del CPE viticultura"
+"SOC_CLND063";"Uvas de vinificación";"19";"VINOS DOP";"SOC_CLND064";"Uvas de vinificación para vinos con denominación de origen protegida (DOP)"
+"SOC_CLND063";"Uvas de vinificación";"21";"VINOS IGP";"SOC_CLND065";"Uvas de vinificación para vinos con indicación geográfica protegida (IGP)"
+"SOC_CLND063";"Uvas de vinificación";"20";"VINOS AROMATIZADOS";"SOC_CLND066";"Uvas de vinificación para otros vinos n.c.o.p. (sin DOP/IGP)"
+"SOC_CLND063";"Uvas de vinificación";;;"SOC_CLND066";"Uvas de vinificación para otros vinos n.c.o.p. (sin DOP/IGP)"

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Debug Parser</title>
+  <script src="js/mode-config.js"></script>
+  <script>if (typeof FREE_MODE === 'undefined') { window.FREE_MODE = false; }</script>
+  <script src="js/db.js"></script>
+  <script src="js/error-handler.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/crypto.js"></script>
+  <script src="js/catalogo-sanitario.js"></script>
+  <script src="js/services/event-bus.js"></script>
+  <script src="js/services/cache-service.js"></script>
+  <script src="js/services/balance-service.js"></script>
+  <script src="js/services/comunidades-service.js"></script>
+  <script src="js/services/pdf-catastro.js"></script>
+  <script src="js/services/pdf-service.js"></script>
+  <script src="js/services/export-service.js"></script>
+  <script src="js/fincas.js"></script>
+  <script src="js/views/importar-zonas-view.js"></script>
+</head>
+<body>
+  <div id="app-content"></div>
+  <div id="error-diag"></div>
+  <div id="toast-container"></div>
+  <script>
+    // Override console to capture
+    const originalLog = console.log;
+    console.log = function(...args) {
+      originalLog.apply(console, args);
+      document.getElementById('output').innerHTML += args.join(' ') + '<br>';
+    };
+    const originalError = console.error;
+    console.error = function(...args) {
+      originalError.apply(console, args);
+      document.getElementById('output').innerHTML += '<span style="color:red">ERROR: ' + args.join(' ') + '</span><br>';
+    };
+    const originalWarn = console.warn;
+    console.warn = function(...args) {
+      originalWarn.apply(console, args);
+      document.getElementById('output').innerHTML += '<span style="color:orange">WARN: ' + args.join(' ') + '</span><br>';
+    };
+  </script>
+  <button onclick="testParser()">Test Parser</button>
+  <div id="output" style="margin-top:20px;white-space:pre-wrap;font-family:monospace;"></div>
+  <script>
+    window.testParser = async function() {
+      document.getElementById('output').innerHTML = '';
+      console.log('Loading pdf.js...');
+      const ok = await PdfCatastro.asegurarPdfJs();
+      console.log('pdf.js loaded:', ok);
+      
+      // Load test PDF
+      const response = await fetch('test-catastro.pdf');
+      const blob = await response.blob();
+      console.log('PDF loaded, size:', blob.size);
+      
+      console.log('Calling PdfCatastro.importar()...');
+      const resultado = await PdfCatastro.importar(blob);
+      console.log('Resultado:', JSON.stringify(resultado, null, 2));
+    };
+  </script>
+</body>
+</html>

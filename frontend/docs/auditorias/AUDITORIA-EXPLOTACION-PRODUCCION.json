@@ -1,0 +1,323 @@
+{
+  "auditoria": {
+    "fecha": "2026-08-07",
+    "modulo": "Explotación/Producción (Leche y Carne)",
+    "version": "v1.8.0 (ExplotacionView), v24 (Módulo Lácteo Integral), v3.2.0 (ProduccionView)"
+  },
+  "rutasYpestanas": {
+    "explotacion": {
+      "ruta": "#/explotacion",
+      "carruselTabs": [
+        { "key": "explotacion", "label": "EXPRO", "icon": "finca", "color": "var(--c-success)" },
+        { "key": "lacteo", "label": "LÁCTEA", "icon": "leche", "color": "var(--c-info)" },
+        { "key": "silos", "label": "SILOS", "icon": "silos", "color": "var(--c-success)" },
+        { "key": "fitosanitarios", "label": "FITOSANITARIOS", "icon": "sanidad", "color": "var(--c-purple)" },
+        { "key": "gastos", "label": "FINANZAS", "icon": "dinero", "color": "var(--c-purple)" },
+        { "key": "proveedores", "label": "PROVEEDORES", "icon": "proveedores", "color": "var(--c-purple)" },
+        { "key": "tramites", "label": "TRÁMITES", "icon": "documento", "color": "var(--c-info)" },
+        { "key": "traslado", "label": "TRASLADOS", "wizard": true },
+        { "key": "censo", "label": "CENSO", "wizard": true },
+        { "key": "crotales", "label": "CROTALES", "wizard": true },
+        { "key": "guia", "label": "GUÍAS", "wizard": true }
+      ],
+      "subModulosLacteoTabs": [
+        { "key": "dashboard", "label": "Dashboard", "icon": "grafico" },
+        { "key": "tanques", "label": "Tanques", "icon": "silos" },
+        { "key": "control", "label": "Control", "icon": "analitica" },
+        { "key": "balance", "label": "Balance", "icon": "documento" },
+        { "key": "graficos", "label": "Gráficos", "icon": "grafico" }
+      ],
+      "subModulosTramitesTabs": [
+        { "key": "guias", "label": "Guías DIMOE", "icon": "documento", "color": "var(--c-info)" },
+        { "key": "censo", "label": "Censo Anual", "icon": "animales", "color": "var(--c-warning)" },
+        { "key": "crotales", "label": "Crotales", "icon": "paquete", "color": "var(--c-success)" },
+        { "key": "traslado", "label": "Traslados", "icon": "trazabilidad", "color": "var(--c-purple)" },
+        { "key": "infolac", "label": "Infolac", "icon": "leche", "color": "var(--c-info)" },
+        { "key": "archivo", "label": "Archivo", "icon": "cuaderno", "color": "var(--c-orange)" }
+      ]
+    },
+    "produccion": {
+      "ruta": "#/produccion",
+      "tabsPrincipales": [
+        { "key": "carne", "label": "Cárnica", "icon": "carne" },
+        { "key": "leche", "label": "Láctea", "icon": "leche" }
+      ],
+      "subTabsLeche": [
+        { "key": "dashboard", "label": "Dashboard", "icon": "grafico" },
+        { "key": "tanques", "label": "Tanques", "icon": "silos" },
+        { "key": "control", "label": "Control", "icon": "analitica" },
+        { "key": "balance", "label": "Balance", "icon": "documento" }
+      ]
+    },
+    "tanques": { "ruta": "#/explotacion?sub=tanques (via carrusel)" },
+    "silos": { "ruta": "#/explotacion?sub=silos (via carrusel)" },
+    "controlLechero": { "ruta": "#/explotacion?sub=lacteo&subtab=control" },
+    "comercializacionLeche": { "ruta": "#/comercializacion?tab=leche" }
+  },
+  "funcionalidadesPrincipales": {
+    "explotacionView": {
+      "descripcion": "Vista unificada del módulo ExPro (Explotación y Producción). Gestiona el carrusel de sub-módulos y la pestaña principal 'Explotación' con balance unificado leche/carne, alertas de silos, guía 365 días SIGGAN, y actividad reciente filtrada por flags FREE/PREMIUM (leche/carne).",
+      "pestañaExplotacion": [
+        "Tarjeta resumen producción (Litros control + Margen MOFA leche + Margen carne)",
+        "Banner Guía Sanitaria 365 días SIGGAN (Andalucía) - auto-autorización si finca indemne/calificada",
+        "Alerta telemetría silos con stock < 15%",
+        "Widget AgendaView",
+        "Actividad reciente unificada (ordeños + pesajes) con búsqueda por crotal/zona",
+        "Acceso a edición/borrado de registros via App._cardRegistro"
+      ],
+      "subModulosDelegados": {
+        "lacteo": "ExplotacionLacteaView (dashboard, tanques, control, balance, gráficos)",
+        "silos": "SilosView (telemetría circular, autonomía, carga/consumo)",
+        "fitosanitarios": "FitosanitariosView",
+        "gastos": "GastosView",
+        "proveedores": "ProveedoresView",
+        "tramites": "Hub administrativo (guías, censo, crotales, traslados, infolac, archivo)"
+      }
+    },
+    "explotacionLacteaView": {
+      "descripcion": "Dashboard del submódulo Lácteo con 5 sub-pestañas. Renderiza tanques, KPIs, última analítica, alertas del MotorLacteo, y gráficos Chart.js.",
+      "subTabs": {
+        "dashboard": "Tanques con stock/temp/limpieza, KPI producción día + 30d + MOFA, última analítica con umbrales por especie/CCAA, alertas DANGER/WARNING",
+        "tanques": "Delegado a TanquesView.render()",
+        "control": "Analíticas (tipo, grasa, proteína, E. seco, gérmenes, somáticas, lab, estado) + Controles oficiales DHI (fecha, media litros/grasa/proteína)",
+        "balance": "Movimientos balance_lacteo (entrada/salida/merma/ajuste) con referencia tipo/id, litros, fecha, turno",
+        "graficos": "5 canvas Chart.js: producción mensual, calidad leche, composición, comparativa tanques, curva lactación (selector animal)"
+      }
+    },
+    "produccionView": {
+      "descripcion": "Vista de Producción con tabs Cárnica/Láctea. Espejo de la vista anterior pero enfocada en listas de registros con KPIs y FAB. Duplica lógica de ExplotacionLacteaView en sub-tabs lácteas.",
+      "tabCarne": "Lista de pesajes (individual/lote) con KPIs total kg y count, FAB 'Registrar Pesaje'",
+      "tabLeche": {
+        "dashboard": "KPIs (Producción hoy, Total L, Extracto seco medio, Analíticas), 3 tanques, última analítica, botones acción Ordeño/Tanque",
+        "tanques": "Lista completa tanques (estado, tipo, stock, temp, limpieza) con acciones Editar/Limpieza",
+        "control": "Mismo contenido que ExplotacionLacteaView.renderControl",
+        "balance": "Mismo contenido que ExplotacionLacteaView.renderBalance"
+      },
+      "extrasTabsProduccion": ["ventas (expediciones)", "gastos"]
+    },
+    "tanquesView": {
+      "descripcion": "Gestión completa de tanques de leche (tanque_frio, cántara, cisterna). Incluye historial de movimientos por tanque desde BalanceLacteo.",
+      "funciones": [
+        "Listado con gauge circular stock %, temp actual/objetivo, limpiezas",
+        "Historial últimos 5 movimientos (entrada/salida) con fechas",
+        "Acciones: Editar (TanqueWizard), Registrar Limpieza (TanquesLeche.registrarLimpieza)"
+      ]
+    },
+    "silosView": {
+      "descripcion": "Telemetría de silos de pienso con gauge SVG circular animado, cálculo de autonomía (días) basado en consumo real 30d (registro_eventos tipo silo_consumo), alertas stock <15%, <35%.",
+      "funciones": [
+        "KPIs: Capacidad total, Almacenado, Ocupación media",
+        "Cards por silo: gauge circular clickeable (recalibración sensores), ficha técnica (modal), acciones Cargar/Consumir/Editar/Eliminar",
+        "Cargar silo: proveedor, cantidad, coste, factura → genera gasto Alimentación + evento registro_eventos tipo silo_carga",
+        "Consumir silo: rebaño opcional, sacos × kg/saco, valor opcional → descuenta stock, genera gasto vinculado a rebaño + evento silo_consumo (base ICA)",
+        "Ficha técnica modal: gauge, KPIs, historial movimientos, botones rápidos",
+        "Recalibración sensores: animación SVG gauge 0% → CAL → valor real"
+      ]
+    },
+    "wizardsLeche": {
+      "OrdeñoWizard": {
+        "pasos": 3,
+        "paso1_datosOrdeño": "Fecha, Turno (AM/PM), Tanque destino (Letra Q), Temperatura tanque",
+        "paso2_produccionAnimal": "Tabla animales hembras activas rebaño lechero (crotal, nombre, input litros), total en vivo",
+        "paso3_confirmacion": "Resumen + balance tanque (stock actual + ordeño = nuevo stock % capacidad)",
+        "guardado": "Produccion.saveLeche por animal + BalanceLacteo.registrar entrada + TanquesLeche.actualizarTemperatura + evento maestro Pesajes.registrar"
+      },
+      "TanqueWizard": {
+        "pasos": 1,
+        "campos": "Nombre, Código Letra Q* (unico, validación MAPA), Capacidad L, Tipo (tanque_frio/cantara/cisterna), Temp objetivo/actual, Observaciones",
+        "validaciones": "Nombre obligatorio, Letra Q obligatorio (min 3 chars), unicidad Letra Q",
+        "guardado": "TanquesLeche.create/update"
+      },
+      "AlbaranLecheWizard": {
+        "descripcion": "Salida láctea colectiva (albarán/cisterna) con completitud normativa RD 989/2022, INFOLAC, Letra Q 2.0",
+        "pasos": 2,
+        "paso1_datosRecogida": "Fecha, Volúmenes L, Especie (vacuno/ovino/caprino), Tanque origen, Matrícula cisterna, Temp, Nº muestra Letra Q, NIF tomador, Inhibidores in situ, Agentes recogida/destino (compradores lácteos), Tipo movimiento Letra Q (7 tipos), Estado Letra Q, Campos cisterna→cisterna, Nº muestreo oficial, Horas ordeño/carga, Contrato, CCAA, Cadena frío, Certificado inhibidores",
+        "paso2_analiticaLiquidacion": "Grasa, Proteína, Gérmenes, Somáticas (recalculo precio en vivo), Aflatoxina M1 (Pivca), Fecha análisis, Laboratorio, Antibióticos, Costes alimentación, Precio base, Primas/penalizaciones, Precio extracto seco → Precio final €/L e Importe total calculados en vivo",
+        "validacionesComplejas": [
+          "MotorLacteo.validarComercializacion (temp, stock tanque, inhibidores)",
+          "MotorLacteo.validarMovimientoLetraQ (reglas MAPA intermediarios, códigos cisterna)",
+          "Bloqueo sanitario automático: Sanitarios.verificarRetiroLeche por rebaño + MotorTrazabilidad.checkSupresión por animal (leche)",
+          "ComunidadesService.evaluarCalidadLecheEspecie (umbrales por especie/CCAA)"
+        ],
+        "guardado": "comercializacion_leche + analiticas_leche (si hay datos lab) + balance_lacteo salida + documento_legal infolac_declaracion + evento maestro Pesajes.registrar (rol VENTA) + impresión albarán"
+      },
+      "AnaliticaLecheWizard": {
+        "pasos": 1,
+        "campos": "Fecha muestreo, Especie, Tipo muestreo (autocontrol/oficial), Tanque, Grasa, Proteína, Gérmenes 30°C, Células somáticas, Laboratorio, Inhibidores",
+        "guardado": "AnaliticasLeche.create"
+      },
+      "MovimientoBalanceWizard": {
+        "pasos": 1,
+        "campos": "Tanque, Tipo (entrada/salida/merma/ajuste), Cantidad L (si ajuste = nuevo stock absoluto), Fecha, Temperatura, Observaciones",
+        "validacion": "Cantidad > 0 (salvo ajuste >= 0)",
+        "guardado": "BalanceLacteo.registrar (referencia_tipo: manual)"
+      }
+    }
+  },
+  "flujosDeTrabajoWizards": {
+    "OrdeñoWizard": {
+      "steps": [
+        { "step": 1, "titulo": "DATOS DEL ORDEÑO", "campos": ["fecha(date)", "turno(select AM/PM)", "tanqueId(select Letra Q)", "temperatura(number°C)"], "validaciones": ["fecha obligatoria", "tanque obligatorio"] },
+        { "step": 2, "titulo": "PRODUCCIÓN POR ANIMAL", "campos": ["Tabla animales hembras rebaño lechero: crotal, nombre, litros(input)"], "validaciones": ["Total litros > 0"] },
+        { "step": 3, "titulo": "CONFIRMACIÓN", "campos": ["Resumen readonly", "Balance tanque proyectado"] }
+      ],
+      "onComplete": "Guarda producción individual + balance tanque entrada + temp tanque + evento maestro"
+    },
+    "TanqueWizard": {
+      "steps": [
+        { "step": 1, "titulo": "NUEVO/EDITAR TANQUE", "campos": ["nombre", "codigo_letra_q*", "capacidad_litros", "tipo", "temperatura_objetivo", "temperatura_actual", "observaciones"], "validaciones": ["nombre req", "letraQ req+único", "capacidad >0"] }
+      ]
+    },
+    "AlbaranLecheWizard": {
+      "steps": [
+        { "step": 1, "titulo": "DATOS DE RECOGIDA EN TANQUE", "campos": ["fecha", "litros", "especie", "tanqueId", "matricula_cisterna", "temperatura", "numero_muestra_letra_q", "nif_tomador_muestra", "resultado_inhibidores_in_situ", "agente_recogida_nif", "agente_destino_nif", "tipo_movimiento_letra_q (7)", "estado_letra_q (4)", "codigo_cisterna_origen/destino_letra_q", "numero_muestreo_oficial", "hora_ordeno", "hora_carga", "contrato_numero", "comunidad_autonoma", "cadena_frio_cumplida", "certificado_inhibidores"], "validaciones": ["fecha req", "litros>0", "CCAA req", "temp>6 warning", "inh certificado req", "reglas intermediarios MAPA", "MotorLacteo.validarMovimientoLetraQ", "balance stock suficiente"] },
+        { "step": 2, "titulo": "ANALÍTICA Y LIQUIDACIÓN (OPCIONAL)", "campos": ["grasa", "proteina", "germenes", "somaticas", "aflatoxina_m1", "metodo_aflatoxina", "fecha_analisis", "laboratorio", "antibioticos", "coste_alimentacion_diario/periodo", "precio_base", "primas_penalizaciones", "precio_extracto_seco (hidden)", "precio_final_calculado", "importe_total_calculado"], "validaciones": ["ComunidadesService.evaluarCalidadLecheEspecie (bloqueante/alertas)"] }
+      ],
+      "onComplete": "Guarda comercializacion_leche + analiticas_leche + balance_lacteo salida + doc legal infolac + evento maestro + imprime albarán"
+    },
+    "AnaliticaLecheWizard": {
+      "steps": [
+        { "step": 1, "titulo": "NUEVA ANALÍTICA", "campos": ["fecha_muestreo", "especie", "tipo_muestreo", "tanqueId", "grasa", "proteina", "germenes_30C", "celulas_somaticas", "laboratorio_nombre", "inhibidores"], "validaciones": ["fecha req"] }
+      ]
+    },
+    "MovimientoBalanceWizard": {
+      "steps": [
+        { "step": 1, "titulo": "NUEVO MOVIMIENTO DE BALANCE", "campos": ["tanqueId", "tipo_movimiento (entrada/salida/merma/ajuste)", "cantidad_litros", "fecha", "temperatura", "observaciones"], "validaciones": ["tanque req", "cantidad>0 (salvo ajuste>=0)"] }
+      ]
+    }
+  },
+  "elementosUIClave": {
+    "tarjetas": [
+      "card-registro (App._cardRegistro) para actividad reciente, tanques, analíticas, controles, balance, silos",
+      "card-resumen KPIs con gradient header + grid 2/3/4 cols (leche-kpi-item)",
+      "card-dark-gradient (silos) con gauge SVG circular animado",
+      "card-accent (wizards) con section-header-theme color oro/púrpura/peligro",
+      "Bento-style alerts: silos críticos <15%, Guía 365, bloqueos sanitarios"
+    ],
+    "KPIs": [
+      "Producción: Litros Control, Margen MOFA (€), Total Litros, Margen Carne (€), Margen Híbrido",
+      "Calidad: Grasa %, Proteína %, Extracto Seco %, Gérmenes (k), Somáticas (k), Inhibidores OK/KO",
+      "Tanques: Stock actual/ capacità L, % llenado, Temp actual/objetivo, Últ/Próx limpieza",
+      "Silos: Capacidad total, Almacenado, Ocupación media %, Autonomía (días), Stock crítico <15%/<35%",
+      "Comercialización: Precio base, Precio extracto seco, Primas, Tasa INLAC, Precio final €/L, Importe total, MOFA"
+    ],
+    "graficos": [
+      "Chart.js canvas: producción mensual, calidad leche, composición, comparativa tanques, curva lactación (por animal)"
+    ],
+    "tablas": [
+      "Tabla animales ordeño (crotal, nombre, input litros) con total en vivo",
+      "Tabla analíticas (tipo, fecha, grasa, proteína, E.seco, gérmenes, somáticas, lab, estado)",
+      "Tabla controles oficiales DHI (fecha, organismo, media L/grasa/proteína)",
+      "Tabla balance movimientos (icono ↑↓, tipo, referencia, litros, fecha+turno)"
+    ],
+    "badgesYEstados": [
+      "badge estado analítica (validado/alerta/pendiente/crítico)",
+      "badge tipo movimiento Letra Q (7 variantes)",
+      "badge estado Letra Q (pendiente/comunicado/rechazado/exento)",
+      "badge temperatura (success ≤4 / warning ≤6 / danger >6)",
+      "badge stock tanque (success >70% / warning 70-90% / danger >90%)",
+      "semaforoCalidad helper (óptima/atención/alerta)"
+    ],
+    "navegacion": [
+      "Carrusel circular ExPro (App.renderCarruselPestanas) con 11 tabs",
+      "Sub-tabs scroll horizontales (lacteo, tramites, leche-produccion)",
+      "FAB contextural (App.renderGuideFab, App._abrirAsistenteProduccion)",
+      "Modales full-screen (wizard-full-screen) con exit guard Android"
+    ]
+  },
+  "integracionSIGGAN_BADIGEX": {
+    "camposNormativos": {
+      "LetraQ": [
+        "codigo_letra_q (tanque, cisterna, muestra)",
+        "tipo_movimiento_letra_q (7 tipos RD 989/2022)",
+        "estado_letra_q (4 estados)",
+        "fecha_limite_comunicacion_letra_q (cálculo MotorLacteo según tipo agente destino)",
+        "fecha_comunicado_letra_q",
+        "recibo_letra_q (identificación productor, código explotación, fecha_hora, litros, operador, muestra)"
+      ],
+      "INFOLAC": [
+        "estado_tramite_infolac (borrador/presentado/validado/error)",
+        "fecha_presentacion_infolac",
+        "numero_registro_infolac",
+        "acuse_infolac",
+        "numero_infolac (finca)",
+        "documento_legal tipo infolac_declaracion"
+      ],
+      "DIMOE_GUIAS": [
+        "guia_movimiento (documentos_legales)",
+        "guia_365_habilitada + calificacion_sanitaria (indemne/calificada) → auto-autorización 365 días Andalucía",
+        "ComunidadesService.getConfiguracionCCAA (guia_automatica_si_saneada)"
+      ],
+      "REGA_CENSO": [
+        "Declaración censal (documentos_legales tipo DECLARACION_CENSAL/censo_anual)",
+        "Pedidos crotales (pedidos_crotales)",
+        "Libro registro (/cuaderno)"
+      ],
+      "CALIDAD_LECHE": [
+        "ComunidadesService.getUmbralesCalidadEspecie (vacuno/ovino/caprino) → grasa min, proteína min, gérmenes max, somáticas max",
+        "ComunidadesService.evaluarCalidadLecheEspecie (bloqueante/alertas)",
+        "Aflatoxina M1 (Plan PIVCA) con método (kit_rapido/ELISA/HPLC)",
+        "Inhibidores in situ (no_realizada/conforme/no_conforme)",
+        "Laboratorios oficiales por CCAA (ComunidadesService.getLaboratoriosLeche)"
+      ],
+      "PRECIOS_REFERENCIA": [
+        "ComunidadesService.PRECIO_EXTRACTO_SECO_REF (precio_base_referencia, precio_por_punto_extracto, tasa_INLAC_defecto)"
+      ]
+    }
+  },
+  "flagsFreePremium": {
+    "modoContextoHelper": {
+      "flags": { "leche": true, "carne": false },
+      "comportamiento": "Dos flags {leche, carne} por finca. No existe modo Híbrido global. Carne = verde lima. Alertas supresión en Sanidad siempre visibles."
+    },
+    "limitesAplicados": {
+      "enVista": "FAB acción principal cambia: 'Registrar Producción' (ambos) / 'Registrar Pesaje' (carne) / 'Registrar Ordeño' (leche)",
+      "enActividadReciente": "Filtra ordeños (leche) y pesajes (carne) según flags",
+      "enWizardOrdeño": "Solo disponible si flag leche=true",
+      "enWizardPesaje": "Solo disponible si flag carne=true (via App._abrirAsistenteProduccion)",
+      "PremiumQA": "PremiumQA.runAll() verifica límites en modelo (.save()), no solo en vista"
+    }
+  },
+  "estados": {
+    "tiposOrdeño": ["AM (Mañana)", "PM (Tarde)"],
+    "estadosAnalitica": ["validado", "alerta", "pendiente", "bloqueante"],
+    "estadosTanque": ["activo", "mantenimiento", "inactivo"],
+    "tiposTanque": ["tanque_frio", "cantara", "cisterna"],
+    "tiposMovimientoBalance": ["entrada", "salida", "merma", "ajuste"],
+    "tiposMovimientoLetraQ": [
+      "explotacion_a_cisterna",
+      "explotacion_a_rechazo",
+      "explotacion_a_establecimiento",
+      "cisterna_a_cisterna",
+      "cisterna_a_rechazo",
+      "cisterna_a_establecimiento"
+    ],
+    "estadosLetraQ": ["pendiente", "comunicado", "rechazado", "exento"],
+    "resultadoInhibidoresInSitu": ["no_realizada", "conforme", "no_conforme"],
+    "tipoMuestreo": ["autocontrol", "oficial"],
+    "especiesLeche": ["vacuno", "ovino", "caprino"],
+    "alertasMotorLacteo": ["DANGER (bloqueante)", "WARNING (aviso)"],
+    "estadoFichaSilo": ["STOCK BAJO (<15%)", "STOCK ESTABLE"],
+    "calificacionSanitaria": ["indemne", "calificada", "otras"]
+  },
+  "datosDemoChamorro": {
+    "precargaSeedData": {
+      "fincas": "Finca demo 'Chamorro' con comunidad_autonoma='andalucia', adsg_codigo, codigo_REGA, numero_infolac, contrato_lacteo_numero",
+      "tanques": "Mínimo 1 tanque con codigo_letra_q válido, capacidad, tipo tanque_frio, temp objetivo 4°C",
+      "rebanos": "Rebaño tipo 'leche'/'mixta' con hembras activas (sexo=H/hembra) con crotal/caravana",
+      "animales": "Vacas lecheras activas con numero_identificacion",
+      "config_silos": "Silos con nombre, capacidad, cantidadActual, alimento, fechaUltimaCarga",
+      "comercializacion_leche": "Entregas con laboratorio (grasa, proteina, germenes, somaticas, antibioticos, extracto_seco), precioBase, importe_total, estado_tramite_infolac",
+      "control_lechero": "Registros DHI con media_rebano_litros/grasa/proteina, organismo_control",
+      "analiticas_leche": "Autocontroles/oficiales con parametros calidad, laboratorio_nombre, inhibidores",
+      "balance_lacteo": "Movimientos entrada/salida con referencia_tipo (produccion_leche/comercializacion_leche/manual), tanqueId, litros, turno",
+      "gastos_ganaderia": "Categoría Alimentacion con montos, fechas, proveedorId, rebanoId",
+      "proveedores": "Compradores tipo 'láctico' activos con nif_cif, tipo_operador_lacteo (primer_comprador/intermediario/establecimiento)",
+      "documentos_legales": "Guías movimiento, censos, infolac_declaracion",
+      "movimientos_ganado": "Traslados internos tipo 'traslado'",
+      "pedidos_crotales": "Historial pedidos con estado, cantidad, fecha",
+      "sanitarios": "Tratamientos con prohibidoLeche, supresión leche/carne, fechas retiro"
+    },
+    "validacionGuíasPWA": "GeGan 36/38, CoMer 40/42, ExPro 52/55 (vs 53/55 Android, 1 target por datos demo)"
+  }
+}

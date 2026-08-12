@@ -1,0 +1,325 @@
+{
+  "modulo": "Informes",
+  "version": "2.3.0",
+  "fechaAuditoria": "2026-08-07",
+  "archivosAuditados": [
+    "js/views/informes-view.js",
+    "js/views/informes-analytics.js",
+    "js/views/informes-data.js",
+    "js/views/informes-export.js"
+  ],
+  "rutasYpestanas": {
+    "rutaPrincipal": "#/informes",
+    "categoriasPrincipales": [
+      {
+        "clave": "general",
+        "etiqueta": "General",
+        "icono": "grafico",
+        "subTabs": {
+          "general": "General",
+          "por-finca": "Por Finca",
+          "alertas": "Alertas",
+          "eficiencia": "Eficiencia",
+          "rent-esp": "Rent. Especie"
+        }
+      },
+      {
+        "clave": "gegan",
+        "etiqueta": "GeGan",
+        "icono": "animales",
+        "subTabs": {
+          "censo": "Censo",
+          "rotacion": "Rotación",
+          "reproductivo": "Repro",
+          "sanidad": "Sanidad",
+          "carne": "Cárnico",
+          "coste-prod": "Coste/Animal"
+        }
+      },
+      {
+        "clave": "expro",
+        "etiqueta": "ExPro",
+        "icono": "finca",
+        "subTabs": {
+          "produccion": "Producción",
+          "leche": "Lácteo",
+          "curva-prod": "Curva",
+          "cargas": "Aforos",
+          "fitosanitario": "Fitosanitario",
+          "silos": "Silos",
+          "tramites": "Trámites",
+          "proveedores": "Proveedores",
+          "gastos": "Gastos"
+        }
+      },
+      {
+        "clave": "comer",
+        "etiqueta": "CoMer",
+        "icono": "compradores",
+        "subTabs": {
+          "ventas": "Ventas",
+          "margenes": "Márgenes",
+          "compradores": "Compradores",
+          "contratos-vencimiento": "Contratos",
+          "transportistas-resumen": "Transportistas",
+          "albaranes": "Albaranes"
+        }
+      },
+      {
+        "clave": "libros",
+        "etiqueta": "Libros",
+        "icono": "documento",
+        "subTabs": {
+          "pyg": "P y G",
+          "flujo-caja": "Flujo Caja",
+          "breakeven": "Break-Even",
+          "subvenciones": "PAC",
+          "exportar": "Exportar",
+          "rega": "REGA"
+        }
+      }
+    ],
+    "totalTabs": 32
+  },
+  "funcionalidadesPrincipales": {
+    "balance": {
+      "descripcion": "Resumen económico completo: ingresos cárnicos, ingresos lácteos, gastos alimentación, otros gastos, balance neto con % rentabilidad",
+      "ubicacion": "Tab General > Rentabilidad General",
+      "metricas": ["balanceTotal", "rentabilidadPct", "ingresosCarne", "ingresosLeche", "gastosAlimentacion", "otrosGastos"]
+    },
+    "rentabilidad": {
+      "descripcion": "Desglose por tipo de explotación (carne/leche) y por zona/rebano",
+      "tabs": ["carne", "leche", "coste-prod", "rent-esp", "pyg"],
+      "metricas": ["margenNetoAnimal", "rentabilidadZonas", "costeProduccionPorCabezaDia", "rentabilidadPorEspecie"]
+    },
+    "censo": {
+      "descripcion": "Censo total, activos, vendidos, por especie, por categoría productiva, por rebaño, pirámide de edad",
+      "tabs": ["censo", "reproductivo", "rotacion", "rega"],
+      "metricas": ["totalAnimales", "activos", "vendidos", "porEspecie", "porCategoria", "piramideEdad", "tasaReposicion", "tasaBajas"]
+    },
+    "desgloseIngresosGastos": {
+      "descripcion": "PyG estructurada con ingresos (leche, carne), gastos operativos (alimentación, sanidad, fitosanitarios, electricidad, personal, amortizaciones), EBITDA",
+      "tabs": ["pyg", "gastos", "margenes", "flujo-caja"],
+      "metricas": ["totalIngresos", "totalGastos", "balanceNeto", "gastosPorCategoria", "gastosPorProveedor", "gastosPorMes", "margenCarneNeto", "mofaLeche", "margenTotal", "flujoCajaMensual"]
+    },
+    "exportacion": {
+      "formatos": ["PDF", "Excel (XLSX)", "CSV SIGGAN/BADIGEX", "XML SIGGAN"],
+      "botones": ["COMPLETO", "GENERAL (por sección)", "CSV SIGGAN"],
+      "funciones": {
+        "pdf": "_exportPDF / _exportPDFSeccion",
+        "excel": "_exportExcel",
+        "rega": "_exportREGA (CSV+XML censo+explotación)",
+        "movimientos": "_exportMovimientos (SIA/PIGGAN)",
+        "produccion": "_exportProduccion (PIGGAN)",
+        "completo": "_exportCompleto (todo)"
+      },
+      "validacionPrevia": "Modal pre-flight con errores bloqueantes y avisos no bloqueantes"
+    }
+  },
+  "nuevasCardsFaseB": {
+    "descripcion": "Implementadas en PR #110, #111 — 5 categorías + 4 renders nuevos + ICA cebo/Botiquín/DIMOE/evolución ventas",
+    "tabs": [
+      {
+        "tab": "produccion",
+        "categoria": "ExPro",
+        "cards": ["Registros 90d", "Tipos activos", "Total kg pesados", "Por tipo de evento", "Evolución temporal (chart)"]
+      },
+      {
+        "tab": "gastos",
+        "categoria": "ExPro",
+        "cards": ["Total Gastos", "Categorías", "Proveedores", "Por categoría", "Por proveedor", "Evolución mensual (chart)"]
+      },
+      {
+        "tab": "margenes",
+        "categoria": "CoMer",
+        "cards": ["Margen Neto Carne (transporte+matanza deducidos)", "MOFA Leche (ingresos-alimentación)", "Margen Total combinado", "Gráfico doughnut Carne/Leche"]
+      },
+      {
+        "tab": "albaranes",
+        "categoria": "CoMer",
+        "cards": ["Total Albaranes", "Importe Total", "Total kg", "Tabla con fecha, tipo, importe, cantidad, estado", "Totales pie tabla"]
+      },
+      {
+        "tab": "ica-cebo",
+        "categoria": "GeGan > Carne",
+        "cards": ["Tandas activas (movimientos entrada motivo=cebo)", "Animales en tanda", "Pesajes registrados", "Consumos silo", "Tabla: Movimiento, Fecha entrada, Animales, Peso último control, Pesajes, Consumo silo"]
+      },
+      {
+        "tab": "botiquin",
+        "categoria": "GeGan > Sanidad (integrado)",
+        "cards": ["Productos totales", "Lotes", "Stock bajo (alertas)", "Próximos a caducar 30d", "Detalle stock bajo con cantidad actual/mínima"]
+      },
+      {
+        "tab": "dimoe",
+        "categoria": "Libros > Trámites",
+        "cards": ["Guías DIMOE emitidas: Fecha, Nº guía, Destino, Motivo, Transportista"]
+      },
+      {
+        "tab": "leche-margen-animal",
+        "categoria": "ExPro > Lácteo",
+        "cards": ["Margen Medio €/cab", "Rendimiento Leche/Animal L/día", "Índice de Renovación %", "Costo Producción Leche €/L"]
+      },
+      {
+        "tab": "leche-produccion",
+        "categoria": "ExPro > Lácteo",
+        "cards": ["Total Litros", "Promedio/Día", "Precio Medio", "Rendimiento L/cab/día", "Registros", "MOFA Total", "Stock Tanques", "Grasa+Proteína %", "Calidad leche (grasa, proteína, extracto seco, células somáticas)", "Producción por rebaño", "Evolución temporal (chart)"]
+      },
+      {
+        "tab": "curva-prod",
+        "categoria": "ExPro",
+        "cards": ["kg Total, Litros Total", "Meta kg, Meta L", "% Cumplimiento Carne, % Cumplimiento Leche", "Tabla mensual: kg, L, kg Acum, L Acum, Ingresos"]
+      },
+      {
+        "tab": "breakeven",
+        "categoria": "Libros",
+        "cards": ["Costes Fijos, Costes Variables, Ingresos", "Break-Even Carne (kg) + Margen Seguridad", "Break-Even Leche (L) + Margen Seguridad", "Cubierto Sí/No por tipo", "Período analizado (meses, rebaños)"]
+      },
+      {
+        "tab": "subvenciones-pac",
+        "categoria": "Libros",
+        "cards": ["Solicitado, Cobrado, Pendiente, Registros", "Resumen por año", "Tabla: Año, Concepto, Régimen, Solicitado, Cobrado, Estado"]
+      }
+    ]
+  },
+  "elementosUIClave": {
+    "graficas": [
+      "Scatter: Margen por animal (peso vs margen)",
+      "Barras apiladas: Rentabilidad por zona",
+      "Linea: Evolución producción leche",
+      "Linea: Evolución precios medios €/kg",
+      "Barras: Gastos por mes",
+      "Doughnut: Márgenes Carne/Leche, Categorías gastos proveedores",
+      "Pie: Tratamientos por categoría sanidad",
+      "Linea: Evolución producción general",
+      "Barras: Precio medio por comprador",
+      "Linea: Curva producción mensual"
+    ],
+    "tablas": [
+      "Libro de Ventas (fecha, albarán, comprador, NIF, kg, €/kg, base, IVA, retención, total, DIMOE/SIGGAN)",
+      "Compradores (nombre, NIF, tipo, ventas, kg, precio medio, total, % ingresos, contrato, última venta)",
+      "Proveedores (nombre, NIF, facturas, media/factura, total, % gasto, categorías, último registro)",
+      "Fitosanitario (fecha, proveedor, producto, zona, monto)",
+      "Sanidad (medicamento, rebaño, fecha, días rest., estado)",
+      "Censo (rebaño, tipo, total, activos, vendidos)",
+      "REGA (movimientos: fecha, tipo, motivo, entidad)",
+      "Trámites (campaña, fecha, calificación, próxima actuación, restricción)",
+      "Contratos (contrato, tipo, comprador, vence, estado)",
+      "Transportistas (nombre, vehículo, capacidad, desinsectación)",
+      "Rotación (nacimientos, compras, ventas, bajas, entrada neta)",
+      "Flujo Caja (mes, entradas, salidas, neto, acumulado)",
+      "Rentabilidad Especie (especie, rebaños, animales, ingresos, gastos, balance, vtas carne, vtas leche)",
+      "Curva Producción (mes, kg, L, kg Acum, L Acum, ingresos)",
+      "PAC (año, concepto, régimen, solicitado, cobrado, estado)",
+      "Albaranes (fecha, tipo, importe, cantidad, estado)",
+      "Silos (silo, alimento, stock, capacidad, %)",
+      "Cargas/Aforos (zona, superficie, aforo máx, ocupación, carga UGM/ha, %, estado)"
+    ],
+    "kpis": [
+      "Balance neto con % rentabilidad",
+      "Censo total / Activos / Vendidos",
+      "Fertilidad %, IEP días, Prolificidad",
+      "Tratamientos totales / Supresiones activas",
+      "Coste sanitario / animal",
+      "Margen neto por animal",
+      "GMD media global kg/día",
+      "Precio medio kg",
+      "Total litros / Promedio día / Precio medio",
+      "Rendimiento L/cab/día",
+      "MOFA total",
+      "Stock tanques / Capacidad",
+      "Grasa + Proteína % con semáforo umbrales",
+      "Margen medio €/cab",
+      "Índice renovación %",
+      "Costo producción €/L",
+      "Células somáticas con semáforo",
+      "Eficiencia técnica (KPIs semáforo verde/amarillo/rojo)",
+      "Carga global UGM/ha con semáforo",
+      "Break-even kg/L con margen seguridad",
+      "Tasa reposición / Tasa bajas",
+      "Flujo caja: entradas, salidas, neto, saldo final"
+    ],
+    "botonesExportacion": [
+      "PDF (por sección: general, carne, leche, reproductivo, sanidad, censo, ventas, compradores, proveedores, fitosanitario, alertas, por-finca, rega, pyg, coste-prod, eficiencia, cargas, rotacion, flujo-caja, rent-esp, curva-prod, breakeven)",
+      "Excel (8 hojas: Animales, Ventas Carne, Producción Leche, Gastos, Sanitarios, Censo, Compradores, Proveedores)",
+      "REGA: CSV censo + XML explotación (SIGGAN/BADIGEX)",
+      "Movimientos: CSV SIA/PIGGAN (altas, bajas, expediciones)",
+      "Producción: CSV PIGGAN (láctea + cárnica)",
+      "Completo: Todo lo anterior",
+      "Botón flotante 'Compartir' tras generar (30s auto-oculto)"
+    ]
+  },
+  "integracionSIGGAN_BADIGEX": {
+    "libroSanitario": {
+      "descripcion": "Exportación CSV/UTF-8-BOM y XML compatible SIGGAN/BADIGEX",
+      "campos": ["Crotal", "Especie", "Raza", "Sexo", "Fecha nacimiento", "Rebaño", "Estado", "RFID", "Madre", "Fecha alta/baja", "Motivo"]
+    },
+    "registroMovimientos": {
+      "descripcion": "Exportación CSV SIA/PIGGAN con movimientos",
+      "campos": ["Fecha", "Tipo", "Motivo", "Crotal", "Especie", "Origen/Destino", "Nº guía", "Transportista", "Matrícula", "Desinsectación"]
+    },
+    "censo": {
+      "descripcion": "CSV censo actual + XML datos explotación para REGA/SIGGAN",
+      "incluye": "REGA, CEA, propietario, NIF, dirección, municipio, provincia, CCAA, ADSG, veterinario, clasificación zootécnica"
+    },
+    "declaracionCensal": {
+      "descripcion": "Compatible con declaraciones censales autonómicas (Andalucía/Extremadura)",
+      "formato": "CSV estándar con BOM UTF-8"
+    },
+    "validacionPrevia": "Modal pre-flight: errores bloqueantes (faltan REGA, crotales duplicados, especies no válidas) y avisos (campos opcionales vacíos, fechas futuras)"
+  },
+  "flagsFreePremium": {
+    "modelo": "Compra única 'premium_unlock' en Play Store",
+    "releaseOficial": "Private/build-and-upload.ps1 (variante FREE)",
+    "versionCode": 512,
+    "restriccionesFree": {
+      "informesConsolidadosMultiFinca": "Solo Premium — informes-view.js verifica flags via ModoContextoHelper",
+      "exportacionAvanzada": "PDF completo / Excel multi-hoja / CSV SIGGAN completo requieren Premium",
+      "accesoTabsAvanzadas": "Algunas tabs (ej. costes, break-even, flujo caja) pueden tener límite Free"
+    },
+    "verificacion": "PremiumQA.runAll() verifica límites en .save() del modelo, no solo en vista/wizard",
+    "modoContexto": "Dos flags {leche, carne} POR FINCA (no globales) en ModoContextoHelper; Carne = verde lima"
+  },
+  "estados": {
+    "periodosConfigurables": "No hay selector de periodo global en UI; cada informe usa ventana fija (90 días, anual, últimos 30 registros, etc.)",
+    "filtros": {
+      "fecha": "Implícitos por tab (últimos 90d, últimos 30 registros, campaña actual)",
+      "finca": "Finca activa única (cambio via Fincas.getActiveId())",
+      "especie": "Filtrado implícito por rebaño/tipo en tabs GeGan; no selector UI explícito",
+      "rebano": "Agrupación por rebaño en la mayoría de tabs (ventas, leche, censo, coste-prod)"
+    }
+  },
+  "datosDemoChamorro": {
+    "validacion": "Cerrada 2026-08-04: GeGan 36/38, CoMer 40/42, ExPro 52/55",
+    "spec": "VALIDACION-GUIAS-DEMO-CHAMORRO.md en Private/",
+    "datosVisiblesEnInformes": {
+      "censo": "Rebaños demo con animales de diferentes especies (vacuno, ovino, caprino, porcino, equino)",
+      "ventasCarne": "Albaranes demo con compradores, pesos canal, precios, IVA, retenciones",
+      "produccionLeche": "Entregas demo con litros, precio base, calidad (grasa/proteína), analizadas",
+      "gastos": "Gastos demo categorizados: Alimentación, Sanidad, Fitosanitarios, Electricidad, Personal, Amortización",
+      "sanidad": "Tratamientos demo con medicamentos, suprimidos, días espera",
+      "reproductivo": "Partos demo, IEP, fertilidad, prolificidad",
+      "movimientos": "Altas, bajas, expediciones con guías DIMOE",
+      "tramites": "Saneamientos demo con calificaciones, restricciones",
+      "silos": "Stock demo con capacidades, % ocupación",
+      "cargas": "Zonas demo con aforos, ocupación, carga UGM/ha",
+      "compradores": "Compradores demo con NIF, tipo, contratos",
+      "proveedores": "Proveedores demo con facturas, categorías",
+      "transportistas": "Transportistas demo con desinsectación vencimientos",
+      "contratos": "Contratos demo con vencimientos",
+      "pac": "Subvenciones demo por año, régimen, solicitado/cobrado",
+      "ica_cebo": "Tandas de cebo demo con movimientos entrada motivo=cebo, pesajes, consumos silo",
+      "botiquin": "Productos demo con stock, lotes, caducidades",
+      "margen_animal": "Cálculos demo por animal con coste sanidad, litros leche, margen neto"
+    }
+  },
+  "notasTecnicas": {
+    "modularizacion": "4 archivos: informes-view.js (UI/render), informes-data.js (loaders), informes-analytics.js (cálculos puros), informes-export.js (PDF/Excel/Share)",
+    "cargaDatos": "Promise.all masiva en render() — 57 async calls paralelas",
+    "cache": "_cachedData para navegación entre tabs sin recargar",
+    "charts": "Chart.js v4 lazy-loaded via App._ensureChartJs()",
+    "pdf": "html2pdf.js con logo base64, anti-page-break styles, progress overlay",
+    "share": "Capacitor Share > navigator.share > fallback download + botón flotante",
+    "validacionExport": "ExportService.validarPreExportacion() con modal errores/avisos",
+    "performance": "Aditivo (build no limpia www); bumpear CACHE_NAME y ?v= tras editar CSS/JS"
+  }
+}

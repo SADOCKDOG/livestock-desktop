@@ -1,0 +1,189 @@
+"Código";"Raza";"Especie";"Clasificación";"Grado de amenaza"
+"10010";"ALBERA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10020";"ALISTANA-SANABRESA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10030";"ASTURIANA DE LA MONTAÑA";"Bovinos";"Raza Autóctona Amenazada";"Bajo"
+"10040";"ASTURIANA DE LOS VALLES";"Bovinos";"Raza Autóctona";
+"10050";"AVILEÑA-NEGRA IBÉRICA";"Bovinos";"Raza Autóctona Amenazada";"Bajo"
+"10051";"AVILEÑA-NEGRA IBÉRICA (VARIEDAD BOCIBLANCA)";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10060";"BERRENDA EN COLORADO";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10070";"BERRENDA EN NEGRO";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10080";"BETIZU";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10090";"BLANCA CACEREÑA";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10100";"BLONDA DE AQUITANIA";"Bovinos";"Raza Integrada en España";
+"10110";"BRUNA DELS PIRINEUS";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10120";"CACHENA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10130";"CALDELÁ";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10140";"CANARIA";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10150";"CÁRDENA ANDALUZA";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10160";"CHAROLESA";"Bovinos";"Raza Integrada en España";
+"10170";"FLECKVIEH";"Bovinos";"Raza Integrada en España";
+"10180";"FRIEIRESA";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10190";"FRISONA";"Bovinos";"Raza Integrada en España";
+"10200";"LIDIA";"Bovinos";"Raza Autóctona";
+"10210";"LIMIÁ";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10220";"LIMUSINA";"Bovinos";"Raza Integrada en España";
+"10230";"MALLORQUINA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10240";"MARISMEÑA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10250";"MENORQUINA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10260";"MONCHINA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10270";"MORUCHA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10271";"MORUCHA (VARIEDAD NEGRA)";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10280";"MURCIANA-LEVANTINA";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10290";"NEGRA ANDALUZA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10300";"PAJUNA";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10310";"PALLARESA";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10320";"PALMERA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10330";"PARDA";"Bovinos";"Raza Integrada en España";
+"10340";"PARDA DE MONTAÑA";"Bovinos";"Raza Autóctona Amenazada";"Bajo"
+"10350";"PASIEGA";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10360";"PIRENAICA";"Bovinos";"Raza Autóctona";
+"10370";"RETINTA";"Bovinos";"Raza Autóctona Amenazada";"Bajo"
+"10380";"RUBIA GALLEGA";"Bovinos";"Raza Autóctona";
+"10390";"SAYAGUESA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10400";"SERRANA DE TERUEL";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10410";"SERRANA NEGRA";"Bovinos";"Raza Autóctona Amenazada";"Alto"
+"10420";"TERREÑA";"Bovinos";"Raza Autóctona Amenazada";"Desconocido"
+"10430";"TUDANCA";"Bovinos";"Raza Autóctona Amenazada";"Bajo"
+"10440";"VIANESA";"Bovinos";"Raza Autóctona Amenazada";"Medio"
+"10450";"MANTEQUERA LEONESA";"Bovinos";"Raza Autóctona Amenazada";"Desconocido"
+"20020";"CHATO MURCIANO";"Cerdos";"Raza Autóctona Amenazada";"Alto"
+"20030";"DUROC";"Cerdos";"Raza Integrada en España";
+"20040";"EUSKAL TXERRIA";"Cerdos";"Raza Autóctona Amenazada";"Desconocido"
+"20050";"GOCHU ASTURCELTA";"Cerdos";"Raza Autóctona Amenazada";"Medio"
+"20070";"IBÉRICO";"Cerdos";"Raza Autóctona";
+"20071";"IBÉRICO (VARIEDAD ENTREPELADO)";"Cerdos";"Raza Autóctona Amenazada";"Bajo"
+"20072";"IBÉRICO (VARIEDAD LAMPIÑO)";"Cerdos";"Raza Autóctona Amenazada";"Medio"
+"20073";"IBÉRICO (VARIEDAD MANCHADO DE JABUGO)";"Cerdos";"Raza Autóctona Amenazada";"Alto"
+"20074";"IBÉRICO (VARIEDAD RETINTO)";"Cerdos";"Raza Autóctona";
+"20075";"IBÉRICO (VARIEDAD TORBISCAL)";"Cerdos";"Raza Autóctona Amenazada";"Medio"
+"20080";"LANDRACE";"Cerdos";"Raza Integrada en España";
+"20090";"LARGE WHITE";"Cerdos";"Raza Integrada en España";
+"20100";"NEGRA CANARIA";"Cerdos";"Raza Autóctona Amenazada";"Medio"
+"20110";"PIETRAIN";"Cerdos";"Raza Integrada en España";
+"20120";"PORC NEGRE MALLORQUÍ";"Cerdos";"Raza Autóctona Amenazada";"Alto"
+"20130";"PORCO CELTA";"Cerdos";"Raza Autóctona Amenazada";"Alto"
+"30010";"ALCARREÑA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30020";"ANSOTANA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30030";"ARANESA";"Ovinos";"Raza Autóctona Amenazada";"Alto"
+"30040";"ASSAF";"Ovinos";"Otras razas reconocidas en España";
+"30050";"BERRICHON DU CHER";"Ovinos";"Raza Integrada en España";
+"30060";"CANARIA";"Ovinos";"Raza Autóctona Amenazada";"Alto"
+"30070";"CANARIA DE PELO";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30080";"CARRANZANA";"Ovinos";"Raza Autóctona Amenazada";"Desconocido"
+"30081";"CARRANZANA (VARIEDAD NEGRA)";"Ovinos";"Raza Autóctona Amenazada";"Desconocido"
+"30090";"CARTERA";"Ovinos";"Raza Autóctona Amenazada";"Bajo"
+"30100";"CASTELLANA";"Ovinos";"Raza Autóctona";
+"30101";"CASTELLANA (VARIEDAD NEGRA)";"Ovinos";"Raza Autóctona Amenazada";"Bajo"
+"30110";"CHAMARITA";"Ovinos";"Raza Autóctona Amenazada";"Alto"
+"30130";"CHURRA";"Ovinos";"Raza Autóctona";
+"30140";"CHURRA LEBRIJANA";"Ovinos";"Raza Autóctona Amenazada";"Alto"
+"30150";"CHURRA TENSINA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30160";"COLMENAREÑA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30170";"FLEISCHSCHAF";"Ovinos";"Raza Integrada en España";
+"30180";"GUIRRA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30190";"ÎLE DE FRANCE";"Ovinos";"Raza Integrada en España";
+"30200";"LACAUNE";"Ovinos";"Otras razas reconocidas en España";
+"30220";"LATXA";"Ovinos";"Raza Autóctona";
+"30230";"LOJEÑA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30240";"MAELLANA";"Ovinos";"Raza Autóctona Amenazada";"Bajo"
+"30250";"MANCHEGA";"Ovinos";"Raza Autóctona";
+"30251";"MANCHEGA (VARIEDAD NEGRA)";"Ovinos";"Raza Autóctona Amenazada";"Alto"
+"30260";"MERINA";"Ovinos";"Raza Autóctona";
+"30261";"MERINA (VARIEDAD DE LOS MONTES UNIVERSALES)";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30262";"MERINA (VARIEDAD NEGRA)";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30270";"MERINA DE GRAZALEMA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30280";"MERINO PRECOZ";"Ovinos";"Raza Integrada en España";
+"30290";"MONTESINA";"Ovinos";"Raza Autóctona Amenazada";"Bajo"
+"30300";"NAVARRA";"Ovinos";"Raza Autóctona";
+"30310";"OJALADA";"Ovinos";"Raza Autóctona Amenazada";"Bajo"
+"30320";"OJINEGRA DE TERUEL";"Ovinos";"Raza Autóctona Amenazada";"Bajo"
+"30330";"OVELLA EIVISSENCA";"Ovinos";"Raza Autóctona Amenazada";"Alto"
+"30340";"OVELLA GALEGA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30350";"OVELLA MALLORQUINA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30360";"OVELLA MENORQUINA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30370";"OVELLA ROJA MALLORQUINA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30380";"PALMERA.";"Ovinos";"Raza Autóctona Amenazada";"Alto"
+"30390";"RASA ARAGONESA";"Ovinos";"Raza Autóctona";
+"30400";"RIPOLLESA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30410";"ROYA BILBILITANA";"Ovinos";"Raza Autóctona Amenazada";"Bajo"
+"30420";"RUBIA DE EL MOLAR";"Ovinos";"Raza Autóctona Amenazada";"Alto"
+"30430";"SALZ";"Ovinos";"Otras razas reconocidas en España";
+"30440";"SASI ARDI";"Ovinos";"Raza Autóctona Amenazada";"Bajo"
+"30450";"SEGUREÑA";"Ovinos";"Raza Autóctona";
+"30460";"TALAVERANA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30470";"XALDA";"Ovinos";"Raza Autóctona Amenazada";"Medio"
+"30480";"XISQUETA";"Ovinos";"Raza Autóctona Amenazada";"Bajo"
+"40020";"AZPI GORRI";"Caprinos";"Raza Autóctona Amenazada";"Desconocido"
+"40030";"BERMEYA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40040";"BLANCA ANDALUZA O SERRANA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40050";"BLANCA CELTIBÉRICA";"Caprinos";"Raza Autóctona Amenazada";"Bajo"
+"40060";"BLANCA DE RASQUERA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40070";"CABRA DE LAS MESETAS";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40080";"CABRA GALEGA";"Caprinos";"Raza Autóctona Amenazada";"Alto"
+"40090";"DEL GUADARRAMA";"Caprinos";"Raza Autóctona Amenazada";"Bajo"
+"40100";"EIVISSENCA";"Caprinos";"Raza Autóctona Amenazada";"Alto"
+"40110";"FLORIDA";"Caprinos";"Raza Autóctona";
+"40130";"MAJORERA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40140";"MALAGUEÑA";"Caprinos";"Raza Autóctona";
+"40150";"MALLORQUINA";"Caprinos";"Raza Autóctona Amenazada";"Alto"
+"40160";"MONCAÍNA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40170";"MURCIANA-GRANADINA";"Caprinos";"Raza Autóctona";
+"40180";"NEGRA SERRANA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40190";"PALMERA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40200";"PAYOYA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40210";"PIRENAICA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40220";"RETINTA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40230";"TINERFEÑA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"40240";"VERATA";"Caprinos";"Raza Autóctona Amenazada";"Medio"
+"60010";"ANDALUZA AZUL";"Gallinas";"Raza Autóctona Amenazada";"Alto"
+"60020";"COMBATIENTE ESPAÑOL";"Gallinas";"Raza Autóctona Amenazada";"Alto"
+"60030";"EUSKAL OILOA";"Gallinas";"Raza Autóctona Amenazada";"Desconocido"
+"60040";"GALIÑA DE MOS";"Gallinas";"Raza Autóctona Amenazada";"Medio"
+"60050";"GALLINA CASTELLANA NEGRA";"Gallinas";"Raza Autóctona Amenazada";"Medio"
+"60060";"GALLINA DEL PRAT";"Gallinas";"Raza Autóctona Amenazada";"Alto"
+"60070";"GALLINA DEL SOBRARBE";"Gallinas";"Raza Autóctona Amenazada";"Alto"
+"60080";"GALLINA EIVISSENCA";"Gallinas";"Raza Autóctona Amenazada";"Desconocido"
+"60090";"GALLINA EMPORDANESA";"Gallinas";"Raza Autóctona Amenazada";"Alto"
+"60100";"GALLINA EXTREMEÑA AZUL";"Gallinas";"Raza Autóctona Amenazada";"Alto"
+"60110";"GALLINA PEDRESA";"Gallinas";"Raza Autóctona Amenazada";"Desconocido"
+"60120";"INDIO DE LEÓN";"Gallinas";"Raza Autóctona Amenazada";"Desconocido"
+"60130";"MALLORQUINA";"Gallinas";"Raza Autóctona Amenazada";"Desconocido"
+"60140";"MENORQUINA";"Gallinas";"Raza Autóctona Amenazada";"Desconocido"
+"60150";"MURCIANA";"Gallinas";"Raza Autóctona Amenazada";"Alto"
+"60160";"PARDO DE LEÓN";"Gallinas";"Raza Autóctona Amenazada";"Desconocido"
+"60170";"PENEDESENCA";"Gallinas";"Raza Autóctona Amenazada";"Alto"
+"60180";"PITA PINTA";"Gallinas";"Raza Autóctona Amenazada";"Alto"
+"60190";"UTRERANA";"Gallinas";"Raza Autóctona Amenazada";"Medio"
+"60200";"VALENCIANA DE CHULILLA";"Gallinas";"Raza Autóctona Amenazada";"Desconocido"
+"100010";"EUSKAL ANTZARA";"Ocas";"Raza Autóctona Amenazada";"Desconocido"
+"100020";"OCA EMPORDANESA";"Ocas";"Raza Autóctona Amenazada";"Alto"
+"160010";"CONEJO ANTIGUO PARDO ESPAÑOL";"Conejos";"Raza Autóctona Amenazada";"Alto"
+"160020";"CONEJO GIGANTE DE ESPAÑA";"Conejos";"Raza Autóctona Amenazada";"Alto"
+"480010";"ANGLO-ÁRABE";"Équidos";"Raza Integrada en España";
+"480020";"ÁRABE";"Équidos";"Raza Integrada en España";
+"480030";"ASTURCÓN";"Équidos";"Raza Autóctona Amenazada";"Medio"
+"480040";"BURGUETE";"Équidos";"Raza Autóctona Amenazada";"Bajo"
+"480050";"CABALLO DE DEPORTE ESPAÑOL";"Équidos";"Otras razas reconocidas en España";
+"480060";"CABALLO DE LAS RETUERTAS";"Équidos";"Raza Autóctona Amenazada";"Desconocido"
+"480070";"CABALLO DE MONTE DE PAÍS VASCO";"Équidos";"Raza Autóctona Amenazada";"Desconocido"
+"480080";"CABALO DE PURA RAZA GALEGA";"Équidos";"Raza Autóctona Amenazada";"Alto"
+"480090";"CAVALL MALLORQUÍ";"Équidos";"Raza Autóctona Amenazada";"Alto"
+"480100";"MENORQUINA";"Équidos";"Raza Autóctona Amenazada";"Medio"
+"480110";"CAVALL PIRINENC CATALÀ";"Équidos";"Raza Autóctona Amenazada";"Bajo"
+"480120";"HISPANO-ÁRABE";"Équidos";"Raza Autóctona Amenazada";"Medio"
+"480130";"HISPANO-BRETÓN";"Équidos";"Raza Autóctona Amenazada";"Bajo"
+"480140";"JACA NAVARRA";"Équidos";"Raza Autóctona Amenazada";"Bajo"
+"480150";"LOSINA";"Équidos";"Raza Autóctona Amenazada";"Alto"
+"480160";"MARISMEÑA";"Équidos";"Raza Autóctona Amenazada";"Alto"
+"480170";"MONCHINA";"Équidos";"Raza Autóctona Amenazada";"Medio"
+"480180";"POTTOKA";"Équidos";"Raza Autóctona Amenazada";"Desconocido"
+"480190";"PURA RAZA ESPAÑOLA";"Équidos";"Raza Autóctona";
+"480200";"PURA SANGRE INGLÉS";"Équidos";"Raza Integrada en España";
+"480210";"TROTADOR ESPAÑOL";"Équidos";"Raza Integrada en España";
+"510010";"ANDALUZA";"Équidos";"Raza Autóctona Amenazada";"Alto"
+"510020";"ASE BALEAR";"Équidos";"Raza Autóctona Amenazada";"Alto"
+"510030";"ASNO DE LAS ENCARTACIONES";"Équidos";"Raza Autóctona Amenazada";"Desconocido"
+"510040";"CATALANA";"Équidos";"Raza Autóctona Amenazada";"Alto"
+"510050";"MAJORERA";"Équidos";"Raza Autóctona Amenazada";"Desconocido"
+"510060";"ZAMORANO-LEONÉS";"Équidos";"Raza Autóctona Amenazada";"Medio"
+"880010";"CAMELLO CANARIO";"Dromedario";"Raza Autóctona Amenazada";"Desconocido"

@@ -1,0 +1,5 @@
+- New "Industrial Premium" interface optimized for high visibility in the field and OLED displays.
+- Redesigned registration Wizards for fast, one-handed operation in rugged environments.
+- New technical info cards with direct access to REGA data and sanitary status.
+- Critical stability improvements in farm management and data synchronization.
+- Performance optimizations in the web rendering engine.

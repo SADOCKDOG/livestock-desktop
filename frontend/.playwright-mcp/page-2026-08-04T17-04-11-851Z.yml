@@ -1,0 +1,42 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Sin conexión
+  - banner [ref=e3]:
+    - img "Livestock Manager" [ref=e5]
+    - generic [ref=e12] [cursor=pointer]:
+      - generic [ref=e13]: ES210050001234
+      - generic [ref=e14]:
+        - text: "Tipo Explo:"
+        - generic [ref=e15]: Híbrida
+  - main [ref=e16]:
+    - generic [ref=e1783]:
+      - tablist "Todas las secciones" [ref=e1784]:
+        - generic "ANIMALES" [ref=e1785] [cursor=pointer]
+        - generic "REBANOS" [ref=e1786] [cursor=pointer]
+        - generic "PATRIMONIO" [ref=e1787] [cursor=pointer]
+        - generic "ZONAS" [ref=e1788] [cursor=pointer]
+        - generic "SANIDAD" [ref=e1789] [cursor=pointer]
+      - generic [ref=e1790]:
+        - generic [ref=e1791]:
+          - 'button "Anterior: SANIDAD" [ref=e1792] [cursor=pointer]'
+          - button "ANIMALES" [ref=e1799] [cursor=pointer]
+          - 'button "Siguiente: REBANOS" [ref=e1808] [cursor=pointer]'
+        - listbox "Todos los submódulos":
+          - option "ANIMALES" [selected]
+          - option "REBANOS"
+          - option "PATRIMONIO"
+          - option "ZONAS"
+          - option "SANIDAD"
+    - generic [ref=e1820]:
+      - heading "| Censo de Animales" [level=1] [ref=e1821]
+      - generic [ref=e1822]: Control de crotales, altas, bajas e inventario
+  - navigation "Navegación principal escritorio" [ref=e18]:
+    - link "Inicio" [ref=e19] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=e33] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=e37] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=e42] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=e50] [cursor=pointer]
+  - status

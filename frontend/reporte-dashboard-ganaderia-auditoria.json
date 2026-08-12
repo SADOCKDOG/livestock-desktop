@@ -1,0 +1,449 @@
+{
+  "modulo": "Dashboard y Ganadería",
+  "vistas": [
+    {
+      "nombre": "DashboardView",
+      "archivo": "js/views/dashboard-view.js",
+      "rutas": [
+        "#/dashboard",
+        "Pantalla principal al iniciar la app (si hay finca activa)"
+      ],
+      "funcionalidades_principales": [
+        "Vista principal de control con KPIs diarios de producción lechera",
+        "Registro rápido de actividad (Bento Grid) con accesos directos a 12 operaciones de campo",
+        "Alertas en tiempo real: sanitarias (supresión), trazabilidad, administrativas (PAC, contratos, ADSG), agenda",
+        "Indicadores lácteos (últimos 12 meses): MOFA, precio medio, extracto seco",
+        "Calendario preventivo estacional con sugerencias contextuales",
+        "Widget de tareas pendientes de agenda",
+        "Banner Premium/Free en versión gratuita",
+        "FAB 'Nueva Actividad' para menú rápido de registros"
+      ],
+      "elementos_ui_clave": [
+        "Bento Grid 12 columnas para tarjetas de registro rápido",
+        "card-registro-quick con colores semánticos por operación",
+        "Skeleton loaders durante carga inicial",
+        "Badges de contador en alertas (rojo=urgente, dorado=advertencia, verde=OK)",
+        "Progress bars para KPIs con código de color (verde/ámbar/rojo)",
+        "Cards colapsables (card-resumen) con toggle chevron",
+        "FAB container con label 'Nueva Actividad'",
+        "EventBus subscription para alertas en vivo"
+      ],
+      "integracion_siggan_badigex": [
+        "Censo anual (botón en registro rápido) → wizard-censo.js",
+        "Pedido de crotales (botón) → wizard-crotales.js (ADSG/SIGGAN)",
+        "Guía de movimiento (botón) → wizard-guia-movimiento",
+        "Albarán de leche (solo modo leche) → wizard-albaran-leche",
+        "Venta masiva/Matadero (solo modo carne) → wizard-venta-masiva",
+        "Tipos de explotación REGA (RD 787/2023) en alertas administrativas",
+        "Cálculo de supresión en alertas sanitarias (días restantes)"
+      ],
+      "flags_free_premium": [
+        "Banner superior en versión Free con botón 'Premium' (isFreeDashboard = PremiumManager.isFree())",
+        "Registro rápido completo disponible en ambas versiones",
+        "KPIs diarios calculados solo si hay datos de entregas de leche",
+        "Indicadores lácteos solo en modo leche (flagsModo.leche)"
+      ],
+      "estados_posibles": [
+        "Finca activa / sin finca",
+        "Modo leche / modo carne / ambos (flags ModoContextoHelper)",
+        "Alertas: sanitaria (rojo/amarillo), trazabilidad, administrativa, agenda"
+      ],
+      "datos_demo_chamorro": [
+        "No carga datos de demo directamente - consume de CacheService (finca_active, rebanos_all, animales_all)",
+        "SeedData.js popula finca 'El Chamorro' con rebaños, animales, entregas de leche, gastos, sanitarios"
+      ]
+    },
+    {
+      "nombre": "GanaderiaView",
+      "archivo": "js/views/ganaderia-view.js",
+      "rutas": [
+        "#/ganaderia",
+        "#/ganaderia?sub=animales|rebanos|patrimonio|zonas|sanidad"
+      ],
+      "funcionalidades_principales": [
+        "Consola unificada GeGan con carrusel horizontal de 5 submódulos",
+        "Delegación dinámica de renderizado a vistas especializadas",
+        "Filtrado de submódulos según flags de explotación (leche/carne por finca)",
+        "Header maestro con color fijo verde lima (--c-success) para todo GeGan",
+        "Widget de agenda integrado (AgendaView.renderWidget)",
+        "Cambio de submódulo con validación de permisos por modo"
+      ],
+      "elementos_ui_clave": [
+        "Carrusel circular de pestañas (App.renderCarruselPestanas) sticky bajo header",
+        "Cabecera maestra con icono, título y descripción por submódulo",
+        "Contenedor dinámico #ganaderia-tab-content",
+        "Widget agenda en #ganaderia-agenda-widget",
+        "Colores por submódulo: naranja(animales), azul(rebanos), ámbar(patrimonio), verde(zona), púrpura(sanidad)"
+      ],
+      "integracion_siggan_badigex": [
+        "Submódulo 'patrimonio' solo visible si flags.carne=true (exclusivo carne)",
+        "Todo GeGan usa color verde lima fijo (marca GeGan)",
+        "Integración con ModoContextoHelper para flags por finca"
+      ],
+      "flags_free_premium": [
+        "No aplica límites directos - delega a submódulos",
+        "Patrimonio solo en modo carne (no es limitación Premium)"
+      ],
+      "estados_posibles": [
+        "5 submódulos: animales, rebanos, patrimonio, zonas, sanidad",
+        "Submódulo activo persistido en _activeSubModule",
+        "Auto-fallback a primer submódulo permitido si el actual deja de estarlo"
+      ],
+      "datos_demo_chamorro": [
+        "No carga datos directamente - delega a vistas hijas"
+      ]
+    },
+    {
+      "nombre": "AnimalesView",
+      "archivo": "js/views/animales-view.js",
+      "rutas": [
+        "#/animales (lista)",
+        "#/animal (nuevo)",
+        "#/animal?id={id} (ficha/detalle)"
+      ],
+      "funcionalidades_principales": [
+        "Lista de animales con búsqueda y filtros (especie, sexo, estado)",
+        "Ficha completa de animal (wizard full-screen) con 10+ secciones",
+        "Validación de crotal en tiempo real (formato ES + 12 dígitos)",
+        "Catálogo oficial de razas FEGA (163 razas, DB v16) por especie",
+        "Tipos de identificador normativos por especie (excluye dados de baja)",
+        "Cálculo de margen económico por animal (MargenAnimal service)",
+        "Libro de registro SIGGAN: país nacimiento, REGA procedencia, madre, DIB/Pasaporte",
+        "Estados: Activo, Vendido, Baja (muerte) con motivo y fecha",
+        "Notificación REGA/SIA (checkbox notificado_rega con validación)",
+        "Gestión de compra: precio, proveedor, factura, pago pendiente",
+        "SANDACH automático al seleccionar motivo de baja",
+        "Historial reproductivo y compañeros de lote (solo edición)"
+      ],
+      "elementos_ui_clave": [
+        "Module header con resumen censal (total, activos, vendidos)",
+        "Banner 'ocultos por modo' si hay animales filtrados por leche/carne",
+        "Card-resumen colapsable por especie",
+        "Búsqueda integrada + select filtro especie",
+        "App._cardRegistro para cada animal (badge estado, enlace 'Ficha ->')",
+        "Wizard full-screen con header fijo (NFC/SCAN), footer fijo (guardar/salir/eliminar)",
+        "Inputs con validación visual: crotal (color código), REGA (input-rega-std dorado)",
+        "Secciones colapsables por tipo de alta (compra) o especie (DIB)",
+        "Toggle 'Alta comunicada oficialmente' con integración NotificacionesREGA"
+      ],
+      "integracion_siggan_badigex": [
+        "Crotal: formato ES + 12 dígitos (SITRAN), validación país nacimiento",
+        "Catálogo razas FEGA oficial (clasificación 1001-1004 con grado amenaza)",
+        "Tipos identificador por especie (normativa RD 787/2023)",
+        "Libro registro: REGA procedencia, país nacimiento, madre, DIB, fecha alta/baja",
+        "Tipos de alta oficiales (Nacimiento, Compra, etc. desde ComunidadesService)",
+        "Categorías animal por especie (libro registro)",
+        "Motivos de baja oficiales + clasificación SANDACH automática",
+        "Notificación REGA/SIA/PIGGAN con validación previa",
+        "Campo 'Destino: CEBO/ENGORDE' derivado de Movimientos.esDestinoCebo()",
+        "Tipo identificación: Completa (EID+Visual) vs Matadero (Visual REGA)"
+      ],
+      "flags_free_premium": [
+        "Margen económico (MargenAnimal) - verifica límite Premium en modelo",
+        "No límites visibles en vista - PremiumQA.runAll() verifica en .save()"
+      ],
+      "estados_posibles": [
+        "activo, vendido, baja (muerte/sacrificio)",
+        "Sexo: H (hembra), M (macho), C (castrado)",
+        "Tipo alta: Nacimiento, Compra, Importación, etc.",
+        "Tipo identificación: Completa, Matadero",
+        "Notificado REGA: true/false"
+      ],
+      "datos_demo_chamorro": [
+        "SeedData crea animales de prueba con crotales ES, razas oficiales, rebaños asignados",
+        "Incluye animales en diferentes estados (activo, vendido, baja)",
+        "Algunos con margen económico calculado (compras, sanidad, leche, ventas)"
+      ]
+    },
+    {
+      "nombre": "RebanosView",
+      "archivo": "js/views/rebanos-view.js",
+      "rutas": [
+        "#/rebanos (lista)",
+        "#/rebano?id={id} (detalle/edición)",
+        "Wizard nuevo rebaño desde lista"
+      ],
+      "funcionalidades_principales": [
+        "Lista de rebaños/lotes con búsqueda por nombre, raza, código lote",
+        "Detalle completo con KPIs: total, activos, vendidos, kg carne, litros leche, eventos",
+        "Edición inline: nombre, especie, tipo, capacidad, código lote, fecha, zona, tipo explotación REGA",
+        "Historial sanitario del rebaño (tratamientos, retiradas, veterinario)",
+        "Gastos y consumos combinados: gastos manuales + consumo silos (registro_eventos tipo silo_consumo)",
+        "Lista de animales del rebaño con ficha rápida y botón 'Mover Lote'",
+        "Wizard 5 pasos para nuevo rebaño con validaciones",
+        "Eliminación con auditoría (solo si sin animales activos)"
+      ],
+      "elementos_ui_clave": [
+        "Module header con resumen (total lotes, activos)",
+        "Gráfico barras evolución mensual (últimos 6 meses)",
+        "Card-resumen balance por categorías (carne, leche, activos, total)",
+        "Búsqueda integrada + App._cardRegistro para cada rebaño",
+        "Badge estado (Activo/Inactivo/Vendido) + enlace 'Ficha ->'",
+        "Wizard full-screen con steps temáticos (ámbar, verde, azul, oro)",
+        "Info-boxes KPIs en detalle (3 columnas)",
+        "Botones widget-link-btn neon para acciones (tratamiento, consumo, gasto, mover)"
+      ],
+      "integracion_siggan_badigex": [
+        "Tipo explotación REGA (RD 787/2023) - select obligatorio en wizard y edición",
+        "Tipos de producción filtrados por flags modo (leche/carne) en creación",
+        "Código de lote / lote identificación para trazabilidad",
+        "Consumo pienso integrado con Silos (descuenta stock, genera gasto analítico)",
+        "Historial sanitario con tiempos de espera carne/leche, veterinario prescriptor"
+      ],
+      "flags_free_premium": [
+        "No límites visibles en vista - delega a servicios",
+        "Tipos de producción disponibles filtrados por flags de finca (no Premium)"
+      ],
+      "estados_posibles": [
+        "activo, inactivo, vendido (rebaño completo)",
+        "Especies: Vacas, Ovejas, Cabras, Cerdos, Equino, etc.",
+        "Tipos producción: según config_tipos_produccion filtrados por modo"
+      ],
+      "datos_demo_chamorro": [
+        "SeedData crea rebaños 'Terneros Cebo', 'Vacas Lecheras', etc. con zonas asignadas",
+        "Eventos de peso y leche registrados para KPIs",
+        "Gastos y consumos de silo imputados a rebaños"
+      ]
+    },
+    {
+      "nombre": "ZonasView",
+      "archivo": "js/views/zonas-view.js",
+      "rutas": [
+        "#/zonas (lista)",
+        "#/zona?index={index} (detalle/edición)",
+        "Modal rotación de pastos"
+      ],
+      "funcionalidades_principales": [
+        "Gestión de zonas/parcelas con aforo, superficie, UGM, carga ganadera",
+        "Cálculo automático UGM por especie (Vacas=1.0, Ovejas/Cabras=0.15, Cerdos=0.3, Equino=1.1)",
+        "Detección de sobrepastoreo (>1.0 UGM/ha) con alerta bento crítica",
+        "Control fitosanitario en tiempo real: bloquea rotación si parcela en cuarentena (plazo seguridad)",
+        "Rotación de pastos: mover rebaños entre zonas con validación fitosanitaria",
+        "Código PAC (parcela agraria) y distancia a agua para PAC/SIGGAN",
+        "Auto-inicialización demo Chamorro: crea 'Cercado de Cebo 1ha' y mueve rebaño para disparar sobrepastoreo",
+        "Eliminación con auditoría (anulada=true, motivo, fecha)"
+      ],
+      "elementos_ui_clave": [
+        "Module header con KPIs (total zonas, ocupación global)",
+        "Card-resumen colapsable ocupación global con progress bar",
+        "Alerta bento sobrepastoreo (rojo, animada, lista parcelas afectadas con UGM/ha)",
+        "App._cardRegistro por zona: badge estado (sobrecarga/óptimo/aceptable/infrautilizada), progress bar carga/aforo",
+        "Métricas SIGGAN solo lectura: UGM total, carga UGM/ha",
+        "Rebaños en zona como cards anidadas con enlace a ficha",
+        "Botón 'Rotar Lote/Rebaño' (verde) o bloqueado (rojo) si cuarentena fitosanitaria",
+        "Wizard 2 pasos nueva zona (datos básicos + PAC/agua)",
+        "Modal rotación: selector rebaño origen, parcela destino (con estado fitosanitario), observaciones"
+      ],
+      "integracion_siggan_badigex": [
+        "Código PAC obligatorio para subvenciones CCAA",
+        "Carga ganadera UGM/ha (límite ecológico 1.0 UGM/ha pastoreo extensivo)",
+        "Distancia a agua (requisito PAC/bienestar)",
+        "Bloqueo fitosanitario: lee gastos categoria 'fitosanitarios' con control_normativo.plazoSeguridadDias",
+        "Registro eventos tipo 'traslado' motivo 'rotacion_pastos' para auditoría",
+        "Zona guarda tanto zonaActual (nombre) como zonaId (FK) para censo por zona"
+      ],
+      "flags_free_premium": [
+        "No límites Premium visibles - funcionalidad completa"
+      ],
+      "estados_posibles": [
+        "Zona: activa, anulada (soft delete con auditoría)",
+        "Estado ocupación: Sobrecarga (>100%), Óptimo (80-100%), Aceptable (50-80%), Infrautilizada (<50%)",
+        "Cuarentena fitosanitaria: bloqueada / libre (calculado en tiempo real)"
+      ],
+      "datos_demo_chamorro": [
+        "Auto-crea 'Cercado de Cebo 1ha' (1 ha, aforo 10) si finca.nombre incluye 'CHAMORRO' o flag demo",
+        "Mueve rebaño 'Terneros Cebo' a esa parcela → dispara sobrepastoreo (2.0 UGM/ha > 1.0)",
+        "Permite probar alerta bento y rotación preventiva en demo"
+      ]
+    }
+  ],
+  "wizards": [
+    {
+      "nombre": "WizardCenso",
+      "archivo": "js/views/wizards/wizard-censo.js",
+      "titulo": "DECLARACIÓN CENSAL",
+      "pasos": [
+        {
+          "orden": 1,
+          "titulo": "FECHA DE REFERENCIA",
+          "campos": [
+            "fecha (date, default: 1 enero año actual) - obligatorio"
+          ],
+          "validaciones": [
+            "Fecha requerida",
+            "Nota: declaración censal obligatoria se refiere a censo a 1 de enero"
+          ]
+        },
+        {
+          "orden": 2,
+          "titulo": "CENSO CONSOLIDADO",
+          "campos": [
+            "Cálculo automático por especie y categoría (solo lectura)",
+            "Total cabezas activas a la fecha",
+            "Desglose: hembras, machos, por categoría"
+          ],
+          "validaciones": [
+            "Debe haber al menos 1 animal activo en la fecha"
+          ]
+        },
+        {
+          "orden": 3,
+          "titulo": "TRAMITACIÓN ADMINISTRATIVA",
+          "campos": [
+            "estado_tramite (select: borrador, presentado, aceptado, rechazado)",
+            "fecha_presentacion (date) - obligatorio si estado != borrador",
+            "numero_registro_oficial (text) - obligatorio si aceptado/rechazado",
+            "acuse_recibo (textarea)"
+          ],
+          "validaciones": [
+            "Fecha presentación requerida si no borrador",
+            "Nº registro oficial requerido si aceptado/rechazado"
+          ]
+        }
+      ],
+      "funcionalidad_completado": [
+        "Guarda en documentos_legales (tipo DECLARACION_CENSAL) con payload censo",
+        "Registra evento registro_eventos tipo declaracion_censal",
+        "Genera PDF declaracion censal (html2pdf) con firma titular, REGA, desglose por especie",
+        "Compartir/Imprimir via DocumentViewer + Share API / Filesystem (Capacitor)"
+      ],
+      "integracion_siggan": [
+        "Documento oficial exigido por SIGGAN (Junta de Andalucía)",
+        "Incluye REGA explotación, NIF/CIF titular, provincia/municipio",
+        "Formato tabla: Especie | Hembras | Machos | Total"
+      ]
+    },
+    {
+      "nombre": "WizardCrotales",
+      "archivo": "js/views/wizards/wizard-crotales.js",
+      "titulo": "PEDIDO OFICIAL CROTALES",
+      "pasos": [
+        {
+          "orden": 1,
+          "titulo": "MATERIAL SOLICITADO",
+          "campos": [
+            "especie (select: Bovino, Ovino, Caprino... desde ComunidadesService.getEspeciesAutorizables())",
+            "tipo (select: Bandera+Botón EID, Botón+Botón EID, Bolo Ruminal+Botón Visual, Crotal Visual Clásico)",
+            "cantidad (number, min 1) - pares de crotales"
+          ],
+          "validaciones": [
+            "Cantidad > 0",
+            "Nota: crotales EID obligatorios para nuevas incorporaciones RD 787/2023"
+          ]
+        },
+        {
+          "orden": 2,
+          "titulo": "DESTINO Y ADSG",
+          "campos": [
+            "Selector ADSG registrada (opcional, autocompleta campos)",
+            "adsg_nombre (text, obligatorio) - destinatario ADSG/OCA",
+            "adsg_codigo (text, opcional)",
+            "adsg_veterinario (text), adsg_vet_colegiado (text), adsg_vet_nif (text)"
+          ],
+          "validaciones": [
+            "ADSG nombre obligatorio",
+            "Validación previa REGA finca (ComunidadesService.validarFormatoREGA)",
+            "Muestra destino SIGGAN (Andalucía) o BADIGEX (Extremadura) según CCAA finca"
+          ]
+        }
+      ],
+      "funcionalidad_completado": [
+        "Guarda en pedidos_crotales (estado: pendiente) con fincaId",
+        "Genera PDF solicitud oficial: datos titular, explotación, REGA, ADSG, material solicitado",
+        "Muestra en DocumentViewer con compartir/imprimir",
+        "Fallback si html2pdf no carga: DocumentViewer.show con HTML"
+      ],
+      "integracion_siggan": [
+        "Documento de delegación para ADSG / Autoridad Competente",
+        "Código REGA explotacion destacado (dorado)",
+        "Plataforma destino: SIGGAN (Andalucía) / BADIGEX (Extremadura) / SIA/PIGGAN",
+        "Especies autorizadas por CCAA (ComunidadesService)"
+      ]
+    },
+    {
+      "nombre": "WizardFinca",
+      "archivo": "js/views/wizards/wizard-finca.js",
+      "metodos": [
+        "showForm(options) - nueva finca (1 paso)",
+        "editar() - editar finca activa (3 pasos)"
+      ],
+      "wizard_nueva_finca": {
+        "pasos": 1,
+        "campos": [
+          "nombre (text, obligatorio)",
+          "propietario (text, obligatorio)",
+          "codigo_REGA (input-rega-std, max 14)",
+          "comunidad_autonoma (select: Andalucía, Extremadura...)",
+          "superficie_total (number step 0.01)",
+          "coordenadas (text)",
+          "especies_autorizadas (checkboxes múltiples: Bovino, Ovino, Caprino, Porcino, Equino, Avícola, Apícola)",
+          "flag_leche (checkbox, default true)",
+          "flag_carne (checkbox, default false)"
+        ],
+        "validaciones": [
+          "Nombre obligatorio",
+          "Propietario obligatorio",
+          "Al menos un flag (leche o carne) activo"
+        ],
+        "onComplete": "Fincas.save() + App.updateNavigationMenu() + App.renderAjustes()"
+      },
+      "wizard_editar_finca": {
+        "pasos": 3,
+        "paso_1_datos_generales_adsg": [
+          "nombre, propietario, codigo_REGA, cea, nif_cif, telefonoContacto, direccion, capacidad_maxima",
+          "comunidad_autonoma, tipo_explotacion (SIGGAN), sistema_explotacion",
+          "flag_leche, flag_carne (modo visibilidad módulos)",
+          "calificacion_sanitaria, guia_365_habilitada",
+          "especies_autorizadas (checkboxes)",
+          "explotacion_lidia (checkbox - etiqueta SIGGAN bovino filiaciones)",
+          "ADSG: nombre, codigo, veterinario, colegiado, telefono, nif, fecha_vencimiento, email"
+        ],
+        "paso_2_contrato_lacteo_infolac": [
+          "contrato_lacteo_numero, contrato_lacteo_fecha_fin, contrato_lacteo_comprador",
+          "numero_infolac",
+          "Validación: si tipo_explotacion leche/mixto → aviso contrato obligatorio"
+        ],
+        "paso_3_instalaciones_lacteas_letra_q": [
+          "Solo si flag_leche=true o tipo_explotacion leche/mixto",
+          "codigo_letra_q (formato T-PP-NNNNN, 3-20 chars alfanum)",
+          "clasificacion_zootecnica_leche (select desde ComunidadesService - solo compatibles Letra Q)",
+          "plazas_vacuno_leche, num_cubiculos, superficie_descanso_m2, metros_lineales_comedero",
+          "Si plazas > 300: capacidad_balsa_purines_m3, tiene_evaluacion_ambiental (sección condicional)"
+        ],
+        "validaciones_paso_3": [
+          "Código Letra Q formato válido",
+          "Si >300 plazas: aviso balsa purines y evaluación ambiental"
+        ]
+      },
+      "integracion_siggan_badigex": [
+        "REGA validado por CCAA (ComunidadesService.validarFormatoREGA)",
+        "Tipo explotación SIGGAN / BADIGEX según CCAA",
+        "Paquete Lácteo: contrato obligatorio 1 año mínimo",
+        "Letra Q: código oficial Registro General Agentes Sector Lácteo (MAPA)",
+        "Clasificación zootécnica solo compatibles Letra Q",
+        "Explotación Lidia: etiqueta SIGGAN (Bovino > Filiaciones)",
+        "Guía 365 días (saneada) - autorización sanitaria",
+        "Especies autorizadas por CCAA"
+      ]
+    }
+  ],
+  "notas": [
+    "ARQUITECTURA MODULAR: Todas las vistas extraídas de App.js original, usan window.DashboardView, window.GanaderiaView, etc. Registradas al final de cada archivo.",
+    "CARRUSEL SUBMÓDULOS: GanaderiaView usa App.renderCarruselPestanas (sticky, z-index 900, overflow clip) - ver memoria carrusel-submodulos-sticky.md",
+    "MODO CONTEXTO POR FINCA: Dos flags {leche, carne} POR FINCA (no globales) en ModoContextoHelper. Carne = verde lima. Ver memoria modo-explotacion-flags.md",
+    "CARD-REGISTRO ESTÁNDAR: Todas las listas usan App._cardRegistro con posicionamiento estándar (estado sup. der., acciones inf. der.) - ver memoria card-registro-positioning-standard.md",
+    "BADGES ESTADO ANIMALES: Viñeta retroiluminada estándar (Activo=verde, Vendido=ámbar, Baja=rojo) - ver memoria animales-view-status-badge.md",
+    "ENLACE 'FICHA ->': Badge amarillo estándar poco prominente - ver memoria animales-view-badge-standard.md y animales-view-ficha-link-fix.md",
+    "SIGGAN 100% IMPLEMENTADO: 7/7 gaps + Lidia + saneamientos granular (PR #66). Ver memoria siggan-auditoria-completa-2026-07.md",
+    "DEMO CHAMORRO: SeedData popula finca 'El Chamorro' con rebaños, animales, zonas, entregas leche, gastos, sanitarios. ZonasView auto-crea 'Cercado de Cebo 1ha' para probar sobrepastoreo.",
+    "DOCUMENTVIEWER PATRÓN: Todos los PDFs (censo, crotales) usan DocumentViewer.show() - NUNCA window.open/print() en Capacitor Android - ver memoria document-viewer-pattern.md",
+    "FREE/PREMIUM: Límites siempre en modelo (.save()), nunca solo en vista. PremiumQA.runAll() verifica. Ver memoria premium-limit-pattern.md",
+    "BUILD WWW ADITIVO: npm run build no limpia www - ficheros borrados siguen en APK hasta limpieza manual. Ver memoria build-www-no-limpia.md",
+    "CACHE_NAME: SW cache-first → bumpear CACHE_NAME y ?v= tras editar CSS/JS - ver memoria deploy-cache-build.md",
+    "WIZARD MANAGER: Todos los wizards usan window.WizardManager.create() con steps, onChange, validate, onComplete",
+    "COMUNIDADESSERVICE: Centraliza datos normativos (REGA, tipos explotación, especies, motivos baja, SANDACH, razas FEGA, Letra Q) - ver docs/NORMATIVA-CROTAL-ESPECIE.md",
+    "TRAZABILIDAD: calcularSupresionRapida en alertas, Movimientos.esDestinoCebo para tanda cebo, registro_eventos para auditoría completa",
+    "MARGEN ECONÓMICO: MargenAnimal.calcular(animalId) muestra coste total, ingreso total, margen neto, desglose compra/sanidad/leche/venta",
+    "NOTIFICACIONES REGA: Gap 11 implementado - checkbox notificado_rega con validación y envío real a REGA/SIA via NotificacionesREGA service"
+  ]
+}

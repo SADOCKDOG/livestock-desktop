@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Explotación Láctea - Livestock Manager v4.3 SIGGAN</title>
+    <style>
+        :root { --primary: #3b82f6; --bg: #0a0a0a; --card: #171717; --text: #e5e5e5; --border: #2d2d2d; --siggan: #34d399; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 40px; }
+        .header { display: flex; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; }
+        .logo { height: 80px; margin-right: 20px; }
+        h1 { color: var(--primary); margin: 0; }
+        h2 { color: var(--primary); margin-top: 30px; }
+        .module-card { background: var(--card); border-radius: 12px; padding: 25px; margin-bottom: 25px; border-left: 5px solid var(--primary); }
+        .siggan-card { background: #0d1f1a; border-radius: 12px; padding: 25px; margin-bottom: 25px; border-left: 5px solid var(--siggan); }
+        .screenshot { width: 100%; max-width: 400px; border-radius: 8px; border: 1px solid #333; margin: 15px 0; display: block; }
+        .badge { background: #3b82f622; color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.9em; font-weight: bold; }
+        .badge-siggan { background: #34d39922; color: var(--siggan); padding: 4px 12px; border-radius: 20px; font-size: 0.9em; font-weight: bold; }
+        .alert { background: #0d1a2e; border: 1px solid #1e40af; border-radius: 8px; padding: 12px 16px; margin: 12px 0; }
+        .alert strong { color: #93c5fd; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th { background: #3b82f633; color: var(--primary); padding: 10px 12px; text-align: left; }
+        td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+        code { background: #262626; padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #93c5fd; }
+        footer { margin-top: 50px; font-size: 0.8em; color: #737373; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="Logo-app.png" class="logo" alt="Logo">
+        <div>
+            <h1>Gestión de Producción Láctea</h1>
+            <p>Control de Entregas, Calidad e INFOLAC · <span class="badge-siggan">Compatible SIGGAN v4.3</span></p>
+        </div>
+    </div>
+
+    <div class="module-card">
+        <h2><span class="badge">LECHE</span> Registro de Entregas</h2>
+        <p>Seguimiento diario de la recogida de leche por cisterna. Incluye campos para extracto seco, grasa, proteína y células somáticas.</p>
+        <img src="img/leche.png" class="screenshot" alt="Pantalla Leche">
+        <ul>
+            <li><strong>Cálculo de Precio:</strong> El sistema calcula el precio final unitario basado en los componentes de calidad.</li>
+            <li><strong>Trazabilidad de cisterna:</strong> Cada entrega registra matrícula del camión y número de albará de la industria láctea.</li>
+            <li><strong>INFOLAC:</strong> Preparado para la comunicación de datos a los sistemas oficiales de calidad de la leche.</li>
+        </ul>
+    </div>
+
+    <div class="module-card">
+        <h2><span class="badge">KPIs</span> Análisis de Rendimiento</h2>
+        <p>Monitorice la producción por animal o por rebaño para identificar los individuos más productivos.</p>
+        <img src="img/dash.png" class="screenshot" alt="Dashboard KPIs">
+        <ul>
+            <li><strong>Producción diaria/mensual:</strong> Gráfico de evolución con comparativa respecto al mismo período anterior.</li>
+            <li><strong>Productividad por animal:</strong> Ranking de las mejores y peores productoras.</li>
+            <li><strong>Alertas de calidad:</strong> Notificación cuando la grasa o proteína caen por debajo del umbral del contrato.</li>
+        </ul>
+    </div>
+
+    <div class="siggan-card">
+        <h2><span class="badge-siggan">SIGGAN</span> Integración Oficial — Explotaciones Lácteas</h2>
+        <p>Las explotaciones de leche tienen requisitos adicionales en SIGGAN respecto a las de carne. La app cubre todos los registros exigidos:</p>
+
+        <table>
+            <tr><th>Obligación Reglamentaria</th><th>Módulo App</th><th>Referencia Legal</th></tr>
+            <tr><td>Libro de registro de animales lecheros</td><td>Rebaños → Animales (tipo: leche)</td><td>RD 1515/2009</td></tr>
+            <tr><td>Registro de entregas de leche</td><td>Albaranes Leche</td><td>RD 1338/2011</td></tr>
+            <tr><td>Controles de calidad (grasa/proteína)</td><td>Albaranes → campos calidad</td><td>Reg. CE 853/2004</td></tr>
+            <tr><td>Identificación de animales (crotales)</td><td>Animales → campo crotal</td><td>RD 728/2007</td></tr>
+            <tr><td>Notificación REGA de bajas reproductoras</td><td>Notificaciones REGA</td><td>Decreto 14/2006</td></tr>
+            <tr><td>Movimientos inter-explotación</td><td>Comercialización / Traslados</td><td>SIGGAN / SIA</td></tr>
+        </table>
+
+        <h3 style="color: var(--siggan); margin-top: 20px;">Código REGA para Queserías / Industrias Lácteas</h3>
+        <p>Al registrar un comprador de tipo <code>quesería</code>, es obligatorio incluir su <strong>código REGA de la industria</strong>. Este código aparece en el albarán de entrega y en los registros oficiales de SIGGAN.</p>
+
+        <div class="alert">
+            <strong>Control lechero oficial:</strong> Para explotaciones integradas en un programa de mejora genética (p.ej. ACRIFLOR en ovino de leche), la app permite sincronizar los controles con los datos ya registrados en la plataforma de la asociación de criadores.
+        </div>
+    </div>
+
+    <div class="siggan-card">
+        <h2><span class="badge-siggan">SIGGAN</span> Períodos de Supresión en Animales Lecheros</h2>
+        <p>Los animales en tratamiento veterinario deben quedar en <strong>período de supresión</strong>. Durante este período, la leche producida <strong>no puede entregarse</strong> a la industria.</p>
+        <ul>
+            <li>La app marca automáticamente los animales con supresión activa.</li>
+            <li>El semáforo de aptitud (rojo/verde) se muestra en el listado del rebaño.</li>
+            <li>Los albaranes de leche excluyen el volumen de animales en supresión si se activa la opción en configuración.</li>
+        </ul>
+        <div class="alert">
+            <strong>Importante:</strong> Entregar leche de animales en período de supresión es una infracción grave según el Reglamento (CE) 853/2004 y puede suponer la pérdida de la certificación de la explotación.
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Livestock Manager Premium · Especialista en Vacuno y Ovino de Leche · Compatible SIGGAN (Andalucía) v4.3
+    </footer>
+</body>
+</html>

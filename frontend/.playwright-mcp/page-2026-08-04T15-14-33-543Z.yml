@@ -1,0 +1,102 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Sin conexión
+  - banner [ref=e3]:
+    - img "Livestock Manager" [ref=e5]
+    - generic [ref=e7]: Cargando...
+  - main [ref=e10]:
+    - generic [ref=e62]:
+      - generic [ref=e64]:
+        - heading "| REGISTRO RÁPIDO DE ACTIVIDAD" [level=2] [ref=e65]:
+          - generic [ref=e66]: "|"
+          - text: REGISTRO RÁPIDO DE ACTIVIDAD
+        - generic [ref=e67]: Acceso directo a operaciones de campo diarias sin intermediarios
+      - generic [ref=e68]:
+        - generic [ref=e74] [cursor=pointer]:
+          - generic [ref=e75]: Control Lechero
+          - generic [ref=e76]: Ordeño y lactación
+        - generic [ref=e85] [cursor=pointer]:
+          - generic [ref=e86]: Pesaje Ganado
+          - generic [ref=e87]: Pesos de lotes o individual
+        - generic [ref=e95] [cursor=pointer]:
+          - generic [ref=e96]: Tratamiento
+          - generic [ref=e97]: Fármacos y veterinaria
+        - generic [ref=e105] [cursor=pointer]:
+          - generic [ref=e106]: Gasto Analítico
+          - generic [ref=e107]: Costes y facturas
+        - generic [ref=e116] [cursor=pointer]:
+          - generic [ref=e117]: Alta Animal
+          - generic [ref=e118]: Crotal o chip nativo
+        - generic [ref=e126] [cursor=pointer]:
+          - generic [ref=e127]: Silos & Pienso
+          - generic [ref=e128]: Cargas y consumos
+        - generic [ref=e138] [cursor=pointer]:
+          - generic [ref=e139]: Traslado
+          - generic [ref=e140]: Mover animales entre rebaños
+        - generic [ref=e150] [cursor=pointer]:
+          - generic [ref=e151]: Censo Anual
+          - generic [ref=e152]: Recuento oficial de ganado
+        - generic [ref=e162] [cursor=pointer]:
+          - generic [ref=e163]: Pedido Crotales
+          - generic [ref=e164]: Solicitud oficial ADSG
+        - generic [ref=e175] [cursor=pointer]:
+          - generic [ref=e176]: Guía Movimiento
+          - generic [ref=e177]: Transporte entre explotaciones
+        - generic [ref=e186] [cursor=pointer]:
+          - generic [ref=e187]: Albarán Leche
+          - generic [ref=e188]: Entrega a comprador/industria
+        - generic [ref=e196] [cursor=pointer]:
+          - generic [ref=e197]: Venta Masiva o Carga de Matadero
+          - generic [ref=e198]: Gestión integral de salidas comerciales, guías de traslado y guías de transporte
+    - generic [ref=e203]:
+      - heading "| KPIS DIARIOS" [level=3] [ref=e204]
+      - generic [ref=e205]: No hay suficientes datos. Registra entregas de leche y animales.
+    - generic [ref=e206]:
+      - generic [ref=e208] [cursor=pointer]:
+        - heading "| ALERTAS TRAZABILIDAD 9" [level=3] [ref=e209]
+        - generic [ref=e210]:
+          - generic [ref=e213]:
+            - generic [ref=e214]: ES654321098768
+            - generic [ref=e215]: "Identificación obligatoria pendiente. Edad: 26 meses"
+          - generic [ref=e221]:
+            - generic [ref=e222]: ES654321098767
+            - generic [ref=e223]: "Identificación obligatoria pendiente. Edad: 56 meses"
+          - generic [ref=e229]:
+            - generic [ref=e230]: ES654321098766
+            - generic [ref=e231]: "Identificación obligatoria pendiente. Edad: 42 meses"
+          - generic [ref=e235]: +6 alertas más
+      - generic [ref=e237] [cursor=pointer]:
+        - heading "| GESTIÓN / PAC 1" [level=3] [ref=e238]:
+          - text: "| GESTIÓN / PAC"
+          - generic [ref=e239]: "1"
+        - generic [ref=e246]:
+          - generic [ref=e247]: Sin registros de comercialización láctea. Dar de alta en INFOLAC.
+          - generic [ref=e248]: Registrar primera venta de leche y darse de alta en INFOLAC.
+    - generic [ref=e255]:
+      - heading "| Verano" [level=3] [ref=e256]
+      - list [ref=e257]:
+        - listitem [ref=e258]: Asegurar sombra y agua limpia abundante
+        - listitem [ref=e259]: Control de parásitos externos (Moscas, garrapatas)
+        - listitem [ref=e260]: Evitar traslados en horas de máximo calor
+      - link "Ver Alertas Completas" [ref=e262] [cursor=pointer]:
+        - /url: "#/alertas"
+    - generic [ref=e265]:
+      - generic [ref=e266]: Nueva Actividad
+      - button "Añadir" [ref=e267] [cursor=pointer]
+  - navigation "Navegación principal escritorio" [ref=e12]:
+    - link "Inicio" [ref=e13] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=e19] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=e21] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=e23] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=e26] [cursor=pointer]
+  - status
+  - generic [ref=e29]:
+    - generic [ref=e30]:
+      - img "Livestock Manager" [ref=e31]
+      - heading "Bienvenido" [level=1] [ref=e32]
+      - paragraph [ref=e33]: Gestión ganadera profesional v4.10.1 Premium
+      - button "Primeros pasos" [ref=e34] [cursor=pointer]
+    - generic [ref=e271]: Cargando datos de la demo...Esto puede tardar unos segundos.

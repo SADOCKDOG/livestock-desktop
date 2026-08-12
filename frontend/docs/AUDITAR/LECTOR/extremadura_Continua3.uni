@@ -1,0 +1,322 @@
+HEADER
+//COMENTARIO:Extremadura Continua3
+  Extremadura Continua2 
+  2007/03/21
+  22:43:59
+  dd/mm/yyyy
+  hh:mm:ss
+  ;
+  LOG_true
+  .
+  BT_false
+  GL_section
+END
+// ******************************************************************
+// * OS:  HHR Program Loader 4.22B								
+// * HHM: HHR Manager version 4.22B
+// * Cambiar el continue por loopreadnew
+// * Se añade la explotación en la lectura continua		
+// * Añadimos campo Tipo Identificacion																				
+// ******************************************************************
+TABLE                                                                                                                                                                                              
+	EID;R;1;1;1;000000000000;;
+	EXPLOT;S;0;1;1;&&&&&&&&&;;
+	ESPECIE;S;0;1;1;#;;
+	RAZAO;O;0;1;1;Merina,Talav,Churra,Manchega,Ile France,M precoz,Berrinc,Fleisch,Landsc,Ot Nac,Ot Ext,Descon;Merina;
+	RAZAC;O;0;1;1;Serrana,Mur-Gra,Malag,Verata,Saane,Reti Ext,Canaria,Cruzada,Otras,Descon;Serrana;
+  	SEXO;O;0;1;1;H,M;H;
+	FECHANAC;D;0;1;1;0000000000;;
+	FECHAID;D;0;1;1;0000000000;;
+	TIPOID;O;0;1;1;Crotal,Bolo,Inyec;Bolo;
+END
+
+LOG
+	LEID;R;1;1;1;###############;;
+	FECHA;D;0;1;1;0000000000;;
+	HORA;T;0;1;1;00000000;;
+	REGA;S;0;1;1;&&&&&&&&&&&&;;
+END
+
+GLOBAL
+END
+
+MESSAGE
+END
+
+MACRO
+
+//*******// macro NEW_REC_CROTAL OVINO//***********************************
+
+begin_macro:NEW_REC_CROTALO
+	
+	 begin_action_area
+		ReadNew(table.EID)
+		Sorting(table.EID)
+		Paste(table.EXPLOT)
+		Paste(table.FECHANAC)
+		Paste(table.SEXO)
+		Paste(table.RAZAO)
+		Paste(table.TIPOID)
+		FillExp(table.ESPECIE,"2")
+		FillExp(table.FECHAID,date())
+	end_action_area
+	begin_screen
+		PrintAnimalMark(0,0,0,table.EID)
+		PrintText(15,0,0,"DUP:")
+		PrintRetagging(37,0,0,table.EID)
+		PrintText(58,0,0,"ESP:")
+		PrintUserInfo(80,0,0,table.EID)
+		PrintReserved(110,0,0,table.EID)
+		PrintAddInfo(122,0,0,table.EID)
+		PrintCountryNumber(0,5,2,table.EID)        
+	 	PrintField(32,5,2,table.EID)
+		DrawLine(0,16,127,16)
+		PrintText(0,20,2,"F.Nac:")
+		EditDateField(38,20,2,table.FECHANAC)
+		PrintText(0,33,2,"Sexo:")
+		EditChoiceField(38,33,2,table.SEXO)
+		DrawLine(0,50,127,50)
+		IconDelete(0,52,table,0)
+		IconFindCol(18,52,table.EID,0)
+		PrintText(40,55,0,"OVINO+CAMPOS b")
+	end_screen
+	begin_screen
+  		DrawLine(0,0,127,0)		
+		PrintText(0,1,2,"Raza:")
+		EditChoiceField(35,1,2,table.RAZAO)
+		PrintText(0,15,2,"F.Id:")
+		EditDateField(35,15,2,table.FECHAID)
+		PrintText(0,29,2,"T.Id:")
+		EditChoiceField(35,29,2,table.TIPOID)
+		PrintText(0,42,2,"Expl:")
+		EditMaskedField(35,42,2,table.EXPLOT)
+		DrawLine(0,56,127,56)
+		PrintText(40,59,0,"OVINO+CAMPOS a")
+	end_screen
+	begin_control_area
+		Copy(table)
+	end_control_area
+end_macro
+
+//*******// macro NEW_REC_CROTAL CAPRINO //***********************************
+
+begin_macro:NEW_REC_CROTALC
+	
+	 begin_action_area
+		ReadNew(table.EID)
+		Sorting(table.EID)
+		Paste(table.EXPLOT)
+		Paste(table.FECHANAC)
+		Paste(table.SEXO)
+		Paste(table.RAZAC)
+		FillExp(table.ESPECIE,"3")
+		FillExp(table.FECHAID,date())	
+	end_action_area
+	begin_screen
+		PrintAnimalMark(0,0,0,table.EID)
+		PrintText(15,0,0,"DUP:")
+		PrintRetagging(37,0,0,table.EID)
+		PrintText(58,0,0,"ESP:")
+		PrintUserInfo(80,0,0,table.EID)
+		PrintReserved(110,0,0,table.EID)
+		PrintAddInfo(122,0,0,table.EID)
+ 		PrintCountryNumber(0,5,2,table.EID)        
+	 	PrintField(32,5,2,table.EID)
+		DrawLine(0,16,127,16)
+		PrintText(0,20,2,"F.Nac:")
+		EditDateField(38,20,2,table.FECHANAC)
+		PrintText(0,33,2,"Sexo:")
+		EditChoiceField(38,33,2,table.SEXO)
+		DrawLine(0,50,127,50)
+		IconDelete(0,52,table,0)
+		IconFindCol(18,52,table.EID,0)
+		PrintText(38,55,0,"CAPRINO+CAMPOS b")
+	end_screen
+	begin_screen
+   		DrawLine(0,0,127,0)		
+		PrintText(0,1,2,"Raza:")
+		EditChoiceField(35,1,2,table.RAZAO)
+		PrintText(0,15,2,"F.Id:")
+		EditDateField(35,15,2,table.FECHAID)
+		PrintText(0,29,2,"T.Id:")
+		EditChoiceField(35,29,2,table.TIPOID)
+		PrintText(0,42,2,"Expl:")
+		EditMaskedField(35,42,2,table.EXPLOT)
+		DrawLine(0,56,127,56)
+		PrintText(40,59,0,"CAPRINO+CAMPOS a")
+	end_screen
+	begin_control_area
+		Copy(table)
+	end_control_area
+end_macro
+
+//*******// macro DATE TIME //***********************************
+
+begin_macro:DATE
+	begin_action_area
+    	end_action_area
+	begin_screen
+		DrawLine(0,0,127,0)
+		PrintText(0,20,2,"Hora:")
+		SetTime(40,19,2)
+		PrintText(0,35,2,"Fecha:")
+		SetDate(40,34,2)
+		DrawLine(0,56,127,56)
+	end_screen	
+    	begin_control_area
+	end_control_area	
+end_macro
+
+//*******// macro EXPLOTACION//***********************************
+
+begin_macro:EXPLOTACION
+	
+	begin_action_area
+		ReadNew(log.LEID)
+		FillExp(log.FECHA,date())
+		FillExp(log.HORA,time())
+		Paste(log.REGA)
+	end_action_area
+	begin_screen
+	
+		PrintField(6,0,3,log.LEID)
+		
+		DrawLine(0,17,127,17)
+		PrintText(0,20,2,"Explotacion:")
+		EditMaskedField(0,32,2,log.REGA)
+		DrawLine(0,50,127,50)
+		PrintText(0,52,2,"Contador:")
+		PrintExp(60,52,2,count(log.*))
+	end_screen
+	begin_control_area
+		Copy(log)
+	end_control_area
+end_macro
+
+//*******// macro LECTURA CONTINUA//***********************************
+
+begin_macro:CONTINUA
+	
+	begin_action_area
+		LoopReadNew_p(log.LEID)
+		FillExp(log.FECHA,date())
+		FillExp(log.HORA,time())
+		Paste(log.REGA)
+	end_action_area
+	begin_screen
+		DrawLine(0,0,127,0)
+		PrintText(0,25,4,"Lectura Continua")
+		PrintText(0,5,2,"Exp.:")
+		PrintField(30,5,2,log.REGA)
+		DrawLine(0,50,127,50)
+		PrintText(0,52,2,"Contador:")
+		PrintExp(60,52,2,count(log.*))
+	end_screen
+	begin_control_area
+		Copy(log)
+	end_control_area
+end_macro
+
+//*******// macro LECTURA SIMPLE//***********************************
+
+begin_macro:SIMPLE
+	
+	begin_action_area
+		ReadNew(log.LEID)
+		FillExp(log.FECHA,date())
+		FillExp(log.HORA,time())
+		Paste(log.REGA)
+	end_action_area
+	begin_screen
+	
+		PrintField(6,0,3,log.LEID)
+		
+		DrawLine(0,17,127,17)
+		PrintText(0,25,4,"Lectura Simple")
+		DrawLine(0,50,127,50)
+		PrintText(0,52,2,"Contador:")
+		PrintExp(60,52,2,count(log.*))
+	end_screen
+	begin_control_area
+		Copy(log)
+	end_control_area
+end_macro
+
+//*******// macro OTROS //***********************************
+
+begin_macro:OTROS
+	begin_action_area
+    	end_action_area
+	begin_screen
+		DrawLine(0,0,127,0)
+		PrintText(0,20,2,"N. Registros:")
+	   	PrintExp(77,20,2,count(table.*))
+		PrintText(0,40,2,"N. Continua:")
+	   	PrintExp(77,40,2,count(log.*))
+		DrawLine(0,56,127,56)
+	end_screen
+    	begin_control_area
+	end_control_area	
+end_macro
+
+END
+
+MENU
+  M0:{Ovino,M1};{Caprino,M2};{Explotacion,M7};{Continua,M3};{Simple,M4};{Fecha/Hora,M5};{Otros,M6}
+  M1:NEW_REC_CROTALO
+  M2:NEW_REC_CROTALC
+  M3:CONTINUA
+  M4:SIMPLE
+  M5:DATE
+  M6:OTROS
+  M7:EXPLOTACION
+END
+
+START_SCREEN
+  begin_screen
+	DrawLine(0,6,127,6)  
+	PrintText(10,20,5,"FELIXCAN")
+	DrawLine(0,56,127,56)
+	PrintText(0,43,1,"Extremadura Cont.3")
+	PrintVersion(21,58,0)
+  end_screen
+END
+ 
+WARNING
+  w_WAIT:Por favor/espere
+  w_UNIQUE:Este valor debe/ser unico
+  w_NOEDIT:El valor/NO es editable
+  w_NOTNULL:El valor/no puede ser nulo
+  w_LOWBATTERY:Bateria baja
+  w_CHARGEBATTERY:Bateria/cargando
+  w_NOT_FREE_MEMORY:No queda memoria
+  w_NOT_STORED:NO ALMACENADO
+  w_STORED:Almacenado
+  w_DATE_GOOD:Fecha/actualizada
+  w_DATE_NO_CHANGE:Fecha NO/actualizada 
+  w_DATE_NOT_GOOD:Fecha erronea!
+  w_TIME_GOOD:Hora/actualizada
+  w_TIME_NO_CHANGE:Hora no/actualizada
+  w_TIME_NOT_GOOD:Hora erronea
+  w_NOTAG:No se encuentra/microchip
+  w_READING:Leyendo...
+  w_SHUTOFF:Apagando
+  w_USBCONNECTED:USB/conectado
+  w_NEW_REC:1G^Nuevo/registro
+  w_NEW_LOG:1^Nuevo/registro
+  w_CHOICE:Elija:
+  w_FIND:Busqueda:
+  w_TAGNOTFIND:Microchip/no encontrado!
+  w_TAGEXIST:S2RG^El microchip/ya existe
+  w_YES:SI
+  w_NOT:NO
+  w_ADD_REC:Nuevo/registro?
+  w_DEL_REC:Borrar/registro?
+  w_UNKNOWN_MES:Mensaje/desconocido
+  w_VALEXIST:Este valor/ya existe
+  w_BTACTIVE:BlueTooth/activado
+  w_BTNOACTIVE:BlueTooth/desactivado
+  w_ON:Encender
+  w_OFF:Apagar
+  w_MEMORY:MEMORIA:
+END

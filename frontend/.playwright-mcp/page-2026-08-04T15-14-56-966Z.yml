@@ -1,0 +1,120 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]: Sin conexión
+  - banner [ref=f1e3]:
+    - img "Livestock Manager" [ref=f1e5]
+    - generic [ref=f1e12] [cursor=pointer]:
+      - generic [ref=f1e13]: ES210050001234
+      - generic [ref=f1e14]:
+        - text: "Tipo Explo:"
+        - generic [ref=f1e15]: Híbrida
+  - main [ref=f1e16]:
+    - generic [ref=f1e18]:
+      - generic [ref=f1e20]:
+        - heading "| REGISTRO RÁPIDO DE ACTIVIDAD" [level=2] [ref=f1e21]:
+          - generic [ref=f1e22]: "|"
+          - text: REGISTRO RÁPIDO DE ACTIVIDAD
+        - generic [ref=f1e23]: Acceso directo a operaciones de campo diarias sin intermediarios
+      - generic [ref=f1e24]:
+        - generic [ref=f1e30] [cursor=pointer]:
+          - generic [ref=f1e31]: Control Lechero
+          - generic [ref=f1e32]: Ordeño y lactación
+        - generic [ref=f1e41] [cursor=pointer]:
+          - generic [ref=f1e42]: Pesaje Ganado
+          - generic [ref=f1e43]: Pesos de lotes o individual
+        - generic [ref=f1e51] [cursor=pointer]:
+          - generic [ref=f1e52]: Tratamiento
+          - generic [ref=f1e53]: Fármacos y veterinaria
+        - generic [ref=f1e61] [cursor=pointer]:
+          - generic [ref=f1e62]: Gasto Analítico
+          - generic [ref=f1e63]: Costes y facturas
+        - generic [ref=f1e72] [cursor=pointer]:
+          - generic [ref=f1e73]: Alta Animal
+          - generic [ref=f1e74]: Crotal o chip nativo
+        - generic [ref=f1e82] [cursor=pointer]:
+          - generic [ref=f1e83]: Silos & Pienso
+          - generic [ref=f1e84]: Cargas y consumos
+        - generic [ref=f1e94] [cursor=pointer]:
+          - generic [ref=f1e95]: Traslado
+          - generic [ref=f1e96]: Mover animales entre rebaños
+        - generic [ref=f1e106] [cursor=pointer]:
+          - generic [ref=f1e107]: Censo Anual
+          - generic [ref=f1e108]: Recuento oficial de ganado
+        - generic [ref=f1e118] [cursor=pointer]:
+          - generic [ref=f1e119]: Pedido Crotales
+          - generic [ref=f1e120]: Solicitud oficial ADSG
+        - generic [ref=f1e131] [cursor=pointer]:
+          - generic [ref=f1e132]: Guía Movimiento
+          - generic [ref=f1e133]: Transporte entre explotaciones
+        - generic [ref=f1e142] [cursor=pointer]:
+          - generic [ref=f1e143]: Albarán Leche
+          - generic [ref=f1e144]: Entrega a comprador/industria
+        - generic [ref=f1e152] [cursor=pointer]:
+          - generic [ref=f1e153]: Venta Masiva o Carga de Matadero
+          - generic [ref=f1e154]: Gestión integral de salidas comerciales, guías de traslado y guías de transporte
+    - generic [ref=f1e159]:
+      - heading "| KPIS DIARIOS (7-30 días)" [level=3] [ref=f1e160]
+      - generic [ref=f1e161]:
+        - generic [ref=f1e162]:
+          - generic [ref=f1e163]: L/DÍA
+          - generic [ref=f1e164]: "46.19"
+          - generic [ref=f1e165]: 6 ♀
+        - generic [ref=f1e166]:
+          - generic [ref=f1e167]: PIENSO (g/L)
+          - generic [ref=f1e168]: "2046"
+          - generic [ref=f1e169]: Eficiencia
+        - generic [ref=f1e170]:
+          - generic [ref=f1e171]: BAJAS
+          - generic [ref=f1e172]: —
+          - generic [ref=f1e173]: Mamitis
+    - generic [ref=f1e176] [cursor=pointer]:
+      - heading "| ALERTAS TRAZABILIDAD 9" [level=3] [ref=f1e177]
+      - generic [ref=f1e178]:
+        - generic [ref=f1e181]:
+          - generic [ref=f1e182]: "Venta #1"
+          - generic [ref=f1e183]: "Documentación post-venta incompleta. Albarán: ALB-2025-0007. Falta DIMOE."
+        - generic [ref=f1e189]:
+          - generic [ref=f1e190]: ES654321098768
+          - generic [ref=f1e191]: "Identificación obligatoria pendiente. Edad: 26 meses"
+        - generic [ref=f1e197]:
+          - generic [ref=f1e198]: ES654321098767
+          - generic [ref=f1e199]: "Identificación obligatoria pendiente. Edad: 56 meses"
+        - generic [ref=f1e203]: +6 alertas más
+    - generic [ref=f1e205]:
+      - heading "| INDICADORES LÁCTEOS (últimos 12 meses)" [level=3] [ref=f1e206]
+      - generic [ref=f1e207]:
+        - generic [ref=f1e208]:
+          - generic [ref=f1e209]: MOFA
+          - generic [ref=f1e210]: 246,00 €
+          - generic [ref=f1e211]: 70.1%
+        - generic [ref=f1e212]:
+          - generic [ref=f1e213]: PRECIO
+          - generic [ref=f1e214]: 0,726
+          - generic [ref=f1e215]: €/L
+        - generic [ref=f1e216]:
+          - generic [ref=f1e217]: EXT. SECO
+          - generic [ref=f1e218]: 11.37%
+          - generic [ref=f1e219]: 3 anal.
+      - link "Control Lechero Detallado" [ref=f1e221] [cursor=pointer]:
+        - /url: "#/comercializacion?tab=leche"
+    - generic [ref=f1e225]:
+      - heading "| Verano" [level=3] [ref=f1e226]
+      - list [ref=f1e227]:
+        - listitem [ref=f1e228]: Asegurar sombra y agua limpia abundante
+        - listitem [ref=f1e229]: Control de parásitos externos (Moscas, garrapatas)
+        - listitem [ref=f1e230]: Evitar traslados en horas de máximo calor
+      - link "Ver Alertas Completas" [ref=f1e232] [cursor=pointer]:
+        - /url: "#/alertas"
+    - generic [ref=f1e235]:
+      - generic [ref=f1e236]: Nueva Actividad
+      - button "Añadir" [ref=f1e237] [cursor=pointer]
+  - navigation "Navegación principal escritorio" [ref=f1e241]:
+    - link "Inicio" [ref=f1e242] [cursor=pointer]:
+      - /url: "#/"
+    - link "GeGan" [ref=f1e247] [cursor=pointer]:
+      - /url: "#/ganaderia"
+    - link "ExPro" [ref=f1e251] [cursor=pointer]:
+      - /url: "#/explotacion"
+    - link "CoMer" [ref=f1e256] [cursor=pointer]:
+      - /url: "#/comercializacion"
+    - button "Más" [ref=f1e264] [cursor=pointer]
+  - status
