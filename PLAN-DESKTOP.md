@@ -44,11 +44,11 @@ Los límites **ya están definidos en el maestro** (`frontend/js/premium-manager
 
 `scripts/sync-from-master.ps1` (ejecutado en cada build vía `beforeBuildCommand`):
 - Refleja desde el maestro: `index.html`, `sw.js`, `manifest.webmanifest`, `privacy-policy.html`, `css/`, `js/`, `icons/`, `manual/`, `assets/`.
-- **Preserva** (nunca borra ni sobrescribe) los 12 archivos propios del desktop:
-  - `index.html` (markup sidebar ERP), `js/app.js` (handlers sidebar), `js/module-colors.js`, `js/views/animales-view.js`, `js/views/rebanos-view.js`, `css/design-tokens.css` (paleta ERP), `css/erp-sidebar.css`, `css/erp-data-table.css`, `css/erp-overrides.css` (neutraliza neón legado), `js/erp-data-table.js`, `js/icons-desktop.js` (iconos extra), `js/mode-config.js`.
+- **Preserva** (nunca borra ni sobrescribe) los 15 archivos propios del desktop:
+  - `index.html` (markup sidebar ERP), `js/app.js` (handlers sidebar), `js/module-colors.js`, `js/views/animales-view.js`, `js/views/rebanos-view.js`, `js/views/compradores-view.js`, `js/views/proveedores-view.js`, `js/views/transportistas-view.js`, `css/design-tokens.css` (paleta ERP), `css/erp-sidebar.css`, `css/erp-data-table.css`, `css/erp-overrides.css` (neutraliza neón legado), `js/erp-data-table.js`, `js/icons-desktop.js` (iconos extra), `js/mode-config.js`.
 - Anuncia cada preservación para revisar diffs a mano cuando el maestro toque esos archivos.
 
-> ⚠️ Deuda conocida: al preservar archivos que también existen en el maestro (app.js, 2 views, design-tokens, module-colors, index.html), los cambios upstream en ellos **no fluyen**; hay que fusionarlos manualmente cuando el sync los anuncie. Refactor futuro: mover overrides a capa overlay pura.
+> ⚠️ Deuda conocida: al preservar archivos que también existen en el maestro (app.js, 5 views, design-tokens, module-colors, index.html), los cambios upstream en ellos **no fluyen**; hay que fusionarlos manualmente cuando el sync los anuncie. Refactor futuro: mover overrides a capa overlay pura.
 
 ## 5. Capa ERP construida (Fases 1–2, hechas)
 
@@ -96,8 +96,11 @@ Auditados todos los CSS, vistas, wizards, componentes transversales e iconos. Re
 > aprobadas. Estrategia de tokenización: hardcode → `var(--token)`; en el maestro
 > el token resuelve a neón (PWA sin cambios visuales) y en desktop a corporativo.
 
-### P2 — Migración a ErpDataTable (paridad ERP; ~10 vistas)
-Orden: `compradores` → `proveedores` → `transportistas` → `gastos` → `historial` → `cuaderno` → `pesadas` → `contratos` → `documentos` (albaranes) → `fitosanitarios`.
+### P2 — Migración a ErpDataTable (paridad ERP; ~10 vistas) — EN CURSO
+Orden: `compradores` ✅ → `proveedores` ✅ → `transportistas` ✅ → `gastos` → `historial` → `cuaderno` → `pesadas` → `contratos` → `documentos` (albaranes) → `fitosanitarios`.
+
+- ✅ **P2-1 (2026-08-12):** compradores (solo módulo compradores; la rama contratos de esa vista se migra con `contratos-view.js`), proveedores y transportistas tienen toggle Tarjetas/Tabla ERP + `_renderErpTable()` (badges de estado/tipo, métricas de última operación/compra, cert. bienestar coloreado) y pasan a la lista de preservados del sync. `erp-overrides.css` gana `.badge-success`/`.badge-gray` standalone (el maestro solo las define compuestas con `.status-badge` — también arregla el badge de estado de animales/rebanos/informes).
+- Nota: `historial` y `pesadas` no existen como vistas propias; localizar su listado real (probablemente dentro de `cuaderno-view.js` u otra vista) en P2-2/P2-3.
 
 ### P3 — Nativo Tauri (la promesa desktop)
 1. **Comando WinRT `Windows.Services.Store`** para Premium (sustituye GP Billing) — crítico para monetizar; la PWA no pudo (#2478).
@@ -124,6 +127,6 @@ Orden: `compradores` → `proveedores` → `transportistas` → `gastos` → `hi
 | 3. Auditoría UI/UX completa | ✅ (ver §6) |
 | 4a. Backlog P0 (limpieza crítica) | ✅ |
 | 4b. Backlog P1 (tokens en vistas + overlay) | ✅ |
-| 4c. Backlog P2 (10 vistas a ErpDataTable) | 🔲 siguiente |
+| 4c. Backlog P2 (10 vistas a ErpDataTable) | 🔶 en curso (3/10: compradores, proveedores, transportistas) |
 | 5. WinRT Store + atajos + nativo (P3–P4) | 🔲 |
 | 6. MSIX Free/Premium + publicación Store (P5) | 🔲 |

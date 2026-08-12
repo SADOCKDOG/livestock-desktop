@@ -19,6 +19,19 @@
   background: var(--c-orange);
 }
 
+/* ── Variantes standalone usadas por las tablas ERP ──
+   El maestro solo las define compuestas (.status-badge.badge-success,
+   styles.css:4261-4265); las vistas con ErpDataTable las emiten simples. */
+.badge-success {
+  background: color-mix(in srgb, var(--c-success) 12%, transparent);
+  color: var(--c-success);
+}
+
+.badge-gray {
+  background: rgba(136, 136, 136, 0.12);
+  color: var(--text-s);
+}
+
 /* ── Variantes "neon" de widgets (sobreescribe styles.css:3862-3864) ── */
 .neon-orange {
   --neon-color: var(--c-orange);

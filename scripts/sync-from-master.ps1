@@ -12,7 +12,8 @@ $ErrorActionPreference = 'Stop'
 
 # $PSScriptRoot = <repo>\scripts -> la raiz del repo es el padre
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$masterPath = Resolve-Path (Join-Path $repoRoot '..' 'LIVESTOCK-MANAGER') -ErrorAction SilentlyContinue
+# Join-Path anidado: compatible con Windows PowerShell 5.1 y PowerShell 7+
+$masterPath = Resolve-Path (Join-Path (Join-Path $repoRoot '..') 'LIVESTOCK-MANAGER') -ErrorAction SilentlyContinue
 
 if (-not $masterPath) {
     Write-Error "No se encontro el repo maestro en ..\LIVESTOCK-MANAGER. Clona/ubica LIVESTOCK-MANAGER como hermano de este repo."
@@ -32,6 +33,9 @@ $preservedList = @(
     'js\module-colors.js',           # Mapa de colores ERP (sin neon)
     'js\views\animales-view.js',     # Toggle Tarjetas/Tabla ERP
     'js\views\rebanos-view.js',      # Toggle Tarjetas/Tabla ERP
+    'js\views\compradores-view.js',  # Toggle Tarjetas/Tabla ERP (módulo compradores)
+    'js\views\proveedores-view.js',  # Toggle Tarjetas/Tabla ERP
+    'js\views\transportistas-view.js', # Toggle Tarjetas/Tabla ERP
     'css\design-tokens.css',         # Paleta ERP profesional
     'css\erp-sidebar.css',           # Sidebar colapsable (solo desktop)
     'css\erp-data-table.css',        # Tablas densas ERP (solo desktop)
