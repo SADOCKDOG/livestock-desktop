@@ -76,10 +76,15 @@ const FitosanitariosView = {
 
             <!-- Historial de Aplicaciones -->
             <div class="card p-16 font-sans" style="background:var(--surface); border:1px solid var(--border-subtle);">
-                <h3 class="text-xs font-black uppercase tracking-widest text-gray-400 mb-15 flex items-center gap-6">
-                    <span style="color:var(--c-success);">|</span> ${Icons.historial()} TRATAMIENTOS Y COMPRAS REGISTRADAS
+                <h3 class="text-xs font-black uppercase tracking-widest text-gray-400 mb-15 flex items-center gap-6" style="justify-content: space-between;">
+                    <span class="flex items-center gap-6"><span style="color:var(--c-success);">|</span> ${Icons.historial()} TRATAMIENTOS Y COMPRAS REGISTRADAS</span>
+                    <span class="flex gap-4">
+                        <button class="btn-erp-secondary btn-sm" id="btn-fito-vista-cards" onclick="FitosanitariosView._setVistaModo('cards')">Tarjetas</button>
+                        <button class="btn-erp-secondary btn-sm" id="btn-fito-vista-tabla" onclick="FitosanitariosView._setVistaModo('tabla')">Tabla ERP</button>
+                    </span>
                 </h3>
 
+                <div id="fito-lista">
                 ${this._cachedRegistros.length === 0 ? `
                 <div class="empty-state py-40 text-center">
                     <div class="empty-state-icon mb-10" style="color:var(--c-success);">${Icons.fitosanitario()}</div>
@@ -91,6 +96,8 @@ const FitosanitariosView = {
                     ${this._cachedRegistros.map(r => this._renderRegistroItem(r)).join('')}
                 </div>
                 `}
+                </div>
+                <div id="fito-erp-table-container" class="mt-12" style="display:none;"></div>
             </div>
 
             <!-- FAB (Botón de Acción Flotante) Premium -->
@@ -100,6 +107,10 @@ const FitosanitariosView = {
             </div>
         </div>
         `;
+
+        // Restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px)
+        const modoGuardado = localStorage.getItem('fitosanitarios_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+        this._setVistaModo(modoGuardado, false);
     },
 
     _renderRegistroItem(r) {
@@ -136,6 +147,111 @@ const FitosanitariosView = {
             </div>
         </div>
         `;
+    },
+
+    // ============================================
+    // VISTA TABLA ERP (desktop)
+    // ============================================
+
+    _setVistaModo(modo, guardar = true) {
+        this._vistaModo = modo;
+        if (guardar) {
+            try { localStorage.setItem('fitosanitarios_view_mode', modo); } catch (_) {}
+        }
+
+        const btnCards = document.getElementById('btn-fito-vista-cards');
+        const btnTabla = document.getElementById('btn-fito-vista-tabla');
+        const contenedorCards = document.getElementById('fito-lista');
+        const contenedorTabla = document.getElementById('fito-erp-table-container');
+
+        if (btnCards && btnTabla) {
+            btnCards.style.background = modo === 'cards' ? 'var(--brand, #1F5FA8)' : 'transparent';
+            btnTabla.style.background = modo === 'tabla' ? 'var(--brand, #1F5FA8)' : 'transparent';
+        }
+
+        if (modo === 'tabla') {
+            if (contenedorCards) contenedorCards.style.display = 'none';
+            if (contenedorTabla) {
+                contenedorTabla.style.display = 'block';
+                this._renderErpTable();
+            }
+        } else {
+            if (contenedorTabla) contenedorTabla.style.display = 'none';
+            if (contenedorCards) contenedorCards.style.display = 'block';
+        }
+    },
+
+    _renderErpTable() {
+        if (!window.ErpDataTable || !this._cachedRegistros) return;
+
+        const tableData = this._cachedRegistros.map(r => {
+            // Mismo cálculo de período de seguridad que la ficha
+            const diasPlazo = Number(r.control_normativo?.plazoSeguridadDias) || 0;
+            let apto = '—';
+            let aptoColor = 'var(--text-d)';
+            if (diasPlazo > 0) {
+                const finPlazo = new Date(new Date(r.fecha).getTime() + (diasPlazo * 24 * 60 * 60 * 1000));
+                const esSeguro = new Date() >= finPlazo;
+                apto = esSeguro ? 'APTO' : `BLOQUEADO (${Math.max(0, Math.ceil((finPlazo - new Date()) / (24 * 60 * 60 * 1000)))}d)`;
+                aptoColor = esSeguro ? 'var(--c-success)' : 'var(--c-danger)';
+            }
+            return {
+                id: r.id,
+                fecha: r.fecha || '—',
+                concepto: r.concepto || '—',
+                zona: (r.snap_zona || 'GENERAL').toUpperCase(),
+                factura: r.factura ? r.factura.toUpperCase() : '—',
+                plazo: diasPlazo > 0 ? diasPlazo : null,
+                apto: apto,
+                _aptoColor: aptoColor,
+                monto: Number(r.monto) || 0
+            };
+        });
+
+        new window.ErpDataTable({
+            containerId: 'fito-erp-table-container',
+            title: 'Registros fitosanitarios',
+            pageSize: 15,
+            columns: [
+                {
+                    key: 'fecha',
+                    label: 'Fecha',
+                    sortable: true,
+                    render: (val) => val !== '—' ? new Date(val).toLocaleDateString('es-ES') : '—'
+                },
+                { key: 'concepto', label: 'Concepto', sortable: true },
+                { key: 'zona', label: 'Zona', sortable: true },
+                { key: 'factura', label: 'Factura', sortable: true },
+                {
+                    key: 'plazo',
+                    label: 'Plazo seguridad',
+                    sortable: true,
+                    align: 'center',
+                    render: (val) => val === null ? '—' : `${val} días`
+                },
+                {
+                    key: 'apto',
+                    label: 'Comercialización',
+                    sortable: true,
+                    render: (val, row) => `<span style="color:${row._aptoColor}; font-weight:700;">${val}</span>`
+                },
+                {
+                    key: 'monto',
+                    label: 'Inversión',
+                    sortable: true,
+                    align: 'right',
+                    render: (val) => `<span style="font-weight:700;">${val.toLocaleString('es-ES', { minimumFractionDigits: 2 })} €</span>`
+                },
+                {
+                    key: 'id',
+                    label: 'Ficha',
+                    sortable: false,
+                    align: 'center',
+                    render: (id) => `<button class="btn-erp-secondary btn-sm" onclick="FitosanitariosView._abrirFichaTratamiento(${id})">Ver Ficha</button>`
+                }
+            ],
+            data: tableData
+        }).render();
     },
 
     async _abrirFichaTratamiento(id) {

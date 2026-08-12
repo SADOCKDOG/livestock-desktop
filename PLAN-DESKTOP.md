@@ -1,6 +1,6 @@
 # Plan Maestro — Livestock Desktop (ERP, Tauri)
 
-> Última revisión: 2026-08-12 · Estado: Fase 2 completada, Fase 3 en curso
+> Última revisión: 2026-08-12 · Estado: backlog ERP (P0–P2) completado; siguiente: P3 nativo Tauri
 
 ## 1. Qué estamos construyendo
 
@@ -44,11 +44,11 @@ Los límites **ya están definidos en el maestro** (`frontend/js/premium-manager
 
 `scripts/sync-from-master.ps1` (ejecutado en cada build vía `beforeBuildCommand`):
 - Refleja desde el maestro: `index.html`, `sw.js`, `manifest.webmanifest`, `privacy-policy.html`, `css/`, `js/`, `icons/`, `manual/`, `assets/`.
-- **Preserva** (nunca borra ni sobrescribe) los 17 archivos propios del desktop:
-  - `index.html` (markup sidebar ERP), `js/app.js` (handlers sidebar), `js/module-colors.js`, `js/views/animales-view.js`, `js/views/rebanos-view.js`, `js/views/compradores-view.js`, `js/views/proveedores-view.js`, `js/views/transportistas-view.js`, `js/views/gastos-view.js`, `js/views/contratos-view.js`, `css/design-tokens.css` (paleta ERP), `css/erp-sidebar.css`, `css/erp-data-table.css`, `css/erp-overrides.css` (neutraliza neón legado), `js/erp-data-table.js`, `js/icons-desktop.js` (iconos extra), `js/mode-config.js`.
+- **Preserva** (nunca borra ni sobrescribe) los 19 archivos propios del desktop:
+  - `index.html` (markup sidebar ERP), `js/app.js` (handlers sidebar), `js/module-colors.js`, `js/views/animales-view.js`, `js/views/rebanos-view.js`, `js/views/compradores-view.js`, `js/views/proveedores-view.js`, `js/views/transportistas-view.js`, `js/views/gastos-view.js`, `js/views/contratos-view.js`, `js/views/documentos-view.js`, `js/views/fitosanitarios-view.js`, `css/design-tokens.css` (paleta ERP), `css/erp-sidebar.css`, `css/erp-data-table.css`, `css/erp-overrides.css` (neutraliza neón legado), `js/erp-data-table.js`, `js/icons-desktop.js` (iconos extra), `js/mode-config.js`.
 - Anuncia cada preservación para revisar diffs a mano cuando el maestro toque esos archivos.
 
-> ⚠️ Deuda conocida: al preservar archivos que también existen en el maestro (app.js, 7 views, design-tokens, module-colors, index.html), los cambios upstream en ellos **no fluyen**; hay que fusionarlos manualmente cuando el sync los anuncie. Refactor futuro: mover overrides a capa overlay pura.
+> ⚠️ Deuda conocida: al preservar archivos que también existen en el maestro (app.js, 9 views, design-tokens, module-colors, index.html), los cambios upstream en ellos **no fluyen**; hay que fusionarlos manualmente cuando el sync los anuncie. Refactor futuro: mover overrides a capa overlay pura.
 
 ## 5. Capa ERP construida (Fases 1–2, hechas)
 
@@ -96,12 +96,13 @@ Auditados todos los CSS, vistas, wizards, componentes transversales e iconos. Re
 > aprobadas. Estrategia de tokenización: hardcode → `var(--token)`; en el maestro
 > el token resuelve a neón (PWA sin cambios visuales) y en desktop a corporativo.
 
-### P2 — Migración a ErpDataTable (paridad ERP) — EN CURSO
-Orden: `compradores` ✅ → `proveedores` ✅ → `transportistas` ✅ → `gastos` ✅ → `contratos` ✅ → `documentos` (albaranes) → `fitosanitarios`.
+### P2 — Migración a ErpDataTable (paridad ERP) ✅ (completado 2026-08-12)
+Orden: `compradores` ✅ → `proveedores` ✅ → `transportistas` ✅ → `gastos` ✅ → `contratos` ✅ → `documentos` ✅ → `fitosanitarios` ✅.
 
 - ✅ **P2-1 (2026-08-12):** compradores (solo módulo compradores; la rama contratos de esa vista se migra con `contratos-view.js`), proveedores y transportistas tienen toggle Tarjetas/Tabla ERP + `_renderErpTable()` (badges de estado/tipo, métricas de última operación/compra, cert. bienestar coloreado) y pasan a la lista de preservados del sync. `erp-overrides.css` gana `.badge-success`/`.badge-gray` standalone (el maestro solo las define compuestas con `.status-badge` — también arregla el badge de estado de animales/rebanos/informes).
 - ✅ **P2-2 (2026-08-12):** gastos (tabs por categoría; el toggle vive en la cabecera de lista de cada tab y la tabla muestra TODOS los registros paginados — las tarjetas cortan a 50).
 - ✅ **P2-3 (2026-08-12):** contratos (badge de tipo leche/carne/mixto, vigencia con cuenta atrás coloreada: VENCIDO / crítico ≤30 días).
+- ✅ **P2-4 (2026-08-12):** documentos (la tabla muestra TODOS los documentos filtrados — las tarjetas cortan a 5 recientes — con detalle contextual por tipo: pedido de crotales, movimiento DIMOE, albarán carne/leche, contrato; acuse de recibo con semáforo de días pendientes) y fitosanitarios (plazo de seguridad con APTO/BLOQUEADO + cuenta atrás, misma lógica que la ficha). **P2 completado: 9 vistas con toggle Tarjetas/Tabla ERP.**
 - **Descartadas del alcance P2** (no son listas de tarjetas de primer nivel): `historial` (no existe como vista; el historial clínico es un fragmento de `sanidad-view.js` y la bitácora es drill-down por animal), `pesadas` (no existe; los pesajes viven en bitácora/trazabilidad) y `cuaderno` (es el Cuaderno Digital oficial RD 787/2023: documento agregado para PDF, ya tabulado).
 
 ### P3 — Nativo Tauri (la promesa desktop)
@@ -129,6 +130,6 @@ Orden: `compradores` ✅ → `proveedores` ✅ → `transportistas` ✅ → `gas
 | 3. Auditoría UI/UX completa | ✅ (ver §6) |
 | 4a. Backlog P0 (limpieza crítica) | ✅ |
 | 4b. Backlog P1 (tokens en vistas + overlay) | ✅ |
-| 4c. Backlog P2 (10 vistas a ErpDataTable) | 🔶 en curso (3/10: compradores, proveedores, transportistas) |
+| 4c. Backlog P2 (9 vistas a ErpDataTable) | ✅ (9/9) |
 | 5. WinRT Store + atajos + nativo (P3–P4) | 🔲 |
 | 6. MSIX Free/Premium + publicación Store (P5) | 🔲 |
