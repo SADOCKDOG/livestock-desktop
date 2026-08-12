@@ -92,9 +92,13 @@ const AnimalesView = {
           </div>
         </div>
       </div>
-      <!-- Filtro de búsqueda integrado (controla el histórico) -->
-      <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-10 pb-5" style="display: flex; align-items: center; gap: 4px;">
-        ${Icons.documento()} Lista de Animales
+      <!-- Filtro de búsqueda e interruptor de vista (Tarjetas / Tabla ERP) -->
+      <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-10 pb-5" style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+        <span style="display: flex; align-items: center; gap: 4px;">${Icons.documento()} Lista de Animales</span>
+        <div class="flex gap-4">
+          <button class="btn-erp-secondary btn-sm" id="btn-vista-cards" onclick="AnimalesView._setVistaModo('cards')">Tarjetas</button>
+          <button class="btn-erp-secondary btn-sm" id="btn-vista-tabla" onclick="AnimalesView._setVistaModo('tabla')">Tabla ERP</button>
+        </div>
       </div>
       <div class="flex gap-8 items-center mb-12">
         <div class="relative flex-1 min-w-0">
@@ -120,6 +124,7 @@ const AnimalesView = {
       html += App._cardRegistro(props);
     });
     html += `</div>
+      <div id="animales-erp-table-container" class="mt-12" style="display:none;"></div>
       <div id="animales-empty-search" class="card mt-10 p-12 text-center d-none" style="background: rgba(255,255,255,0.01);">
         <div class="text-2xl mb-8" style="color:#555;">${Icons.buscar()}</div>
         <p class="text-gray-500 uppercase font-900 text-xs" style="margin: 0;">No se encontraron animales con ese criterio.</p>
@@ -128,6 +133,11 @@ const AnimalesView = {
 
     main.innerHTML = html;
     AnimalesView._cache = { animales, rebanoMap, sanitariosAll };
+
+    // Inicializar o restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px)
+    const modoGuardado = localStorage.getItem('animales_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+    AnimalesView._setVistaModo(modoGuardado, false);
+
     // FAB Guía interactiva
     if (window.App && typeof App.renderGuideFab === 'function') {
       App.renderGuideFab('/ganaderia', 'animales');
@@ -203,6 +213,79 @@ const AnimalesView = {
         return App._cardRegistro(props);
       }).join('');
     }
+  },
+
+  _setVistaModo(modo, guardar = true) {
+    if (guardar) {
+      try { localStorage.setItem('animales_view_mode', modo); } catch (_) {}
+    }
+
+    const btnCards = document.getElementById('btn-vista-cards');
+    const btnTabla = document.getElementById('btn-vista-tabla');
+    const contenedorCards = document.getElementById('animales-lista');
+    const contenedorTabla = document.getElementById('animales-erp-table-container');
+
+    if (btnCards && btnTabla) {
+      btnCards.style.background = modo === 'cards' ? 'var(--brand, #1F5FA8)' : 'transparent';
+      btnTabla.style.background = modo === 'tabla' ? 'var(--brand, #1F5FA8)' : 'transparent';
+    }
+
+    if (modo === 'tabla') {
+      if (contenedorCards) contenedorCards.style.display = 'none';
+      if (contenedorTabla) {
+        contenedorTabla.style.display = 'block';
+        this._renderErpTable();
+      }
+    } else {
+      if (contenedorTabla) contenedorTabla.style.display = 'none';
+      if (contenedorCards) contenedorCards.style.display = 'grid';
+    }
+  },
+
+  _renderErpTable() {
+    const cache = AnimalesView._cache;
+    if (!cache || !window.ErpDataTable) return;
+
+    const base = this._aplicarFiltros(cache.animales, cache.rebanoMap);
+    const tableData = base.map(a => {
+      const rebano = cache.rebanoMap[a.rebanoId];
+      return {
+        id: a.id,
+        crotal: a.crotal || a.numero_identificacion || 'Sin Crotal',
+        especie: a.especie || '—',
+        sexo: a.sexo || '—',
+        raza: a.raza || '—',
+        rebanoNombre: rebano ? rebano.nombre : 'Sin rebaño',
+        estado: a.estado || 'activo'
+      };
+    });
+
+    new window.ErpDataTable({
+      containerId: 'animales-erp-table-container',
+      title: 'Animales',
+      pageSize: 15,
+      columns: [
+        { key: 'crotal', label: 'Crotal / CNI', sortable: true },
+        { key: 'especie', label: 'Especie', sortable: true },
+        { key: 'sexo', label: 'Sexo', sortable: true },
+        { key: 'raza', label: 'Raza', sortable: true },
+        { key: 'rebanoNombre', label: 'Rebaño', sortable: true },
+        {
+          key: 'estado',
+          label: 'Estado',
+          sortable: true,
+          render: (val) => `<span class="badge ${val === 'activo' ? 'badge-success' : 'badge-gray'}">${val}</span>`
+        },
+        {
+          key: 'id',
+          label: 'Ficha',
+          sortable: false,
+          align: 'center',
+          render: (id) => `<button class="btn-erp-secondary btn-sm" onclick="location.hash='/animal?id=${id}'">Ver Ficha</button>`
+        }
+      ],
+      data: tableData
+    }).render();
   },
 
   async renderDetalle(params) {

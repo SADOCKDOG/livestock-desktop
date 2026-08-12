@@ -164,6 +164,7 @@ const App = {
       App._setupHeaderBackButton();
       App._setupHeaderContextClick();
       App._setupHardwareBackButton();
+      App._setupSidebar();
       await App._ejecutarMigracionesFondo();
       App._initScrollShadows();
       // Cargar preferencias visuales
@@ -477,14 +478,7 @@ const App = {
         return;
       }
 
-      // 2. Cerrar sheet "Más" de navegación si está abierto
-      const moreSheet = document.getElementById('nav-more-sheet');
-      if (moreSheet && moreSheet.classList.contains('open')) {
-        moreSheet.classList.remove('open');
-        return;
-      }
-
-      // 3. Wizard/overlay abierto → pasar por Cancelar (confirmación de descarte + onCancel)
+      // 2. Wizard/overlay abierto → pasar por Cancelar (confirmación de descarte + onCancel)
       const wizard = document.querySelector('.wizard-full-screen');
       if (wizard) {
         const cancelBtn = wizard.querySelector('#wizard-btn-cancel');
@@ -494,10 +488,10 @@ const App = {
         return;
       }
 
-      // 4. Obtener ruta actual del hash
+      // 3. Obtener ruta actual del hash
       const hash = window.location.hash.slice(1) || '/';
 
-      // 5. Si es el Dashboard principal → preguntar si desea salir
+      // 4. Si es el Dashboard principal → preguntar si desea salir
       if (hash === '/') {
         const doExit = () => { if (AppPlugin.exitApp) AppPlugin.exitApp(); };
         Confirm.confirm('Salir', '¿Deseas salir de la aplicación?', false)
@@ -505,7 +499,7 @@ const App = {
         return;
       }
 
-      // 6. Cualquier otra ruta → retroceder en el historial (respetando la guarda de salida)
+      // 5. Cualquier otra ruta → retroceder en el historial (respetando la guarda de salida)
       //    Si no hay historial, volver al Dashboard
       App._confirmLeave().then(ok => {
         if (!ok) return;
@@ -610,13 +604,72 @@ const App = {
   },
 
   /**
-   * Abre/cierra el bottom sheet "Más" de navegación
+   * Configura el sidebar ERP y recupera su estado persistido.
+   * No altera la navegación móvil: el CSS muestra bottom-nav bajo 1024px.
    */
-  _toggleMenuNavegacion() {
-    const sheet = document.getElementById("nav-more-sheet");
-    if (!sheet) return;
-    const isOpen = sheet.classList.toggle("open");
-    document.getElementById("nav-more")?.setAttribute("aria-expanded", String(isOpen));
+  _setupSidebar() {
+    const sidebar = document.getElementById('erpSidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    if (!sidebar || !toggle) return;
+
+    let collapsed = false;
+    try {
+      collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+    } catch (_) {}
+    this._setSidebarCollapsed(collapsed, false);
+
+    // Atajos de teclado de escritorio sin interferir con campos editables.
+    document.addEventListener('keydown', (event) => {
+      const tag = event.target?.tagName;
+      const isEditing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || event.target?.isContentEditable;
+      if (event.altKey && event.key.toLowerCase() === 's' && !isEditing) {
+        event.preventDefault();
+        this._toggleSidebar();
+      }
+    });
+  },
+
+  /** Alterna entre el sidebar ERP expandido y el compacto. */
+  _toggleSidebar() {
+    const sidebar = document.getElementById('erpSidebar');
+    if (!sidebar) return;
+    this._setSidebarCollapsed(sidebar.dataset.collapsed !== 'true');
+  },
+
+  /** Aplica visualmente el estado del sidebar y opcionalmente lo persiste. */
+  _setSidebarCollapsed(collapsed, persist = true) {
+    const sidebar = document.getElementById('erpSidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    if (!sidebar || !toggle) return;
+
+    const value = String(Boolean(collapsed));
+    sidebar.dataset.collapsed = value;
+    document.body.dataset.sidebarCollapsed = value;
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+    toggle.setAttribute('aria-label', collapsed ? 'Desplegar menú' : 'Plegar menú');
+    toggle.title = collapsed ? 'Desplegar menú (Alt+S)' : 'Plegar menú (Alt+S)';
+
+    sidebar.querySelectorAll('.sidebar-link').forEach((link) => {
+      const label = link.querySelector('.sidebar-link-label')?.textContent?.trim() || 'Abrir módulo';
+      link.title = label;
+    });
+
+    if (persist) {
+      try {
+        localStorage.setItem('sidebar-collapsed', value);
+      } catch (_) {}
+    }
+  },
+
+  /** Sincroniza el enlace activo del sidebar con la ruta actual. */
+  _updateSidebarNavigation(path) {
+    document.querySelectorAll('.sidebar-link[data-route]').forEach((link) => {
+      const route = link.dataset.route;
+      const active = path === route || (route === '/ganaderia' && path === '/animales');
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
   },
 
   /** Colapsa/expande la card de resumen (chevron esquina superior derecha). Reutilizable en todas las vistas. */
@@ -1032,12 +1085,6 @@ const App = {
         }
       }
 
-      // Visibilidad en el Bottom Sheet (#nav-more-sheet)
-      // El sheet "Más" es el ÍNDICE COMPLETO de módulos: todos visibles siempre.
-      // (La ocultación de "duplicados encapsulados" dejaba módulos huérfanos,
-      //  solo alcanzables desde el desplegable del header — decisión de David 2026-07-04.)
-      const sheetItems = document.querySelectorAll('#nav-more-sheet .more-sheet-item');
-      sheetItems.forEach(item => { item.style.display = 'flex'; });
     } catch (e) {
       console.warn('[Navigation] Error en updateNavigationMenu:', e);
     }
@@ -1103,6 +1150,7 @@ const App = {
     }
 
     await this.updateNavigationMenu();
+    this._updateSidebarNavigation(path);
 
     let activeSvg = null;
     
@@ -1118,33 +1166,7 @@ const App = {
       }
     });
 
-    // 2. Check "Más" items
-    let moreActiveText = null;
-    document.querySelectorAll(".more-sheet-item").forEach((el) => {
-      const href = el.getAttribute("href");
-      if (!href) return;
-      const isActive = path === '/' ? href === '#/' : href.startsWith(`#${path}`);
-      if (isActive) {
-        moreActiveText = el.textContent.trim();
-        const svg = el.querySelector('svg');
-        if (svg) activeSvg = svg;
-      }
-    });
-
-    // 3. Update "Más" button
-    const navMore = document.getElementById('nav-more');
-    if (navMore) {
-      const navMoreLabel = navMore.querySelector('.label');
-      if (moreActiveText) {
-        navMore.classList.add('active');
-        if (navMoreLabel) navMoreLabel.textContent = moreActiveText;
-      } else {
-        navMore.classList.remove('active');
-        if (navMoreLabel) navMoreLabel.textContent = 'Más';
-      }
-    }
-
-    // 4. Update Header Icon
+    // 2. Update Header Icon
     if (activeSvg) {
       const headerRouteIcon = document.getElementById('header-route-icon');
       if (headerRouteIcon) {
@@ -1156,10 +1178,6 @@ const App = {
         headerRouteIcon.appendChild(clonedSvg);
       }
     }
-
-    // Cerrar menú "Más" al navegar
-    const sheet = document.getElementById("nav-more-sheet");
-    if (sheet) sheet.classList.remove("open");
 
     // Actualizar header contextual (título de vista + botón volver)
     this._updateHeaderContext(path);

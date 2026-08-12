@@ -1,0 +1,232 @@
+/**
+ * erp-sidebar.css — Sidebar ERP modular colapsable (estándar SAP Fiori / Microsoft Dynamics).
+ * Normativa: .agent/AGENTS.md §1 · activada en index.html ≥1024px.
+ *
+ * Estados:
+ *  · expandido  (default) — 240px icon+texto
+ *  · colapsado  (data-collapsed="true") — 72px icon-only, oculta .sidebar-section-label
+ *      y .sidebar-link-label, persistido vía App._toggleSidebar() (localStorage).
+ *
+ * El bottom-nav queda intacto y se muestra en <1024px como fallback móvil/tablet
+ * (regla '@media (max-width:1023px)').
+ */
+
+/* ---------- CONTENEDOR ---------- */
+.erp-sidebar {
+  position: fixed;
+  top: 64px; /* debajo del main-header, ver layout.css */
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  border-right: 1px solid color-mix(in srgb, var(--sidebar-text) 12%, transparent);
+  padding: 16px 0 16px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 90;
+  transition: width 0.18s ease;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--sidebar-text) 30%, transparent) transparent;
+}
+.erp-sidebar[data-collapsed="true"] {
+  width: 72px;
+}
+
+/* ---------- BOTÓN COLAPSAR ---------- */
+.sidebar-toggle {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin: 0 0 12px 12px;
+  background: transparent;
+  color: var(--sidebar-text);
+  border: 1px solid color-mix(in srgb, var(--sidebar-text) 22%, transparent);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.3s;
+}
+.sidebar-toggle:hover {
+  background: var(--sidebar-active-bg);
+  color: #FFF;
+}
+.erp-sidebar[data-collapsed="true"] .sidebar-toggle svg {
+  transform: rotate(180deg);
+}
+.sidebar-toggle:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- SECCIÓN / MÓDULO ---------- */
+.sidebar-section {
+  margin: 0 8px 18px 8px;
+}
+.sidebar-section + .sidebar-section {
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, var(--sidebar-text) 10%, transparent);
+}
+.sidebar-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 8px 6px 8px;
+  font-size: var(--fs-label);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--sidebar-text) 65%, transparent);
+  user-select: none;
+}
+.sidebar-section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
+
+/* Al colapsar, las etiquetas del módulo desaparecen para dejar solo el icono */
+.erp-sidebar[data-collapsed="true"] .sidebar-section-label {
+  display: none;
+}
+
+/* Módulos visibles solo si el sidebar está expandido; cuando está colapsado, los
+   títulos actúan como separadores visuales (sin texto). Se aplica el icono a la
+   izquierda y un margen generoso entre secciones. */
+.erp-sidebar[data-collapsed="true"] .sidebar-section {
+  margin: 0 4px 14px 4px;
+}
+.erp-sidebar[data-collapsed="true"] .sidebar-section-title {
+  justify-content: center;
+  margin: 0 0 8px 0;
+}
+
+/* ---------- LISTA DE ENLACES ---------- */
+.sidebar-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sidebar-links > li {
+  margin: 0;
+}
+
+/* ---------- ENLACE (estilo SAP Fiori) ---------- */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  color: inherit;
+  font-size: var(--fs-body);
+  font-weight: 500;
+  line-height: 1.2;
+  background: transparent;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-link:hover {
+  background: color-mix(in srgb, var(--sidebar-active-bg) 50%, transparent);
+  /* conserva el color del módulo del icono */
+  color: currentColor;
+}
+.sidebar-link.active,
+.sidebar-link[aria-current="page"] {
+  background: var(--sidebar-active-bg);
+  color: #FFF;
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--p-gold);
+}
+.sidebar-link-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
+.sidebar-link-label {
+  display: inline-block;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Colapsado: solo icono, sin etiqueta */
+.erp-sidebar[data-collapsed="true"] .sidebar-link {
+  justify-content: center;
+  padding: 10px 6px;
+}
+.erp-sidebar[data-collapsed="true"] .sidebar-link-label {
+  display: none;
+}
+.erp-sidebar[data-collapsed="true"] .sidebar-link:hover::after {
+  /* tooltip nativo al pasar el ratón en estado colapsado */
+  content: attr(title);
+  position: absolute;
+  left: 78px;
+  background: var(--surface, #1E1E1E);
+  color: var(--text-p);
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 35%);
+}
+
+/* ---------- LAYOUT PRINCIPAL: empujar contenido ---------- */
+/* main#app-content debe dejar 240px a la izquierda para el sidebar. */
+@media (min-width: 1024px) {
+  body {
+    padding-left: 240px;
+    transition: padding-left 0.18s ease;
+  }
+  body[data-sidebar-collapsed="true"] {
+    padding-left: 72px;
+  }
+}
+/* En <1024px la sidebar queda oculta y el bottom-nav retoma el control */
+@media (max-width: 1023px) {
+  .erp-sidebar {
+    display: none;
+  }
+  body,
+  body[data-sidebar-collapsed="true"] {
+    padding-left: 0;
+  }
+  #bottomNavWrap {
+    display: flex !important;
+  }
+}
+
+/* ---------- MODO CLARO ---------- */
+body[data-modo="claro"] .erp-sidebar {
+  background: var(--sidebar-bg); /* navy corporativo en ambos modos */
+  color: var(--sidebar-text);
+  border-right-color: color-mix(in srgb, var(--sidebar-text) 18%, transparent);
+}
+body[data-modo="claro"] .sidebar-link.active,
+body[data-modo="claro"] .sidebar-link[aria-current="page"] {
+  box-shadow: inset 3px 0 0 var(--p-gold);
+}
+body[data-modo="claro"] .erp-sidebar[data-collapsed="true"] .sidebar-link:hover::after {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* ---------- ACCESIBILIDAD: foco teclado ---------- */
+.sidebar-link:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}

@@ -1,0 +1,33 @@
+/**
+ * erp-overrides.css — Neutralización de la paleta neón legada.
+ *
+ * styles.css se sincroniza desde el maestro (SOLO LECTURA) y no se puede
+ * editar aquí. Esta hoja carga DESPUÉS de styles.css y redefine, con la
+ * misma especificidad, las reglas que aún usan hardcodes neón
+ * (#C5FA50, #E8555F, #4FADF5…) para alinearlas con los tokens ERP de
+ * design-tokens.css. Los nombres de clase los emite el JS del maestro;
+ * aquí solo se re-mapean colores. Backlog completo: PLAN-DESKTOP.md §7.
+ */
+
+/* ── Badges (sobreescribe styles.css:1615-1617) ── */
+.badge-blue {
+  background: rgba(31, 95, 168, 0.16);
+  color: var(--c-info);
+}
+
+.badge-solid-orange {
+  background: var(--c-orange);
+}
+
+/* ── Variantes "neon" de widgets (sobreescribe styles.css:3862-3864) ── */
+.neon-orange {
+  --neon-color: var(--c-orange);
+  --neon-glow: rgba(249, 115, 22, 0.45);
+  --neon-inner: rgba(249, 115, 22, 0.22);
+}
+
+.neon-accent {
+  --neon-color: var(--c-info);
+  --neon-glow: rgba(31, 95, 168, 0.55);
+  --neon-inner: rgba(31, 95, 168, 0.25);
+}
