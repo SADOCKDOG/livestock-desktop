@@ -310,3 +310,52 @@ body::after {
     width: 220px;
   }
 }
+
+/* ── Visor de manuales: embebido en el marco de contenido (#app-content) ──
+   El manual se abre dentro del área de vistas de módulo (debajo de la
+   cabecera y a la derecha del sidebar), no a pantalla completa. El iframe
+   ocupa el alto visible del marco y gestiona su propio scroll. */
+.manual-viewer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 100px);
+  margin: 0;
+}
+.manual-viewer-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  margin-bottom: 12px;
+}
+.manual-viewer-title {
+  margin: 0;
+  font-size: 1.05rem;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.manual-frame {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: #fff;
+}
+.manual-frame-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  text-align: center;
+  color: var(--text-s);
+  background: var(--surface);
+  border-radius: var(--r-md);
+}
+/* Al abrir un manual, recortar el padding inferior de #app-content para que
+   el visor ocupe justo el alto visible sin generar scroll de página. */
+main#app-content.manual-open {
+  padding-bottom: 12px;
+  min-height: auto;
+}

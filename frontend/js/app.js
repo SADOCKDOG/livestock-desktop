@@ -612,6 +612,9 @@ const App = {
     const toggle = document.getElementById('sidebarToggle');
     if (!sidebar || !toggle) return;
 
+    // Construir el acordeón de navegación antes de aplicar el estado colapsado
+    this._renderSidebarNav();
+
     let collapsed = false;
     try {
       collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
@@ -661,14 +664,92 @@ const App = {
     }
   },
 
-  /** Sincroniza el enlace activo del sidebar con la ruta actual. */
-  _updateSidebarNavigation(path) {
-    document.querySelectorAll('.sidebar-link[data-route]').forEach((link) => {
+  /** Construye el acordeón del sidebar a partir de App.NAV_GROUPS. */
+  _renderSidebarNav() {
+    const nav = document.getElementById('erpSidebarNav');
+    if (!nav) return;
+    const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    let html = '';
+    this.NAV_GROUPS.forEach((group) => {
+      let itemsHtml = '';
+      group.items.forEach((item) => {
+        itemsHtml +=
+          '<a class="sidebar-link" href="#' + item.route + '" data-route="' + item.route + '" title="' + esc(item.label) + '">' +
+            '<span class="sidebar-link-icon" style="color:' + item.color + ';">' + item.icon() + '</span>' +
+            '<span class="sidebar-link-label">' + esc(item.label) + '</span>' +
+          '</a>';
+      });
+      html +=
+        '<div class="sidebar-group" data-group="' + group.key + '">' +
+          '<button type="button" class="sidebar-group-toggle" data-group-toggle="' + group.key + '" aria-expanded="true" title="' + esc(group.label) + '">' +
+            '<span class="sidebar-group-icon">' + group.icon() + '</span>' +
+            '<span class="sidebar-group-label">' + esc(group.label) + '</span>' +
+            '<span class="sidebar-group-chevron">' + Icons.chevronAbajo() + '</span>' +
+          '</button>' +
+          '<div class="sidebar-group-items" data-group-items="' + group.key + '">' + itemsHtml + '</div>' +
+        '</div>';
+    });
+    nav.innerHTML = html;
+
+    // Restaurar estado de grupos colapsados (persistido en localStorage)
+    this.NAV_GROUPS.forEach((group) => {
+      const wrap = nav.querySelector('.sidebar-group[data-group="' + group.key + '"]');
+      if (wrap) wrap.classList.toggle('collapsed', this._getGroupCollapsed(group.key));
+    });
+
+    // Delegación de clic en los toggles de grupo (evita listeners duplicados)
+    if (!nav.dataset.bound) {
+      nav.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-group-toggle]');
+        if (btn && nav.contains(btn)) this._toggleSidebarGroup(btn);
+      });
+      nav.dataset.bound = '1';
+    }
+
+    // Marcar ruta activa inicial
+    const hash = (window.location.hash || '').slice(1) || '/';
+    const [p, q] = hash.split('?');
+    this._updateSidebarNavigation(p, q);
+  },
+
+  _getGroupCollapsed(key) {
+    try { return localStorage.getItem('sidebar-group-' + key) === '1'; } catch (_) { return false; }
+  },
+  _setGroupCollapsed(key, collapsed) {
+    try { localStorage.setItem('sidebar-group-' + key, collapsed ? '1' : '0'); } catch (_) {}
+  },
+  _toggleSidebarGroup(btn) {
+    const group = btn.closest('.sidebar-group');
+    if (!group) return;
+    const collapsed = !group.classList.contains('collapsed');
+    group.classList.toggle('collapsed', collapsed);
+    this._setGroupCollapsed(group.dataset.group, collapsed);
+    btn.setAttribute('aria-expanded', String(!collapsed));
+  },
+  _expandSidebarGroup(group) {
+    if (!group.classList.contains('collapsed')) return;
+    group.classList.remove('collapsed');
+    this._setGroupCollapsed(group.dataset.group, false);
+    const btn = group.querySelector('[data-group-toggle]');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+  },
+
+  /** Sincroniza el enlace activo del sidebar con la ruta actual y despliega
+   *  automáticamente el grupo padre del submódulo activo. */
+  _updateSidebarNavigation(path, query) {
+    const full = query ? path + '?' + query : path;
+    document.querySelectorAll('#erpSidebarNav .sidebar-link[data-route]').forEach((link) => {
       const route = link.dataset.route;
-      const active = path === route || (route === '/ganaderia' && path === '/animales');
+      const active = route === full || route === path;
       link.classList.toggle('active', active);
-      if (active) link.setAttribute('aria-current', 'page');
-      else link.removeAttribute('aria-current');
+      if (active) {
+        link.setAttribute('aria-current', 'page');
+        const groupWrap = link.closest('.sidebar-group');
+        if (groupWrap) this._expandSidebarGroup(groupWrap);
+      } else {
+        link.removeAttribute('aria-current');
+      }
     });
   },
 
@@ -689,6 +770,67 @@ const App = {
     ExplotacionView: 'var(--text-s)',
     ComercializacionView: 'var(--text-s)',
   },
+
+  /**
+   * Estructura del acordeón del sidebar (escritorio ≥1024px). Cada grupo es un
+   * módulo superior (GeGan, ExPro, CoMer, Informes, Herramientas) que se
+   * despliega para mostrar sus submódulos. Cada submódulo conserva su color y
+   * SVG propios ("Respetamos los colores y SVG de cada uno de ellos"), salvo
+   * el ítem activo que lleva el acento azul institucional del sidebar.
+   * Las rutas usan el formato `?tab=` que el router normaliza a hub interno.
+   */
+  NAV_GROUPS: [
+    {
+      key: 'gegan', label: 'GeGan', icon: () => Icons.rebanos(),
+      items: [
+        { key: 'animales', label: 'Animales', icon: () => Icons.animales(), color: 'var(--c-orange)', route: '/ganaderia?tab=animales' },
+        { key: 'rebanos', label: 'Rebaños', icon: () => Icons.rebanos(), color: 'var(--c-info)', route: '/ganaderia?tab=rebanos' },
+        { key: 'patrimonio', label: 'Patrimonio', icon: () => Icons.edificio(), color: 'var(--c-warning)', route: '/ganaderia?tab=patrimonio' },
+        { key: 'zonas', label: 'Zonas', icon: () => Icons.zonas(), color: 'var(--c-success)', route: '/ganaderia?tab=zonas' },
+        { key: 'sanidad', label: 'Sanidad', icon: () => Icons.sanidad(), color: 'var(--c-purple)', route: '/ganaderia?tab=sanidad' },
+      ],
+    },
+    {
+      key: 'expro', label: 'ExPro', icon: () => Icons.finca(),
+      items: [
+        { key: 'explotacion', label: 'Explotación', icon: () => Icons.finca(), color: 'var(--c-success)', route: '/explotacion?tab=explotacion' },
+        { key: 'lacteo', label: 'Láctea', icon: () => Icons.leche(), color: 'var(--c-info)', route: '/explotacion?tab=lacteo' },
+        { key: 'silos', label: 'Silos', icon: () => Icons.silos(), color: 'var(--c-success)', route: '/explotacion?tab=silos' },
+        { key: 'fitosanitarios', label: 'Fitosanitarios', icon: () => Icons.sanidad(), color: 'var(--c-purple)', route: '/explotacion?tab=fitosanitarios' },
+        { key: 'gastos', label: 'Finanzas', icon: () => Icons.dinero(), color: 'var(--c-purple)', route: '/explotacion?tab=gastos' },
+        { key: 'proveedores', label: 'Proveedores', icon: () => Icons.proveedores(), color: 'var(--c-purple)', route: '/explotacion?tab=proveedores' },
+        { key: 'tramites', label: 'Trámites', icon: () => Icons.documento(), color: 'var(--c-info)', route: '/explotacion?tab=tramites' },
+      ],
+    },
+    {
+      key: 'comer', label: 'CoMer', icon: () => Icons.comercial(),
+      items: [
+        { key: 'leche', label: 'Leche', icon: () => Icons.leche(), color: 'var(--c-info)', route: '/comercializacion?tab=leche' },
+        { key: 'carne', label: 'Carne', icon: () => Icons.carne(), color: 'var(--c-success)', route: '/comercializacion?tab=carne' },
+        { key: 'compradores', label: 'Compradores', icon: () => Icons.compradores(), color: 'var(--c-purple)', route: '/comercializacion?tab=compradores' },
+        { key: 'contratos', label: 'Contratos', icon: () => Icons.documento(), color: 'var(--c-purple)', route: '/comercializacion?tab=contratos' },
+        { key: 'transportistas', label: 'Transportistas', icon: () => Icons.transportistas(), color: 'var(--c-pink)', route: '/comercializacion?tab=transportistas' },
+      ],
+    },
+    {
+      key: 'informes', label: 'Informes y Doc', icon: () => Icons.informes(),
+      items: [
+        { key: 'informes', label: 'Informes', icon: () => Icons.informes(), color: 'var(--text-s)', route: '/informes' },
+        { key: 'cuaderno', label: 'Cuaderno Digital', icon: () => Icons.cuaderno(), color: 'var(--c-orange)', route: '/cuaderno' },
+        { key: 'alertas', label: 'Alertas', icon: () => Icons.campana(), color: 'var(--c-warning)', route: '/alertas' },
+        { key: 'documentos', label: 'Documentos', icon: () => Icons.documento(), color: 'var(--c-purple)', route: '/documentos' },
+        { key: 'manuales', label: 'Manuales', icon: () => Icons.libro(), color: 'var(--c-purple)', route: '/manuales' },
+      ],
+    },
+    {
+      key: 'herramientas', label: 'Herramientas', icon: () => Icons.ajustes(),
+      items: [
+        { key: 'ajustes', label: 'Ajustes', icon: () => Icons.ajustes(), color: 'var(--text-s)', route: '/ajustes' },
+        { key: 'importar-rfid', label: 'Importar RFID', icon: () => Icons.importar(), color: 'var(--text-s)', route: '/importar-rfid' },
+        { key: 'agenda', label: 'Agenda', icon: () => Icons.calendar(), color: 'var(--c-orange)', route: '/agenda' },
+      ],
+    },
+  ],
 
   /**
    * Genera el HTML del carrusel circular de pestañas de submódulo: un marco
@@ -1104,6 +1246,8 @@ const App = {
   async route() {
     const hash = window.location.hash.slice(1) || "/";
     const [path, query] = hash.split("?");
+    // Salir del visor de manuales si se navega a otra vista
+    document.getElementById('app-content')?.classList.remove('manual-open');
     const params = new URLSearchParams(query);
 
     // URL redirections for consolidated architecture v5.0
@@ -1153,7 +1297,7 @@ const App = {
     }
 
     await this.updateNavigationMenu();
-    this._updateSidebarNavigation(path);
+    this._updateSidebarNavigation(path, query);
 
     let activeSvg = null;
     

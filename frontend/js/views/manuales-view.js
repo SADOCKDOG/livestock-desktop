@@ -161,6 +161,7 @@ const ManualesView = {
 
   async render() {
     const main = document.getElementById('app-content');
+    main.classList.remove('manual-open');
     main.innerHTML = `
       <div class="page-container">
         <div class="page-header">
@@ -199,41 +200,29 @@ const ManualesView = {
   },
 
   async _abrirManual(archivo, titulo) {
-    // Cargar el manual dentro de un overlay con iframe y botón de salir
-    const overlay = document.createElement('div');
-    overlay.id = 'manual-viewer-overlay';
-    overlay.className = 'wizard-full-screen';
-    overlay.style.cssText = `
-      position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999;
-      background:#fff; display:flex; flex-direction:column;
-    `;
+    // Renderizar el manual DENTRO del marco de contenido de las vistas de
+    // módulo (#app-content), conservando la cabecera y el sidebar visibles
+    // (en vez de un overlay full-screen que los cubría).
+    const main = document.getElementById('app-content');
+    if (!main) return;
+    main.classList.add('manual-open');
 
-    overlay.innerHTML = `
-      <iframe id="manual-frame" src="${archivo}"
-              style="flex:1; width:100%; border:none;"
-              onerror="this.parentElement.innerHTML='<div style=\\'padding:40px;text-align:center;color:#999;\\'>Error al cargar el manual.</div>'">
-      </iframe>
-      <div style="display:flex; align-items:center; justify-content:space-between;
-                  background:#1a1a2e; padding:8px 14px; padding-bottom:calc(8px + env(safe-area-inset-bottom)); flex-shrink:0; min-height:48px;
-                  ">
-        <span style="color:#fff; font-weight:800; font-size:0.85rem; display:flex; align-items:center; gap:8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%;">
-          <span style="color:#e0a83a; display:flex; align-items:center;">${Icons.libro()}</span>
-          ${titulo || 'Manual'}
-        </span>
-        <button id="btn-cerrar-manual"
-                style="background:rgba(255,255,255,0.15); border:none; color:#fff; font-size:0.85rem;
-                       padding:8px 16px; border-radius:8px; cursor:pointer; font-weight:700;
-                       display:flex; align-items:center; gap:6px; flex-shrink:0;">
-          Volver ${Icons.siguiente()}
-        </button>
-      </div>
-    `;
+    main.innerHTML = `
+      <div class="manual-viewer">
+        <div class="manual-viewer-bar">
+          <button type="button" class="btn btn-sm" id="btn-volver-manual">
+            ${Icons.atras()} Volver
+          </button>
+          <h2 class="page-title manual-viewer-title">
+            <span style="color:var(--c-purple); margin-right:6px; display:inline-flex; vertical-align:middle;">${Icons.libro()}</span>
+            ${titulo || 'Manual'}
+          </h2>
+        </div>
+        <iframe id="manual-frame" class="manual-frame" src="${archivo}"
+                onerror="this.parentElement.innerHTML='<div class=\\'manual-frame-error\\'>Error al cargar el manual.</div>'"></iframe>
+      </div>`;
 
-    document.body.appendChild(overlay);
-
-    overlay.querySelector('#btn-cerrar-manual').onclick = () => {
-      overlay.remove();
-    };
+    main.querySelector('#btn-volver-manual').onclick = () => this.render();
   },
 
   async _exportarPDF(archivo, titulo) {
