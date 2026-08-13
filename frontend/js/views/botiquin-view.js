@@ -47,7 +47,7 @@ const BotiquinView = {
 
     let html = '';
     if (this._cache.length === 0) {
-      html = `<div class="empty-state"><div class="empty-state-icon">${Icons.sanidad()}</div><p class="empty-state-text">Sin productos registrados en el botiquín.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="BotiquinView._crearProducto()">${Icons.agregar()} Registrar primer producto</button></div></div>`;
+      html = `<div class="empty-state"><div class="empty-state-icon">${Icons.sanidad()}</div><p class="empty-state-text">Sin productos registrados en el botiquín.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="BotiquinView._crearProducto()">${Icons.agregar()} Nuevo primer Producto</button></div></div>`;
     } else {
       const moduleColor = (window.getModuleColor && window.getModuleColor('/botiquin')) || 'var(--c-info)';
       const hoy = new Date().toISOString().split('T')[0];
@@ -99,14 +99,13 @@ const BotiquinView = {
             </div>
           </div>
         </div>
+        <div class="module-header-primary-action">
+          <button class="btn btn-create btn-lg w-full" onclick="BotiquinView._crearProducto()">${Icons.agregar()} Nuevo Producto</button>
+        </div>
         <div class="grid gap-12">${fichasHtml}</div>`;
     }
 
-    main.innerHTML = html + `
-      <div class="fab-container" onclick="BotiquinView._crearProducto()">
-        <span class="fab-label">Nuevo Producto</span>
-        <button class="fab-btn">${Icons.fabPlus()}</button>
-      </div>`;
+    main.innerHTML = html;
   },
 
   async renderDetalle(params) {

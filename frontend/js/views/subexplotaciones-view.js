@@ -27,7 +27,7 @@ const SubexplotacionesView = {
 
     let html = '';
     if (subsConIndice.length === 0) {
-      html = `<div class="empty-state"><div class="empty-state-icon">${Icons.rebanos()}</div><p class="empty-state-text">Sin subexplotaciones registradas.</p><p class="text-aaa text-[0.65rem] uppercase font-800 mt-4 px-20 text-center">Solo es necesario si gestionas varias especies en esta finca y necesitas declarar censo/clasificación zootécnica por separado ante SIEX/SIGGAN.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="SubexplotacionesView._crearSubexplotacion()">${Icons.agregar()} Registrar primera subexplotación</button></div></div>`;
+      html = `<div class="empty-state"><div class="empty-state-icon">${Icons.rebanos()}</div><p class="empty-state-text">Sin subexplotaciones registradas.</p><p class="text-aaa text-[0.65rem] uppercase font-800 mt-4 px-20 text-center">Solo es necesario si gestionas varias especies en esta finca y necesitas declarar censo/clasificación zootécnica por separado ante SIEX/SIGGAN.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="SubexplotacionesView._crearSubexplotacion()">${Icons.agregar()} Nueva primer Subexplotación</button></div></div>`;
     } else {
       const moduleColor = (window.getModuleColor && window.getModuleColor('/subexplotaciones')) || 'var(--c-info)';
       let fichasHtml = '';
@@ -62,14 +62,13 @@ const SubexplotacionesView = {
             </div>
           </div>
         </div>
+        <div class="module-header-primary-action">
+          <button class="btn btn-create btn-lg w-full" onclick="SubexplotacionesView._crearSubexplotacion()">${Icons.agregar()} Nueva Subexplotación</button>
+        </div>
         <div class="grid gap-12">${fichasHtml}</div>`;
     }
 
-    main.innerHTML = html + `
-      <div class="fab-container" onclick="SubexplotacionesView._crearSubexplotacion()">
-        <span class="fab-label">Nueva Subexplotación</span>
-        <button class="fab-btn">${Icons.fabPlus()}</button>
-      </div>`;
+    main.innerHTML = html;
   },
 
   /** Censo activo por especieId dentro de la finca (a partir de rebaños propios). */

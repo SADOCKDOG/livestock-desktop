@@ -30,7 +30,7 @@ const AnimalesView = {
         <p class="empty-state-text">Aún no hay animales registrados.</p>
         <div class="text-center mt-20">
             <button class="btn btn-create btn-lg" onclick="location.hash='/animal'" data-guide="btn-vacio-animales">
-              ${Icons.agregar()} Registrar primer animal
+              ${Icons.agregar()} Nuevo primer animal
             </button>
         </div>
       </div>`;

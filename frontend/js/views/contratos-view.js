@@ -240,17 +240,6 @@ const ContratosView = {
       });
     }).join('')}</div>`;
 
-    // Botón Flotante de Acción con viñeta (se agrega después de la lista)
-    const fabContainer = document.createElement('div');
-    fabContainer.className = 'fab-container';
-    fabContainer.innerHTML = `
-      <span class="fab-label">NUEVO CONTRATO</span>
-      <button class="fab-btn">${Icons.fabPlus()}</button>
-    `;
-    fabContainer.onclick = () => {
-      location.hash = '/contrato';  // Nuevo contrato sin comprador preseleccionado
-    };
-    container.appendChild(fabContainer);
   },
 
   // ============================================

@@ -83,6 +83,7 @@ const FitosanitariosView = {
                         <button class="btn-erp-secondary btn-sm" id="btn-fito-vista-tabla" onclick="FitosanitariosView._setVistaModo('tabla')">Tabla ERP</button>
                     </span>
                 </h3>
+                <div class="module-header-primary-action"><button class="btn btn-create btn-lg w-full" data-guide="btn-nuevo-registro" onclick="FitosanitariosView._nuevoTratamiento()">${Icons.agregar()} Nuevo Registro</button></div>
 
                 <div id="fito-lista">
                 ${this._cachedRegistros.length === 0 ? `
@@ -100,11 +101,6 @@ const FitosanitariosView = {
                 <div id="fito-erp-table-container" class="mt-12" style="display:none;"></div>
             </div>
 
-            <!-- FAB (Botón de Acción Flotante) Premium -->
-            <div class="fab-container" style="--fab-neon-color: var(--c-purple);" onclick="FitosanitariosView._nuevoTratamiento()">
-                <span class="fab-label">Nuevo Registro</span>
-                <button class="fab-btn">${Icons.fabPlus()}</button>
-            </div>
         </div>
         `;
 

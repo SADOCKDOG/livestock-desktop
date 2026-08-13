@@ -161,6 +161,9 @@ const ProduccionView = {
           ${subtitle ? `<div class="text-gray" style="font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">${subtitle}</div>` : ''}
         </div>
       </div>
+      <div class="module-header-primary-action">
+        <button class="btn btn-create btn-lg w-full" onclick="${registrarHandler}">${Icons.agregar()} Registrar ${registrarLabel}</button>
+      </div>
 
       <!-- Resumen de datos registrados (colapsable/estático) -->
       <div class="card p-12 mb-14 border-222 card-total-3d card-resumen" style="background: rgba(255,255,255,0.015);">
@@ -184,11 +187,7 @@ const ProduccionView = {
         ${recordsHtml}
       </div>
 
-      <!-- Botón Flotante de Acción con viñeta -->
-      <div class="fab-container" onclick="${registrarHandler}">
-        <span class="fab-label">Nuevo Registro ${registrarLabel}</span>
-        <button class="fab-btn" style="--fab-color: ${color};">${Icons.fabPlus()}</button>
-      </div>`;
+    `;
   },
 
   _renderCarne(content, d) {
@@ -436,14 +435,12 @@ const ProduccionView = {
         </div>
       </div>
 
-      <!-- Botón FAB -->
-      <div class="fab-container" onclick="window.TanqueWizard.open()">
-        <span class="fab-label">Nuevo Tanque</span>
-        <button class="fab-btn" style="--fab-color: var(--c-info);">${Icons.fabPlus()}</button>
+      <div class="module-header-primary-action">
+        <button class="btn btn-create btn-lg w-full" onclick="window.TanqueWizard.open()">${Icons.agregar()} Nuevo Tanque</button>
       </div>
 
       <!-- Listado -->
-      ${tanquesHtml || '<div class="p-20 text-center"><div class="text-aaa text-sm mb-12">No hay tanques registrados</div><button onclick="window.TanqueWizard.open()" class="px-20 py-10 font-900" style="background: var(--c-info); color:#000; border:none; border-radius:6px;">Registrar primer tanque</button></div>'}
+      ${tanquesHtml || '<div class="p-20 text-center"><div class="text-aaa text-sm mb-12">No hay tanques registrados</div><button onclick="window.TanqueWizard.open()" class="px-20 py-10 font-900" style="background: var(--c-info); color:#000; border:none; border-radius:6px;">Nuevo primer Tanque</button></div>'}
     `;
   },
 

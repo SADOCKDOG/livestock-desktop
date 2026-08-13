@@ -251,15 +251,6 @@ const TransportistasView = {
       onClick: `TransportistasView._verDetalle(${t.id})`
     })).join('');
 
-    // Botón Flotante de Acción con viñeta (se agrega después de la lista)
-    const fabContainer = document.createElement('div');
-    fabContainer.className = 'fab-container';
-    fabContainer.innerHTML = `
-      <span class="fab-label">Nuevo Transportista</span>
-      <button class="fab-btn" aria-label="Añadir"><span aria-hidden="true">${Icons.fabPlus()}</span></button>
-    `;
-    fabContainer.onclick = () => TransportistasView._abrirFormulario();
-    container.appendChild(fabContainer);
   },
 
   // ============================================

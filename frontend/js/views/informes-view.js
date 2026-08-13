@@ -200,7 +200,10 @@ const InformesView = {
       </div>
     `;
 
-    return catsHtml + subTabsHtml;
+    // La navegación de Informes (categorías + sub-tabs) se movió al submenú del
+    // sidebar (colgando de "Informes"). Se devuelve vacío para no pintar las
+    // franjas horizontales, que no se desplazaban bien en escritorio.
+    return '';
   },
 
   /**

@@ -96,6 +96,49 @@
     return cs.visibility !== 'hidden' && cs.display !== 'none' && parseFloat(cs.opacity || '1') > 0.05;
   }
 
+  /**
+   * Re-enlaza selectores LEGADOS de carrusel/pestañas a las entradas equivalentes del
+   * sidebar ERP (escritorio). El carrusel de submódulos se ocultó en escritorio porque
+   * sus opciones viven ahora en el acordeón del sidebar (gegan/expro/comer); las guías
+   * seguían apuntando a `.carrusel-dot[data-tab=...]`, que ya no está en pantalla, así
+   * que el spotlight no resaltaba nada (el paso caía a narrativo). Remapeamos a
+   * `.sidebar-link[data-route="<hub>?tab=<tab>"]`, que SÍ existe y es resaltable.
+   *
+   * Solo afecta a selectores de carrusel; el resto (`.module-header .btn-create`,
+   * `.guide-fab`, …) se devuelve intacto. Es tolerante a selectores compuestos
+   * (separados por comas) y pillar-aware (usa guide.route / guide.pillar).
+   *
+   * NOTA (capa ERP desktop): este motor es PROPIEDAD del desktop (está en $preservedList
+   * de scripts/sync-from-master.ps1), de modo que este remap sobrevive al sync desde el
+   * maestro sin tener que tocar los 21 catálogos guides/*.js.
+   */
+  function _remapTarget(selector, guide) {
+    if (!selector) return selector;
+    return String(selector).split(',').map(s => _remapOne(s.trim(), guide)).join(', ');
+  }
+  function _remapOne(p, guide) {
+    // Franja/contendor de pestañas (cualquier variante: '.carrusel-pestanas',
+    // '[data-carrusel]' o descendiente '.carrusel-pestanas .carrusel-dot'): apuntar
+    // al grupo del pilar en el sidebar.
+    if (p.includes('.carrusel-pestanas') || p.includes('[data-carrusel]')) {
+      const g = guide && guide.pillar ? guide.pillar : null;
+      return g ? '.sidebar-group-toggle[data-group-toggle="' + g + '"]' : p;
+    }
+    // Dot/marco de pestaña concreto: .sidebar-link[data-route="<hub>?tab=<tab>"]
+    const m = p.match(/\.carrusel-(?:dot|marco|pestana)(?:\[data-tab="([^"]+)"\])?/);
+    if (m && m[1]) {
+      const hub = guide && guide.route ? guide.route : null;
+      if (hub) return '.sidebar-link[data-route="' + hub + '?tab=' + m[1] + '"]';
+    }
+    return p;
+  }
+
+  /** Resuelve el elemento objetivo de un paso, aplicando el remap de carrusel→sidebar. */
+  function _resolveTarget(step, guide) {
+    if (!step || !step.target) return null;
+    return _qs(_remapTarget(step.target, guide));
+  }
+
   /** Genera ID único para elementos del overlay */
   function _uid(prefix) {
     return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
@@ -409,17 +452,46 @@
     const limiteSup = 62 + _safeInset('--safe-top') + margen;
     const limiteInf = viewportH - (65 + _safeInset('--safe-bottom')) - margen;
 
+    // ── Caso SIDEBAR (escritorio): el target es un enlace/grupo del acordeón a la
+    // izquierda. El popover (260-320px) NO debe colocarse sobre el propio enlace ni
+    // descentrarse a la derecha: se ancla en la ZONA DE CONTENIDO (a la derecha del
+    // sidebar), centrado verticalmente respecto al target y dentro de la banda. Así
+    // nunca tapa el spotlight (que queda a la izquierda) ni queda descentrado.
+    const inSidebar = target.closest && target.closest('.erp-sidebar');
+    if (inSidebar) {
+      const sidebar = document.querySelector('.erp-sidebar');
+      const sw = sidebar ? sidebar.getBoundingClientRect().width : 0;
+      let left = sw + 16;
+      left = Math.min(left, viewportW - popoverRect.width - margen);
+      left = Math.max(margen, left);
+      let top = rect.top + rect.height / 2 - popoverRect.height / 2;
+      top = Math.max(limiteSup, Math.min(top, limiteInf - popoverRect.height));
+      popover.style.maxHeight = '';
+      popover.style.overflowY = '';
+      popover.style.top = top + 'px';
+      popover.style.left = left + 'px';
+      return;
+    }
+
+    // ── Caso general (contenido / móvil): arriba del target si cabe, abajo si no.
+    // Ambas opciones se construyen para NO solaparse con el elemento resaltado.
+    let top = rect.top - popoverRect.height - gap;   // arriba (no solapa: top+h ≤ rect.top-gap)
+    const abajo = rect.bottom + gap;                  // abajo (no solapa: abajo ≥ rect.bottom+gap)
+    const cabeArriba = top >= limiteSup;
+    const cabeAbajo = abajo + popoverRect.height <= limiteInf;
+    if (!cabeArriba && cabeAbajo) {
+      top = abajo;                 // no cabe arriba pero sí abajo → abajo
+    } else if (cabeArriba && !cabeAbajo) {
+      top = top;                   // sólo cabe arriba → arriba
+    } else if (!cabeArriba && !cabeAbajo) {
+      top = limiteSup;             // ni arriba ni abajo → anclar arriba (scroll interno abajo)
+    }
+    // (si ambas caben, se queda arriba por defecto: mejor junto al flujo de lectura)
+
     // Horizontal: centrado sobre el target y acotado al ANCHO (antes se acotaba con la
     // altura del viewport, que en móvil vertical es mucho mayor y no acotaba nada).
     let left = rect.left + rect.width / 2 - popoverRect.width / 2;
     left = Math.max(margen, Math.min(left, viewportW - popoverRect.width - margen));
-
-    // Vertical: arriba del target si cabe, abajo si no.
-    let top = rect.top - popoverRect.height - gap;
-    if (top < limiteSup) {
-      const abajo = rect.bottom + gap;
-      top = (abajo + popoverRect.height <= limiteInf) ? abajo : limiteSup;
-    }
 
     // Garantía final: el popover nunca sobresale de la banda utilizable, de modo que sus
     // botones (Siguiente / Saltar) queden siempre alcanzables. Si es más alto que la
@@ -574,7 +646,7 @@
     // Recalcular spotlight/popover por si el DOM cambió
     setTimeout(() => {
       if (state.overlay && state.step.target) {
-        const target = _qs(state.step.target);
+        const target = _resolveTarget(state.step, state.guide);
         if (target) {
           _updateSpotlight(state.overlay, target);
           _positionPopover(state.popover, target);
@@ -610,7 +682,7 @@
     // Paso opcional (spec §4): si su elemento no está presente —porque depende de datos
     // o de un formulario abierto— se omite en lugar de mostrar un paso sin contexto.
     const candidato = steps[index];
-    if (candidato.optional && candidato.target && !_qs(candidato.target)) {
+    if (candidato.optional && candidato.target && !_resolveTarget(candidato, state.guide)) {
       const siguiente = index + dir;
       if (siguiente < 0 || siguiente >= steps.length) {
         if (dir > 0) return GuideManager._finish();
@@ -652,7 +724,7 @@
     }
 
     // Si hay target visible, anclar overlay + popover sobre él
-    const candidatoTarget = state.step.target ? _qs(state.step.target) : null;
+    const candidatoTarget = _resolveTarget(state.step, state.guide);
     const target = _esResaltable(candidatoTarget) ? candidatoTarget : null;
     if (target) {
       _ensureVisible(target);
@@ -667,7 +739,7 @@
       clearTimeout(state._reanclaje);
       state._reanclaje = setTimeout(() => {
         if (_state.currentGuide !== state) return;
-        const t = state.step.target ? _qs(state.step.target) : null;
+        const t = _resolveTarget(state.step, state.guide);
         if (t && _esResaltable(t)) {
           _updateSpotlight(state.overlay, t);
           _positionPopover(state.popover, t);
@@ -780,7 +852,7 @@
       // Esperar target si waitFor
       let target = null;
       if (firstStep.target) {
-        target = await _waitForSelector(firstStep.target, firstStep.waitFor);
+        target = await _waitForSelector(_remapTarget(firstStep.target, guide), firstStep.waitFor);
         if (!target) {
           console.warn('[GuideManager] Target no encontrado tras waitFor:', firstStep.target);
           // Seguir sin target (paso narrativo centrado)
@@ -799,6 +871,15 @@
 
       // Crear popover
       const popover = _createPopover(firstStep, target || document.body, 0, guide.steps.length, color);
+
+      // Primer paso narrativo (sin target resoluble): centrar el popover en el viewport
+      // en vez de dejarlo anclado arriba de la banda. Los pasos narrativos siguientes
+      // ya se centran en _goToStep, pero el paso 0 sólo pasa por _createPopover.
+      if (!target) {
+        popover.style.top = '50%';
+        popover.style.left = '50%';
+        popover.style.transform = 'translate(-50%, -50%)';
+      }
 
       // Estado actual
       _state.currentGuide = {
@@ -923,7 +1004,7 @@
       if (!state || !state.step) return;
       if (!state.step.target) return; // paso narrativo, no hay target
 
-      const target = _qs(state.step.target);
+      const target = _resolveTarget(state.step, state.guide);
       if (target) {
         _updateSpotlight(state.overlay, target);
         _positionPopover(state.popover, target);

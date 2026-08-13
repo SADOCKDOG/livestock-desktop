@@ -30,6 +30,7 @@ $preservedList = @(
     'js\erp-data-table.js',          # Componente ErpDataTable (solo desktop)
     'js\icons-desktop.js',           # Iconos extra desktop: chevronArriba, sortNeutral
     'js\app.js',                     # Handlers sidebar ERP (_setupSidebar, etc.)
+    'js\guide-manager.js',           # Motor de guías: remap carrusel→sidebar (preserva targets ocultos)
     'js\module-colors.js',           # Mapa de colores ERP (sin neon)
     'js\views\animales-view.js',     # Toggle Tarjetas/Tabla ERP
     'js\views\rebanos-view.js',      # Toggle Tarjetas/Tabla ERP
@@ -42,6 +43,7 @@ $preservedList = @(
     'js\views\fitosanitarios-view.js', # Toggle Tarjetas/Tabla ERP
     'js\views\comercializacion-view.js', # Banner/KPI cromo ERP unificado (neutro)
     'js\views\manuales-view.js',      # Visor de manuales embebido en #app-content (no overlay full-screen)
+    'js\guides\inicio-dashboard.js',  # Guía del Inicio/Dashboard (propia del desktop; el maestro no la trae)
     'css\design-tokens.css',         # Paleta ERP profesional
     'css\erp-sidebar.css',           # Sidebar colapsable (solo desktop)
     'css\erp-data-table.css',        # Tablas densas ERP (solo desktop)

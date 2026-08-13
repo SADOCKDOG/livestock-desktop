@@ -27,16 +27,14 @@ const ExplotacionView = {
     this.render();
   },
 
-  async _renderLacteoView(container) {
+  async _renderLacteoView(container, options) {
     if (!container) return;
     const d = this._cachedData;
-    const subTabs = [
-      { key: 'dashboard', label: 'Dashboard' },
-      { key: 'tanques', label: 'Tanques' },
-      { key: 'control', label: 'Control' },
-      { key: 'balance', label: 'Balance' },
-      { key: 'graficos', label: 'Gráficos' },
-    ];
+    // Sub-pestaña activa vía submenú del sidebar (?tab=lacteo&sub=KEY).
+    // Sin sub (ruta legacy) se muestra el Dashboard por defecto.
+    if (options && typeof options.get === 'function' && options.get('sub')) {
+      this._lacteoSubTab = options.get('sub');
+    }
 
     // Tarjeta de Resumen Lácteo (unifica KPIs sueltos)
     const resumenLacteoHtml = d ? `
@@ -63,11 +61,6 @@ const ExplotacionView = {
     container.innerHTML = `
       <div class="px-4 pt-12">
         ${resumenLacteoHtml}
-        <div class="tabs-scroll leche-sub-tabs scroll-shadow-container mb-14">
-          ${subTabs.map(t => `
-            <button class="text-[0.6rem] font-900 uppercase px-12 py-6 rounded-sm" style="background:${this._lacteoSubTab === t.key ? 'var(--c-info)' : 'var(--c-222)'}; color:${this._lacteoSubTab === t.key ? '#000' : 'var(--c-aaa)'};" onclick="ExplotacionView._cambiarLacteoSubTab('${t.key}')">${t.label}</button>
-          `).join('')}
-        </div>
         <div id="expro-lacteo-subtab-content"></div>
       </div>`;
     const subContainer = document.getElementById('expro-lacteo-subtab-content');
@@ -256,7 +249,8 @@ const ExplotacionView = {
         this._renderModoExplotacion(document.getElementById('expro-tab-content'), d);
         break;
       case 'lacteo':
-        await this._renderLacteoView(document.getElementById('expro-tab-content'));
+        this._lacteoSubTab = (options && typeof options.get === 'function' && options.get('sub')) || 'dashboard';
+        await this._renderLacteoView(document.getElementById('expro-tab-content'), options);
         break;
       case 'silos':
         if (window.SilosView) await SilosView.render();
@@ -265,12 +259,13 @@ const ExplotacionView = {
         if (window.FitosanitariosView) await FitosanitariosView.render();
         break;
       case 'gastos':
-        if (window.GastosView) await GastosView.render();
+        if (window.GastosView) await GastosView.render(options);
         break;
       case 'proveedores':
         if (window.ProveedoresView) await ProveedoresView.render();
         break;
       case 'tramites':
+        this._tramiteSubTab = (options && typeof options.get === 'function' && options.get('sub')) || 'guias';
         await this._renderTramitesView(document.getElementById('expro-tab-content'), fincaId);
         break;
       case 'traslado':
@@ -525,10 +520,7 @@ const ExplotacionView = {
           })).join('')}
         </div>
       </div>
-      <div class="fab-container" style="--fab-neon-color: var(--c-purple);" onclick="App._abrirFormularioGasto({ origenModulo: 'explotacion' })">
-        <span class="fab-label">Nuevo Gasto</span>
-        <button class="fab-btn">${Icons.fabPlus()}</button>
-      </div>`;
+`;
   },
 
   async _abrirOpcionesRegistro(eventId, modo) {
@@ -852,14 +844,6 @@ const ExplotacionView = {
           <span style="color: var(--c-info); margin-right: 4px;">|</span> HUB DE GESTIÓN ADMINISTRATIVA
         </div>
 
-        <div class="flex gap-8 px-12 pt-4 mb-14 overflow-x-auto no-scrollbar">
-          ${subTabs.map(t => `
-            <button class="text-[0.6rem] font-900 uppercase px-12 py-6 rounded-sm whitespace-nowrap"
-                    style="background:${this._tramiteSubTab === t.key ? t.color : 'var(--c-222)'};
-                           color:${this._tramiteSubTab === t.key ? '#000' : 'var(--c-aaa)'};"
-                    onclick="ExplotacionView._cambiarTramiteSubTab('${t.key}')">${t.label}</button>
-          `).join('')}
-        </div>
 
         <div id="tramites-tab-content" class="animate-fade-in">
           ${contentHtml}

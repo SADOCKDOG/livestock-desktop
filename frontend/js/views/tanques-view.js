@@ -21,7 +21,7 @@ window.TanquesView = {
       <div class="card p-30 text-center">
         <div class="text-aaa text-sm mb-12">No hay tanques registrados</div>
         <div class="text-[0.6rem] text-666 mb-16">Registra los tanques de frío de tu explotación con su código oficial Letra Q para poder comercializar leche.</div>
-        <button onclick="window.TanqueWizard.open()" class="px-20 py-10 font-900" style="background:var(--c-info); color:#000; border:none; border-radius:6px;">Registrar primer tanque</button>
+        <button onclick="window.TanqueWizard.open()" class="px-20 py-10 font-900" style="background:var(--c-info); color:#000; border:none; border-radius:6px;">Nuevo primer Tanque</button>
       </div>`;
     }
 

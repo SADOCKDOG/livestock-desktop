@@ -134,18 +134,17 @@ const SilosView = {
 
             ${alertaSiloHtml}
 
+            <div class="module-header-primary-action">
+              <button class="btn btn-create btn-lg w-full" onclick="SilosView._abrirFormularioSilo()">${Icons.agregar()} Nuevo Silo</button>
+            </div>
+
             <!-- Listado de Silos -->
             <div class="flex flex-col gap-15 font-sans">
                 ${this._cachedSilos.length === 0
-                    ? `<div class="empty-state"><div class="empty-state-icon">${Icons.explotacion()}</div><p class="empty-state-text">Sin silos registrados.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="SilosView._abrirFormularioSilo()" data-guide="btn-vacio-silos">${Icons.agregar()} Registrar primer silo</button></div></div>`
+                    ? `<div class="empty-state"><div class="empty-state-icon">${Icons.explotacion()}</div><p class="empty-state-text">Sin silos registrados.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="SilosView._abrirFormularioSilo()" data-guide="btn-vacio-silos">${Icons.agregar()} Nuevo primer silo</button></div></div>`
                     : this._cachedSilos.map(s => this._renderSiloCard(s)).join('')}
             </div>
 
-            <!-- FAB (Botón de Acción Flotante) Premium -->
-            <div class="fab-container" style="--fab-neon-color: var(--c-success);" onclick="SilosView._abrirFormularioSilo()">
-                <span class="fab-label">Nuevo Silo</span>
-                <button class="fab-btn">${Icons.fabPlus()}</button>
-            </div>
         </div>
         `;
     },

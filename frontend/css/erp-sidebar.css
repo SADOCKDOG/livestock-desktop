@@ -14,16 +14,19 @@
 /* ---------- CONTENEDOR ---------- */
 .erp-sidebar {
   position: fixed;
-  top: 64px; /* debajo del main-header, ver layout.css */
+  top: 0; /* full-height: arranca en el borde superior para rellenar la esquina
+            superior izquierda (el header semitransparente queda encima, z-2000). */
   left: 0;
   bottom: 0;
   width: 240px;
   background: var(--sidebar-bg);
   color: var(--sidebar-text);
   border-right: 1px solid color-mix(in srgb, var(--sidebar-text) 12%, transparent);
-  padding: 16px 0 16px 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  padding: 64px 0 16px 0; /* 64px arriba para no solapar el main-header (~62px) */
+  display: flex;
+  flex-direction: column; /* el botón de contraer queda fijo arriba y el <nav>
+    es el único que se desplaza debajo, así "Inicio" nunca pasa por debajo */
+  overflow: hidden;
   z-index: 90;
   transition: width 0.18s ease;
   scrollbar-width: thin;
@@ -35,15 +38,16 @@
 
 /* ---------- BOTÓN COLAPSAR ---------- */
 .sidebar-toggle {
-  position: sticky;
-  top: 0;
+  flex: 0 0 auto; /* no crece ni se encoge: queda fijo arriba del todo */
+  position: static; /* en flujo normal, encima del <nav>; no se solapa con Inicio */
   display: flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   height: 36px;
   margin: 0 0 8px 12px;
-  background: transparent;
+  background: var(--sidebar-bg);
+  z-index: 5;
   color: var(--sidebar-text);
   border: 1px solid color-mix(in srgb, var(--sidebar-text) 22%, transparent);
   border-radius: var(--r-sm);
@@ -61,6 +65,44 @@
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
+
+/* ---------- PIE DE ESTADO (versión / plan / fecha / finca) ---------- */
+.sidebar-status {
+  flex: 0 0 auto; /* fijo abajo del todo, fuera del área de scroll del nav */
+  margin: 0 8px 8px 8px;
+  padding: 10px 12px;
+  border-top: 1px solid color-mix(in srgb, var(--sidebar-text) 12%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.68rem;
+  color: color-mix(in srgb, var(--sidebar-text) 72%, transparent);
+  line-height: 1.25;
+}
+.sidebar-status .ss-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sidebar-status .ss-label {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.58rem;
+  opacity: 0.65;
+  white-space: nowrap;
+}
+.sidebar-status .ss-value {
+  font-weight: 800;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar-status .ss-plan-free { color: var(--c-warning); }
+.sidebar-status .ss-plan-premium { color: var(--c-success); }
+/* En modo colapsado (72px) el texto no cabe: se oculta el pie */
+.erp-sidebar[data-collapsed="true"] .sidebar-status { display: none; }
 
 /* ---------- SECCIÓN / MÓDULO ---------- */
 .sidebar-section {
@@ -168,6 +210,11 @@
 .erp-sidebar-nav {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto; /* ocupa el espacio bajo el botón de contraer y es quien
+    hace scroll, dejando el botón siempre fijo arriba a la izquierda */
+  min-height: 0; /* necesario para que el scroll funcione dentro de un flex */
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 0 8px 8px 8px;
 }
 .sidebar-group {
@@ -305,6 +352,17 @@
   }
   body[data-sidebar-collapsed="true"] {
     padding-left: 72px;
+  }
+  /* El header es SOLO de contenido: arranca a la derecha del sidebar para no
+     solaparse con él ni teñir su franja superior con la sombra neón. El sidebar
+     (top:0) es dueño de toda la columna izquierda, incluida la esquina superior. */
+  header {
+    left: 240px;
+    right: 0;
+    transition: left 0.18s ease, background 0.3s ease, box-shadow 0.3s ease;
+  }
+  body[data-sidebar-collapsed="true"] header {
+    left: 72px;
   }
 }
 /* En <1024px la sidebar queda oculta y el bottom-nav retoma el control */

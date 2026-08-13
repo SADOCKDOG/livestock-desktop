@@ -614,6 +614,12 @@ const App = {
 
     // Construir el acordeón de navegación antes de aplicar el estado colapsado
     this._renderSidebarNav();
+    // Pie de estado (versión, plan, fecha, finca activa) y refresco al cambiar de finca
+    this._renderSidebarStatus();
+    if (!this._statusBound) {
+      window.addEventListener('fincaChanged', () => this._renderSidebarStatus());
+      this._statusBound = true;
+    }
 
     let collapsed = false;
     try {
@@ -694,14 +700,24 @@ const App = {
       '</a>';
     };
 
-    let html = '';
+    // Enlace fijo "Inicio" (Dashboard) en la parte superior del menú lateral. En
+    // escritorio el bottom-nav está oculto, así que sin esto el Inicio solo sería
+    // alcanzable vía el logo del header. Reutiliza .sidebar-link y su lógica de
+    // estado activo (_updateSidebarNavigation marca data-route="/" cuando path='/').
+    const homeLink = '<a class="sidebar-link" href="#/" data-route="/" title="Inicio" ' +
+      'style="margin-bottom:8px; border-bottom:1px solid color-mix(in srgb, var(--sidebar-text) 10%, transparent); padding-bottom:8px;">' +
+        '<span class="sidebar-link-icon" style="color:var(--header-neon-color, var(--c-success));">' + Icons.home() + '</span>' +
+        '<span class="sidebar-link-label">Inicio</span>' +
+      '</a>';
+
+    let html = homeLink;
     this.NAV_GROUPS.forEach((group) => {
       let itemsHtml = '';
       group.items.forEach((item) => { itemsHtml += renderItem(item, group.key); });
       html +=
         '<div class="sidebar-group" data-group="' + group.key + '">' +
           '<button type="button" class="sidebar-group-toggle" data-group-toggle="' + group.key + '" aria-expanded="true" title="' + esc(group.label) + '">' +
-            '<span class="sidebar-group-icon">' + group.icon() + '</span>' +
+            '<span class="sidebar-group-icon" style="color:' + (group.color || '') + ';">' + group.icon() + '</span>' +
             '<span class="sidebar-group-label">' + esc(group.label) + '</span>' +
             '<span class="sidebar-group-chevron">' + Icons.chevronAbajo() + '</span>' +
           '</button>' +
@@ -710,15 +726,37 @@ const App = {
     });
     nav.innerHTML = html;
 
-    // Restaurar estado de grupos/subgrupos colapsados (persistido en localStorage)
+    // Restaurar estado de grupos/subgrupos colapsados (persistido en localStorage).
+    // Por defecto colapsado en primera carga; se corrige también aria-expanded.
     nav.querySelectorAll('.sidebar-group[data-group]').forEach((wrap) => {
-      wrap.classList.toggle('collapsed', this._getGroupCollapsed(wrap.dataset.group));
+      const collapsed = this._getGroupCollapsed(wrap.dataset.group);
+      wrap.classList.toggle('collapsed', collapsed);
+      const btn = wrap.querySelector('[data-group-toggle]');
+      if (btn) btn.setAttribute('aria-expanded', String(!collapsed));
     });
 
     // Delegación de clic en los toggles de grupo/subgrupo (evita listeners duplicados)
     if (!nav.dataset.bound) {
       nav.addEventListener('click', (e) => {
+        const sidebar = document.getElementById('erpSidebar');
+        const collapsedSidebar = sidebar && sidebar.dataset.collapsed === 'true';
         const btn = e.target.closest('[data-group-toggle]');
+        if (collapsedSidebar) {
+          // En modo compacto los submenús están ocultos (CSS display:none). Al
+          // pulsar cualquier entrada desplegamos la barra completa para poder
+          // usar el menú.
+          this._setSidebarCollapsed(false);
+          if (btn && nav.contains(btn)) {
+            // Y abrimos el grupo concreto que se ha pinchado (con sus ancestros
+            // en caso de subgrupos anidados).
+            let g = btn.closest('.sidebar-group');
+            while (g) { this._expandSidebarGroup(g); g = g.parentElement ? g.parentElement.closest('.sidebar-group') : null; }
+            return;
+          }
+          // Si fue un enlace hoja (href), la navegación ocurre y la barra queda
+          // desplegada; nada más que hacer aquí.
+          return;
+        }
         if (btn && nav.contains(btn)) this._toggleSidebarGroup(btn);
       });
       nav.dataset.bound = '1';
@@ -731,7 +769,10 @@ const App = {
   },
 
   _getGroupCollapsed(key) {
-    try { return localStorage.getItem('sidebar-group-' + key) === '1'; } catch (_) { return false; }
+    // Por defecto COLAPSADO (true) en la primera carga (sin estado persistido en
+    // localStorage): el usuario despliega los grupos de módulos de forma explícita.
+    // Al volver a Inicio el acordeón se contrae por completo (ver _updateSidebarNavigation).
+    try { return localStorage.getItem('sidebar-group-' + key) !== '0'; } catch (_) { return true; }
   },
   _setGroupCollapsed(key, collapsed) {
     try { localStorage.setItem('sidebar-group-' + key, collapsed ? '1' : '0'); } catch (_) {}
@@ -744,6 +785,30 @@ const App = {
     this._setGroupCollapsed(group.dataset.group, collapsed);
     btn.setAttribute('aria-expanded', String(!collapsed));
   },
+  /** Pinta el pie de estado del sidebar: versión de la app, plan Free/Premium,
+   *  fecha actual y nombre de la finca activa. Se refresca al cambiar de finca
+   *  (evento 'fincaChanged') y al iniciar. */
+  async _renderSidebarStatus() {
+    const el = document.getElementById('sidebarStatus');
+    if (!el) return;
+    const version = (window.APP_INFO && window.APP_INFO.version) || '';
+    const isFree = !!(window.PremiumManager && window.PremiumManager.isFree);
+    const plan = isFree ? 'Free' : 'Premium';
+    const planClass = isFree ? 'ss-plan-free' : 'ss-plan-premium';
+    let fincaNombre = 'Sin finca';
+    try {
+      const finca = (window.Fincas && typeof Fincas.getActive === 'function')
+        ? await Fincas.getActive().catch(() => null) : null;
+      if (finca && finca.nombre) fincaNombre = finca.nombre;
+    } catch (_) { /* sin finca activa */ }
+    const fecha = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+    el.innerHTML = `
+      <div class="ss-row"><span class="ss-label">Versión</span><span class="ss-value">${version}</span></div>
+      <div class="ss-row"><span class="ss-label">Plan</span><span class="ss-value ${planClass}">${plan}</span></div>
+      <div class="ss-row"><span class="ss-label">Fecha</span><span class="ss-value">${fecha}</span></div>
+      <div class="ss-row"><span class="ss-label">Finca</span><span class="ss-value">${fincaNombre}</span></div>`;
+  },
+
   _expandSidebarGroup(group) {
     if (!group.classList.contains('collapsed')) return;
     group.classList.remove('collapsed');
@@ -751,11 +816,27 @@ const App = {
     const btn = group.querySelector('[data-group-toggle]');
     if (btn) btn.setAttribute('aria-expanded', 'true');
   },
+  /** Contrae todos los grupos/subgrupos del sidebar (sin persistir). Usado al entrar
+   *  en Inicio, donde ningún módulo está activo y no hay grupo que desplegar. */
+  _collapseAllSidebarGroups() {
+    const nav = document.getElementById('erpSidebarNav');
+    if (!nav) return;
+    nav.querySelectorAll('.sidebar-group[data-group]').forEach((g) => {
+      g.classList.add('collapsed');
+      const btn = g.querySelector('[data-group-toggle]');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    });
+  },
 
   /** Sincroniza el enlace activo del sidebar con la ruta actual y despliega
    *  automáticamente el grupo padre del submódulo activo. */
   _updateSidebarNavigation(path, query) {
     const full = query ? path + '?' + query : path;
+    // Al entrar en Inicio (Dashboard) el acordeón se contrae por completo: ningún
+    // módulo está activo, así que no hay grupo que dejar desplegado.
+    if (!path || path === '/') {
+      this._collapseAllSidebarGroups();
+    }
     document.querySelectorAll('#erpSidebarNav .sidebar-link[data-route]').forEach((link) => {
       const route = link.dataset.route;
       const active = route === full || route === path;
@@ -799,61 +880,128 @@ const App = {
    */
   NAV_GROUPS: [
     {
-      key: 'gegan', label: 'GeGan', icon: () => Icons.rebanos(),
+      // Colores originales del PWA (maestro module-colors.js), restaurados en los
+      // iconos del menú de módulos. El acento de la entrada activa sigue siendo
+      // --p-gold (fijo); solo se colorea el SVG del icono vía currentColor.
+      key: 'gegan', label: 'GeGan', icon: () => Icons.rebanos(), color: '#FF4444',
       items: [
-        { key: 'animales', label: 'Animales', icon: () => Icons.animales(), color: 'var(--c-orange)', route: '/ganaderia?tab=animales' },
-        { key: 'rebanos', label: 'Rebaños', icon: () => Icons.rebanos(), color: 'var(--c-info)', route: '/ganaderia?tab=rebanos' },
-        { key: 'patrimonio', label: 'Patrimonio', icon: () => Icons.edificio(), color: 'var(--c-warning)', route: '/ganaderia?tab=patrimonio' },
-        { key: 'zonas', label: 'Zonas', icon: () => Icons.zonas(), color: 'var(--c-success)', route: '/ganaderia?tab=zonas' },
-        { key: 'sanidad', label: 'Sanidad', icon: () => Icons.sanidad(), color: 'var(--c-purple)', route: '/ganaderia?tab=sanidad' },
+        { key: 'animales', label: 'Animales', icon: () => Icons.animales(), color: '#F97316', route: '/ganaderia?tab=animales' },
+        { key: 'rebanos', label: 'Rebaños', icon: () => Icons.rebanos(), color: '#3B82F6', route: '/ganaderia?tab=rebanos' },
+        { key: 'patrimonio', label: 'Patrimonio', icon: () => Icons.edificio(), color: '#FF4444', route: '/ganaderia?tab=patrimonio' },
+        { key: 'zonas', label: 'Zonas', icon: () => Icons.zonas(), color: '#CCFF00', route: '/ganaderia?tab=zonas' },
+        { key: 'sanidad', label: 'Sanidad', icon: () => Icons.sanidad(), color: '#FF4444', route: '/ganaderia?tab=sanidad' },
       ],
     },
     {
-      key: 'expro', label: 'ExPro', icon: () => Icons.finca(),
+      key: 'expro', label: 'ExPro', icon: () => Icons.finca(), color: '#CCFF00',
       items: [
-        { key: 'explotacion', label: 'Explotación', icon: () => Icons.finca(), color: 'var(--c-success)', route: '/explotacion?tab=explotacion' },
-        { key: 'lacteo', label: 'Láctea', icon: () => Icons.leche(), color: 'var(--c-info)', route: '/explotacion?tab=lacteo' },
-        { key: 'silos', label: 'Silos', icon: () => Icons.silos(), color: 'var(--c-success)', route: '/explotacion?tab=silos' },
-        { key: 'fitosanitarios', label: 'Fitosanitarios', icon: () => Icons.sanidad(), color: 'var(--c-purple)', route: '/explotacion?tab=fitosanitarios' },
-        { key: 'gastos', label: 'Finanzas', icon: () => Icons.dinero(), color: 'var(--c-purple)', route: '/explotacion?tab=gastos' },
-        { key: 'proveedores', label: 'Proveedores', icon: () => Icons.proveedores(), color: 'var(--c-purple)', route: '/explotacion?tab=proveedores' },
-        { key: 'tramites', label: 'Trámites', icon: () => Icons.documento(), color: 'var(--c-info)', route: '/explotacion?tab=tramites' },
+        { key: 'explotacion', label: 'Explotación', icon: () => Icons.finca(), color: '#CCFF00', route: '/explotacion?tab=explotacion' },
+        { key: 'lacteo', label: 'Láctea', icon: () => Icons.leche(), color: '#3B82F6', items: [
+          { key: 'dashboard', label: 'Dashboard', icon: () => Icons.dashboard(), color: '#3B82F6', route: '/explotacion?tab=lacteo&sub=dashboard' },
+          { key: 'tanques', label: 'Tanques', icon: () => Icons.silos(), color: '#3B82F6', route: '/explotacion?tab=lacteo&sub=tanques' },
+          { key: 'control', label: 'Control', icon: () => Icons.analitica(), color: '#3B82F6', route: '/explotacion?tab=lacteo&sub=control' },
+          { key: 'balance', label: 'Balance', icon: () => Icons.documento(), color: '#3B82F6', route: '/explotacion?tab=lacteo&sub=balance' },
+          { key: 'graficos', label: 'Gráficos', icon: () => Icons.grafico(), color: '#3B82F6', route: '/explotacion?tab=lacteo&sub=graficos' },
+        ] },
+        { key: 'silos', label: 'Silos', icon: () => Icons.silos(), color: '#CCFF00', route: '/explotacion?tab=silos' },
+        { key: 'fitosanitarios', label: 'Fitosanitarios', icon: () => Icons.sanidad(), color: '#FF4444', route: '/explotacion?tab=fitosanitarios' },
+        { key: 'gastos', label: 'Finanzas', icon: () => Icons.dinero(), color: '#FF4444', items: [
+          { key: 'todos', label: 'Resumen', icon: () => Icons.documento(), color: '#FF4444', route: '/explotacion?tab=gastos&cat=todos' },
+          { key: 'Alimentacion', label: 'Alimentación', icon: () => Icons.paquete(), color: '#F97316', route: '/explotacion?tab=gastos&cat=Alimentacion' },
+          { key: 'Sanidad', label: 'Sanidad', icon: () => Icons.sanidad(), color: '#FF4444', route: '/explotacion?tab=gastos&cat=Sanidad' },
+          { key: 'Fitosanitarios', label: 'Fitosanitarios', icon: () => Icons.sanidad(), color: '#22C55E', route: '/explotacion?tab=gastos&cat=Fitosanitarios' },
+          { key: 'Electricidad', label: 'Electricidad', icon: () => Icons.info(), color: '#3B82F6', route: '/explotacion?tab=gastos&cat=Electricidad' },
+          { key: 'Personal', label: 'Personal', icon: () => Icons.compradores(), color: '#FB923C', route: '/explotacion?tab=gastos&cat=Personal' },
+          { key: 'Amortizacion', label: 'Amortización', icon: () => Icons.transportistas(), color: '#A855F7', route: '/explotacion?tab=gastos&cat=Amortizacion' },
+        ] },
+        { key: 'proveedores', label: 'Proveedores', icon: () => Icons.proveedores(), color: '#A855F7', route: '/explotacion?tab=proveedores' },
+        { key: 'tramites', label: 'Trámites', icon: () => Icons.documento(), color: '#CCFF00', items: [
+          { key: 'tram-guias', label: 'Guías DIMOE', icon: () => Icons.documento(), color: '#3B82F6', route: '/explotacion?tab=tramites&sub=guias' },
+          { key: 'tram-censo', label: 'Censo Anual', icon: () => Icons.animales(), color: '#F59E0B', route: '/explotacion?tab=tramites&sub=censo' },
+          { key: 'tram-crotales', label: 'Crotales', icon: () => Icons.paquete(), color: '#3FB950', route: '/explotacion?tab=tramites&sub=crotales' },
+          { key: 'tram-traslado', label: 'Traslados', icon: () => Icons.trazabilidad(), color: '#A855F7', route: '/explotacion?tab=tramites&sub=traslado' },
+          { key: 'tram-infolac', label: 'Infolac', icon: () => Icons.leche(), color: '#3B82F6', route: '/explotacion?tab=tramites&sub=infolac' },
+          { key: 'tram-archivo', label: 'Archivo', icon: () => Icons.cuaderno(), color: '#FB923C', route: '/explotacion?tab=tramites&sub=archivo' },
+        ] },
       ],
     },
     {
-      key: 'comer', label: 'CoMer', icon: () => Icons.comercial(),
+      key: 'comer', label: 'CoMer', icon: () => Icons.comercial(), color: '#3B82F6',
       items: [
-        { key: 'leche', label: 'Leche', icon: () => Icons.leche(), color: 'var(--c-info)', route: '/comercializacion?tab=leche' },
-        { key: 'carne', label: 'Carne', icon: () => Icons.carne(), color: 'var(--c-success)', route: '/comercializacion?tab=carne' },
-        { key: 'compradores', label: 'Compradores', icon: () => Icons.compradores(), color: 'var(--c-purple)', route: '/comercializacion?tab=compradores' },
-        { key: 'contratos', label: 'Contratos', icon: () => Icons.documento(), color: 'var(--c-purple)', route: '/comercializacion?tab=contratos' },
-        { key: 'transportistas', label: 'Transportistas', icon: () => Icons.transportistas(), color: 'var(--c-pink)', route: '/comercializacion?tab=transportistas' },
+        { key: 'leche', label: 'Leche', icon: () => Icons.leche(), color: '#3B82F6', route: '/comercializacion?tab=leche' },
+        { key: 'carne', label: 'Carne', icon: () => Icons.carne(), color: '#CCFF00', route: '/comercializacion?tab=carne' },
+        { key: 'compradores', label: 'Compradores', icon: () => Icons.compradores(), color: '#3B82F6', route: '/comercializacion?tab=compradores' },
+        { key: 'contratos', label: 'Contratos', icon: () => Icons.documento(), color: '#3B82F6', route: '/comercializacion?tab=contratos' },
+        { key: 'transportistas', label: 'Transportistas', icon: () => Icons.transportistas(), color: '#EC4899', route: '/comercializacion?tab=transportistas' },
+        { key: 'libro-ventas', label: 'Libro de Ventas', icon: () => Icons.libroVentas(), color: '#3B82F6', route: '/albaranes-ventas' },
       ],
     },
     {
-      key: 'informes', label: 'Informes y Doc', icon: () => Icons.informes(),
+      key: 'informes', label: 'Informes y Doc', icon: () => Icons.informes(), color: '#FFD600',
       items: [
-        { key: 'informes', label: 'Informes', icon: () => Icons.informes(), color: 'var(--text-s)', route: '/informes' },
-        { key: 'cuaderno', label: 'Cuaderno Digital', icon: () => Icons.cuaderno(), color: 'var(--c-orange)', route: '/cuaderno' },
-        { key: 'alertas', label: 'Alertas', icon: () => Icons.campana(), color: 'var(--c-warning)', route: '/alertas' },
-        { key: 'documentos', label: 'Documentos', icon: () => Icons.documento(), color: 'var(--c-purple)', route: '/documentos' },
-        { key: 'manuales', label: 'Manuales', icon: () => Icons.libro(), color: 'var(--c-purple)', route: '/manuales' },
+        { key: 'informes', label: 'Informes', icon: () => Icons.informes(), color: '#FFD600', items: [
+          { key: 'inf-general', label: 'General', icon: () => Icons.grafico(), color: '#FFD600', items: [
+            { key: 'inf-general-general', label: 'General', icon: () => Icons.grafico(), color: '#FFD600', route: '/informes?cat=general&tab=general' },
+            { key: 'inf-por-finca', label: 'Por Finca', icon: () => Icons.finca(), color: '#FFD600', route: '/informes?cat=general&tab=por-finca' },
+            { key: 'inf-eficiencia', label: 'Eficiencia', icon: () => Icons.tendencia(), color: '#FFD600', route: '/informes?cat=general&tab=eficiencia' },
+            { key: 'inf-rent-esp', label: 'Rent. Especie', icon: () => Icons.reproduccion(), color: '#FFD600', route: '/informes?cat=general&tab=rent-esp' },
+          ] },
+          { key: 'inf-gegan', label: 'GeGan', icon: () => Icons.animales(), color: '#3FB950', items: [
+            { key: 'inf-censo', label: 'Censo', icon: () => Icons.rebanos(), color: '#3FB950', route: '/informes?cat=gegan&tab=censo' },
+            { key: 'inf-rotacion', label: 'Rotación', icon: () => Icons.tendencia(), color: '#3FB950', route: '/informes?cat=gegan&tab=rotacion' },
+            { key: 'inf-reproductivo', label: 'Repro', icon: () => Icons.reproduccion(), color: '#3FB950', route: '/informes?cat=gegan&tab=reproductivo' },
+            { key: 'inf-sanidad', label: 'Sanidad', icon: () => Icons.sanidad(), color: '#3FB950', route: '/informes?cat=gegan&tab=sanidad' },
+            { key: 'inf-carne', label: 'Cárnico', icon: () => Icons.carne(), color: '#3FB950', route: '/informes?cat=gegan&tab=carne' },
+            { key: 'inf-coste-prod', label: 'Coste/Animal', icon: () => Icons.balanza(), color: '#3FB950', route: '/informes?cat=gegan&tab=coste-prod' },
+          ] },
+          { key: 'inf-expro', label: 'ExPro', icon: () => Icons.finca(), color: '#3B82F6', items: [
+            { key: 'inf-produccion', label: 'Producción', icon: () => Icons.grafico(), color: '#3B82F6', route: '/informes?cat=expro&tab=produccion' },
+            { key: 'inf-leche', label: 'Lácteo', icon: () => Icons.leche(), color: '#3B82F6', route: '/informes?cat=expro&tab=leche' },
+            { key: 'inf-curva-prod', label: 'Curva', icon: () => Icons.tendencia(), color: '#3B82F6', route: '/informes?cat=expro&tab=curva-prod' },
+            { key: 'inf-cargas', label: 'Aforos', icon: () => Icons.balanza(), color: '#3B82F6', route: '/informes?cat=expro&tab=cargas' },
+            { key: 'inf-fitosanitario', label: 'Fitosanitario', icon: () => Icons.sanidad(), color: '#3B82F6', route: '/informes?cat=expro&tab=fitosanitario' },
+            { key: 'inf-silos', label: 'Silos', icon: () => Icons.silos(), color: '#3B82F6', route: '/informes?cat=expro&tab=silos' },
+            { key: 'inf-tramites', label: 'Trámites', icon: () => Icons.documento(), color: '#3B82F6', route: '/informes?cat=expro&tab=tramites' },
+            { key: 'inf-proveedores', label: 'Proveedores', icon: () => Icons.proveedores(), color: '#3B82F6', route: '/informes?cat=expro&tab=proveedores' },
+            { key: 'inf-gastos', label: 'Gastos', icon: () => Icons.dinero(), color: '#3B82F6', route: '/informes?cat=expro&tab=gastos' },
+          ] },
+          { key: 'inf-comer', label: 'CoMer', icon: () => Icons.compradores(), color: '#F59E0B', items: [
+            { key: 'inf-ventas', label: 'Ventas', icon: () => Icons.libroVentas(), color: '#F59E0B', route: '/informes?cat=comer&tab=ventas' },
+            { key: 'inf-margenes', label: 'Márgenes', icon: () => Icons.dinero(), color: '#F59E0B', route: '/informes?cat=comer&tab=margenes' },
+            { key: 'inf-compradores', label: 'Compradores', icon: () => Icons.compradores(), color: '#F59E0B', route: '/informes?cat=comer&tab=compradores' },
+            { key: 'inf-contratos', label: 'Contratos', icon: () => Icons.contratos(), color: '#F59E0B', route: '/informes?cat=comer&tab=contratos-vencimiento' },
+            { key: 'inf-transportistas', label: 'Transportistas', icon: () => Icons.transportistas(), color: '#F59E0B', route: '/informes?cat=comer&tab=transportistas-resumen' },
+            { key: 'inf-albaranes', label: 'Albaranes', icon: () => Icons.libroVentas(), color: '#F59E0B', route: '/informes?cat=comer&tab=albaranes' },
+          ] },
+          { key: 'inf-libros', label: 'Libros', icon: () => Icons.documento(), color: '#A855F7', items: [
+            { key: 'inf-pyg', label: 'P y G', icon: () => Icons.dinero(), color: '#A855F7', route: '/informes?cat=libros&tab=pyg' },
+            { key: 'inf-flujo-caja', label: 'Flujo Caja', icon: () => Icons.tendencia(), color: '#A855F7', route: '/informes?cat=libros&tab=flujo-caja' },
+            { key: 'inf-breakeven', label: 'Break-Even', icon: () => Icons.balanza(), color: '#A855F7', route: '/informes?cat=libros&tab=breakeven' },
+            { key: 'inf-subvenciones', label: 'PAC', icon: () => Icons.pac(), color: '#A855F7', route: '/informes?cat=libros&tab=subvenciones' },
+          ] },
+        ] },
+        { key: 'cuaderno', label: 'Cuaderno Digital', icon: () => Icons.cuaderno(), color: '#F97316', route: '/cuaderno' },
+        { key: 'alertas', label: 'Alertas', icon: () => Icons.campana(), color: '#FFD600', route: '/alertas' },
+        { key: 'informe-rega', label: 'Informe REga', icon: () => Icons.informeRega(), color: '#A855F7', route: '/informes?cat=libros&tab=rega' },
+        { key: 'exportacion-oficial', label: 'Exportación Oficial', icon: () => Icons.exportar(), color: '#A855F7', route: '/informes?cat=libros&tab=exportar' },
+        { key: 'documentos', label: 'Documentos DIMOE', icon: () => Icons.documento(), color: '#A855F7', route: '/documentos' },
+        { key: 'manuales', label: 'Manuales', icon: () => Icons.libro(), color: '#A855F7', route: '/manuales' },
       ],
     },
     {
-      key: 'herramientas', label: 'Herramientas', icon: () => Icons.ajustes(),
+      key: 'herramientas', label: 'Herramientas', icon: () => Icons.ajustes(), color: '#B1B1B1',
       items: [
-        { key: 'ajustes', label: 'Ajustes', icon: () => Icons.ajustes(), color: 'var(--text-s)', route: '/ajustes' },
-        { key: 'importar-rfid', label: 'Importar RFID', icon: () => Icons.importar(), color: 'var(--text-s)', route: '/importar-rfid' },
+        { key: 'ajustes', label: 'Ajustes', icon: () => Icons.ajustes(), color: '#B1B1B1', route: '/ajustes' },
+        { key: 'importar-rfid', label: 'Importar RFID', icon: () => Icons.importar(), color: '#B1B1B1', route: '/importar-rfid' },
         {
-          key: 'agenda', label: 'Agenda', icon: () => Icons.calendar(), color: 'var(--c-orange)',
+          key: 'agenda', label: 'Agenda', icon: () => Icons.calendar(), color: '#F97316',
           items: [
-            { key: 'agenda-todos', label: 'Todos', icon: () => Icons.buscar(), color: 'var(--p-gold)', route: '/agenda?filtro=todos' },
-            { key: 'agenda-gegan', label: 'Animales', icon: () => Icons.animales(), color: 'var(--c-orange)', route: '/agenda?filtro=gegan' },
-            { key: 'agenda-rebanos', label: 'Rebaños', icon: () => Icons.rebanos(), color: 'var(--c-info)', route: '/agenda?filtro=rebanos' },
-            { key: 'agenda-sanidad', label: 'Sanidad', icon: () => Icons.sanidad(), color: 'var(--c-purple)', route: '/agenda?filtro=sanidad' },
-            { key: 'agenda-carnico', label: 'Carne', icon: () => Icons.carne(), color: 'var(--c-success)', route: '/agenda?filtro=carnico' },
-            { key: 'agenda-lacteos', label: 'Leche', icon: () => Icons.leche(), color: 'var(--c-info)', route: '/agenda?filtro=lacteos' },
+            { key: 'agenda-todos', label: 'Todos', icon: () => Icons.buscar(), color: '#F97316', route: '/agenda?filtro=todos' },
+            { key: 'agenda-gegan', label: 'Animales', icon: () => Icons.animales(), color: '#F97316', route: '/agenda?filtro=gegan' },
+            { key: 'agenda-rebanos', label: 'Rebaños', icon: () => Icons.rebanos(), color: '#3B82F6', route: '/agenda?filtro=rebanos' },
+            { key: 'agenda-sanidad', label: 'Sanidad', icon: () => Icons.sanidad(), color: '#FF4444', route: '/agenda?filtro=sanidad' },
+            { key: 'agenda-carnico', label: 'Carne', icon: () => Icons.carne(), color: '#CCFF00', route: '/agenda?filtro=carnico' },
+            { key: 'agenda-lacteos', label: 'Leche', icon: () => Icons.leche(), color: '#3B82F6', route: '/agenda?filtro=lacteos' },
           ]
         },
       ],
@@ -2969,7 +3117,7 @@ const App = {
       if (tab) {
         ExplotacionView._activeSubModule = tab;
       }
-      await ExplotacionView.render();
+      await ExplotacionView.render(params);
     }
   },
 
@@ -3082,12 +3230,27 @@ const App = {
   // ==========================================
   async renderInformes(params) {
     try {
-      // Soporte de deep-link: #/informes?tab=alertas (o cualquier sub-tab válido)
-      const tab = params?.get ? params.get('tab') : null;
-      if (tab && window.InformesView) {
-        const esValido = Object.values(InformesView._categories || {})
-          .some(cat => Object.prototype.hasOwnProperty.call(cat.tabs || {}, tab));
-        if (esValido) InformesView._currentTab = tab;
+      // Deep-link: #/informes?cat=general&tab=alertas (cualquier categoría/sub-tab válido).
+      // La navegación de Informes se hace desde el submenú del sidebar; aquí solo
+      // sincronizamos el estado de la vista con los parámetros de la ruta.
+      if (params?.get && window.InformesView) {
+        const cats = InformesView._categories || {};
+        const cat = params.get('cat');
+        const tab = params.get('tab');
+        if (cat && Object.prototype.hasOwnProperty.call(cats, cat)) {
+          InformesView._currentCategory = cat;
+        }
+        const catActual = InformesView._currentCategory;
+        const tabsCat = (cats[catActual] || {}).tabs || {};
+        const tabValido = (t) => Object.prototype.hasOwnProperty.call(tabsCat, t);
+        if (tab && tabValido(tab)) {
+          InformesView._currentTab = tab;
+        } else if (!tabValido(InformesView._currentTab)) {
+          // El tab activo no pertenece a la categoría (p.ej. cambio de cat sin tab):
+          // caer al primer sub-tab válido de la categoría actual.
+          const primero = Object.keys(tabsCat).find(t => InformesView._esTabPermitida(t));
+          if (primero) InformesView._currentTab = primero;
+        }
       }
       await InformesView.render();
     } catch (e) {

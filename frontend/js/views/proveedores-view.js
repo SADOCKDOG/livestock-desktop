@@ -27,6 +27,9 @@ const ProveedoresView = {
               </div>
             </div>
           </div>
+          <div class="module-header-primary-action">
+            <button class="btn btn-create btn-lg w-full" onclick="ProveedoresView.renderFormulario()">${Icons.agregar()} Nuevo Proveedor</button>
+          </div>
 
           <div class="mb-16">
             <div id="prov-kpis"></div>
@@ -44,11 +47,6 @@ const ProveedoresView = {
           <div id="prov-lista"><div class="loader">Cargando proveedores...</div></div>
           <div id="prov-erp-table-container" class="mt-12" style="display:none;"></div>
 
-          <!-- Botón Flotante de Acción con viñeta -->
-          <div class="fab-container" onclick="ProveedoresView.renderFormulario()">
-            <span class="fab-label">Nuevo Proveedor</span>
-            <button class="fab-btn" aria-label="Añadir"><span aria-hidden="true">${Icons.fabPlus()}</span></button>
-          </div>
           `;
 
         // Restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px); la tabla se pinta al llegar los datos en _cargarDatos

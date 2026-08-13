@@ -33,6 +33,12 @@ const DashboardView = {
 
     main.innerHTML = await this._buildHTML(finca, rebanos, animales, rent, censo, alertasSanitarias, alertasTrazabilidad, alertasAdministrativas, alertaEpoca, kpisDiarios, indicadoresLeche, tareasAgenda, alertasAgenda);
 
+    // FAB "Guía" del Inicio (igual que en las vistas de submódulo) para relanzar el tour
+    // del Dashboard. Se pinta aquí para que la guía inicio.dashboard pueda apuntar a él.
+    if (window.App && typeof App.renderGuideFab === 'function') {
+      App.renderGuideFab('/', null);
+    }
+
     this._suscribirAlertasVivo();
   },
 

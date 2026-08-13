@@ -20,7 +20,10 @@ const GastosView = {
     { key: 'Amortizacion', icon: Icons.transportistas(), label: 'Amortización', color: 'var(--c-purple)', colorDark: '#7e22ce' },
   ],
 
-  async render() {
+  async render(params) {
+    // Categoría seleccionada vía submenú del sidebar (?tab=gastos&cat=KEY).
+    // Sin cat (p.ej. ruta legacy) se muestra el resumen global ("todos").
+    this._currentTab = (params && typeof params.get === 'function' && params.get('cat')) || 'todos';
     const main = document.getElementById('expro-tab-content') || document.getElementById('app-content');
     // Cargar datos primero
     const gastosRecords = await Gastos.list(await Fincas.getActiveId());
@@ -95,20 +98,6 @@ const GastosView = {
         </div>
       </div>
 
-      <div class="mb-14">
-        <div class="tabs-scroll-wrapper">
-          <div class="tabs-scroll gasto-tabs scroll-shadow-container"
-               onscroll="const b=this.parentNode.querySelector('.scroll-indicator-badge'); if(b) b.classList.add('hidden');">
-            ${this._CATEGORIAS.map(c => `
-              <button class="gasto-tab ${this._currentTab === c.key ? 'active' : ''}" 
-                      data-tab="${c.key}" 
-                      onclick="GastosView._cambiarTab('${c.key}')" 
-                      style="--tab-color: ${c.color};">${c.icon} ${c.label.toUpperCase()}</button>
-            `).join('')}
-          </div>
-          <div class="scroll-indicator-badge">${Icons.rotacion()} deslizar ➔</div>
-        </div>
-      </div>
       <div id="gasto-content"><div class="loader">Cargando gastos...</div></div>`;
 
     this._cachedData = { gastosRecords, kpis };
@@ -179,6 +168,9 @@ const GastosView = {
       : `<div class="p-14 text-center bg-dark rounded-sm border border-222"><span class="text-555 text-xs uppercase font-900 tracking-widest">${Icons.buscar()} ${emptyMsg}</span></div>`;
 
     content.innerHTML = `
+      <div class="module-header-primary-action">
+        <button class="btn btn-create btn-lg w-full" onclick="${registrarHandler}">${Icons.agregar()} Registrar ${registrarLabel}</button>
+      </div>
       <div class="card">
         <div class="flex items-center gap-12 mb-12">
           <div class="text-white font-900 uppercase text-lg tracking-wider">
@@ -212,11 +204,7 @@ const GastosView = {
         <div id="gastos-cards-container">${recordsHtml}</div>
         <div id="gastos-erp-table-container" class="mt-12" style="display:none;"></div>
       </div>
-      <!-- Botón Flotante de Acción con viñeta -->
-      <div class="fab-container" onclick="${registrarHandler}">
-        <span class="fab-label">Nuevo ${registrarLabel}</span>
-        <button class="fab-btn" aria-label="Añadir"><span aria-hidden="true">${Icons.fabPlus()}</span></button>
-      </div>`;
+`;
   },
 
   // ============================================

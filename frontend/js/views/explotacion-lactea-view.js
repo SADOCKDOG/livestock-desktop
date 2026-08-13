@@ -48,12 +48,8 @@ window.ExplotacionLacteaView = {
 
     let html = `
     <div class="p-16">
-      <div class="flex items-center justify-between mb-16">
+      <div class="mb-16">
         <h2 class="text-lg font-900 uppercase tracking-tight" style="color:var(--c-info);">Explotación Láctea</h2>
-        <div class="flex gap-8">
-          <button onclick="window.OrdeñoWizard.open()" class="text-xs px-12 py-6 font-900 uppercase" style="background:var(--c-info); color:#000; border:none; border-radius:6px;">+ Ordeño</button>
-          <button onclick="window.TanqueWizard.open()" class="btn-secondary text-xs px-12 py-6 font-900 uppercase">+ Tanque</button>
-        </div>
       </div>`;
 
     if (alertasDanger.length > 0) {
@@ -108,7 +104,6 @@ window.ExplotacionLacteaView = {
       html += `
       <div class="card p-20 text-center">
         <div class="text-aaa text-xs mb-8">No hay tanques registrados</div>
-        <button onclick="window.TanqueWizard.open()" class="btn-primary text-xs px-16 py-8 font-900" style="background:var(--c-info);">Registrar primer tanque</button>
       </div>`;
     }
 

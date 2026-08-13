@@ -20,7 +20,7 @@ const InstalacionesView = {
     if (!finca) {
       html = `<div class="empty-state"><p class="empty-state-text">Selecciona una finca activa primero.</p></div>`;
     } else if (instalacionesConIndice.length === 0) {
-      html = `<div class="empty-state"><div class="empty-state-icon">${Icons.edificio()}</div><p class="empty-state-text">Sin instalaciones registradas.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="InstalacionesView._crearInstalacion()">${Icons.agregar()} Registrar primera instalación</button></div></div>`;
+      html = `<div class="empty-state"><div class="empty-state-icon">${Icons.edificio()}</div><p class="empty-state-text">Sin instalaciones registradas.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="InstalacionesView._crearInstalacion()">${Icons.agregar()} Nueva primer Instalación</button></div></div>`;
     } else {
       const moduleColor = (window.getModuleColor && window.getModuleColor('/instalaciones')) || 'var(--c-info)';
       let fichasHtml = '';
@@ -54,14 +54,13 @@ const InstalacionesView = {
             </div>
           </div>
         </div>
+        <div class="module-header-primary-action">
+          <button class="btn btn-create btn-lg w-full" onclick="InstalacionesView._crearInstalacion()">${Icons.agregar()} Nueva Instalación</button>
+        </div>
         <div class="grid gap-12">${fichasHtml}</div>`;
     }
 
-    main.innerHTML = html + `
-      <div class="fab-container" onclick="InstalacionesView._crearInstalacion()">
-        <span class="fab-label">Nueva Instalación</span>
-        <button class="fab-btn">${Icons.fabPlus()}</button>
-      </div>`;
+    main.innerHTML = html;
   },
 
   async renderDetalle(params) {

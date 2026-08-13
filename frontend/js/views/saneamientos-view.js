@@ -22,7 +22,7 @@ const SaneamientosView = {
 
     let html = '';
     if (registros.length === 0) {
-      html = `<div class="empty-state"><div class="empty-state-icon">${Icons.sanidad()}</div><p class="empty-state-text">Sin campañas de saneamiento registradas.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="SaneamientosView._crearSaneamiento()">${Icons.agregar()} Registrar primer saneamiento</button></div></div>`;
+      html = `<div class="empty-state"><div class="empty-state-icon">${Icons.sanidad()}</div><p class="empty-state-text">Sin campañas de saneamiento registradas.</p><div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="SaneamientosView._crearSaneamiento()">${Icons.agregar()} Nuevo primer Saneamiento</button></div></div>`;
     } else {
       const moduleColor = (window.getModuleColor && window.getModuleColor('/saneamientos')) || 'var(--c-info)';
       let fichasHtml = '';
@@ -55,14 +55,13 @@ const SaneamientosView = {
             </div>
           </div>
         </div>
+        <div class="module-header-primary-action">
+          <button class="btn btn-create btn-lg w-full" onclick="SaneamientosView._crearSaneamiento()">${Icons.agregar()} Nuevo Saneamiento</button>
+        </div>
         <div class="grid gap-12">${fichasHtml}</div>`;
     }
 
-    main.innerHTML = html + `
-      <div class="fab-container" onclick="SaneamientosView._crearSaneamiento()">
-        <span class="fab-label">Nuevo Saneamiento</span>
-        <button class="fab-btn">${Icons.fabPlus()}</button>
-      </div>`;
+    main.innerHTML = html;
   },
 
   async renderDetalle(params) {
