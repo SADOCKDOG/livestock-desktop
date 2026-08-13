@@ -236,6 +236,16 @@
 }
 .sidebar-group.collapsed .sidebar-group-items { display: none; }
 
+/* Subgrupo anidado (p.ej. filtros de Agenda colgando bajo "Agenda"): reutiliza
+   el árbol de .sidebar-group-items y reduce el toggle para marcar la jerarquía. */
+.sidebar-subgroup > .sidebar-group-toggle {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  margin-top: 2px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
 /* Colapsado global del sidebar (icon-only): ocultar etiquetas/submódulos
    y mostrar solo el icono de grupo con tooltip. */
 .erp-sidebar[data-collapsed="true"] .sidebar-group-label,

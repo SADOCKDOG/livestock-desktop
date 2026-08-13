@@ -664,22 +664,40 @@ const App = {
     }
   },
 
-  /** Construye el acordeón del sidebar a partir de App.NAV_GROUPS. */
+  /** Construye el acordeón del sidebar a partir de App.NAV_GROUPS.
+   *  Soporta subgrupos anidados: un item con `items` se renderiza como un
+   *  subgrupo plegable (p.ej. los filtros de Agenda cuelgan bajo "Agenda").
+   *  Sus hijos siempre son enlaces hoja con `route`. */
   _renderSidebarNav() {
     const nav = document.getElementById('erpSidebarNav');
     if (!nav) return;
     const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+    // Renderiza un item: hoja (enlace) o subgrupo plegable (item con `items`).
+    const renderItem = (item, groupKey) => {
+      if (item.items && item.items.length) {
+        const subKey = groupKey + '::' + item.key;
+        let children = '';
+        item.items.forEach((child) => { children += renderItem(child, subKey); });
+        return '<div class="sidebar-group sidebar-subgroup" data-group="' + subKey + '">' +
+          '<button type="button" class="sidebar-group-toggle" data-group-toggle="' + subKey + '" aria-expanded="true" title="' + esc(item.label) + '">' +
+            '<span class="sidebar-group-icon" style="color:' + item.color + ';">' + item.icon() + '</span>' +
+            '<span class="sidebar-group-label">' + esc(item.label) + '</span>' +
+            '<span class="sidebar-group-chevron">' + Icons.chevronAbajo() + '</span>' +
+          '</button>' +
+          '<div class="sidebar-group-items" data-group-items="' + subKey + '">' + children + '</div>' +
+        '</div>';
+      }
+      return '<a class="sidebar-link" href="#' + item.route + '" data-route="' + item.route + '" title="' + esc(item.label) + '">' +
+        '<span class="sidebar-link-icon" style="color:' + item.color + ';">' + item.icon() + '</span>' +
+        '<span class="sidebar-link-label">' + esc(item.label) + '</span>' +
+      '</a>';
+    };
+
     let html = '';
     this.NAV_GROUPS.forEach((group) => {
       let itemsHtml = '';
-      group.items.forEach((item) => {
-        itemsHtml +=
-          '<a class="sidebar-link" href="#' + item.route + '" data-route="' + item.route + '" title="' + esc(item.label) + '">' +
-            '<span class="sidebar-link-icon" style="color:' + item.color + ';">' + item.icon() + '</span>' +
-            '<span class="sidebar-link-label">' + esc(item.label) + '</span>' +
-          '</a>';
-      });
+      group.items.forEach((item) => { itemsHtml += renderItem(item, group.key); });
       html +=
         '<div class="sidebar-group" data-group="' + group.key + '">' +
           '<button type="button" class="sidebar-group-toggle" data-group-toggle="' + group.key + '" aria-expanded="true" title="' + esc(group.label) + '">' +
@@ -692,13 +710,12 @@ const App = {
     });
     nav.innerHTML = html;
 
-    // Restaurar estado de grupos colapsados (persistido en localStorage)
-    this.NAV_GROUPS.forEach((group) => {
-      const wrap = nav.querySelector('.sidebar-group[data-group="' + group.key + '"]');
-      if (wrap) wrap.classList.toggle('collapsed', this._getGroupCollapsed(group.key));
+    // Restaurar estado de grupos/subgrupos colapsados (persistido en localStorage)
+    nav.querySelectorAll('.sidebar-group[data-group]').forEach((wrap) => {
+      wrap.classList.toggle('collapsed', this._getGroupCollapsed(wrap.dataset.group));
     });
 
-    // Delegación de clic en los toggles de grupo (evita listeners duplicados)
+    // Delegación de clic en los toggles de grupo/subgrupo (evita listeners duplicados)
     if (!nav.dataset.bound) {
       nav.addEventListener('click', (e) => {
         const btn = e.target.closest('[data-group-toggle]');
@@ -745,8 +762,9 @@ const App = {
       link.classList.toggle('active', active);
       if (active) {
         link.setAttribute('aria-current', 'page');
-        const groupWrap = link.closest('.sidebar-group');
-        if (groupWrap) this._expandSidebarGroup(groupWrap);
+        // Desplegar el grupo y todos sus ancestros (subgrupos anidados)
+        let g = link.closest('.sidebar-group');
+        while (g) { this._expandSidebarGroup(g); g = g.parentElement ? g.parentElement.closest('.sidebar-group') : null; }
       } else {
         link.removeAttribute('aria-current');
       }
@@ -827,7 +845,17 @@ const App = {
       items: [
         { key: 'ajustes', label: 'Ajustes', icon: () => Icons.ajustes(), color: 'var(--text-s)', route: '/ajustes' },
         { key: 'importar-rfid', label: 'Importar RFID', icon: () => Icons.importar(), color: 'var(--text-s)', route: '/importar-rfid' },
-        { key: 'agenda', label: 'Agenda', icon: () => Icons.calendar(), color: 'var(--c-orange)', route: '/agenda' },
+        {
+          key: 'agenda', label: 'Agenda', icon: () => Icons.calendar(), color: 'var(--c-orange)',
+          items: [
+            { key: 'agenda-todos', label: 'Todos', icon: () => Icons.buscar(), color: 'var(--p-gold)', route: '/agenda?filtro=todos' },
+            { key: 'agenda-gegan', label: 'Animales', icon: () => Icons.animales(), color: 'var(--c-orange)', route: '/agenda?filtro=gegan' },
+            { key: 'agenda-rebanos', label: 'Rebaños', icon: () => Icons.rebanos(), color: 'var(--c-info)', route: '/agenda?filtro=rebanos' },
+            { key: 'agenda-sanidad', label: 'Sanidad', icon: () => Icons.sanidad(), color: 'var(--c-purple)', route: '/agenda?filtro=sanidad' },
+            { key: 'agenda-carnico', label: 'Carne', icon: () => Icons.carne(), color: 'var(--c-success)', route: '/agenda?filtro=carnico' },
+            { key: 'agenda-lacteos', label: 'Leche', icon: () => Icons.leche(), color: 'var(--c-info)', route: '/agenda?filtro=lacteos' },
+          ]
+        },
       ],
     },
   ],
@@ -859,6 +887,11 @@ const App = {
     const next = tabs[(idx + 1) % n];
     const menuId = `carrusel-menu-${viewName}`;
     const colorModulo = App.CARRUSEL_COLOR_MODULO[viewName] || active.color;
+    // Desktop: si las opciones del carrusel ya viven en el acordeón del sidebar
+    // (GeGan/ExPro/CoMer como navegación; Agenda como filtros TODOS/ANIMALES/…),
+    // se marca --sidebar para ocultarlo en escritorio (erp-overrides.css). Cualquier
+    // otro uso del carrusel (no representado en el menú) se deja visible.
+    const ocultarCarruselEscritorio = ['GanaderiaView', 'ExplotacionView', 'ComercializacionView', 'AgendaView'].includes(viewName);
     // Llamada al helper que await render() + emite view:tabChanged para re-anclar guía
     const navegarConGuia = (key) => `App._cambiarSubmoduloConGuia('${viewName}', '${key}')`;
 
@@ -882,7 +915,7 @@ const App = {
       </div>`;
 
     return `
-      <div class="carrusel-modulo" style="--mode-color: ${colorModulo};">
+      <div class="carrusel-modulo${ocultarCarruselEscritorio ? ' carrusel-modulo--sidebar' : ''}" style="--mode-color: ${colorModulo};">
         ${dots}
         <div class="carrusel-pestanas-wrapper">
           <div class="carrusel-pestanas">
@@ -3020,7 +3053,14 @@ const App = {
     }
   },
   async renderAgenda(params) {
-    if (window.AgendaView) { await AgendaView.render(params); }
+    if (window.AgendaView) {
+      // El filtro de la Agenda (TODOS/ANIMALES/…) vive ahora como subgrupo en el
+      // sidebar (rutas /agenda?filtro=X). Lo aplicamos vía la propiedad pública
+      // _filtroModulo antes de renderizar; no se toca AgendaView (maestro).
+      const filtro = params && params.get ? params.get('filtro') : null;
+      if (filtro) AgendaView._filtroModulo = filtro;
+      await AgendaView.render(params);
+    }
   },
 
   async renderSilos() {

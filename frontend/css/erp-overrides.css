@@ -185,14 +185,26 @@ body::after {
    ========================================================================= */
 @media (min-width: 1024px) {
 
-  /* ── B · Carrusel de pestañas → tab-strip fijo (sin flechas/dots) ── */
-  .carrusel-modulo {
-    position: relative;          /* ancla el .carrusel-menu dropdown */
-    margin-left: 0;
-    margin-right: 0;
-    padding: 10px 0 6px;
-    background: transparent;
-    backdrop-filter: none;
+  /* ── B · Carrusel de pestañas ──
+     Se ocultan en escritorio los carruseles cuyas opciones ya viven en el
+     acordeón del sidebar: los de NAVEGACIÓN de submódulos (GeGan / ExPro /
+     CoMer) y el de FILTRO de Agenda (TODOS/ANIMALES/REBAÑOS/SANIDAD/CARNE/
+     LECHE), marcados --sidebar por App.renderCarruselPestanas. Cualquier otro
+     uso del carrusel (no representado en el menú) se deja visible. En <1024px
+     todo el carrusel queda visible (fallback móvil/tablet, sin sidebar ERP). */
+  .carrusel-modulo--sidebar {
+    display: none !important;
+  }
+
+  /* ── Cabecera: alinear logo a la izquierda (escritorio) ──
+     El grid de la cabecera centra el logo en su columna (layout.css:
+     .header-logo-container { justify-self: center }); en escritorio lo fijamos
+     al borde izquierdo para emparejarlo con el arranque del sidebar (mismo
+     inset de 12px: padding-left de la cabecera = margin-left del toggle).
+     Deja la esquina superior izquierda coherente. En <1024px se conserva el
+     logo centrado (sin sidebar ERP). */
+  .header-logo-container {
+    justify-self: start;
   }
   .carrusel-pestanas {
     justify-content: flex-start;
