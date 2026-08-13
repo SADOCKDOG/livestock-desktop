@@ -151,6 +151,8 @@
       this._initialized = true;
       try { localStorage.setItem(STORAGE_KEY, 'true'); } catch (e) {}
       console.log('[PurchaseManager] Premium marcado como comprado');
+      // Desktop (piel ERP): refresca el indicador Free/Premium del pie del sidebar
+      try { window.dispatchEvent(new CustomEvent('premiumChanged', { detail: { purchased: true } })); } catch (e) {}
       // Repintar la vista actual para que desaparezcan los banners/candados Free
       if (!yaEstaba && window.App && typeof App.route === 'function') {
         try { App.route(); } catch (e) {}
