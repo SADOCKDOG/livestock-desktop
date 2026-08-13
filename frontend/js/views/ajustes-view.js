@@ -118,12 +118,9 @@ const AjustesView = {
             <span class="badge badge-sm uppercase" style="background:color-mix(in srgb, var(--c-danger) 12%, transparent); color:var(--c-danger); border:1px solid color-mix(in srgb, var(--c-danger) 30%, transparent); padding:4px 8px; border-radius:4px; font-weight:900; letter-spacing:0.5px; font-size:0.62rem;">${Icons.alerta()} EXPLOTACIÓN DE LIDIA</span>
           </div>` : ''}
         </div>
-        <div class="grid grid-cols-2 gap-10">
+        <div class="grid gap-10">
           <button class="widget-link-btn widget-link-btn--neon neon-info" onclick="AjustesView._editarFincaPrincipal()">
             ${Icons.editar()} <span class="widget-link-label">Editar Datos</span>
-          </button>
-          <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="AjustesView._gestionarZonas()">
-            ${Icons.zonas()} <span class="widget-link-label">Zonas / Parcelas</span>
           </button>
         </div>
       </div>` : ''}
@@ -408,8 +405,6 @@ const AjustesView = {
       App.toastError("Wizard de Finca no disponible");
     }
   },
-
-  async _gestionarZonas() { location.hash = '#/zonas'; },
 
   _abrirManual() {
     const overlay = document.createElement('div');
