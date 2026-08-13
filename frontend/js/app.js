@@ -163,6 +163,7 @@ const App = {
       App._inyectarIconosEstaticos();
       App._setupHeaderBackButton();
       App._setupHeaderContextClick();
+      App._setupHeaderExtras();
       App._setupHardwareBackButton();
       App._setupSidebar();
       App._observarVerMas();
@@ -580,6 +581,140 @@ const App = {
 
     // Resetear color de cabecera al navegar (por defecto oro)
     this.updateHeaderColor(null);
+  },
+
+  /* ── Huecos de la barra superior (piel ERP escritorio) ────────────────── */
+
+  // Puebla iconos de los controles nuevos y dispara el primer conteo de alertas.
+  _setupHeaderExtras() {
+    try {
+      const si = document.getElementById('header-search-icon');
+      if (si && window.Icons && typeof Icons.buscar === 'function') si.innerHTML = Icons.buscar();
+      const bi = document.getElementById('header-alerts-icon');
+      if (bi && window.Icons && typeof Icons.campana === 'function') bi.innerHTML = Icons.campana();
+    } catch (e) { /* iconos opcionales */ }
+    this._renderAlertasBell();
+  },
+
+  // Migas de pan derivadas de la ruta actual (hub › tab › sub/cat).
+  _renderBreadcrumbs(path, params) {
+    const el = document.getElementById('header-breadcrumbs');
+    if (!el) return;
+    const hub = (path || '/').split('?')[0];
+    const hubLabel = this._headerTitles[hub] || 'Livestock';
+    const crumbs = [{ label: hubLabel, route: hub }];
+    if (params && typeof params.get === 'function') {
+      const tab = params.get('tab');
+      if (tab) {
+        const tl = this._crumbTabLabel(hub, tab);
+        if (tl) crumbs.push({ label: tl });
+        const sub = params.get('sub') || params.get('cat');
+        if (sub) {
+          const sl = this._crumbSubLabel(hub, tab, sub);
+          if (sl) crumbs.push({ label: sl });
+        }
+      }
+    }
+    el.innerHTML = crumbs.map((c, i) => {
+      const sep = i > 0 ? '<span class="bc-sep">›</span>' : '';
+      if (c.route && i === 0) {
+        return sep + '<a class="bc-crumb bc-link" href="javascript:void(0)" onclick="location.hash=\'#' + c.route + '\'">' + c.label + '</a>';
+      }
+      return sep + '<span class="bc-crumb">' + c.label + '</span>';
+    }).join('');
+  },
+
+  _crumbTabLabel(hub, tab) {
+    const M = {
+      '/explotacion': { explotacion: 'Explotación', lacteo: 'Láctea', silos: 'Silos', fitosanitarios: 'Fitosanitarios', gastos: 'Gastos', proveedores: 'Proveedores', tramites: 'Trámites' },
+      '/ganaderia': { animales: 'Animales', rebanos: 'Rebaños', patrimonio: 'Patrimonio', zonas: 'Zonas', sanidad: 'Sanidad' },
+      '/comercializacion': { leche: 'Leche', carne: 'Carne', compradores: 'Compradores', contratos: 'Contratos', transportistas: 'Transportistas' }
+    };
+    return (M[hub] && M[hub][tab]) || null;
+  },
+
+  _crumbSubLabel(hub, tab, sub) {
+    const M = {
+      lacteo: { dashboard: 'Dashboard', tanques: 'Tanques', control: 'Control', balance: 'Balance', graficos: 'Gráficos' },
+      tramites: { guias: 'Guías', censo: 'Censo', crotales: 'Crotales', traslado: 'Traslado', infolac: 'Infolac', archivo: 'Archivo' },
+      gastos: { todos: 'Todos', Alimentacion: 'Alimentación', Sanidad: 'Sanidad', Fitosanitarios: 'Fitosanitarios', Electricidad: 'Electricidad', Personal: 'Personal', Amortizacion: 'Amortización' }
+    };
+    return (M[tab] && M[tab][sub]) || null;
+  },
+
+  // Buscador global: localiza un animal por crotal / CNI / nombre y abre su ficha.
+  async _buscarGlobal() {
+    const input = document.getElementById('header-search-input');
+    if (!input) return;
+    const term = (input.value || '').trim();
+    if (!term) return;
+    input.blur();
+    try {
+      if (!window.db) return;
+      const animales = await window.db.getAll('animales').catch(() => []);
+      const t = term.toLowerCase();
+      const matches = (animales || []).filter(a =>
+        (a.crotal && String(a.crotal).toLowerCase().includes(t)) ||
+        (a.cni && String(a.cni).toLowerCase().includes(t)) ||
+        (a.nombre && String(a.nombre).toLowerCase().includes(t))
+      );
+      if (matches.length === 1) {
+        window.location.hash = '#/animal?id=' + matches[0].id;
+        input.value = '';
+      } else if (matches.length > 1) {
+        App.toast('Varios animales coinciden con «' + term + '». Afina el crotal.');
+        window.location.hash = '#/ganaderia?tab=animales';
+      } else {
+        App.toast('Sin coincidencias para «' + term + '».');
+      }
+    } catch (e) {
+      console.warn('[buscarGlobal]', e);
+    }
+  },
+
+  // Conteo ligero de alertas para la campana (contratos por vencer + silos bajos).
+  async _contarAlertas() {
+    let n = 0;
+    try {
+      if (window.db) {
+        const [contratos, silos] = await Promise.all([
+          window.db.getAll('contratos_compra').catch(() => []),
+          window.db.getAll('config_silos').catch(() => [])
+        ]);
+        const now = Date.now();
+        const lim = now + 30 * 24 * 3600 * 1000;
+        (contratos || []).forEach(c => {
+          const v = c.vigenciaHasta || c.fechaFin || c.vigencia;
+          if (!v) return;
+          const t = new Date(v).getTime();
+          if (!isNaN(t) && t >= now && t <= lim) n++;
+        });
+        (silos || []).forEach(s => {
+          const cap = Number(s.capacidad) || 0;
+          const niv = Number(s.nivel) || Number(s.stock) || 0;
+          if (cap > 0 && (niv / cap) * 100 < 15) n++;
+        });
+      }
+    } catch (e) { console.warn('[contarAlertas]', e); }
+    return n;
+  },
+
+  async _renderAlertasBell() {
+    if (this._alertasBellRunning) return;
+    this._alertasBellRunning = true;
+    try {
+      const badge = document.getElementById('header-alerts-count');
+      if (!badge) return;
+      const n = await this._contarAlertas();
+      if (n > 0) {
+        badge.style.display = '';
+        badge.textContent = n > 99 ? '99+' : String(n);
+      } else {
+        badge.style.display = 'none';
+      }
+    } finally {
+      this._alertasBellRunning = false;
+    }
   },
 
   /** Actualiza el color neon de la cabecera según el mapa único MODULE_COLORS.
@@ -1513,6 +1648,10 @@ const App = {
 
     // Actualizar header contextual (título de vista + botón volver)
     this._updateHeaderContext(path);
+
+    // Huecos de la barra superior (migas de pan + campana de alertas)
+    this._renderBreadcrumbs(path, params);
+    this._renderAlertasBell();
 
     // Si venimos de crear un comprador rápido para el wizard de venta, volver al wizard
     if (window._volverAWizardVenta && path === '/comprador' && params?.get?.('id')) {

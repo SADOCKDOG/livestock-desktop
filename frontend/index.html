@@ -84,6 +84,9 @@
   </head>
   <body>
     <header id="main-header" role="banner">
+      <!-- Migas de pan (izquierda, derivadas de la ruta) -->
+      <nav id="header-breadcrumbs" class="header-breadcrumbs" aria-label="Ruta de navegación"></nav>
+
       <!-- Left: Logo (Centrado en su columna) -->
       <div class="header-logo-container" onclick="App.route('/')">
           <img src="icons/Logo aplicación.png" alt="Livestock Manager" id="app-logo" />
@@ -93,6 +96,21 @@
          <div id="header-context">
             <span id="header-route-icon" data-icon="home"></span>
         </div>
+
+        <!-- Buscador global (crotal / CNI / nombre) -->
+        <div id="header-search" class="header-search">
+            <span id="header-search-icon" class="header-search-icon"></span>
+            <input id="header-search-input" class="header-search-input" type="search"
+                   placeholder="Buscar por crotal, CNI o nombre…" autocomplete="off"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();App._buscarGlobal();}" />
+        </div>
+
+        <!-- Campana de alertas con contador -->
+        <button id="header-alerts-bell" class="header-alerts-bell" type="button"
+                onclick="location.hash='#/alertas'" aria-label="Ver alertas" title="Alertas">
+            <span id="header-alerts-icon" class="alerts-bell-icon"></span>
+            <span id="header-alerts-count" class="alerts-count" style="display:none">0</span>
+        </button>
 
         <!-- Right: Viñeta de Finca (REGA con haz de luz) -->
         <div class="flex items-center gap-10 justify-end" style="justify-self: end; display: flex; align-items: flex-end; padding-bottom: 8px;">

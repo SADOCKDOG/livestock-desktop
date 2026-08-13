@@ -682,3 +682,94 @@ main#app-content.manual-open {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
+/* === Barra superior: huecos rellenos (migas, buscador, alertas) ===
+   Este archivo solo se carga en la piel ERP de escritorio, así que basta
+   con ocultar por defecto y mostrar en el media query de escritorio. Si la
+   ventana se estrecha <1024px, los controles desaparecen sin quedar sueltos. */
+.header-breadcrumbs,
+.header-search,
+.header-alerts-bell { display: none; }
+
+@media (min-width: 1024px) {
+  /* Rejilla: [migas] [logo] [pill] [buscador 1fr] [alertas] [finca] */
+  #main-header {
+    grid-template-columns: auto auto auto 1fr auto auto;
+  }
+
+  .header-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 0.8rem;
+    color: var(--text-m, #bbb);
+    min-width: 0;
+    overflow: hidden;
+  }
+  .header-breadcrumbs .bc-crumb { white-space: nowrap; }
+  .header-breadcrumbs .bc-link {
+    color: var(--header-neon-color, var(--c-info, #38bdf8));
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .header-breadcrumbs .bc-link:hover { text-decoration: underline; }
+  .header-breadcrumbs .bc-sep { color: var(--border, #444); margin: 0 6px; }
+
+  .header-search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border, #444);
+    border-radius: 18px;
+    padding: 4px 10px;
+    max-width: 320px;
+    width: 100%;
+  }
+  .header-search:focus-within { border-color: var(--header-neon-color, var(--c-info, #38bdf8)); }
+  .header-search-icon { display: flex; color: var(--text-m, #bbb); }
+  .header-search-icon svg { width: 16px; height: 16px; }
+  .header-search-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text, #fff);
+    font-size: 0.8rem;
+    width: 100%;
+    min-width: 0;
+  }
+  .header-search-input::placeholder { color: var(--text-m, #888); }
+
+  .header-alerts-bell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--border, #444);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    color: var(--text, #fff);
+    flex-shrink: 0;
+  }
+  .header-alerts-bell:hover { border-color: var(--p-gold, #ffd600); color: var(--p-gold, #ffd600); }
+  .alerts-bell-icon { display: flex; }
+  .alerts-bell-icon svg { width: 18px; height: 18px; }
+  .alerts-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--c-danger, #ef4444);
+    color: #fff;
+    border-radius: 10px;
+    padding: 0 5px;
+    font-size: 0.6rem;
+    font-weight: 900;
+    line-height: 16px;
+    min-width: 16px;
+    text-align: center;
+    box-shadow: 0 0 6px rgba(239,68,68,0.6);
+  }
+}

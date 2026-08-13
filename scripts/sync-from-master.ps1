@@ -64,6 +64,28 @@ $preservedList = @(
     'js\views\albaranes-ventas-view.js', # Libro de Ventas: tabla ERP
     'js\views\ajustes-view.js',          # Altas (finca/ADSG/especie) al formato de chip
     'js\guides\inicio-dashboard.js',  # Guía del Inicio/Dashboard (propia del desktop; el maestro no la trae)
+    # --- Guías re-apuntadas a la piel ERP (sidebar / erp-action-group). Sin esto, el
+    #     sync desde el mástro revertiría el re-apuntado (el mástro usa targets de carrusel). ---
+    'js\guides\comer-carne.js',
+    'js\guides\comer-compradores.js',
+    'js\guides\comer-contratos.js',
+    'js\guides\comer-leche.js',
+    'js\guides\comer-panoramica.js',
+    'js\guides\comer-transportistas.js',
+    'js\guides\expro-explotacion.js',
+    'js\guides\expro-fitosanitarios.js',
+    'js\guides\expro-gastos.js',
+    'js\guides\expro-lacteo.js',
+    'js\guides\expro-panoramica.js',
+    'js\guides\expro-proveedores.js',
+    'js\guides\expro-silos.js',
+    'js\guides\expro-tramites.js',
+    'js\guides\gegan-animales.js',
+    'js\guides\gegan-panoramica.js',
+    'js\guides\gegan-patrimonio.js',
+    'js\guides\gegan-rebanos.js',
+    'js\guides\gegan-zonas.js',
+    'js\guides\onboarding-primeros-pasos.js',
     'css\design-tokens.css',         # Paleta ERP profesional
     'css\erp-sidebar.css',           # Sidebar colapsable (solo desktop)
     'css\erp-data-table.css',        # Tablas densas ERP (solo desktop)
