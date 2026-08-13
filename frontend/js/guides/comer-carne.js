@@ -34,7 +34,7 @@
       {
         title: 'Resumen Comercial Cárnico',
         body: 'Tarjeta superior con 2 KPIs: **Ventas** (nº de animales/lotes vendidos) e **Ingreso** bruto total (verde neón). Gradiente verde lima, borde izquierdo verde lima neón. Click en chevron → despliega balance completo (5 KPIs: Peso Canal kg, Animales Vendidos, Rend. Promedio %, Ingreso Bruto, Margen Neto Real).',
-        target: '.card[style*="border-left: 4px solid var(--c-success)"]',
+        target: '[data-guide="resumen-comercial"]',
         waitFor: 1000,
         position: 'below'
       },

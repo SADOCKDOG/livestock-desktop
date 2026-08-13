@@ -73,9 +73,9 @@
         position: 'below'
       },
       {
-        title: 'Accesos directos a sub-vistas',
-        body: 'Botones rápidos: **Animales** (censo individual), **Rebaños** (lotes), **Zonas** (parcelas). Navegan a las pestañas correspondientes del carrusel GeGan.',
-        target: '.grid.grid-cols-3 a[href="#/animales"], .grid.grid-cols-3 a[href="#/rebanos"], .grid.grid-cols-3 a[href="#/zonas"]',
+        title: 'Acceso a las sub-vistas',
+        body: 'Desde el menú lateral llegas a **Animales** (censo individual), **Rebaños** (lotes) y **Zonas** (parcelas). En escritorio se accede siempre desde ahí: los antiguos botones de acceso rápido se retiraron por duplicar el menú.',
+        target: '.sidebar-group[data-group="gegan"] .sidebar-group-items',
         waitFor: 1000,
         position: 'below'
       },

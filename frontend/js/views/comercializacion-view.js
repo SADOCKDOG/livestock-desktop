@@ -342,7 +342,7 @@ const ComercializacionView = {
 
     // Tarjeta de Resumen Comercial Lácteo (cromo ERP neutro)
     const resumenLecheHtml = `
-      <div class="card p-16 mb-16 border-222 animate-fade-in" style="background: rgba(255,255,255,0.02); border-left: 4px solid var(--text-s);">
+      <div class="card p-16 mb-16 border-222 animate-fade-in" data-guide="resumen-comercial" style="background: rgba(255,255,255,0.02); border-left: 4px solid var(--text-s);">
         <div class="flex items-center gap-12 mb-10">
           <span class="text-3xl" style="color:var(--text-s);">${Icons.leche()}</span>
           <div>
@@ -420,7 +420,7 @@ const ComercializacionView = {
 
     // Tarjeta de Resumen Comercial Cárnico (cromo ERP neutro)
     const resumenCarneHtml = `
-      <div class="card p-16 mb-16 border-222 animate-fade-in" style="background: rgba(255,255,255,0.02); border-left: 4px solid var(--text-s);">
+      <div class="card p-16 mb-16 border-222 animate-fade-in" data-guide="resumen-comercial" style="background: rgba(255,255,255,0.02); border-left: 4px solid var(--text-s);">
         <div class="flex items-center gap-12 mb-10">
           <span class="text-3xl" style="color:var(--text-s);">${Icons.carne()}</span>
           <div>

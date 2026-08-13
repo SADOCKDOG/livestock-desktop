@@ -34,7 +34,7 @@
       {
         title: 'Resumen Comercial Lácteo',
         body: 'Tarjeta superior con 2 KPIs: **Entregas** (nº de cisternas/albaranes) y **Litros** totales del período. Gradiente azul, borde izquierdo azul neón. Click en chevron → despliega balance completo (4 KPIs: Total Litros, Cisternas, Alimentación Período, MOFA Real).',
-        target: '.card[style*="border-left: 4px solid var(--c-info)"]',
+        target: '[data-guide="resumen-comercial"]',
         waitFor: 1000,
         position: 'below'
       },

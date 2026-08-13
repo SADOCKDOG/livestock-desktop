@@ -69,8 +69,8 @@
       },
       {
         title: 'Cambio a pestaña Compradores',
-        body: 'Los botones "Compradores / Contratos" en la UI (si están visibles) cambian el módulo interno sin recargar. La guía se reinicia para Compradores.',
-        target: '[onclick*="_cambiarModulo(\'compradores\')"], [onclick*="CompradoresView._cambiarModulo"]',
+        body: 'Desde el menú lateral (CoMer) saltas entre **Compradores** y **Contratos** sin recargar. La guía se reinicia para Compradores.',
+        target: '.sidebar-link[data-route="/comercializacion?tab=compradores"]',
         waitFor: 1500,
         optional: true,
         optionalReason: 'Botones de cambio entre Contratos/Compradores - dependen de implementación UI',

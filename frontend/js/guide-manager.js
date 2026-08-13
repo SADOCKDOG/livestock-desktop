@@ -130,6 +130,18 @@
       const hub = guide && guide.route ? guide.route : null;
       if (hub) return '.sidebar-link[data-route="' + hub + '?tab=' + m[1] + '"]';
     }
+    // Ficha de un listado: en escritorio los módulos abren en Tabla ERP, así que
+    // las tarjetas ni siquiera se generan y el paso se quedaba sin elemento al
+    // que apuntar. Si no hay tarjeta visible pero sí una tabla pintada, se
+    // resalta su primera fila, que es el equivalente al registro de la ficha.
+    if (p.includes('.card-registro')) {
+      let hayTarjeta = false;
+      try { hayTarjeta = !!_qs(p); } catch (e) {}
+      if (!hayTarjeta) {
+        const fila = document.querySelector('.erp-data-table tbody tr');
+        if (fila) return '.erp-data-table tbody tr';
+      }
+    }
     return p;
   }
 
