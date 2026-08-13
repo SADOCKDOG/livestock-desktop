@@ -200,3 +200,17 @@ body[data-modo="claro"] .btn-erp-pagi {
   border-color: var(--border, #D6DCE3);
   color: var(--text, #1F2A37);
 }
+
+/* ---------------------------------------------------------------------------
+   Colores de campo heredados de las tarjetas
+   ---------------------------------------------------------------------------
+   Al pasar los listados de tarjetas a tabla, los campos conservan el color que
+   los identificaba: el identificador en dorado, los importes en verde, las
+   alertas en rojo. Se aplican con `cellClass` en la definición de columna.
+   --------------------------------------------------------------------------- */
+.erp-data-table td.erp-cell-id       { color: var(--p-gold, #E4B33E); font-weight: 900; }
+.erp-data-table td.erp-cell-ok       { color: var(--c-success, #15803D); font-weight: 800; }
+.erp-data-table td.erp-cell-alerta   { color: var(--c-danger, #DC2626); font-weight: 800; }
+.erp-data-table td.erp-cell-aviso    { color: var(--c-warning, #B45309); font-weight: 800; }
+.erp-data-table td.erp-cell-info     { color: var(--c-info, #1F5FA8); font-weight: 800; }
+.erp-data-table td.erp-cell-tenue    { color: var(--text-d, #777); }

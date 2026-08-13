@@ -177,9 +177,15 @@ class ErpDataTable {
                 <tr>
                   ${this.columns.map(col => {
                     const alignClass = col.align ? `text-${col.align}` : 'text-left';
+                    // col.cellClass permite conservar en la tabla el color que el
+                    // campo tenía en la tarjeta (identificador en dorado, importes
+                    // en verde, alertas en rojo…). Admite función (val, row).
+                    const extraClass = typeof col.cellClass === 'function'
+                      ? (col.cellClass(row[col.key], row) || '')
+                      : (col.cellClass || '');
                     const rawVal = row[col.key];
                     const renderedVal = col.render ? col.render(rawVal, row) : (rawVal !== null && rawVal !== undefined ? rawVal : '—');
-                    return `<td class="${alignClass}">${renderedVal}</td>`;
+                    return `<td class="${(alignClass + ' ' + extraClass).trim()}">${renderedVal}</td>`;
                   }).join('')}
                 </tr>
               `).join('') : `
