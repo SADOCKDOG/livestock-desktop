@@ -520,23 +520,71 @@ main#app-content.manual-open {
    acción de registro destaque sobre otra. Anula también el ámbar de
    neon-warning (Guía Mov.), que quedaría descolgado del conjunto.
    --------------------------------------------------------------------------- */
-.erp-action-group .widget-link-btn--neon {
+.widget-link-btn--neon {
   --neon-color: #d2d6dd;
   --neon-glow: rgba(210, 214, 221, 0.40);
   --neon-inner: rgba(210, 214, 221, 0.16);
 }
 /* ...pero el icono SVG conserva el color semántico de su variante, que es lo
    que permite distinguir una acción de otra de un vistazo. */
-.erp-action-group .neon-success { --icono-color: var(--c-success); }
-.erp-action-group .neon-info    { --icono-color: var(--c-info); }
-.erp-action-group .neon-accent  { --icono-color: var(--c-purple, #A855F7); }
-.erp-action-group .neon-warning { --icono-color: var(--c-warning); }
-.erp-action-group .neon-danger  { --icono-color: var(--c-danger); }
-.erp-action-group .neon-orange  { --icono-color: var(--c-orange); }
-.erp-action-group .widget-link-btn--neon svg {
+.neon-success { --icono-color: var(--c-success); }
+.neon-info    { --icono-color: var(--c-info); }
+.neon-accent  { --icono-color: var(--c-purple, #A855F7); }
+.neon-warning { --icono-color: var(--c-warning); }
+.neon-danger  { --icono-color: var(--c-danger); }
+.neon-orange  { --icono-color: var(--c-orange); }
+.neon-purple  { --icono-color: var(--c-purple, #A855F7); }
+.widget-link-btn--neon svg {
   color: var(--icono-color, #d2d6dd);
   stroke: var(--icono-color, #d2d6dd);
   filter: drop-shadow(0 0 6px var(--icono-color, rgba(210, 214, 221, 0.6)));
+}
+
+/* Tamaño estándar del chip en escritorio: fila compacta en vez del bloque
+   vertical a todo el ancho que usa el móvil. Vale para los chips sueltos
+   (Ajustes, acciones de ficha), no solo para los de dentro de un marco. */
+@media (min-width: 1024px) {
+  .widget-link-btn--neon {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    min-width: 0;
+    width: auto;
+    padding: 10px 20px;
+    gap: 10px;
+    border: none;
+    cursor: pointer;
+    /* sin salto de línea: el chip crece a lo ancho antes que a lo alto, para
+       que todos compartan los 40px de alto */
+    white-space: nowrap;
+  }
+  .widget-link-btn--neon svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  .widget-link-btn--neon .widget-link-label {
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  /* Algunos chips traen su propio padding en clases utilitarias (px-10 py-6,
+     h-auto…) que los descuadraba respecto al resto: gana el estándar. */
+  .widget-link-btn--neon.px-10,
+  .widget-link-btn--neon.h-auto,
+  .widget-link-btn--neon.py-6,
+  .widget-link-btn--neon.py-8,
+  .widget-link-btn--neon.py-14 {
+    padding: 10px 20px;
+    height: 40px;
+  }
+  /* Los bloques que colocaban un chip a todo el ancho pasan a alinearlo a la
+     izquierda con su tamaño propio. */
+  .grid > .widget-link-btn--neon {
+    justify-self: start;
+  }
 }
 
 /* Variante centrada del marco de acciones: se usa para las acciones de
