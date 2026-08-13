@@ -502,6 +502,9 @@ const ComercializacionView = {
           title: r.title,
           metadata: r.metadata,
           badge: r.badge,
+          // sin `tipo`: el badge de estas secciones no es una categoría
+          // (en Carne es el importe y en Leche viene con marcado), asi que el
+          // desplegable se oculta solo y queda solo el buscador de texto.
           color: color,
           onClick: r.onclick
         })).join('')
@@ -511,6 +514,10 @@ const ComercializacionView = {
       <div class="card p-14 border-222" style="background: rgba(255,255,255,0.02);">
         <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-10 pb-6">
           <span style="color: ${color}; margin-right: 4px;">|</span> ${Icons.documento()} ${listName}
+        </div>
+        <div class="erp-filtros" data-filtros-para="comer-registros-lista">
+          <input type="search" class="form-input search-input" placeholder="Buscar por comprador, fecha o cantidad...">
+          <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
         </div>
         <div class="grid gap-10" id="comer-registros-lista" data-ver-mas="10">
           ${recordsHtml}

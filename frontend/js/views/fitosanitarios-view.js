@@ -90,6 +90,10 @@ const FitosanitariosView = {
                   </div>
                 </fieldset>
 
+                <div class="erp-filtros" data-filtros-para="fito-lista">
+                  <input type="search" class="form-input search-input" placeholder="Buscar tratamiento por producto, parcela o fecha...">
+                  <select class="form-select" data-etiqueta-todos="Toda categoría"></select>
+                </div>
                 <div id="fito-lista" data-ver-mas="10">
                 ${this._cachedRegistros.length === 0 ? `
                 <div class="empty-state py-40 text-center">
@@ -98,9 +102,7 @@ const FitosanitariosView = {
                     <div class="text-center mt-20"><button class="widget-link-btn widget-link-btn--neon neon-success" onclick="FitosanitariosView._nuevoTratamiento()" data-guide="btn-vacio-fitosanitarios">${Icons.agregar()}<span class="widget-link-label">Registrar primer Tratamiento</span></button></div>
                 </div>
                 ` : `
-                <div class="flex flex-col gap-10">
-                    ${this._cachedRegistros.map(r => this._renderRegistroItem(r)).join('')}
-                </div>
+                ${this._cachedRegistros.map(r => this._renderRegistroItem(r)).join('')}
                 `}
                 </div>
                 <div id="fito-erp-table-container" class="mt-12" style="display:none;"></div>
@@ -116,7 +118,8 @@ const FitosanitariosView = {
 
     _renderRegistroItem(r) {
         return `
-        <div class="flex items-center justify-between gap-10 p-12 rounded-sm border border-222 hover:border-gray transition-all"
+        <div class="flex items-center justify-between gap-10 p-12 rounded-sm border border-222 hover:border-gray transition-all mb-10"
+             data-tipo="${r.categoria || r.tipo || 'tratamiento'}"
              style="background:var(--bg); border:1px solid #1c1c1c; cursor:pointer;"
              onclick="FitosanitariosView._abrirFichaTratamiento(${r.id})"
              title="Ver Ficha Técnica de Tratamiento">

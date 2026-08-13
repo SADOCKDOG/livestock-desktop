@@ -422,15 +422,12 @@ const ExplotacionView = {
         <div class="inf-section-title mb-10 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
           <span style="color: var(--c-success); margin-right: 4px;">|</span> ${Icons.documento()} ACTIVIDAD RECIENTE
         </div>
-        <div class="mb-10 relative">
-          <input type="text" id="expro-search-actividad" class="wizard-input font-bold uppercase py-12 px-16 pr-40 text-sm"
-                 placeholder="BUSCAR POR CROTAL O ZONA..." value="${this._filtroActividad}"
+        <div class="erp-filtros" data-filtros-de="expro-actividad-grid">
+          <input type="search" id="expro-search-actividad" class="form-input search-input"
+                 placeholder="Buscar por crotal o zona..." value="${this._filtroActividad}"
                  oninput="ExplotacionView._filtrarActividad(this.value)">
-          <div style="position:absolute; right:15px; top:50%; transform:translateY(-50%); pointer-events:none; color:${metaRef.color};">
-            ${Icons.buscar()}
-          </div>
         </div>
-        <div class="grid gap-10" id="expro-actividad-grid">
+        <div class="grid gap-10" id="expro-actividad-grid" data-ver-mas="10">
           ${this._renderActividadItems()}
         </div>
       </div>`;

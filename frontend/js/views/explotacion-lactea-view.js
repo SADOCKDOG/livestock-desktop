@@ -235,7 +235,7 @@ window.ExplotacionLacteaView = {
     const analiticasHtml = analiticas.slice(0, 20).map(a => {
       const estadoColor = a.estado === 'validado' ? 'var(--c-success)' : (a.estado === 'alerta' ? 'var(--c-warning)' : 'var(--c-danger)');
       return `
-        <div class="card p-12 mb-10" style="border-left: 3px solid var(--c-accent);">
+        <div class="card p-12 mb-10" data-tipo="${a.tipo_muestreo || 'autocontrol'}" style="border-left: 3px solid var(--c-accent);">
           <div class="flex items-center justify-between mb-6">
             <div class="text-sm font-900 uppercase">${a.tipo_muestreo || 'Autocontrol'} — ${UI.formatDate(a.fecha_muestreo)}</div>
             <span class="badge badge-sm" style="background: ${estadoColor}15; color: ${estadoColor}; border: 1px solid ${estadoColor}40; font-size: 0.6rem; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 6px;">${a.estado}</span>
@@ -271,7 +271,7 @@ window.ExplotacionLacteaView = {
     }).join('');
 
     const controlLecheroHtml = controlLechero.slice(0, 10).map(c => `
-      <div class="card p-12 mb-10" style="border-left: 3px solid var(--c-purple);">
+      <div class="card p-12 mb-10" data-tipo="${c.organismo_control || 'DHI'}" style="border-left: 3px solid var(--c-purple);">
         <div class="flex items-center justify-between mb-6">
           <div class="text-sm font-900 uppercase">Control Lechero — ${UI.formatDate(c.fecha_control)}</div>
           <span class="badge badge-sm badge-purple" style="font-size: 0.6rem; font-weight: 900; text-transform: uppercase; padding: 2px 8px; border-radius: 6px;">${c.organismo_control || 'DHI'}</span>
@@ -317,12 +317,24 @@ window.ExplotacionLacteaView = {
         <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-10 pb-5" style="display: flex; align-items: center; gap: 4px; margin-top: 15px;">
           ${Icons.analitica()} Analíticas de Leche
         </div>
+        <div class="erp-filtros" data-filtros-para="lacteo-analiticas-lista">
+          <input type="search" class="form-input search-input" placeholder="Buscar analítica por fecha, laboratorio o estado...">
+          <select class="form-select" data-etiqueta-todos="Todo muestreo"></select>
+        </div>
+        <div id="lacteo-analiticas-lista" data-ver-mas="10">
         ${analiticasHtml || '<div class="p-14 text-center bg-dark rounded-sm border border-222"><span class="text-555 text-xs uppercase font-900 tracking-widest">Sin analíticas registradas</span></div>'}
+        </div>
 
         <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-10 pb-5" style="display: flex; align-items: center; gap: 4px; margin-top: 15px;">
           ${Icons.documento()} Controles Oficiales (DHI)
         </div>
+        <div class="erp-filtros" data-filtros-para="lacteo-controles-lista">
+          <input type="search" class="form-input search-input" placeholder="Buscar control por fecha u organismo...">
+          <select class="form-select" data-etiqueta-todos="Todo organismo"></select>
+        </div>
+        <div id="lacteo-controles-lista" data-ver-mas="10">
         ${controlLecheroHtml || '<div class="p-14 text-center bg-dark rounded-sm border border-222"><span class="text-555 text-xs uppercase font-900 tracking-widest">Sin controles lecheros registrados</span></div>'}
+        </div>
       </div>
     `;
   },
@@ -337,7 +349,7 @@ window.ExplotacionLacteaView = {
       const icon = m.tipo_movimiento === 'entrada' ? '↓' : (m.tipo_movimiento === 'salida' ? '↑' : '•');
       const color = m.tipo_movimiento === 'entrada' ? 'var(--c-success)' : 'var(--c-danger)';
       return `
-        <div class="card p-10 mb-8" style="border-left: 3px solid ${color};">
+        <div class="card p-10 mb-8" data-tipo="${m.tipo_movimiento || 'otro'}" style="border-left: 3px solid ${color};">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-sm font-900" style="color: ${color};">${icon} ${m.tipo_movimiento.toUpperCase()}</div>
@@ -377,7 +389,13 @@ window.ExplotacionLacteaView = {
           </div>
         </fieldset>
 
+        <div class="erp-filtros" data-filtros-para="lacteo-movimientos-lista">
+          <input type="search" class="form-input search-input" placeholder="Buscar movimiento por fecha, litros o referencia...">
+          <select class="form-select" data-etiqueta-todos="Todo movimiento"></select>
+        </div>
+        <div id="lacteo-movimientos-lista" data-ver-mas="10">
         ${movimientosHtml || '<div class="p-14 text-center bg-dark rounded-sm border border-222"><span class="text-555 text-xs uppercase font-900 tracking-widest">Sin movimientos registrados</span></div>'}
+        </div>
       </div>
     `;
   },

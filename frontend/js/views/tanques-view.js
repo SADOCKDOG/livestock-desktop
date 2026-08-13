@@ -19,7 +19,12 @@ window.TanquesView = {
         <div class="erp-action-group-body">
           <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="window.TanqueWizard.open()">${Icons.agregar()}<span class="widget-link-label">Nuevo Tanque</span></button>
         </div>
-      </fieldset>`;
+      </fieldset>
+      <div class="erp-filtros" data-filtros-para="tanques-lista">
+        <input type="search" class="form-input search-input" placeholder="Buscar tanque por nombre, código Letra Q o estado...">
+        <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
+      </div>
+      <div id="tanques-lista" data-ver-mas="10">`;
 
     if (tanques.length === 0) {
       html += `
@@ -57,7 +62,7 @@ window.TanquesView = {
       }
 
       html += `
-      <div class="card p-14 mb-12" style="border-left:3px solid var(--c-info);">
+      <div class="card p-14 mb-12" data-tipo="${t.estado || 'sin estado'}" style="border-left:3px solid var(--c-info);">
         <div class="flex items-center justify-between mb-10">
           <div>
             <div class="text-sm font-900 uppercase">${t.nombre}</div>
@@ -107,7 +112,7 @@ window.TanquesView = {
       </div>`;
     }
 
-    html += `</div>`;
+    html += `</div></div>`;
     container.innerHTML = html;
   }
 };
