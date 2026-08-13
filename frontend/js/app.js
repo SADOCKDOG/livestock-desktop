@@ -165,6 +165,7 @@ const App = {
       App._setupHeaderContextClick();
       App._setupHardwareBackButton();
       App._setupSidebar();
+      App._observarVerMas();
       await App._ejecutarMigracionesFondo();
       App._initScrollShadows();
       // Cargar preferencias visuales
@@ -618,6 +619,7 @@ const App = {
     this._renderSidebarStatus();
     if (!this._statusBound) {
       window.addEventListener('fincaChanged', () => this._renderSidebarStatus());
+      window.addEventListener('premiumChanged', () => this._renderSidebarStatus());
       this._statusBound = true;
     }
 
@@ -792,7 +794,9 @@ const App = {
     const el = document.getElementById('sidebarStatus');
     if (!el) return;
     const version = (window.APP_INFO && window.APP_INFO.version) || '';
-    const isFree = !!(window.PremiumManager && window.PremiumManager.isFree);
+    const isFree = !window.PremiumManager || typeof window.PremiumManager.isFree !== 'function'
+      ? true
+      : window.PremiumManager.isFree();
     const plan = isFree ? 'Free' : 'Premium';
     const planClass = isFree ? 'ss-plan-free' : 'ss-plan-premium';
     let fincaNombre = 'Sin finca';
@@ -1196,7 +1200,7 @@ const App = {
     }
 
     return `
-      <${tag} ${href} ${onClick} class="${className}" style="display:flex; gap:10px; align-items:stretch; cursor:pointer; --registro-color: ${color}; border-top:0; border-right:0; border-bottom:0; ${customStyle}">
+      <${tag} ${href} ${onClick} class="${className}"${opts.tipo ? ` data-tipo="${opts.tipo}"` : ''} style="display:flex; gap:10px; align-items:stretch; cursor:pointer; --registro-color: ${color}; border-top:0; border-right:0; border-bottom:0; ${customStyle}">
         <!-- BLOQUE IZQUIERDO -->
         <div class="flex-1 min-w-0 flex flex-col justify-center">
           ${leftColumnContent}
@@ -1584,6 +1588,12 @@ const App = {
           if (main) main.scrollTop = 0;
         }
 
+        // Listados largos: filtros de búsqueda/tipo y recorte a los N primeros
+        try { this._recolocarMarcoRegistro(main); } catch (e) { console.warn('[Marco]', e); }
+        try { this._recolocarToggleVista(main); } catch (e) { console.warn('[Toggle]', e); }
+        try { this.aplicarFiltrosListadoAuto(main); } catch (e) { console.warn('[Filtros]', e); }
+        try { this.aplicarVerMasAuto(main); } catch (e) { console.warn('[VerMas]', e); }
+
         // Animación de entrada entre rutas
         main.classList.add('route-enter');
         main.addEventListener('animationend', () => main.classList.remove('route-enter'), { once: true });
@@ -1674,6 +1684,174 @@ const App = {
    * @param {string|null} tab - Clave del sub-módulo (ej: 'animales', 'silos') o null para panorámica
    * @param {HTMLElement} [container=document.body] - Contenedor donde insertar el FAB
    */
+  /** Baja el marco de acciones de registro desde la cabecera del módulo hasta
+   *  justo encima del listado al que pertenece (fila de filtros, listado o
+   *  tabla, lo que aparezca primero). Así el botón de alta queda pegado a los
+   *  registros que crea, en vez de flotando junto a la tarjeta de cabecera.
+   *  Se excluyen los marcos de acciones generales del módulo, que no cuelgan de
+   *  ningún listado concreto y se marcan con `.erp-action-group--modulo`. */
+  _recolocarMarcoRegistro(raiz = document) {
+    raiz.querySelectorAll('.erp-action-group:not(.erp-action-group--modulo)').forEach((marco) => {
+      // Primer destino que aparezca DESPUÉS del marco: buscador del listado,
+      // listado recortable o tabla ERP. Buscar solo hacia delante evita que en
+      // vistas con varios listados (Sanidad) el marco suba al listado equivocado.
+      const destino = Array.from(
+        raiz.querySelectorAll('.erp-filtros, [data-ver-mas], [id$="-erp-table-container"]')
+      ).find((el) => marco.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING
+        && !marco.contains(el));
+      if (!destino) return;                          // marco sin listado propio: se queda
+      if (destino.previousElementSibling === marco) return;  // ya está en su sitio
+      destino.parentElement.insertBefore(marco, destino);
+    });
+  },
+
+  /** Recoloca el conmutador Tarjetas / Tabla ERP en su sitio canónico: justo
+   *  encima del marco de acciones de registro (y por tanto debajo de la tarjeta
+   *  de cabecera y de las alertas). Son controles de VISTA, no de registro, así
+   *  que no deben mezclarse con los botones de alta ni quedar sueltos junto al
+   *  título del listado, que es donde cada vista los colocaba por su cuenta. */
+  _recolocarToggleVista(raiz = document) {
+    const btn = raiz.querySelector('[id$="-vista-cards"]');
+    if (!btn) return;
+    const contenedor = btn.parentElement;
+    const marco = raiz.querySelector('.erp-action-group');
+    if (!contenedor || !marco || contenedor.contains(marco)) return;
+    contenedor.classList.add('erp-vista-toggle');
+    if (marco.previousElementSibling === contenedor) return;
+    marco.parentElement.insertBefore(contenedor, marco);
+  },
+
+  /** Engancha una fila de filtros `.erp-filtros[data-filtros-para="idListado"]`
+   *  al listado indicado: el buscador oculta las tarjetas cuyo texto no coincide
+   *  y el desplegable filtra por su atributo `data-tipo`. El desplegable se
+   *  puebla solo con los tipos presentes; si ninguna tarjeta declara `data-tipo`,
+   *  se oculta. Filtra en el DOM, así que no hace falta re-renderizar la vista. */
+  aplicarFiltrosListado(fila) {
+    if (!fila || fila.dataset.filtrosAplicados === '1') return;
+    const lista = document.getElementById(fila.dataset.filtrosPara);
+    if (!lista) return;
+    fila.dataset.filtrosAplicados = '1';
+
+    const input = fila.querySelector('input');
+    const select = fila.querySelector('select');
+    const items = () => Array.from(lista.children).filter((el) => !el.classList.contains('erp-ver-mas'));
+
+    // Poblar el desplegable con los tipos que realmente hay en los datos
+    if (select) {
+      const tipos = [...new Set(items().map((el) => el.dataset.tipo).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'es'));
+      if (!tipos.length) {
+        select.style.display = 'none';
+      } else {
+        select.innerHTML = '<option value="">' + (select.dataset.etiquetaTodos || 'Todos los tipos') + '</option>'
+          + tipos.map((t) => '<option value="' + t + '">' + t.toUpperCase() + '</option>').join('');
+      }
+    }
+
+    const filtrar = () => {
+      const texto = (input && input.value || '').trim().toLowerCase();
+      const tipo = (select && select.value) || '';
+      let visibles = 0;
+      items().forEach((el) => {
+        const coincideTexto = !texto || (el.textContent || '').toLowerCase().includes(texto);
+        const coincideTipo = !tipo || el.dataset.tipo === tipo;
+        const ok = coincideTexto && coincideTipo;
+        el.dataset.filtrado = ok ? '' : '1';
+        if (ok) visibles++;
+      });
+      // Al filtrar se muestran todas las coincidencias: el recorte de 10 se
+      // recalcula sobre el subconjunto resultante.
+      lista.dataset.verMasAplicado = '';
+      this.aplicarVerMas(lista);
+      // ...y las descartadas por el filtro se ocultan pase lo que pase
+      items().forEach((el) => { if (el.dataset.filtrado === '1') el.style.display = 'none'; });
+
+      const vacio = fila.parentElement && fila.parentElement.querySelector('[data-filtros-vacio]');
+      if (vacio) vacio.style.display = visibles === 0 ? '' : 'none';
+    };
+
+    if (input) input.addEventListener('input', filtrar);
+    if (select) select.addEventListener('change', filtrar);
+  },
+
+  /** Engancha todas las filas de filtros de la vista recién pintada. */
+  aplicarFiltrosListadoAuto(raiz = document) {
+    raiz.querySelectorAll('.erp-filtros[data-filtros-para]').forEach((f) => {
+      this.aplicarFiltrosListado(f);
+      this._sincronizarVisibilidadFiltros(f, f.dataset.filtrosPara);
+    });
+    // Filas de filtros que la propia vista ya gestiona (tienen su handler): no
+    // se les engancha nada, solo se ocultan cuando manda la tabla ERP.
+    raiz.querySelectorAll('.erp-filtros[data-filtros-de]').forEach((f) => {
+      this._sincronizarVisibilidadFiltros(f, f.dataset.filtrosDe);
+    });
+  },
+
+  /** La tabla ERP trae su propio buscador: si el listado de tarjetas está
+   *  oculto (toggle Tarjetas/Tabla), la fila de filtros sobra y se esconde. */
+  _sincronizarVisibilidadFiltros(fila, idLista) {
+    const lista = document.getElementById(idLista);
+    fila.style.display = (lista && lista.style.display === 'none') ? 'none' : '';
+  },
+
+  /** Limita visualmente un listado a los `limite` primeros registros (los más
+   *  recientes, porque los listados llegan ordenados de nuevo a antiguo) y
+   *  añade debajo un botón «Ver más» que revela el resto.
+   *  Se aplica solo a contenedores marcados con data-ver-mas="N". */
+  aplicarVerMas(contenedor, limite) {
+    const cont = typeof contenedor === 'string' ? document.getElementById(contenedor) : contenedor;
+    if (!cont) return;
+    const n = Number(limite || cont.dataset.verMas || 10);
+    const previo = cont.nextElementSibling;
+    if (previo && previo.classList && previo.classList.contains('erp-ver-mas')) previo.remove();
+
+    const items = Array.from(cont.children);
+    items.forEach((el, i) => { el.style.display = i < n ? '' : 'none'; });
+    if (items.length <= n) return;
+
+    const pie = document.createElement('div');
+    pie.className = 'erp-ver-mas';
+    const restantes = items.length - n;
+    pie.innerHTML = '<button type="button" class="btn-erp-secondary btn-sm">'
+      + 'Ver más <span class="erp-ver-mas-count">(' + restantes + ' ' + (restantes === 1 ? 'registro' : 'registros') + ' más)</span>'
+      + '</button>';
+    pie.querySelector('button').addEventListener('click', () => {
+      items.forEach((el) => { el.style.display = ''; });
+      pie.remove();
+    });
+    cont.insertAdjacentElement('afterend', pie);
+  },
+
+  /** Aplica «Ver más» a todos los listados marcados de la vista recién pintada. */
+  aplicarVerMasAuto(raiz = document) {
+    raiz.querySelectorAll('[data-ver-mas]').forEach((cont) => {
+      if (cont.dataset.verMasAplicado === '1') return;
+      cont.dataset.verMasAplicado = '1';
+      this.aplicarVerMas(cont);
+    });
+  },
+
+  /** Observa #app-content para recortar también los listados que repintan las
+   *  propias vistas (buscadores, cambios de pestaña, toggle Tarjetas/Tabla),
+   *  que no pasan por route(). Cada contenedor se procesa una sola vez. */
+  _observarVerMas() {
+    if (this._verMasObserver) return;
+    const main = document.getElementById('app-content');
+    if (!main || typeof MutationObserver === 'undefined') return;
+    this._verMasObserver = new MutationObserver(() => {
+      if (this._verMasPendiente) return;
+      this._verMasPendiente = true;
+      requestAnimationFrame(() => {
+          this._verMasPendiente = false;
+        try { this._recolocarMarcoRegistro(main); } catch (e) { console.warn('[Marco]', e); }
+        try { this._recolocarToggleVista(main); } catch (e) { console.warn('[Toggle]', e); }
+        try { this.aplicarFiltrosListadoAuto(main); } catch (e) { console.warn('[Filtros]', e); }
+        try { this.aplicarVerMasAuto(main); } catch (e) { console.warn('[VerMas]', e); }
+      });
+    });
+    this._verMasObserver.observe(main, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+  },
+
   renderGuideFab(route, tab, container = document.body) {
     // Se retira siempre primero: al cambiar de tab el FAB anterior apuntaría a la guía
     // del tab que se acaba de abandonar, y si el nuevo tab no tiene guía debe desaparecer.

@@ -196,7 +196,7 @@ const DocumentosView = {
       this._setupFilters();
 
       // Restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px)
-      const modoGuardado = localStorage.getItem('documentos_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+      const modoGuardado = localStorage.getItem('documentos_view_mode') || 'tabla';
       this._setVistaModo(modoGuardado, false);
     } catch (e) {
       console.error('[Documentos] Error:', e);

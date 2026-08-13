@@ -13,15 +13,20 @@ window.TanquesView = {
     <div class="p-16">
       <div class="flex items-center justify-between mb-16">
         <h2 class="text-lg font-900 uppercase tracking-tight" style="color:var(--c-info);">Tanques de Leche</h2>
-        <button onclick="window.TanqueWizard.open()" class="text-xs px-12 py-6 font-900 uppercase" style="background:var(--c-info); color:#000; border:none; border-radius:6px;">+ Nuevo Tanque</button>
-      </div>`;
+      </div>
+      <fieldset class="erp-action-group">
+        <legend>Registro de Tanques</legend>
+        <div class="erp-action-group-body">
+          <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="window.TanqueWizard.open()">${Icons.agregar()}<span class="widget-link-label">Nuevo Tanque</span></button>
+        </div>
+      </fieldset>`;
 
     if (tanques.length === 0) {
       html += `
       <div class="card p-30 text-center">
         <div class="text-aaa text-sm mb-12">No hay tanques registrados</div>
         <div class="text-[0.6rem] text-666 mb-16">Registra los tanques de frío de tu explotación con su código oficial Letra Q para poder comercializar leche.</div>
-        <button onclick="window.TanqueWizard.open()" class="px-20 py-10 font-900" style="background:var(--c-info); color:#000; border:none; border-radius:6px;">Nuevo primer Tanque</button>
+        <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="window.TanqueWizard.open()">${Icons.agregar()}<span class="widget-link-label">Nuevo primer Tanque</span></button>
       </div>`;
     }
 
@@ -96,8 +101,8 @@ window.TanquesView = {
         ${historialHtml}
 
         <div class="flex gap-6 mt-10">
-          <button onclick='window.TanqueWizard.open(${JSON.stringify(t)})' class="text-[0.55rem] font-800 px-8 py-4 rounded-sm" style="background:var(--c-222); color:var(--c-aaa);">Editar</button>
-          ${t.estado === 'activo' ? `<button onclick="window.TanquesLeche.registrarLimpieza(${t.id})" class="text-[0.55rem] font-800 px-8 py-4 rounded-sm" style="background:var(--c-success)20; color:var(--c-success);">Registrar Limpieza</button>` : ''}
+          <button onclick='window.TanqueWizard.open(${JSON.stringify(t)})' class="btn-erp-secondary btn-sm">Editar</button>
+          ${t.estado === 'activo' ? `<button onclick="window.TanquesLeche.registrarLimpieza(${t.id})" class="btn-erp-secondary btn-sm">Registrar Limpieza</button>` : ''}
         </div>
       </div>`;
     }

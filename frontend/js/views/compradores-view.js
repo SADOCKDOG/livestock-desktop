@@ -71,9 +71,12 @@ const CompradoresView = {
             <div class="text-[0.6rem] text-gray uppercase font-900">Activos: <strong class="text-success">${this._cachedCompradores?.filter(c => c.activo !== false).length || 0}</strong></div>
           </div>
         </div>
-        <div class="module-header-primary-action">
-          <button class="btn btn-create btn-lg w-full" onclick="CompradoresView._crearComprador()">${Icons.agregar()} Nuevo Comprador</button>
-        </div>
+        <fieldset class="erp-action-group">
+          <legend>Registro de Compradores</legend>
+          <div class="erp-action-group-body">
+            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="CompradoresView._crearComprador()">${Icons.agregar()}<span class="widget-link-label">Nuevo Comprador</span></button>
+          </div>
+        </fieldset>
       </div>
 
       <!-- Evolución Mensual -->
@@ -162,7 +165,7 @@ const CompradoresView = {
       this._renderListaCompradores(this._cachedData.compradores);
 
       // Restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px)
-      const modoGuardado = localStorage.getItem('compradores_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+      const modoGuardado = localStorage.getItem('compradores_view_mode') || 'tabla';
       this._setVistaModo(modoGuardado, false);
     } else {
       this._cachedData = { contratos: this._filtrarContratos(this._cachedContratos || []) };
@@ -342,7 +345,7 @@ const CompradoresView = {
         <div class="empty-state">
           <div class="empty-state-icon">${Icons.edificio()}</div>
           <p class="empty-state-text">${this._cachedCompradores?.length === 0 ? 'Aún no hay compradores registrados.' : 'No hay compradores con ese filtro.'}</p>
-          <button class="btn btn-create btn-sm" onclick="CompradoresView.renderFormulario()" data-guide="btn-vacio-compradores">${Icons.agregar()} Nuevo primer Comprador</button>
+          <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="CompradoresView.renderFormulario()" data-guide="btn-vacio-compradores">${Icons.agregar()}<span class="widget-link-label">Nuevo primer Comprador</span></button>
         </div>`;
       return;
     }
@@ -460,7 +463,7 @@ const CompradoresView = {
       title: 'Compradores',
       pageSize: 15,
       columns: [
-        { key: 'nombre', label: 'Nombre', sortable: true },
+        { key: 'nombre', label: 'Nombre', sortable: true, cellClass: 'erp-cell-id' },
         { key: 'nif_cif', label: 'NIF/CIF', sortable: true },
         { key: 'ciudad', label: 'Ciudad', sortable: true },
         {
@@ -498,7 +501,7 @@ const CompradoresView = {
         <div class="empty-state">
           <div class="empty-state-icon">${Icons.contratos()}</div>
           <p class="empty-state-text">Aún no hay contratos registrados.</p>
-          <button class="btn btn-create btn-sm" style="background:var(--c-success);" onclick="CompradoresView._nuevoContratoLibre()" data-guide="btn-vacio-contratos">${Icons.agregar()} Nuevo primer Contrato</button>
+          <button class="widget-link-btn widget-link-btn--neon neon-success" style="background:var(--c-success);" onclick="CompradoresView._nuevoContratoLibre()" data-guide="btn-vacio-contratos">${Icons.agregar()}<span class="widget-link-label">Nuevo primer Contrato</span></button>
         </div>`;
       return;
     }

@@ -71,9 +71,6 @@ const RebanosView = {
             <div class="text-[0.6rem] text-gray uppercase font-900">Activos: <strong class="text-success">${rebanosActivos}</strong></div>
           </div>
         </div>
-        <div class="module-header-primary-action">
-          <button class="btn btn-create btn-lg w-full" data-guide="btn-nuevo-rebano" onclick="RebanosView._crearRebano()">${Icons.agregar()} Nuevo Rebaño</button>
-        </div>
       </div>
 
       ${window.ModoContextoHelper.bannerOcultosPorModo(ocultosPorModo, 'rebaño', 'rebaños')}
@@ -116,6 +113,13 @@ const RebanosView = {
 
       <div class="mb-14">
         <!-- Filtro de búsqueda e interruptor de vista (Tarjetas / Tabla ERP) -->
+        <fieldset class="erp-action-group">
+          <legend>Registro de Rebaños</legend>
+          <div class="erp-action-group-body">
+            <button class="widget-link-btn widget-link-btn--neon neon-success" data-guide="btn-nuevo-rebano" onclick="RebanosView._crearRebano()">${Icons.agregar()}<span class="widget-link-label">Nuevo Rebaño</span></button>
+          </div>
+        </fieldset>
+
         <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-10 pb-5" style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
           <span style="display: flex; align-items: center; gap: 4px;">${Icons.rebanos()} LISTA DE REBAÑOS</span>
           <div class="flex gap-4">
@@ -139,7 +143,7 @@ const RebanosView = {
     this._renderLista();
 
     // Inicializar o restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px)
-    const modoGuardado = localStorage.getItem('rebanos_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+    const modoGuardado = localStorage.getItem('rebanos_view_mode') || 'tabla';
     RebanosView._setVistaModo(modoGuardado, false);
 
     // FAB Guía interactiva
@@ -256,7 +260,7 @@ const RebanosView = {
 
     // Volver a renderizar la lista
     this._renderLista();
-    const modoGuardado = localStorage.getItem('rebanos_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+    const modoGuardado = localStorage.getItem('rebanos_view_mode') || 'tabla';
     if (modoGuardado === 'tabla') {
       this._renderErpTable();
     }
@@ -307,7 +311,7 @@ const RebanosView = {
       title: 'Rebaños',
       pageSize: 15,
       columns: [
-        { key: 'nombre', label: 'Nombre / Lote', sortable: true },
+        { key: 'nombre', label: 'Nombre / Lote', sortable: true, cellClass: 'erp-cell-id' },
         { key: 'especie', label: 'Especie', sortable: true },
         { key: 'tipo', label: 'Tipo Producción', sortable: true },
         { key: 'codigo_lote', label: 'Código Lote', sortable: true },

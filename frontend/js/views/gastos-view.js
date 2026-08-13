@@ -149,7 +149,7 @@ const GastosView = {
     });
 
     // Restaurar modo de vista tras pintar la sección (por defecto "tabla" en escritorio ≥ 1024px)
-    const modo = this._vistaModo || localStorage.getItem('gastos_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+    const modo = this._vistaModo || localStorage.getItem('gastos_view_mode') || 'tabla';
     this._setVistaModo(modo, false);
   },
 
@@ -168,9 +168,12 @@ const GastosView = {
       : `<div class="p-14 text-center bg-dark rounded-sm border border-222"><span class="text-555 text-xs uppercase font-900 tracking-widest">${Icons.buscar()} ${emptyMsg}</span></div>`;
 
     content.innerHTML = `
-      <div class="module-header-primary-action">
-        <button class="btn btn-create btn-lg w-full" onclick="${registrarHandler}">${Icons.agregar()} Registrar ${registrarLabel}</button>
-      </div>
+      <fieldset class="erp-action-group">
+        <legend>Registro de ${registrarLabel}</legend>
+        <div class="erp-action-group-body">
+          <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="${registrarHandler}">${Icons.agregar()}<span class="widget-link-label">Registrar ${registrarLabel}</span></button>
+        </div>
+      </fieldset>
       <div class="card">
         <div class="flex items-center gap-12 mb-12">
           <div class="text-white font-900 uppercase text-lg tracking-wider">

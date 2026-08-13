@@ -83,14 +83,19 @@ const FitosanitariosView = {
                         <button class="btn-erp-secondary btn-sm" id="btn-fito-vista-tabla" onclick="FitosanitariosView._setVistaModo('tabla')">Tabla ERP</button>
                     </span>
                 </h3>
-                <div class="module-header-primary-action"><button class="btn btn-create btn-lg w-full" data-guide="btn-nuevo-registro" onclick="FitosanitariosView._nuevoTratamiento()">${Icons.agregar()} Nuevo Registro</button></div>
+                <fieldset class="erp-action-group">
+                  <legend>Registro de Tratamientos Fitosanitarios</legend>
+                  <div class="erp-action-group-body">
+                    <button class="widget-link-btn widget-link-btn--neon neon-success" data-guide="btn-nuevo-registro" onclick="FitosanitariosView._nuevoTratamiento()">${Icons.agregar()}<span class="widget-link-label">Registrar Tratamiento</span></button>
+                  </div>
+                </fieldset>
 
                 <div id="fito-lista">
                 ${this._cachedRegistros.length === 0 ? `
                 <div class="empty-state py-40 text-center">
                     <div class="empty-state-icon mb-10" style="color:var(--c-success);">${Icons.fitosanitario()}</div>
                     <p class="empty-state-text text-gray-500 font-bold uppercase text-xs">No hay registros fitosanitarios cargados en esta finca.</p>
-                    <div class="text-center mt-20"><button class="btn btn-create btn-lg" onclick="FitosanitariosView._nuevoTratamiento()" data-guide="btn-vacio-fitosanitarios">${Icons.agregar()} Nuevo Registro</button></div>
+                    <div class="text-center mt-20"><button class="widget-link-btn widget-link-btn--neon neon-success" onclick="FitosanitariosView._nuevoTratamiento()" data-guide="btn-vacio-fitosanitarios">${Icons.agregar()}<span class="widget-link-label">Registrar primer Tratamiento</span></button></div>
                 </div>
                 ` : `
                 <div class="flex flex-col gap-10">
@@ -105,7 +110,7 @@ const FitosanitariosView = {
         `;
 
         // Restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px)
-        const modoGuardado = localStorage.getItem('fitosanitarios_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+        const modoGuardado = localStorage.getItem('fitosanitarios_view_mode') || 'tabla';
         this._setVistaModo(modoGuardado, false);
     },
 

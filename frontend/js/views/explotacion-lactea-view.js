@@ -3,6 +3,59 @@
  * Módulo Lácteo Integral (v24)
  */
 window.ExplotacionLacteaView = {
+
+  // ── Acciones sobre los registros de Láctea ────────────────────────────────
+  // Hasta ahora las analíticas y los movimientos de balance se pintaban en
+  // modo consulta: no había forma de abrirlos ni corregirlos desde la interfaz.
+
+  /** Abre una analítica existente en el asistente, en modo edición. */
+  async _editarAnalitica(id) {
+    try {
+      const analitica = await window.AnaliticasLeche.getById(Number(id));
+      if (!analitica) return App.toastError('La analítica ya no existe');
+      await window.AnaliticaLecheWizard.open(analitica);
+    } catch (e) {
+      App.toastError(e.message);
+    }
+  },
+
+  /** Elimina una analítica, previa confirmación. */
+  async _eliminarAnalitica(id) {
+    const ok = await Confirm.confirm('Eliminar analítica', '¿Eliminar esta analítica del control lechero? La acción no se puede deshacer.', true);
+    if (!ok) return;
+    try {
+      await window.db.delete('analiticas_leche', Number(id));
+      App.toast('Analítica eliminada', 'success');
+      App.route();
+    } catch (e) {
+      App.toastError(e.message);
+    }
+  },
+
+  /** Abre un movimiento de balance existente en el asistente, en modo edición. */
+  async _editarMovimiento(id) {
+    try {
+      const mov = await window.BalanceLacteo.getById(Number(id));
+      if (!mov) return App.toastError('El movimiento ya no existe');
+      await window.MovimientoBalanceWizard.open(mov);
+    } catch (e) {
+      App.toastError(e.message);
+    }
+  },
+
+  /** Elimina un movimiento de balance. El stock del tanque se recalcula solo,
+   *  porque se deriva de la suma de movimientos. */
+  async _eliminarMovimiento(id) {
+    const ok = await Confirm.confirm('Eliminar movimiento', '¿Eliminar este movimiento de balance? El stock del tanque se recalculará automáticamente.', true);
+    if (!ok) return;
+    try {
+      await window.BalanceLacteo.eliminar(Number(id));
+      App.toast('Movimiento eliminado', 'success');
+      App.route();
+    } catch (e) {
+      App.toastError(e.message);
+    }
+  },
   async render(container) {
     const App = window.App;
     const fincaId = await window.Fincas.getActiveId();
@@ -95,7 +148,7 @@ window.ExplotacionLacteaView = {
           </div>
         </div>
         <div class="flex gap-6 mt-8">
-          <button onclick="window.TanqueWizard.open(${JSON.stringify(t).replace(/"/g, '&quot;')})" class="text-[0.55rem] font-800 px-8 py-4 rounded-sm" style="background:var(--c-222); color:var(--c-aaa);">Editar</button>
+          <button onclick="window.TanqueWizard.open(${JSON.stringify(t).replace(/"/g, '&quot;')})" class="btn-erp-secondary btn-sm">Editar</button>
         </div>
       </div>`;
     }
@@ -104,6 +157,7 @@ window.ExplotacionLacteaView = {
       html += `
       <div class="card p-20 text-center">
         <div class="text-aaa text-xs mb-8">No hay tanques registrados</div>
+        <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="location.hash='/explotacion?tab=lacteo&sub=tanques'">${Icons.agregar()}<span class="widget-link-label">Nuevo primer Tanque</span></button>
       </div>`;
     }
 
@@ -251,8 +305,14 @@ window.ExplotacionLacteaView = {
               <div class="text-gray" style="font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Analíticas y controles oficiales</div>
             </div>
           </div>
-          <button onclick="window.AnaliticaLecheWizard.open()" class="text-xs px-12 py-6 font-900 uppercase" style="background:var(--c-accent); color:#000; border:none; border-radius:6px;">+ Analítica</button>
         </div>
+
+        <fieldset class="erp-action-group">
+          <legend>Registro de Analíticas</legend>
+          <div class="erp-action-group-body">
+            <button class="widget-link-btn widget-link-btn--neon neon-accent" onclick="window.AnaliticaLecheWizard.open()">${Icons.analitica()}<span class="widget-link-label">Nueva Analítica</span></button>
+          </div>
+        </fieldset>
 
         <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-10 pb-5" style="display: flex; align-items: center; gap: 4px; margin-top: 15px;">
           ${Icons.analitica()} Analíticas de Leche
@@ -288,6 +348,10 @@ window.ExplotacionLacteaView = {
               <div class="text-xs text-aaa">${UI.formatDate(m.fecha)} ${m.turno ? '(' + m.turno + ')' : ''}</div>
             </div>
           </div>
+          <div class="flex gap-6 mt-8 justify-end">
+            <button class="btn-erp-secondary btn-sm" onclick="ExplotacionLacteaView._editarMovimiento(${m.id})">Editar</button>
+            <button class="btn-erp-secondary btn-sm" onclick="ExplotacionLacteaView._eliminarMovimiento(${m.id})">Eliminar</button>
+          </div>
         </div>
       `;
     }).join('');
@@ -304,8 +368,14 @@ window.ExplotacionLacteaView = {
               <div class="text-gray" style="font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Movimientos de tanque (más reciente primero)</div>
             </div>
           </div>
-          <button onclick="window.MovimientoBalanceWizard.open()" class="text-xs px-12 py-6 font-900 uppercase" style="background:var(--c-info); color:#000; border:none; border-radius:6px;">+ Movimiento</button>
         </div>
+
+        <fieldset class="erp-action-group">
+          <legend>Registro de Movimientos</legend>
+          <div class="erp-action-group-body">
+            <button class="widget-link-btn widget-link-btn--neon neon-info" onclick="window.MovimientoBalanceWizard.open()">${Icons.agregar()}<span class="widget-link-label">Registrar Movimiento</span></button>
+          </div>
+        </fieldset>
 
         ${movimientosHtml || '<div class="p-14 text-center bg-dark rounded-sm border border-222"><span class="text-555 text-xs uppercase font-900 tracking-widest">Sin movimientos registrados</span></div>'}
       </div>

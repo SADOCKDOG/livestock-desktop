@@ -218,6 +218,9 @@ const ExplotacionView = {
       : flagsHeader.carne ? "App._abrirAsistenteProduccion('carne', { origen_modulo: 'explotacion' })"
       : "App._abrirAsistenteProduccion('leche', { origen_modulo: 'explotacion' })";
     const primaryLabel = flagsHeader.leche && flagsHeader.carne ? 'Registrar Producción' : flagsHeader.carne ? 'Registrar Pesaje' : 'Registrar Ordeño';
+    // La acción principal se pinta dentro del contenido, bajo la tarjeta de
+    // cabecera y las alertas (ver _renderModoExplotacion), no en el chrome.
+    this._accionPrincipal = { onclick: primaryOnclick, label: primaryLabel };
 
     main.innerHTML = `
       <!-- Carrusel circular de secciones de Explotación y Soporte: marco centrado con la sección activa -->
@@ -233,10 +236,6 @@ const ExplotacionView = {
 
       <!-- Cabecera de Módulo: Acción principal (KPIs movidos a tarjetas de contenido) -->
       <div class="module-header px-4">
-        ${this._activeSubModule === 'explotacion' ? `
-        <div class="module-header-primary-action">
-          <button class="btn btn-create btn-lg w-full" onclick="${primaryOnclick}">${Icons.fabPlus()} ${primaryLabel}</button>
-        </div>` : ''}
       </div>
 
       <!-- Contenedor Dinámico para la pestaña activa -->
@@ -394,6 +393,13 @@ const ExplotacionView = {
       <div class="report-section px-4">
         ${resumenProduccionHtml}
         ${guia365BannerHtml}
+        ${this._accionPrincipal ? `
+        <fieldset class="erp-action-group">
+          <legend>Registro de Producción</legend>
+          <div class="erp-action-group-body">
+            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="${this._accionPrincipal.onclick}">${Icons.fabPlus()}<span class="widget-link-label">${this._accionPrincipal.label}</span></button>
+          </div>
+        </fieldset>` : ''}
         ${(d.silosCriticos && d.silosCriticos.length > 0) ? `
         <div class="card p-14 mb-14 border-222 card-resumen" style="background: rgba(255, 68, 68, 0.03); border-left: 4px solid var(--c-danger);">
           <div class="text-xs text-white font-black uppercase tracking-wider mb-6 flex items-center gap-6" style="color:var(--c-danger);">
@@ -698,7 +704,12 @@ const ExplotacionView = {
       case 'guias':
         contentHtml += `
           <div class="grid gap-12">
-            <button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardGuiaMovimiento()">Emitir Nueva Guía DIMOE</button>
+            <fieldset class="erp-action-group">
+              <legend>Registro de Guías DIMOE</legend>
+              <div class="erp-action-group-body">
+                <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardGuiaMovimiento()">${Icons.documento()}<span class="widget-link-label">Emitir Nueva Guía DIMOE</span></button>
+              </div>
+            </fieldset>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-info); margin-right: 4px;">|</span> HISTORIAL DE GUÍAS
@@ -719,11 +730,12 @@ const ExplotacionView = {
       case 'censo':
         contentHtml += `
           <div class="grid gap-12">
-            <button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardCenso()">Generar Declaración Censal</button>
-            <div class="grid grid-cols-2 gap-8">
-              <button class="btn btn-dark py-12" onclick="App.route('/cuaderno')">${Icons.cuaderno()} Libro Registro</button>
-              <button class="btn btn-dark py-12" onclick="InformesView.renderCategoria('gegan')">${Icons.informes()} Informe REGA</button>
-            </div>
+            <fieldset class="erp-action-group">
+              <legend>Registro del Censo Anual</legend>
+              <div class="erp-action-group-body">
+                <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardCenso()">${Icons.documento()}<span class="widget-link-label">Generar Declaración Censal</span></button>
+              </div>
+            </fieldset>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-warning); margin-right: 4px;">|</span> HISTORIAL DE CENSOS
@@ -744,7 +756,12 @@ const ExplotacionView = {
       case 'crotales':
         contentHtml += `
           <div class="grid gap-12">
-            <button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardCrotales()">Pedir Nuevos Crotales</button>
+            <fieldset class="erp-action-group">
+              <legend>Registro de Crotales</legend>
+              <div class="erp-action-group-body">
+                <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardCrotales()">${Icons.agregar()}<span class="widget-link-label">Pedir Nuevos Crotales</span></button>
+              </div>
+            </fieldset>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-success); margin-right: 4px;">|</span> HISTORIAL DE PEDIDOS
@@ -764,7 +781,12 @@ const ExplotacionView = {
       case 'traslado':
         contentHtml += `
           <div class="grid gap-12">
-            <button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardTraslado()">Registrar Movimiento Interno</button>
+            <fieldset class="erp-action-group">
+              <legend>Registro de Traslados</legend>
+              <div class="erp-action-group-body">
+                <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardTraslado()">${Icons.documento()}<span class="widget-link-label">Registrar Movimiento Interno</span></button>
+              </div>
+            </fieldset>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-purple); margin-right: 4px;">|</span> HISTORIAL DE TRASLADOS
@@ -784,7 +806,6 @@ const ExplotacionView = {
       case 'infolac':
         contentHtml += `
           <div class="grid gap-12">
-            <button class="btn btn-create btn-lg w-full" onclick="App.route('/comercializacion?tab=leche')">Ver Entregas para Infolac</button>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-info); margin-right: 4px;">|</span> TRAMITACIONES INFOLAC

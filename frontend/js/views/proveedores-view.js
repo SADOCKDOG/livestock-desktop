@@ -27,9 +27,12 @@ const ProveedoresView = {
               </div>
             </div>
           </div>
-          <div class="module-header-primary-action">
-            <button class="btn btn-create btn-lg w-full" onclick="ProveedoresView.renderFormulario()">${Icons.agregar()} Nuevo Proveedor</button>
-          </div>
+          <fieldset class="erp-action-group">
+            <legend>Registro de Proveedores</legend>
+            <div class="erp-action-group-body">
+              <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="ProveedoresView.renderFormulario()">${Icons.agregar()}<span class="widget-link-label">Nuevo Proveedor</span></button>
+            </div>
+          </fieldset>
 
           <div class="mb-16">
             <div id="prov-kpis"></div>
@@ -50,7 +53,7 @@ const ProveedoresView = {
           `;
 
         // Restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px); la tabla se pinta al llegar los datos en _cargarDatos
-        const modoGuardado = localStorage.getItem('proveedores_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+        const modoGuardado = localStorage.getItem('proveedores_view_mode') || 'tabla';
         this._setVistaModo(modoGuardado, false);
 
         await this._cargarDatos();
@@ -210,7 +213,7 @@ const ProveedoresView = {
             title: 'Proveedores',
             pageSize: 15,
             columns: [
-                { key: 'nombre', label: 'Nombre', sortable: true },
+                { key: 'nombre', label: 'Nombre', sortable: true, cellClass: 'erp-cell-id' },
                 { key: 'nif_cif', label: 'NIF/CIF', sortable: true },
                 { key: 'ciudad', label: 'Ciudad', sortable: true },
                 { key: 'telefono', label: 'Teléfono', sortable: false },

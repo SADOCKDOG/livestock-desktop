@@ -143,7 +143,7 @@ const AjustesView = {
             <div>${f.id !== activeId ? `<button onclick="AjustesView._cambiarFincaActiva(${f.id})" class="btn btn-secondary btn-sm">Activar</button>` : `<span style="font-size: 1.1rem; font-weight: 800; border: 1px solid var(--c-success); color: var(--c-success); background: rgba(204,255,0,0.1); padding: 6px 12px; border-radius: 8px; display: inline-block;">ACTIVA</span>`}</div>
           </div>`).join("")}
         </div>
-        ${!isFree ? `<button class="btn btn-create btn-full mt-15" onclick="App._showFincaForm()">${Icons.agregar()} Nueva Finca</button>` : ''}
+        ${!isFree ? `<button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._showFincaForm()">${Icons.agregar()}<span class="widget-link-label">Nueva Finca</span></button>` : ''}
       </div>
 
       <!-- ===================== ADSG Y SANIDAD ===================== -->
@@ -158,7 +158,7 @@ const AjustesView = {
               <button class="btn btn-secondary btn-sm" onclick="AjustesView._editarADSG(${a.id})">${Icons.editar()}</button>
             </div>`).join('')}
         </div>
-        <button class="btn btn-create btn-full mt-15" onclick="AjustesView._nuevoADSG()">${Icons.agregar()} Nueva ADSG</button>
+        <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="AjustesView._nuevoADSG()">${Icons.agregar()}<span class="widget-link-label">Nueva ADSG</span></button>
       </div>
 
       <!-- ===================== OBJETIVOS DE EXPLOTACIÓN ===================== -->
@@ -180,7 +180,7 @@ const AjustesView = {
           <span style="color: var(--c-orange);">|</span> ${Icons.reproduccion()} ESPECIES Y RAZAS
         </h3>
         <div id="especies-container" class="mt-15">${this._renderEspecies(config)}</div>
-        <button class="btn btn-create btn-full mt-15" onclick="AjustesView._agregarEspecie()">${Icons.agregar()} Añadir Especie</button>
+        <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="AjustesView._agregarEspecie()">${Icons.agregar()}<span class="widget-link-label">Añadir Especie</span></button>
       </div>
 
       <!-- ===================== GESTIÓN DE ALERTAS ===================== -->

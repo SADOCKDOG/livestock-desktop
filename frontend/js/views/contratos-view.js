@@ -76,9 +76,12 @@ const ContratosView = {
             <div class="text-[0.6rem] text-gray uppercase font-900">Vigentes: <strong class="text-success">${contratosActivos}</strong></div>
           </div>
         </div>
-        <div class="module-header-primary-action">
-          <button class="btn btn-create btn-lg w-full" onclick="ContratosView._crearContrato()">${Icons.agregar()} Nuevo Contrato</button>
-        </div>
+        <fieldset class="erp-action-group">
+          <legend>Registro de Contratos</legend>
+          <div class="erp-action-group-body">
+            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="ContratosView._crearContrato()">${Icons.agregar()}<span class="widget-link-label">Nuevo Contrato</span></button>
+          </div>
+        </fieldset>
       </div>
 
       <!-- Evolución Mensual -->
@@ -119,7 +122,7 @@ const ContratosView = {
     this._renderLista();
 
     // Restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px)
-    const modoGuardado = localStorage.getItem('contratos_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+    const modoGuardado = localStorage.getItem('contratos_view_mode') || 'tabla';
     this._setVistaModo(modoGuardado, false);
   },
 
@@ -304,7 +307,7 @@ const ContratosView = {
       title: 'Contratos',
       pageSize: 15,
       columns: [
-        { key: 'numero', label: 'Nº Contrato', sortable: true },
+        { key: 'numero', label: 'Nº Contrato', sortable: true, cellClass: 'erp-cell-id' },
         { key: 'comprador', label: 'Comprador', sortable: true },
         {
           key: 'tipo',

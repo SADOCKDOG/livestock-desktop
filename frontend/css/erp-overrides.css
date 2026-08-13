@@ -249,6 +249,19 @@ body::after {
     margin-bottom: 0;
     flex: 0 0 auto;
   }
+  /* El marco de acciones no debe compartir línea con la tarjeta de cabecera:
+     un separador elástico lo empuja a la línea siguiente, donde queda pegado
+     al margen izquierdo conservando su ancho propio (no se estira). */
+  .module-header::after {
+    content: '';
+    flex-basis: 100%;
+    height: 0;
+    order: 98;
+  }
+  .module-header > .erp-action-group {
+    order: 99;
+    margin-right: auto;
+  }
   /* El botón primario full-width (mobile) pasa a ancho de contenido, compacto */
   .module-header-primary-action .btn,
   .btn.btn-create.btn-lg.w-full {
@@ -370,4 +383,246 @@ body::after {
 main#app-content.manual-open {
   padding-bottom: 12px;
   min-height: auto;
+}
+
+/* ===========================================================================
+   Acciones de registro agrupadas (patrón "group box" de ERP de escritorio)
+   ---------------------------------------------------------------------------
+   Marco con título embebido en el borde (fieldset + legend) que agrupa los
+   botones de registro de un módulo o de un listado concreto. Sustituye a los
+   CTA sueltos: todos los botones adoptan el mismo formato de chip compacto
+   (icono + etiqueta en fila) y el bloque queda centrado bajo la tarjeta a la
+   que pertenece.
+   =========================================================================== */
+.erp-action-group {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  /* pegado al margen izquierdo del contenido, justo encima del buscador */
+  margin: 0 0 18px;
+  padding: 6px 28px 20px;
+  text-align: left;
+  border: 1px solid #3a3a42;
+  border-radius: var(--r-sm, 6px);
+  background: rgba(255, 255, 255, 0.025);
+}
+.erp-action-group > legend {
+  padding: 0 8px;
+  font-size: 0.6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-s, #aaa);
+  white-space: nowrap;
+}
+.erp-action-group-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  /* los botones se centran respecto al título del marco (el marco en sí sigue
+     pegado al margen izquierdo del contenido) */
+  justify-content: center;
+  gap: 22px;
+  /* aire entre el título del marco y los botones que envuelve */
+  padding-top: 14px;
+}
+/* Los chips del grupo: fila compacta, sin el formato columna de móvil */
+.erp-action-group .widget-link-btn {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  min-width: 0;
+  padding: 10px 20px;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.erp-action-group .widget-link-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.erp-action-group .widget-link-label {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Pie «Ver más» de los listados recortados (ver App.aplicarVerMas) */
+.erp-ver-mas {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0 18px;
+}
+.erp-ver-mas button {
+  min-width: 220px;
+  padding: 10px 22px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.erp-ver-mas-count {
+  font-weight: 700;
+  opacity: 0.7;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* En escritorio no hay bottom-nav: el FAB de guía deja de flotar a media altura
+   (bottom:150px, pensado para librar la barra inferior del móvil) y baja a la
+   esquina, donde no tapa los filtros ni los botones de los listados. */
+@media (min-width: 1024px) {
+  #guide-fab {
+    bottom: 20px !important;
+  }
+}
+
+/* ===========================================================================
+   Fila de filtros de listado: buscador + desplegable de tipo
+   ---------------------------------------------------------------------------
+   Formato único para todos los módulos, tomado de animales-view.js: el
+   buscador ocupa el espacio libre y el selector va a su derecha con ancho
+   fijo. Ambos comparten alto (44px) y alineación.
+   =========================================================================== */
+.erp-filtros {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.erp-filtros .form-input,
+.erp-filtros input[type="search"],
+.erp-filtros input[type="text"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-top: 0;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+.erp-filtros .form-select {
+  width: 150px;
+  min-width: 130px;
+  flex-shrink: 0;
+  margin-top: 0;
+  padding: 12px;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------------------------
+   Color único de los botones de registro: gris claro retroiluminado.
+   Los chips llegaban en verde (neon-success) y azul (neon-info/neon-accent)
+   heredados del btn-create y de las acciones secundarias; dentro del marco de
+   acciones todos comparten ahora el mismo gris con halo, para que ninguna
+   acción de registro destaque sobre otra. Anula también el ámbar de
+   neon-warning (Guía Mov.), que quedaría descolgado del conjunto.
+   --------------------------------------------------------------------------- */
+.erp-action-group .widget-link-btn--neon {
+  --neon-color: #d2d6dd;
+  --neon-glow: rgba(210, 214, 221, 0.40);
+  --neon-inner: rgba(210, 214, 221, 0.16);
+}
+/* ...pero el icono SVG conserva el color semántico de su variante, que es lo
+   que permite distinguir una acción de otra de un vistazo. */
+.erp-action-group .neon-success { --icono-color: var(--c-success); }
+.erp-action-group .neon-info    { --icono-color: var(--c-info); }
+.erp-action-group .neon-accent  { --icono-color: var(--c-purple, #A855F7); }
+.erp-action-group .neon-warning { --icono-color: var(--c-warning); }
+.erp-action-group .neon-danger  { --icono-color: var(--c-danger); }
+.erp-action-group .neon-orange  { --icono-color: var(--c-orange); }
+.erp-action-group .widget-link-btn--neon svg {
+  color: var(--icono-color, #d2d6dd);
+  stroke: var(--icono-color, #d2d6dd);
+  filter: drop-shadow(0 0 6px var(--icono-color, rgba(210, 214, 221, 0.6)));
+}
+
+/* Variante centrada del marco de acciones: se usa para las acciones de
+   documento (exportar PDF / CSV / imprimir), que no pertenecen a un listado
+   concreto sino al informe o cuaderno completo. */
+.erp-action-group--centro {
+  margin-left: auto;
+  margin-right: auto;
+}
+.erp-action-group--centro .erp-action-group-body {
+  justify-content: center;
+}
+
+/* ===========================================================================
+   Cabecera de módulo sin duplicados (escritorio)
+   ---------------------------------------------------------------------------
+   El chrome ERP ya rotula el módulo arriba con su icono y su nombre, así que
+   la tarjeta de cabecera los repetía: mismo SVG y mismo título dos veces. Se
+   ocultan ambos y se retira el borde lateral iluminado, que en escritorio
+   duplica el código de color que ya da la entrada activa del sidebar. Se
+   conserva la descripción y los KPIs, que sí aportan.
+   =========================================================================== */
+@media (min-width: 1024px) {
+  .module-header > .card > .flex.items-center > span:first-child {
+    display: none;
+  }
+  .module-header > .card h2 {
+    display: none;
+  }
+  .module-header > .card {
+    border-left: 0 !important;
+  }
+}
+
+/* El conmutador Tarjetas / Tabla ERP se recoloca encima del marco de acciones
+   (ver App._recolocarToggleVista). Si acaba dentro de .module-header, ocupa su
+   propia línea y queda pegado a la izquierda, justo sobre el marco. */
+.erp-vista-toggle {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+@media (min-width: 1024px) {
+  .module-header > .erp-vista-toggle {
+    order: 99;
+    flex-basis: 100%;
+    justify-content: flex-start;
+    margin-right: auto;
+  }
+  .module-header > .erp-action-group {
+    order: 100;
+  }
+}
+
+/* Los chips que quedan fuera de un marco de acciones (empty-states, altas de
+   Ajustes) comparten el gris retroiluminado y el icono en color de los que sí
+   están enmarcados, para que no desentonen. */
+.empty-state .widget-link-btn--neon,
+.erp-chip-suelto {
+  --neon-color: #d2d6dd;
+  --neon-glow: rgba(210, 214, 221, 0.40);
+  --neon-inner: rgba(210, 214, 221, 0.16);
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 10px 20px;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 auto;
+}
+.empty-state .widget-link-btn--neon svg,
+.erp-chip-suelto svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--c-success);
+  stroke: var(--c-success);
+  filter: drop-shadow(0 0 6px var(--c-success));
+}
+.empty-state .widget-link-label,
+.erp-chip-suelto .widget-link-label {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }

@@ -208,6 +208,7 @@ const ComercializacionView = {
     const modoMetaComer = window.ModoContextoHelper.getModeMetaEffective(flagsModo);
     let headerKpisHtml = '';
     let headerPrimaryHtml = '';
+    let headerPrimaryLegend = 'Acciones de Registro';
     if (this._activeSubModule === 'leche' || this._activeSubModule === 'carne') {
       const dComer = await this._ensureData(fincaId, this._needsDataRefresh);
       if (this._activeSubModule === 'leche') {
@@ -221,7 +222,8 @@ const ComercializacionView = {
             <span class="module-header-kpi-label">Litros</span>
             <span class="module-header-kpi-value">${UI.formatNumber(litros)}</span>
           </div>`;
-        headerPrimaryHtml = `<button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardAlbaranLeche()">${Icons.fabPlus()} Registrar Retirada</button>`;
+        headerPrimaryLegend = 'Registro de Retiradas';
+        headerPrimaryHtml = `<button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardAlbaranLeche()">${Icons.fabPlus()}<span class="widget-link-label">Registrar Retirada</span></button>`;
       } else {
         const ingreso = dComer.ventas.reduce((s, v) => s + (v.precio_total || 0), 0);
         headerKpisHtml = `
@@ -233,7 +235,8 @@ const ComercializacionView = {
             <span class="module-header-kpi-label">Ingreso</span>
             <span class="module-header-kpi-value" style="color: var(--c-success);">${UI.formatCurrency(Math.round(ingreso))}</span>
           </div>`;
-        headerPrimaryHtml = `<button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardVentaMasiva()">${Icons.fabPlus()} Registrar Venta</button>`;
+        headerPrimaryLegend = 'Registro de Ventas';
+        headerPrimaryHtml = `<button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardVentaMasiva()">${Icons.fabPlus()}<span class="widget-link-label">Registrar Venta</span></button>`;
       }
     }
 
@@ -249,7 +252,7 @@ const ComercializacionView = {
       )}
 
       <div class="module-header px-4">
-        ${headerPrimaryHtml ? `<div class="module-header-primary-action">${headerPrimaryHtml}</div>` : ''}
+        ${headerPrimaryHtml ? `<fieldset class="erp-action-group"><legend>${headerPrimaryLegend}</legend><div class="erp-action-group-body">${headerPrimaryHtml}</div></fieldset>` : ''}
         <div class="text-left mb-6 uppercase" style="letter-spacing: 0.5px; padding-left: 4px;">
           <h1 style="font-size: 1.1rem; font-weight: 900; color: #fff; margin: 0; display: flex; items-center;">
             <span style="color:${currentMeta.color}; margin-right:4px;">|</span> ${currentMeta.title}
@@ -509,7 +512,7 @@ const ComercializacionView = {
         <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-10 pb-6">
           <span style="color: ${color}; margin-right: 4px;">|</span> ${Icons.documento()} ${listName}
         </div>
-        <div class="grid gap-10">
+        <div class="grid gap-10" id="comer-registros-lista" data-ver-mas="10">
           ${recordsHtml}
         </div>
       </div>`;

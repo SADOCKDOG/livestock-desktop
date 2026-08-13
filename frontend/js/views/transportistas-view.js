@@ -110,9 +110,12 @@ const TransportistasView = {
             <div class="text-[0.6rem] text-gray uppercase font-900">Activos: <strong class="text-success">${activoCount}</strong></div>
           </div>
         </div>
-        <div class="module-header-primary-action">
-          <button class="btn btn-create btn-lg w-full" onclick="TransportistasView._crearTransportista()">${Icons.agregar()} Nuevo Transportista</button>
-        </div>
+        <fieldset class="erp-action-group">
+          <legend>Registro de Transportistas</legend>
+          <div class="erp-action-group-body">
+            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="TransportistasView._crearTransportista()">${Icons.agregar()}<span class="widget-link-label">Nuevo Transportista</span></button>
+          </div>
+        </fieldset>
       </div>
 
       <!-- Evolución Mensual -->
@@ -174,7 +177,7 @@ const TransportistasView = {
     this._renderLista();
 
     // Restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px)
-    const modoGuardado = localStorage.getItem('transportistas_view_mode') || (window.innerWidth >= 1024 ? 'tabla' : 'cards');
+    const modoGuardado = localStorage.getItem('transportistas_view_mode') || 'tabla';
     this._setVistaModo(modoGuardado, false);
   },
 
@@ -225,7 +228,7 @@ const TransportistasView = {
     const transportistas = this._cachedData ? this._cachedData.transportistas : [];
 
     if (transportistas.length === 0) {
-      container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">${Icons.transportistas()}</div><p class="empty-state-text">${this._cachedDataRaw ? this._cachedDataRaw.transportistas.length === 0 ? 'No hay transportistas registrados.' : 'No hay transportistas con ese filtro.' : 'Cargando...'}</p><button class="btn btn-create btn-sm" onclick="TransportistasView._abrirFormulario()" data-guide="btn-vacio-transportistas">${Icons.agregar()} Nuevo Transportista</button></div>`;
+      container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">${Icons.transportistas()}</div><p class="empty-state-text">${this._cachedDataRaw ? this._cachedDataRaw.transportistas.length === 0 ? 'No hay transportistas registrados.' : 'No hay transportistas con ese filtro.' : 'Cargando...'}</p><button class="widget-link-btn widget-link-btn--neon neon-success" onclick="TransportistasView._abrirFormulario()" data-guide="btn-vacio-transportistas">${Icons.agregar()}<span class="widget-link-label">Nuevo Transportista</span></button></div>`;
       return;
     }
 
@@ -306,7 +309,7 @@ const TransportistasView = {
       title: 'Transportistas',
       pageSize: 15,
       columns: [
-        { key: 'nombre', label: 'Nombre', sortable: true },
+        { key: 'nombre', label: 'Nombre', sortable: true, cellClass: 'erp-cell-id' },
         { key: 'nif_cif', label: 'NIF/CIF', sortable: true },
         { key: 'matricula', label: 'Matrícula', sortable: true },
         { key: 'telefono', label: 'Teléfono', sortable: false },

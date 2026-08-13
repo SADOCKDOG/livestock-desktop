@@ -6,6 +6,7 @@
 
 const AlbaranesVentasView = {
   _currentTab: 'todos',
+  _vistaModo: 'cards',
   _filtroActivo: {
     texto: '',
     tipo: ''
@@ -72,6 +73,8 @@ const AlbaranesVentasView = {
       this._cachedData = filteredData;
 
       main.innerHTML = this._renderHTML(filteredData);
+      // _renderHTML deja el contenedor con el loader; hay que rellenarlo.
+      this._renderLista();
     } catch (e) {
       console.error('[AlbaranesVentasView] Error:', e);
       main.innerHTML = `<div class="card text-center p-40 text-red" style="border: 1px solid var(--c-danger); background: rgba(255, 68, 68, 0.05);">Error: ${e.message}</div>`;
@@ -228,7 +231,12 @@ const AlbaranesVentasView = {
           </div>
         </div>
       </div>
-      <div id="albaranes-lista"><div class="loader">Cargando albaranes y ventas...</div></div>;
+      <div class="flex justify-end gap-6 mb-8">
+        <button class="btn-erp-secondary btn-sm" id="btn-alb-vista-cards" onclick="AlbaranesVentasView._setVistaModo('cards')">Tarjetas</button>
+        <button class="btn-erp-secondary btn-sm" id="btn-alb-vista-tabla" onclick="AlbaranesVentasView._setVistaModo('tabla')">Tabla ERP</button>
+      </div>
+      <div id="albaranes-lista"><div class="loader">Cargando albaranes y ventas...</div></div>
+      <div id="alb-erp-table-container" class="mt-12" style="display:none;"></div>;
 
       <!-- FAB -->
       <div class="fixed bottom-20 right-20 z-50">
@@ -239,10 +247,98 @@ const AlbaranesVentasView = {
     `;
   },
 
+  /** Alterna el historial de albaranes entre tarjetas y tabla densa ERP. */
+  _setVistaModo(modo, guardar = true) {
+    this._vistaModo = modo;
+    if (guardar) {
+      try { localStorage.setItem('albaranes_view_mode', modo); } catch (_) {}
+    }
+
+    const btnCards = document.getElementById('btn-alb-vista-cards');
+    const btnTabla = document.getElementById('btn-alb-vista-tabla');
+    const contenedorCards = document.getElementById('albaranes-lista');
+    const contenedorTabla = document.getElementById('alb-erp-table-container');
+
+    if (btnCards && btnTabla) {
+      btnCards.style.background = modo === 'cards' ? 'var(--brand, #1F5FA8)' : 'transparent';
+      btnTabla.style.background = modo === 'tabla' ? 'var(--brand, #1F5FA8)' : 'transparent';
+    }
+
+    if (modo === 'tabla') {
+      if (contenedorCards) contenedorCards.style.display = 'none';
+      if (contenedorTabla) {
+        contenedorTabla.style.display = 'block';
+        this._renderErpTable();
+      }
+    } else {
+      if (contenedorTabla) contenedorTabla.style.display = 'none';
+      if (contenedorCards) contenedorCards.style.display = 'block';
+    }
+  },
+
+  _renderErpTable() {
+    if (!window.ErpDataTable || !this._cacheTabla) return;
+
+    const tableData = this._cacheTabla.map(reg => ({
+      id: reg.id,
+      tipo: reg.tipo,
+      numero: reg.numero,
+      titulo: reg.titulo,
+      comprador: reg.comprador,
+      fecha: this._fmtFecha(reg.fecha),
+      cantidad: `${Number(reg.cantidad || 0).toLocaleString('es-ES')} ${reg.unidad || ''}`.trim(),
+      importe: Number(reg.importe || 0).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }),
+      estado: (reg.estado || '').toUpperCase(),
+      trazabilidad: reg.trazabilidad || '—'
+    }));
+
+    new window.ErpDataTable({
+      containerId: 'alb-erp-table-container',
+      title: 'Libro de Ventas',
+      pageSize: 15,
+      columns: [
+        { key: 'numero', label: 'Nº Albarán', sortable: true, cellClass: 'erp-cell-id' },
+        {
+          key: 'tipo',
+          label: 'Tipo',
+          sortable: true,
+          // leche azul, carne verde: mismo código de color que la tarjeta
+          cellClass: (v) => (v === 'leche' ? 'erp-cell-info' : 'erp-cell-ok'),
+          render: (v) => (v || '').toUpperCase()
+        },
+        { key: 'comprador', label: 'Comprador', sortable: true },
+        { key: 'fecha', label: 'Fecha', sortable: true },
+        { key: 'cantidad', label: 'Cantidad', sortable: true, align: 'right' },
+        { key: 'importe', label: 'Importe', sortable: true, align: 'right', cellClass: 'erp-cell-ok' },
+        {
+          key: 'estado',
+          label: 'Estado',
+          sortable: true,
+          cellClass: (v) => (v === 'BORRADOR' ? 'erp-cell-aviso'
+            : v === 'RECHAZADO' ? 'erp-cell-alerta'
+            : v === 'PRESENTADO' ? 'erp-cell-ok' : 'erp-cell-info')
+        },
+        {
+          key: 'id',
+          label: 'Acciones',
+          sortable: false,
+          align: 'center',
+          render: (id, row) => `<button class="btn-erp-secondary btn-sm" onclick="AlbaranesVentasView._imprimirDoc('${row.tipo}', ${id})">Imprimir</button>`
+        }
+      ],
+      data: tableData
+    }).render();
+  },
+
   _renderLista() {
     const filtrados = this._currentTab === 'todos'
       ? this._cachedData
       : this._cachedData.filter(r => r.tipo === this._currentTab);
+
+    this._cacheTabla = filtrados;
+    // El modo lo manda la preferencia guardada; por defecto, tabla.
+    const modoGuardado = localStorage.getItem('albaranes_view_mode') || 'tabla';
+    setTimeout(() => this._setVistaModo(modoGuardado, false), 0);
 
     if (!filtrados.length) {
       document.getElementById('albaranes-lista').innerHTML = `<div class="empty-state"><div class="empty-state-icon">${Icons.comercial()}</div><p class="empty-state-text">No hay registros de albaranes o ventas.</p></div>`;
@@ -257,7 +353,7 @@ const AlbaranesVentasView = {
       rechazado: 'var(--c-danger)'
     };
 
-    document.getElementById('albaranes-lista').innerHTML = `<div class="grid gap-10">
+    document.getElementById('albaranes-lista').innerHTML = `<div class="grid gap-10" data-ver-mas="10">
       ${filtrados.map(reg => {
         const color = colors[reg.tipo] || 'var(--c-info)';
         const badgeColor = badgeColors[reg.estado] || 'var(--c-info)';

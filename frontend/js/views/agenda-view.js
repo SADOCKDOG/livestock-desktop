@@ -45,11 +45,13 @@ const AgendaView = {
 
             <div class="px-4">
                 <div class="module-header">
-                    <div class="module-header-primary-action">
-                        <button class="btn btn-create btn-lg w-full" onclick="window.WizardTarea.open({ onComplete: () => AgendaView.render() })">
-                            ${Icons.fabPlus()} Nueva Tarea
-                        </button>
-                    </div>
+                    <fieldset class="erp-action-group">
+                      <legend>Registro de Tareas</legend>
+                      <div class="erp-action-group-body">
+                        <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="window.WizardTarea.open({ onComplete: () =><span class="widget-link-label">AgendaView.render() })">
+                        ${Icons.fabPlus()} Nueva Tarea</span></button>
+                      </div>
+                    </fieldset>
                 </div>
 
                 <div class="card p-16 mb-16 border-222 animate-fade-in" style="background: linear-gradient(135deg, rgba(255,215,0,0.05) 0%, rgba(0,0,0,0.2) 100%); border-left: 4px solid var(--p-gold);">
@@ -70,7 +72,7 @@ const AgendaView = {
                     <button onclick="AgendaView._setFiltroEstado('completada')" class="btn btn-sm flex-1 ${this._filtroEstado === 'completada' ? 'btn--success' : 'btn-secondary'}">Completadas</button>
                 </div>
 
-                <div class="grid gap-10">
+                <div class="grid gap-10" id="agenda-lista" data-ver-mas="10">
                     ${this._renderTareasList(tareas)}
                 </div>
             </div>
