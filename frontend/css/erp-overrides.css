@@ -580,10 +580,18 @@ main#app-content.manual-open {
     padding: 10px 20px;
     height: 40px;
   }
-  /* Los bloques que colocaban un chip a todo el ancho pasan a alinearlo a la
-     izquierda con su tamaño propio. */
-  .grid > .widget-link-btn--neon {
-    justify-self: start;
+  /* Los bloques que colocaban los chips en rejilla (grid-cols-2 dentro de un
+     max-w-320, pensado para el bloque vertical del móvil) los estrangulaban:
+     con el chip en fila y sin cortar el texto, el contenido excede la columna
+     y los botones se solapan. En escritorio esas rejillas pasan a ser una fila
+     que se ajusta al contenido. */
+  .grid:has(> .widget-link-btn--neon) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: none;
+    margin-left: 0;
+    margin-right: auto;
   }
 }
 
