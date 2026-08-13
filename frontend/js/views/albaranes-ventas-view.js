@@ -206,30 +206,17 @@ const AlbaranesVentasView = {
       <div class="text-xs text-white uppercase font-black tracking-wider mb-10 flex items-center gap-4">
         <span style="color: ${moduleColor};">|</span> ${Icons.documento()} HISTORIAL DE ALBARANES Y VENTAS
       </div>
-      <div class="flex gap-8 items-center mb-12">
-        <div class="relative flex-1 min-w-0">
-          <input type="search" id="albaran-search" placeholder="Buscar por comprador, número de albarán, concepto..."
-                 oninput="AlbaranesVentasView._setFiltro('texto', this.value)"
-                 class="form-input search-input w-full" style="margin-top:0;">
-        </div>
-        <select id="albaran-filtro-tipo" class="form-select"
-                onchange="AlbaranesVentasView._setFiltro('tipo', this.value)"
-                style="width:130px; min-width:110px; flex-shrink:0;">
-          <option value="">Todos los tipos</option>
-          <option value="leche" ${this._filtroActivo.tipo === 'leche' ? 'selected' : ''}>Entregas Leche</option>
-          <option value="carne" ${this._filtroActivo.tipo === 'carne' ? 'selected' : ''}>Ventas Carne</option>
-        </select>
+      <div class="erp-filtros" data-filtros-de="albaranes-lista">
+        <input type="search" id="albaran-search" placeholder="Buscar por comprador, número de albarán, concepto..."
+               oninput="AlbaranesVentasView._setFiltro('texto', this.value)"
+               class="form-input search-input">
       </div>
 
       <!-- Tabs de comercialización estandarizados -->
-      <div class="mb-14">
-        <div class="scroll-shadow-container scroll-tabs-row mb-10">
-          <div class="comer-tabs">
-            <button class="comer-tab ${this._currentTab === 'todos' ? 'active' : ''}" data-tab="todos" onclick="AlbaranesVentasView._cambiarTab('todos')">${Icons.comercial()} Todo</button>
-            <button class="comer-tab ${this._currentTab === 'leche' ? 'active' : ''}" data-tab="leche" onclick="AlbaranesVentasView._cambiarTab('leche')">${Icons.leche()} Leche</button>
-            <button class="comer-tab ${this._currentTab === 'carne' ? 'active' : ''}" data-tab="carne" onclick="AlbaranesVentasView._cambiarTab('carne')">${Icons.carne()} Carne</button>
-          </div>
-        </div>
+      <div class="erp-vista-toggle" id="albaranes-tabs">
+        <button class="btn-erp-secondary btn-sm albaranes-tab" data-tab="todos" onclick="AlbaranesVentasView._cambiarTab('todos')" style="background:${this._currentTab === 'todos' ? 'var(--brand, #1F5FA8)' : 'transparent'};">Todo</button>
+        <button class="btn-erp-secondary btn-sm albaranes-tab" data-tab="leche" onclick="AlbaranesVentasView._cambiarTab('leche')" style="background:${this._currentTab === 'leche' ? 'var(--brand, #1F5FA8)' : 'transparent'};">Leche</button>
+        <button class="btn-erp-secondary btn-sm albaranes-tab" data-tab="carne" onclick="AlbaranesVentasView._cambiarTab('carne')" style="background:${this._currentTab === 'carne' ? 'var(--brand, #1F5FA8)' : 'transparent'};">Carne</button>
       </div>
       <div class="flex justify-end gap-6 mb-8">
         <button class="btn-erp-secondary btn-sm" id="btn-alb-vista-cards" onclick="AlbaranesVentasView._setVistaModo('cards')">Tarjetas</button>
@@ -396,10 +383,13 @@ const AlbaranesVentasView = {
   _cambiarTab(tab) {
     this._currentTab = tab;
     document.querySelectorAll('.albaranes-tab').forEach(b => {
-      b.classList.toggle('active', b.dataset.tab === tab);
+      const activo = b.dataset.tab === tab;
+      b.classList.toggle('active', activo);
+      b.style.background = activo ? 'var(--brand, #1F5FA8)' : 'transparent';
     });
     this._renderLista();
-    window.scrollTo(0, 0);
+    // No se sube al principio: el usuario está mirando el listado y devolverlo
+    // a la cabecera en cada cambio de pestaña obliga a volver a bajar.
   },
 
   _fmtFecha(dateStr) {

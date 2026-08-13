@@ -1696,7 +1696,7 @@ const App = {
       // listado recortable o tabla ERP. Buscar solo hacia delante evita que en
       // vistas con varios listados (Sanidad) el marco suba al listado equivocado.
       const destino = Array.from(
-        raiz.querySelectorAll('.erp-filtros, [data-ver-mas], [id$="-erp-table-container"]')
+        raiz.querySelectorAll('.erp-filtros, [data-ver-mas], [id$="-lista"], [id$="-erp-table-container"]')
       ).find((el) => marco.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING
         && !marco.contains(el));
       if (!destino) return;                          // marco sin listado propio: se queda

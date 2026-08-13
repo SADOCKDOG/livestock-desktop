@@ -714,7 +714,12 @@ const ExplotacionView = {
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-info); margin-right: 4px;">|</span> HISTORIAL DE GUÍAS
             </div>
-            <div class="grid gap-10">
+            
+            <div class="erp-filtros" data-filtros-para="tramites-guias-lista">
+              <input type="search" class="form-input search-input" placeholder="Buscar guía por destino, fecha o número...">
+              <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
+            </div>
+            <div class="grid gap-10" id="tramites-guias-lista" data-ver-mas="10">
               ${guiasFinca.length > 0 ? guiasFinca.slice(0, 10).map(g => App._cardRegistro({
                 icon: Icons.documento(),
                 title: g.numero_documento || g.numero || `Guía #${g.id}`,
@@ -740,7 +745,12 @@ const ExplotacionView = {
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-warning); margin-right: 4px;">|</span> HISTORIAL DE CENSOS
             </div>
-            <div class="grid gap-10">
+            
+            <div class="erp-filtros" data-filtros-para="tramites-censos-lista">
+              <input type="search" class="form-input search-input" placeholder="Buscar censo por año o estado...">
+              <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
+            </div>
+            <div class="grid gap-10" id="tramites-censos-lista" data-ver-mas="10">
               ${censosFinca.length > 0 ? censosFinca.map(c => App._cardRegistro({
                 icon: Icons.animales(),
                 title: `Censo Anual ${new Date(c.fecha).getFullYear()}`,
@@ -766,7 +776,12 @@ const ExplotacionView = {
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-success); margin-right: 4px;">|</span> HISTORIAL DE PEDIDOS
             </div>
-            <div class="grid gap-10">
+            
+            <div class="erp-filtros" data-filtros-para="tramites-crotales-lista">
+              <input type="search" class="form-input search-input" placeholder="Buscar pedido por fecha o unidades...">
+              <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
+            </div>
+            <div class="grid gap-10" id="tramites-crotales-lista" data-ver-mas="10">
               ${pedidos.length > 0 ? pedidos.slice(0, 10).map(p => App._cardRegistro({
                 icon: Icons.paquete(),
                 title: `Pedido #${p.id.toString().slice(-6)}`,
@@ -791,7 +806,12 @@ const ExplotacionView = {
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-purple); margin-right: 4px;">|</span> HISTORIAL DE TRASLADOS
             </div>
-            <div class="grid gap-10">
+            
+            <div class="erp-filtros" data-filtros-para="tramites-traslados-lista">
+              <input type="search" class="form-input search-input" placeholder="Buscar traslado por zona, fecha o lote...">
+              <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
+            </div>
+            <div class="grid gap-10" id="tramites-traslados-lista" data-ver-mas="10">
               ${trasladosFinca.length > 0 ? trasladosFinca.slice(0, 10).map(m => App._cardRegistro({
                 icon: Icons.trazabilidad(),
                 title: `Traslado de ${m.animalId?.length || 1} cabezas`,

@@ -90,7 +90,7 @@ const FitosanitariosView = {
                   </div>
                 </fieldset>
 
-                <div id="fito-lista">
+                <div id="fito-lista" data-ver-mas="10">
                 ${this._cachedRegistros.length === 0 ? `
                 <div class="empty-state py-40 text-center">
                     <div class="empty-state-icon mb-10" style="color:var(--c-success);">${Icons.fitosanitario()}</div>
