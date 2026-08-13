@@ -32,6 +32,7 @@ $preservedList = @(
     'js\app.js',                     # Handlers sidebar ERP (_setupSidebar, etc.)
     'js\guide-manager.js',           # Motor de guías: remap carrusel→sidebar (preserva targets ocultos)
     'js\module-colors.js',           # Mapa de colores ERP (sin neon)
+    'js\purchase-manager.js',       # Emite 'premiumChanged' para el indicador Free/Premium del sidebar
     'js\views\animales-view.js',     # Toggle Tarjetas/Tabla ERP
     'js\views\rebanos-view.js',      # Toggle Tarjetas/Tabla ERP
     'js\views\compradores-view.js',  # Toggle Tarjetas/Tabla ERP (módulo compradores)
@@ -43,6 +44,25 @@ $preservedList = @(
     'js\views\fitosanitarios-view.js', # Toggle Tarjetas/Tabla ERP
     'js\views\comercializacion-view.js', # Banner/KPI cromo ERP unificado (neutro)
     'js\views\manuales-view.js',      # Visor de manuales embebido en #app-content (no overlay full-screen)
+    # --- Estandarización de botones / limpieza de FAB y sub-tabs (piel ERP) ---
+    'js\views\agenda-view.js',           # CTA cabecera, sin FAB; filtros al sidebar
+    'js\views\botiquin-view.js',         # CTA cabecera "Nuevo Producto", sin FAB
+    'js\views\dashboard-view.js',        # FAB "Nueva Actividad" + FAB de guía del Inicio
+    'js\views\explotacion-view.js',      # Láctea/Trámites como subgrupos del sidebar (?sub=)
+    'js\views\explotacion-lactea-view.js', # Sin botones inline; empty-state al sub-tab Tanques
+    'js\views\informes-view.js',         # Navegación cat/tab movida al sidebar
+    'js\views\instalaciones-view.js',    # CTA cabecera "Nueva Instalación", sin FAB
+    'js\views\produccion-view.js',       # CTA cabecera por sección + tab de tanques
+    'js\views\saneamientos-view.js',     # CTA cabecera "Nuevo Saneamiento", sin FAB
+    'js\views\silos-view.js',            # CTA cabecera "Nuevo Silo", sin FAB
+    'js\views\subexplotaciones-view.js', # CTA cabecera "Nueva Subexplotación", sin FAB
+    'js\views\tanques-view.js',          # CTA normalizada al patrón module-header-primary-action
+    'js\views\zonas-view.js',            # CTA cabecera + acción secundaria Importar PDF
+    'js\views\sanidad-view.js',          # Acciones de registro agrupadas (fieldset erp-action-group)
+    'js\views\patrimonio-view.js',       # Acciones de registro agrupadas (fieldset erp-action-group)
+    'js\views\cuaderno-view.js',         # Acciones de documento agrupadas (exportar PDF/CSV/imprimir)
+    'js\views\albaranes-ventas-view.js', # Libro de Ventas: tabla ERP
+    'js\views\ajustes-view.js',          # Altas (finca/ADSG/especie) al formato de chip
     'js\guides\inicio-dashboard.js',  # Guía del Inicio/Dashboard (propia del desktop; el maestro no la trae)
     'css\design-tokens.css',         # Paleta ERP profesional
     'css\erp-sidebar.css',           # Sidebar colapsable (solo desktop)
