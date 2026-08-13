@@ -78,7 +78,7 @@
       {
         title: 'Botón principal adaptativo',
         body: 'Botón grande en cabecera cambia según flags: **Leche+Carne** → "Registrar Producción" (submenú); **solo Carne** → "Registrar Pesaje"; **solo Leche** → "Registrar Ordeño". Abre wizard real correspondiente.',
-        target: '.module-header-primary-action .btn-create',
+        target: 'button[onclick*="App._abrirAsistenteProduccion"], button[onclick*="App._abrirSubmenuRegistros"]',
         waitFor: true,
         position: 'below'
       },

@@ -123,7 +123,7 @@
       {
         title: '4. Producción — Según tu modo (Leche / Carne)',
         body: 'Ve a **Explotación (ExPro)**. Si **Leche=ON**: registra **retiradas de leche** (albaranes, analíticas, MOFA). Si **Carne=ON**: registra **pesajes** y **ventas a matadero** (EUROP, rendimientos, margen neto). El botón principal de la cabecera adapta su acción al modo activo.',
-        target: '.module-header-primary-action button',
+        target: 'button[onclick*="App._abrirWizardAlbaranLeche()"], button[onclick*="App._abrirWizardVentaMasiva()"]',
         waitFor: 2000,
         position: 'below',
         launch: async () => {

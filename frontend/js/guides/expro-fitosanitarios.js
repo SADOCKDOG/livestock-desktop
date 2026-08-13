@@ -55,9 +55,9 @@
         position: 'above'
       },
       {
-        title: 'FAB Nuevo Registro',
-        body: 'FAB flotante «Nuevo Registro» (abajo derecha, verde neón) abre formulario: producto, dosis, hectáreas, zona, plazo seguridad, operador, fecha, notas, coste. Valida campos obligatorios. Guarda en gastos_ganaderia con categoría "Fitosanitarios".',
-        target: '.fab-container[onclick*="FitosanitariosView._nuevoTratamiento"]',
+        title: 'Registrar Tratamiento',
+        body: 'Botón «Registrar Tratamiento» (marco de registro verde, arriba del listado) abre formulario: producto, dosis, hectáreas, zona, plazo seguridad, operador, fecha, notas, coste. Valida campos obligatorios. Guarda en gastos_ganaderia con categoría "Fitosanitarios".',
+        target: 'button[onclick*="FitosanitariosView._nuevoTratamiento()"]',
         waitFor: 1500,
         position: 'above'
       },

@@ -55,7 +55,7 @@
       {
         title: 'Registrar un nuevo animal',
         body: 'El botón **«Nuevo Animal»** abre el wizard de alta completa (hash #/animal). Cubre: crotal REGA (ES+12 dígitos), especie/sexo/raza (catálogo oficial FEGA), rebaño, fecha, tipo de alta (nacimiento/compra), identificación técnica, Libro de Registro SIGGAN, genealógia (madre), DIB bovino, estado y observaciones.',
-        target: '.module-header-primary-action button, [onclick*="location.hash=\'/animal\'"]',
+        target: 'button[onclick*="location.hash=\'/animal\'"]',
         waitFor: true,
         position: 'below',
         launch: () => { location.hash = '#/animal'; }

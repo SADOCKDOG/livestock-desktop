@@ -56,8 +56,8 @@
       },
       {
         title: 'Acciones: Cargar / Consumo / Editar / Eliminar',
-        body: '4 botones móviles por silo: **CARGAR** (llenar silo, registra entrada + gasto), **CONSUMO** (descuenta stock, imputa kg a rebaño + genera gasto analítico + evento), **EDITAR** (ficha técnica), **ELIMINAR** (con confirmación). FAB principal «Nuevo Silo» abajo a la derecha.',
-        target: '.fab-container, [onclick*="SilosView._abrirLlenarSilo"], [onclick*="SilosView._abrirConsumirSilo"]',
+        body: '4 botones móviles por silo: **CARGAR** (llenar silo, registra entrada + gasto), **CONSUMO** (descuenta stock, imputa kg a rebaño + genera gasto analítico + evento), **EDITAR** (ficha técnica), **ELIMINAR** (con confirmación). El botón «Nuevo Silo» (marco de registro verde, arriba del listado) crea un silo.',
+        target: 'button[onclick*="SilosView._abrirFormularioSilo()"]',
         waitFor: 1500,
         position: 'above'
       },

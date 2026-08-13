@@ -44,64 +44,52 @@
         position: 'center'
       },
       {
-        title: 'Sub-tabs de navegación',
-        body: 'Barra de 6 sub-tabs (scrollable): Guías, Censo, Crotales, Traslado, Infolac, Archivo. Cada una con icono y color propio. Click para cambiar sin recargar. La guía se reinicia al cambiar sub-tab.',
-        target: '[onclick*="_cambiarTramiteSubTab"]',
+        title: 'Sub-pestañas de navegación (sidebar)',
+        body: 'En el sidebar, bajo **Trámites**, el submenú **Guías DIMOE, Censo Anual, Crotales, Traslados, Infolac, Archivo**. Cada una con icono y color propio. Click para cambiar sin recargar.',
+        target: '.sidebar-group-toggle[data-group-toggle="expro::tramites"]',
         waitFor: 1000,
         position: 'below'
       },
       {
         title: 'Guías — Movimientos DIMOE',
-        body: 'Sub-tab **Guías**: botón «Emitir Nueva Guía DIMOE» (wizard WizardGuiaMovimiento). Historial guías emitidas: número, fecha, destino, estado (REGISTRADA/ENVIADA/ANULADA). Click abre detalle. Exportación XML/CSV para SIGGAN.',
-        target: '#expro-tab-content [onclick*="_abrirWizardGuiaMovimiento"], [onclick*="_cambiarTramiteSubTab(\'guias\')"]',
+        body: 'Sub-pestaña **Guías**: botón «Emitir Nueva Guía DIMOE» (wizard WizardGuiaMovimiento) en el marco de registro. Historial guías emitidas: número, fecha, destino, estado (REGISTRADA/ENVIADA/ANULADA). Click abre detalle. Exportación XML/CSV para SIGGAN.',
+        target: '.sidebar-link[data-route="/explotacion?tab=tramites&sub=guias"]',
         waitFor: 1500,
-        optional: true,
-        optionalReason: 'Solo visible en sub-tab Guías; cambia con _cambiarTramiteSubTab',
         position: 'above'
       },
       {
         title: 'Censo — Declaración Anual REGA',
-        body: 'Sub-tab **Censo**: botón «Generar Declaración Censal» (wizard WizardCenso). Accesos directos: «Libro Registro» (cuaderno digital) e «Informe REGA» (InformesView). Historial censos: año, fecha declaración, total cabezas, badge OFICIAL.',
-        target: '#expro-tab-content [onclick*="_abrirWizardCenso"], [onclick*="_cambiarTramiteSubTab(\'censo\')"]',
+        body: 'Sub-pestaña **Censo**: botón «Generar Declaración Censal» (wizard WizardCenso) en el marco de registro. Accesos directos: «Libro Registro» (cuaderno digital) e «Informe REGA» (InformesView). Historial censos: año, fecha declaración, total cabezas, badge OFICIAL.',
+        target: '.sidebar-link[data-route="/explotacion?tab=tramites&sub=censo"]',
         waitFor: 1500,
-        optional: true,
-        optionalReason: 'Solo visible en sub-tab Censo; cambia con _cambiarTramiteSubTab',
         position: 'above'
       },
       {
         title: 'Crotales — Pedido Identificadores',
-        body: 'Sub-tab **Crotales**: botón «Pedir Nuevos Crotales» (wizard WizardCrotales). Historial pedidos: ID, fecha, cantidad, estado (PENDIENTE/ENVIADO/RECIBIDO). Trazabilidad completa de identificadores recibidos y asignados.',
-        target: '#expro-tab-content [onclick*="_abrirWizardCrotales"], [onclick*="_cambiarTramiteSubTab(\'crotales\')"]',
+        body: 'Sub-pestaña **Crotales**: botón «Pedir Nuevos Crotales» (wizard WizardCrotales) en el marco de registro. Historial pedidos: ID, fecha, cantidad, estado (PENDIENTE/ENVIADO/RECIBIDO). Trazabilidad completa de identificadores recibidos y asignados.',
+        target: '.sidebar-link[data-route="/explotacion?tab=tramites&sub=crotales"]',
         waitFor: 1500,
-        optional: true,
-        optionalReason: 'Solo visible en sub-tab Crotales; cambia con _cambiarTramiteSubTab',
         position: 'above'
       },
       {
         title: 'Traslado — Movimientos Internos',
-        body: 'Sub-tab **Traslado**: botón «Registrar Movimiento Interno» (wizard WizardTraslado). Historial traslados: fecha, cabezas, rebaño origen → destino, badge COMPLETADO. Registra evento en auditoría y actualiza zona/rebaño de animales.',
-        target: '#expro-tab-content [onclick*="_abrirWizardTraslado"], [onclick*="_cambiarTramiteSubTab(\'traslado\')"]',
+        body: 'Sub-pestaña **Traslado**: botón «Registrar Movimiento Interno» (wizard WizardTraslado) en el marco de registro. Historial traslados: fecha, cabezas, rebaño origen → destino, badge COMPLETADO. Registra evento en auditoría y actualiza zona/rebaño de animales.',
+        target: '.sidebar-link[data-route="/explotacion?tab=tramites&sub=traslado"]',
         waitFor: 1500,
-        optional: true,
-        optionalReason: 'Solo visible en sub-tab Traslado; cambia con _cambiarTramiteSubTab',
         position: 'above'
       },
       {
         title: 'Infolac — Entregas Industria Láctea',
-        body: 'Sub-tab **Infolac** (solo si Leche=ON): botón «Ver Entregas para Infolac» (enlaza a ComercializacionView). Historial declaraciones: fecha recogida, cisterna, litros, estado tramitación. Requisito para industrias lácteas.',
-        target: '#expro-tab-content [onclick*="comercializacion"], [onclick*="_cambiarTramiteSubTab(\'infolac\')"]',
+        body: 'Sub-pestaña **Infolac** (solo si Leche=ON): botón «Ver Entregas para Infolac» (enlaza a ComercializacionView) en el marco de registro. Historial declaraciones: fecha recogida, cisterna, litros, estado tramitación. Requisito para industrias lácteas.',
+        target: '.sidebar-link[data-route="/explotacion?tab=tramites&sub=infolac"]',
         waitFor: 1500,
-        optional: true,
-        optionalReason: 'Solo visible si flags.leche === true y en sub-tab Infolac',
         position: 'above'
       },
       {
         title: 'Archivo — Exportación y Memoria',
-        body: 'Sub-tab **Archivo**: 3 tarjetas de acción: **Libro Registro** (cuaderno digital completo), **Exportación SIGGAN** (XML/CSV formatos oficiales CCAA), **Memoria Anual** (balances entrada/salida/existencias por campaña, en InformesView).',
-        target: '#expro-tab-content [onclick*="documentos"], #expro-tab-content [onclick*="/cuaderno"], [onclick*="_cambiarTramiteSubTab(\'archivo\')"]',
+        body: 'Sub-pestaña **Archivo**: 3 tarjetas de acción: **Libro Registro** (cuaderno digital completo), **Exportación SIGGAN** (XML/CSV formatos oficiales CCAA), **Memoria Anual** (balances entrada/salida/existencias por campaña, en InformesView).',
+        target: '.sidebar-link[data-route="/explotacion?tab=tramites&sub=archivo"]',
         waitFor: 1500,
-        optional: true,
-        optionalReason: 'Solo visible en sub-tab Archivo; cambia con _cambiarTramiteSubTab',
         position: 'above'
       },
       {

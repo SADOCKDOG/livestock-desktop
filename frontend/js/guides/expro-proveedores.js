@@ -53,9 +53,9 @@
         position: 'above'
       },
       {
-        title: 'FAB Nuevo Proveedor',
-        body: 'FAB «Nuevo Proveedor» abre formulario: nombre (obligatorio), NIF/CIF, dirección, ciudad, teléfono, email, categorías (multi-select: Alimentación, Sanidad, Fitosanitarios, Electricidad, Personal, Amortización, Otros), notas. Guarda en config_proveedores.',
-        target: '.fab-container[onclick*="ProveedoresView.renderFormulario"]',
+        title: 'Registrar Nuevo Proveedor',
+        body: 'Botón «Nuevo Proveedor» (marco de registro verde, arriba del listado) abre formulario: nombre (obligatorio), NIF/CIF, dirección, ciudad, teléfono, email, categorías (multi-select: Alimentación, Sanidad, Fitosanitarios, Electricidad, Personal, Amortización, Otros), notas. Guarda en config_proveedores.',
+        target: 'button[onclick*="ProveedoresView.renderFormulario()"]',
         waitFor: 1500,
         position: 'above'
       },

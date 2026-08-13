@@ -53,7 +53,7 @@
       {
         title: 'Registrar pesaje (asistente de producción)',
         body: 'Botón **«Registrar Pesaje»** abre el **Asistente de Producción (carne)** para introducir pesos de animales/lotes. Los pesajes seriados son la base del cálculo de ganancia de peso vivo → ICA. Sin pesajes, no hay ICA.',
-        target: '.module-header-primary-action button, [onclick*="_abrirAsistenteProduccion"]',
+        target: 'button[onclick*="App._abrirAsistenteProduccion"]',
         waitFor: true,
         position: 'below',
         launch: () => { if (window.App && App._abrirAsistenteProduccion) App._abrirAsistenteProduccion('carne', { origen_modulo: 'patrimonio' }); }

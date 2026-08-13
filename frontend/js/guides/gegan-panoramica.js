@@ -42,15 +42,14 @@
       },
       {
         title: 'Modo de explotación (Leche / Carne)',
-        body: 'En Ajustes → Explotación activas los flags **Leche** y **Carne** por finca. Si Carne está ON, aparece la pestaña <strong>Patrimonio</strong> (ICA de cebo). Si Leche está ON, verás producción láctea en otras vistas. Cambia según tu sistema productivo real.',
-        target: '.module-header .btn-create',
-        waitFor: true,
-        position: 'below',
-        launch: () => { if (window.App && App.route) App.route('/ajustes?tab=explotacion'); }
+        body: 'En **Fincas → edición de la finca activa** (wizard de configuración, sección *Modo de explotación*) activas los flags **Leche** y **Carne** por finca. Si Carne está ON, aparece la pestaña <strong>Patrimonio</strong> (ICA de cebo). Si Leche está ON, verás producción láctea en otras vistas. Cambia según tu sistema productivo real.',
+        target: null,
+        position: 'center',
+        launch: () => { if (window.WizardFinca && WizardFinca.editar) WizardFinca.editar(); }
       },
       {
-        title: 'Carrusel de pestañas (navegación principal)',
-        body: 'El **carrusel horizontal** en la parte superior permite cambiar entre pestañas sin recargar la app. Cada pestaña tiene su icono y color. Desliza o click para navegar. La guía se reinicia al cambiar de pestaña.',
+        title: 'Navegación de GeGan (sidebar)',
+        body: 'En el **menú lateral** del pilar Ganadería (GeGan) están las 5 secciones: **Animales, Rebaños, Patrimonio, Zonas, Sanidad**. Cada una con su icono y color. Click en la sección para navegar sin recargar la app. La guía se reinicia al cambiar de sección.',
         target: '.carrusel-pestanas, [data-carrusel]',
         waitFor: 1500,
         position: 'below'

@@ -60,9 +60,9 @@
         position: 'above'
       },
       {
-        title: 'FAB Nuevo Comprador',
-        body: 'FAB púrpura «Nuevo Comprador» abre **wizard modal** (card-registro centrado, z-index 6000): nombre, NIF/CIF, tipo (cárnico/láctico/híbrido), operador SIGGAN (matadero/industria/operador/tratante), operador lácteo (letra Q), REGA destino, CCAA, dirección, contacto, condiciones pago, notas, checkbox activo. Guarda en `config_compradores`.',
-        target: '.fab-container',
+        title: 'Registrar Nuevo Comprador',
+        body: 'Botón «Nuevo Comprador» (marco de registro verde, arriba del listado) abre **wizard modal** (card-registro centrado, z-index 6000): nombre, NIF/CIF, tipo (cárnico/láctico/híbrido), operador SIGGAN (matadero/industria/operador/tratante), operador lácteo (letra Q), REGA destino, CCAA, dirección, contacto, condiciones pago, notas, checkbox activo. Guarda en `config_compradores`.',
+        target: 'button[onclick*="CompradoresView._crearComprador()"]',
         waitFor: 1500,
         position: 'above'
       },

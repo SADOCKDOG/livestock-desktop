@@ -39,46 +39,44 @@
         position: 'below'
       },
       {
-        title: 'Sub-tabs de navegación interna',
-        body: 'Barra de 5 sub-tabs bajo el resumen: **Dashboard** (visión general), **Tanques** (enfriadores, capacidades, temperaturas), **Control** (registros oficiales laboratorio), **Balance** (economía láctea: ingresos, costes, MOFA), **Gráficos** (evolución producción, componentes, comparativas). Click para cambiar sin recargar.',
-        target: '.leche-sub-tabs button, .tabs-scroll.leche-sub-tabs',
+        title: 'Sub-pestañas de navegación (sidebar)',
+        body: 'En el sidebar, bajo **Láctea**, el submenú **Dashboard** (visión general), **Tanques** (enfriadores, capacidades, temperaturas), **Control** (registros oficiales laboratorio), **Balance** (economía láctea: ingresos, costes, MOFA), **Gráficos** (evolución producción, componentes, comparativas). Click para cambiar sin recargar.',
+        target: '.sidebar-group-toggle[data-group-toggle="expro::lacteo"]',
         waitFor: 1000,
         position: 'below'
       },
       {
-        title: 'Dashboard — Visión general (sub-tab activo)',
-        body: 'Sub-tab por defecto. Resumen visual: producción última semana, tanques con nivel/temperatura, próximos controles, alertas (ej. temperatura alta). Acceso rápido a registrar ordeño y ver control.',
-        target: '#expro-lacteo-subtab-content .card-registro, #expro-lacteo-subtab-content .dashboard-kpi, [onclick*="_cambiarLacteoSubTab(\'dashboard\')"]',
+        title: 'Dashboard — Visión general (sub-pestaña activa)',
+        body: 'Sub-pestaña por defecto. Resumen visual: producción última semana, tanques con nivel/temperatura, próximos controles, alertas (ej. temperatura alta). Acceso rápido a registrar ordeño y ver control.',
+        target: '.sidebar-link[data-route="/explotacion?tab=lacteo&sub=dashboard"]',
         waitFor: 1500,
         position: 'above'
       },
       {
-        title: 'Tanques — Enfriadores (click sub-tab Tanques)',
-        body: 'Sub-tab **Tanques** (delega a TanquesView si existe). Cada tanque: capacidad, litros actuales, temperatura, estado (enfriando/ok/alarma). FAB «Nuevo Tanque». Click en tarjeta abre ficha con histórico temperaturas y calibración.',
-        target: '[onclick*="_cambiarLacteoSubTab(\'tanques\')"]',
-        waitFor: 1500,
-        position: 'below',
-        optional: true,
-        optionalReason: 'Requiere window.TanquesView cargado (módulo opcional)'
-      },
-      {
-        title: 'Control — Analíticas laboratorio (click sub-tab Control)',
-        body: 'Sub-tab **Control**: listado de controles oficiales (fecha, litros, grasa, proteína, extracto seco, urea, recuento celular). Cada control abre ficha con componentes, comparación con anterior y tendencia. FAB para registrar nuevo control (wizard).',
-        target: '[onclick*="_cambiarLacteoSubTab(\'control\')"]',
+        title: 'Tanques — Enfriadores (sub-pestaña Tanques)',
+        body: 'Sub-pestaña **Tanques** (delega a TanquesView si existe). Cada tanque: capacidad, litros actuales, temperatura, estado (enfriando/ok/alarma). Botón «Nuevo Tanque» en el marco de registro. Click en tarjeta abre ficha con histórico temperaturas y calibración.',
+        target: '.sidebar-link[data-route="/explotacion?tab=lacteo&sub=tanques"]',
         waitFor: 1500,
         position: 'below'
       },
       {
-        title: 'Balance — Economía láctea MOFA (click sub-tab Balance)',
-        body: 'Sub-tab **Balance**: ingresos por leche (litros × precio), costes alimentación (pienso, forraje), **MOFA** = Ingresos - Coste Alimentación. Desglose por periodo, comparativa con campañas anteriores. KPIs: €/litro, €/vaca/día, % coste alimentación.',
-        target: '[onclick*="_cambiarLacteoSubTab(\'balance\')"]',
+        title: 'Control — Analíticas laboratorio (sub-pestaña Control)',
+        body: 'Sub-pestaña **Control**: listado de controles oficiales (fecha, litros, grasa, proteína, extracto seco, urea, recuento celular). Cada control abre ficha con componentes, comparación con anterior y tendencia. Botón para registrar nuevo control (wizard) en el marco de registro.',
+        target: '.sidebar-link[data-route="/explotacion?tab=lacteo&sub=control"]',
         waitFor: 1500,
         position: 'below'
       },
       {
-        title: 'Gráficos — Evolución y componentes (click sub-tab Gráficos)',
-        body: 'Sub-tab **Gráficos**: series temporales de producción (L/día), grasa/proteína (%), recuento celular, urea, MOFA. Selector de rango (semana/mes/año/campaña). Exportable a imagen/PDF para informes.',
-        target: '[onclick*="_cambiarLacteoSubTab(\'graficos\')"]',
+        title: 'Balance — Economía láctea MOFA (sub-pestaña Balance)',
+        body: 'Sub-pestaña **Balance**: ingresos por leche (litros × precio), costes alimentación (pienso, forraje), **MOFA** = Ingresos - Coste Alimentación. Desglose por periodo, comparativa con campañas anteriores. KPIs: €/litro, €/vaca/día, % coste alimentación.',
+        target: '.sidebar-link[data-route="/explotacion?tab=lacteo&sub=balance"]',
+        waitFor: 1500,
+        position: 'below'
+      },
+      {
+        title: 'Gráficos — Evolución y componentes (sub-pestaña Gráficos)',
+        body: 'Sub-pestaña **Gráficos**: series temporales de producción (L/día), grasa/proteína (%), recuento celular, urea, MOFA. Selector de rango (semana/mes/año/campaña). Exportable a imagen/PDF para informes.',
+        target: '.sidebar-link[data-route="/explotacion?tab=lacteo&sub=graficos"]',
         waitFor: 1500,
         position: 'below'
       },

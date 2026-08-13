@@ -38,8 +38,8 @@
         position: 'center'
       },
       {
-        title: 'Carrusel de pestañas',
-        body: 'El carrusel circular superior muestra **solo las pestañas permitidas** según tu modo de explotación (Ajustes → Explotación): Leche (azul) si flags.leche=ON; Carne (verde lima) si flags.carne=ON; Compradores, Contratos y Transportistas (púrpura/rosa) siempre. Click para cambiar sin recargar la vista completa.',
+        title: 'Navegación de CoMer (sidebar)',
+        body: 'En el **menú lateral** del pilar Comercialización (CoMer) están las 5 secciones: **Leche, Carne, Compradores, Contratos, Transportistas**. Leche (azul) aparece si flags.leche=ON; Carne (verde lima) si flags.carne=ON; Compradores, Contratos y Transportistas (púrpura/rosa) siempre. Los flags Leche/Carne se activan en **Fincas → edición de la finca activa**. Click en cada sección para navegar sin recargar.',
         target: '.carrusel-pestanas .carrusel-dot, .carrusel-pestanas .carrusel-marco',
         waitFor: 1000,
         position: 'below'
@@ -56,7 +56,7 @@
       {
         title: 'Cabecera adaptativa por pestaña activa',
         body: 'La cabecera cambia según la pestaña: **Leche/Carne** → KPIs de entregas/ventas + botón principal "Registrar Retirada" / "Registrar Venta" (abren wizards reales). **Compradores/Contratos/Transportistas** → resumen + FAB "Nuevo". La acción principal siempre lanza el wizard correspondiente.',
-        target: '.module-header-primary-action button',
+        target: 'button[onclick*="App._abrirWizardAlbaranLeche()"], button[onclick*="App._abrirWizardVentaMasiva()"]',
         waitFor: true,
         position: 'below'
       },

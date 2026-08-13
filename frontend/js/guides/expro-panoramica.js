@@ -41,15 +41,14 @@
       },
       {
         title: 'Modo de explotación (Leche / Carne)',
-        body: 'En Ajustes → Explotación activas los flags **Leche** y **Carne** por finca. Si Leche=ON, aparece la pestaña **Láctea** con producción diaria, tanques, control y balance MOFA. Si Carne=ON, la pestaña Explotación muestra margen carne y GMD. Cambia según tu sistema productivo real.',
-        target: '.module-header .btn-create',
-        waitFor: true,
-        position: 'below',
-        launch: () => { if (window.App && App.route) App.route('/ajustes?tab=explotacion'); }
+        body: 'En **Fincas → edición de la finca activa** (wizard de configuración, sección *Modo de explotación*) activas los flags **Leche** y **Carne** por finca. Si Leche=ON, aparece la pestaña **Láctea** con producción diaria, tanques, control y balance MOFA. Si Carne=ON, la pestaña Explotación muestra margen carne y GMD. Cambia según tu sistema productivo real.',
+        target: null,
+        position: 'center',
+        launch: () => { if (window.WizardFinca && WizardFinca.editar) WizardFinca.editar(); }
       },
       {
-        title: 'Carrusel de pestañas (navegación principal)',
-        body: 'El **carrusel horizontal** en la parte superior permite cambiar entre las 7 pestañas sin recargar la app. Cada pestaña tiene su icono y color. Desliza o click para navegar. La guía se reinicia al cambiar de pestaña.',
+        title: 'Navegación del módulo ExPro (sidebar)',
+        body: 'En el **menú lateral** del pilar ExPro (grupo «EXPRO» en la barra lateral) accedes a las 7 secciones: **Explotación, Láctea, Silos, Fitosanitarios, Finanzas, Proveedores, Trámites**. Las que tienen sub-secciones (Láctea, Finanzas, Trámites) se despliegan al pulsar su grupo. Cambia de sección y la guía se adapta.',
         target: '.carrusel-pestanas, [data-carrusel]',
         waitFor: 1500,
         position: 'below'
@@ -57,58 +56,58 @@
       {
         title: 'Explotación — Control general',
         body: 'Pestaña por defecto (**Explotación**). KPIs de producción (litros, margen carne), banner **Guía 365** (solo Andalucía + saneamiento), alerta **telemetría silos** (stock <15%), búsqueda de actividad por crotal/zona y listado cronológico de ordeños/pesajes. Botón principal adaptativo: "Registrar Producción" / "Registrar Pesaje" / "Registrar Ordeño" según flags.',
-        target: '.carrusel-dot[data-tab="explotacion"]',
-        waitFor: 1000,
+        target: '.sidebar-link[data-route="/explotacion?tab=explotacion"]',
+        waitFor: 1500,
         position: 'below',
-        launch: () => { if (window.ExplotacionView && ExplotacionView._cambiarSubModulo) ExplotacionView._cambiarSubModulo('explotacion'); }
+        launch: () => { if (window.App && App.route) App.route('/explotacion?tab=explotacion'); }
       },
       {
         title: 'Láctea — Producción diaria (solo Leche)',
         body: 'Pestaña **Láctea** (solo si Leche=ON). Resumen KPIs (litros control, margen MOFA), 5 sub-tabs internas: Dashboard, Tanques, Control, Balance, Gráficos. Wizard real de ordeño/control desde sub-tabs.',
-        target: '.carrusel-dot[data-tab="lacteo"]',
-        waitFor: 1000,
+        target: '.sidebar-link[data-route="/explotacion?tab=lacteo&sub=dashboard"]',
+        waitFor: 1500,
         position: 'below',
-        launch: () => { if (window.ExplotacionView && ExplotacionView._cambiarSubModulo) ExplotacionView._cambiarSubModulo('lacteo'); }
+        launch: () => { if (window.App && App.route) App.route('/explotacion?tab=lacteo&sub=dashboard'); }
       },
       {
         title: 'Silos — Telemetría alimentación',
         body: 'Pestaña **Silos**: capacidad total, almacenado, ocupación media. Cada silo tiene gauge circular (% nivel), autonomía estimada (días), alerta rojo si <15%. Acciones: Cargar, Consumo (descarga stock + imputa gasto + genera evento), Editar, Eliminar. FAB «Nuevo Silo».',
-        target: '.carrusel-dot[data-tab="silos"]',
-        waitFor: 1000,
+        target: '.sidebar-link[data-route="/explotacion?tab=silos"]',
+        waitFor: 1500,
         position: 'below',
-        launch: () => { if (window.ExplotacionView && ExplotacionView._cambiarSubModulo) ExplotacionView._cambiarSubModulo('silos'); }
+        launch: () => { if (window.App && App.route) App.route('/explotacion?tab=silos'); }
       },
       {
         title: 'Fitosanitarios — Cuaderno de campo',
         body: 'Pestaña **Fitosanitarios**: libro oficial (RD 787/2023). KPIs: inversión total, aplicaciones, zonas tratadas. Botón «Exportar Libro Fitosanitario Oficial (PDF)». Historial de tratamientos/compras. FAB «Nuevo Registro».',
-        target: '.carrusel-dot[data-tab="fitosanitarios"]',
-        waitFor: 1000,
+        target: '.sidebar-link[data-route="/explotacion?tab=fitosanitarios"]',
+        waitFor: 1500,
         position: 'below',
-        launch: () => { if (window.ExplotacionView && ExplotacionView._cambiarSubModulo) ExplotacionView._cambiarSubModulo('fitosanitarios'); }
+        launch: () => { if (window.App && App.route) App.route('/explotacion?tab=fitosanitarios'); }
       },
       {
         title: 'Finanzas — Gastos por categoría',
         body: 'Pestaña **Finanzas** (gastos): evolución mensual 6 meses, balance consolidado por 6 categorías (Alimentación, Sanidad, Fitosanitarios, Electricidad, Personal, Amortización). Tabs por categoría con listado y FAB «Nuevo Gasto».',
-        target: '.carrusel-dot[data-tab="gastos"]',
-        waitFor: 1000,
+        target: '.sidebar-link[data-route="/explotacion?tab=gastos&cat=todos"]',
+        waitFor: 1500,
         position: 'below',
-        launch: () => { if (window.ExplotacionView && ExplotacionView._cambiarSubModulo) ExplotacionView._cambiarSubModulo('gastos'); }
+        launch: () => { if (window.App && App.route) App.route('/explotacion?tab=gastos&cat=todos'); }
       },
       {
         title: 'Proveedores — Trazabilidad compras',
         body: 'Pestaña **Proveedores**: KPIs (proveedores, gasto asignado, registros). Búsqueda por nombre/NIF/ciudad. Lista con detalle de compras por proveedor. FAB «Nuevo Proveedor».',
-        target: '.carrusel-dot[data-tab="proveedores"]',
-        waitFor: 1000,
+        target: '.sidebar-link[data-route="/explotacion?tab=proveedores"]',
+        waitFor: 1500,
         position: 'below',
-        launch: () => { if (window.ExplotacionView && ExplotacionView._cambiarSubModulo) ExplotacionView._cambiarSubModulo('proveedores'); }
+        launch: () => { if (window.App && App.route) App.route('/explotacion?tab=proveedores'); }
       },
       {
         title: 'Trámites — Gestión documental SIGGAN',
         body: 'Pestaña **Trámites**: 6 sub-tabs (Guías DIMOE, Censo, Crotales, Traslado, Infolac, Archivo). Cada una con botón de alta (wizard real) + historial. Exportación SIGGAN/REGA, libro registro, memoria anual. FAB contextual por sub-tab.',
-        target: '.carrusel-dot[data-tab="tramites"]',
-        waitFor: 1000,
+        target: '.sidebar-link[data-route="/explotacion?tab=tramites&sub=guias"]',
+        waitFor: 1500,
         position: 'below',
-        launch: () => { if (window.ExplotacionView && ExplotacionView._cambiarSubModulo) ExplotacionView._cambiarSubModulo('tramites'); }
+        launch: () => { if (window.App && App.route) App.route('/explotacion?tab=tramites&sub=guias'); }
       },
       {
         title: 'FAB Guía y reinicio',

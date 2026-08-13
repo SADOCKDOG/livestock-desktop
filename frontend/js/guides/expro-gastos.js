@@ -50,9 +50,9 @@
         optionalReason: 'Solo visible tras renderizar la pestaña Gastos (contenido dinámico)'
       },
       {
-        title: 'Tabs por Categoría Contable',
-        body: 'Barra de tabs horizontal (scrollable): **Todos, Alimentación, Sanidad, Fitosanitarios, Electricidad, Personal, Amortización**. Cada tab filtra el listado inferior. Tab activa resaltada con su color. Click para cambiar sin recargar.',
-        target: '.gasto-tabs button, .tabs-scroll.gasto-tabs',
+        title: 'Categorías contables (submenú del sidebar)',
+        body: 'En el sidebar, bajo **Finanzas**, el submenú **Resumen, Alimentación, Sanidad, Fitosanitarios, Electricidad, Personal, Amortización** filtra el listado inferior. La entrada activa se resalta con su color. Click para cambiar sin recargar.',
+        target: '.sidebar-group-toggle[data-group-toggle="expro::gastos"]',
         waitFor: 1000,
         position: 'below'
       },
@@ -64,9 +64,9 @@
         position: 'above'
       },
       {
-        title: 'FAB Nuevo Gasto',
-        body: 'FAB flotante «Nuevo Gasto» (púrpura) abre wizard: categoría (selector 6 opciones), concepto, fecha, importe (€), proveedor (opcional, enlace a Proveedores), zona, notas. Valida importe >0. Genera gasto_ganaderia + evento registro_eventos.',
-        target: '.fab-container[onclick*="App._abrirFormularioGasto"]',
+        title: 'Registrar Gasto',
+        body: 'Botón «Registrar Gasto» (marco de registro verde, arriba del listado) abre wizard: categoría (selector 6 opciones), concepto, fecha, importe (€), proveedor (opcional, enlace a Proveedores), zona, notas. Valida importe >0. Genera gasto_ganaderia + evento registro_eventos.',
+        target: 'button[onclick*="App._abrirFormularioGasto()"]',
         waitFor: 1500,
         position: 'above'
       },

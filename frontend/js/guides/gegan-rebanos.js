@@ -55,7 +55,7 @@
       {
         title: 'Crear nuevo rebaño (wizard guiado)',
         body: 'Botón **«Nuevo Rebaño»** abre wizard de 5 pasos: (1) Identificación: nombre + especie; (2) Ubicación y tipo: tipo producción + zona; (3) REGA: tipo explotación obligatorio; (4) Capacidad y trazabilidad: aforo + código lote; (5) Fecha y notas. Valida cada paso antes de avanzar.',
-        target: '.module-header-primary-action button, [onclick*="RebanosView._crearRebano"]',
+        target: 'button[onclick*="RebanosView._crearRebano()"]',
         waitFor: true,
         position: 'below',
         launch: () => { if (window.RebanosView && RebanosView._crearRebano) RebanosView._crearRebano(); }

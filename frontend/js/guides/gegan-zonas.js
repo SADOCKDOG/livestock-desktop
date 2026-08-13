@@ -54,7 +54,7 @@
       {
         title: 'Crear nueva zona (wizard 2 pasos)',
         body: 'Botón **«Nueva Zona»** abre wizard: (1) Identificación: nombre, aforo, superficie (ha), uso principal; (2) Requisitos: **código PAC** (obligatorio para subvenciones), distancia a agua (m). Genera ID único y guarda en finca.',
-        target: '.module-header-primary-action button, [onclick*="ZonasView._crearZona"]',
+        target: 'button[onclick*="ZonasView._crearZona()"]',
         waitFor: true,
         position: 'below',
         launch: () => { if (window.ZonasView && ZonasView._crearZona) ZonasView._crearZona(); }

@@ -55,7 +55,7 @@
       {
         title: 'FAB Registrar Venta',
         body: 'Botón flotante verde lima (--c-success) «Registrar Venta» abre **WizardVentaMasiva**: selección múltiple de animales/lotes (checkbox), comprador (selector mataderos/cooperativas), fecha sacrificio, peso canal unitario o por lote, rendimiento %, clasificación EUROP/S, precio €/kg o importe total, gastos transporte y matanza (opcionales, descuentan del margen). Guarda en comercializacion_carne + eventos + actualiza animal a "Vendido".',
-        target: '.module-header-primary-action button[onclick*="App._abrirWizardVentaMasiva"]',
+        target: 'button[onclick*="App._abrirWizardVentaMasiva()"]',
         waitFor: 1500,
         position: 'above'
       },
