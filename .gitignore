@@ -1,6 +1,9 @@
-﻿@"
 node_modules/
 .DS_Store
 *.log
 src-tauri/target/
-@
+
+# Material local / personal (no se sube al repo)
+private/
+.ai/
+.vscode/
