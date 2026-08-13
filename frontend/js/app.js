@@ -681,10 +681,13 @@ const App = {
   /** Color de pantalla fijo por módulo principal (verde lima GeGan / azul ExPro / amarillo CoMer,
    *  ver .agent/AGENTS.md §1). Unifica la cromática del carrusel y del marco de cabecera para que
    *  no varíe entre submódulos; los iconos SVG y las tarjetas de registro conservan su color propio. */
+  // Cromo de carrusel unificado en gris acero ERP: un solo estilo para todos
+  // los módulos (antes verde/azul/amarillo por módulo). El color queda reservado
+  // para estados semánticos (éxito/peligro/premio) en los datos, no en el cromo.
   CARRUSEL_COLOR_MODULO: {
-    GanaderiaView: 'var(--c-success)',
-    ExplotacionView: 'var(--c-info)',
-    ComercializacionView: 'var(--c-warning)',
+    GanaderiaView: 'var(--text-s)',
+    ExplotacionView: 'var(--text-s)',
+    ComercializacionView: 'var(--text-s)',
   },
 
   /**

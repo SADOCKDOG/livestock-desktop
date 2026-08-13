@@ -137,7 +137,7 @@
 }
 .sidebar-link:hover {
   background: color-mix(in srgb, var(--sidebar-active-bg) 50%, transparent);
-  /* conserva el color del módulo del icono */
+  /* Enlaces e iconos unificados a --sidebar-text; solo el ítem activo lleva acento */
   color: currentColor;
 }
 .sidebar-link.active,

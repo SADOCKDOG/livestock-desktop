@@ -69,12 +69,104 @@
 .text-orange        { color: var(--c-orange); }
 .border-blue        { border-color: var(--c-info); }
 .border-orange      { border-color: var(--c-orange); }
-.card-accent-blue   { border-left-color: var(--c-info); }
-.card-accent-orange { border-left-color: var(--c-orange); }
+/* Acentos de tarjeta del maestro → gris acero único (coherencia ERP).
+   El color queda reservado para estados semánticos (éxito/peligro/premio). */
+.card-accent-blue,
+.card-accent-orange,
+.card-accent-purple,
+.card-accent-green,
+.card-accent-red,
+.card-accent-amber,
+.card-accent-gold {
+  border-left-color: var(--text-s) !important;
+}
 .color-blue         { --registro-color: var(--c-info); }
 .color-orange       { --registro-color: var(--c-orange); }
 
-/* ── Check del selector de tema: ✓ Unicode → SVG (styles.css:2447) ── */
+/* ── Tintes verde LIMA del maestro → verde institucional ERP ──
+   styles.css usa rgba(197,250,80,…) (#C5FA50 neón) como "verde" de fondos,
+   badges y cajas. Se re-mapean a tintes de --c-success (#15803D) con el
+   mismo alfa, manteniendo la jerarquía visual sin el neón. */
+.q-pill.p1 {
+  background: color-mix(in srgb, var(--c-success) 12%, transparent);
+  border-color: color-mix(in srgb, var(--c-success) 30%, transparent);
+}
+
+.badge-green {
+  background: color-mix(in srgb, var(--c-success) 10%, transparent);
+}
+
+.badge-green-outline {
+  background: color-mix(in srgb, var(--c-success) 10%, transparent);
+  border-color: color-mix(in srgb, var(--c-success) 30%, transparent);
+}
+
+.card-tint-green {
+  background: color-mix(in srgb, var(--c-success) 5%, transparent);
+}
+
+.card-tint-green-lg {
+  background: color-mix(in srgb, var(--c-success) 8%, transparent);
+}
+
+.bg-green-subtle {
+  background: color-mix(in srgb, var(--c-success) 3%, transparent);
+}
+
+.wizard-alert-info {
+  background: color-mix(in srgb, var(--c-success) 8%, transparent);
+}
+
+.nota-box-green {
+  background: color-mix(in srgb, var(--c-success) 10%, transparent);
+}
+
+.hint-box-green {
+  background: color-mix(in srgb, var(--c-success) 10%, transparent);
+}
+
+.btn-inline-green {
+  background: color-mix(in srgb, var(--c-success) 15%, transparent);
+  border-color: color-mix(in srgb, var(--c-success) 30%, transparent);
+}
+
+.comprador-mode-header--hibrido {
+  background: color-mix(in srgb, var(--c-success) 10%, transparent);
+}
+
+.inf-sep-xls {
+  background: color-mix(in srgb, var(--c-success) 20%, transparent);
+}
+
+/* ── Glows lima hardcodeados (sin var) → glow institucional ── */
+.fab-container:active .fab-btn {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--brand) 40%, transparent);
+}
+
+.btn-success, .btn--success, .wizard-btn-success {
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--c-success) 30%, transparent);
+}
+
+/* ── Unified chrome: neutralizar marco neón heredado del PWA ──
+   El marco "L" azul era un vestigio PWA (mobile-first) que chocaba
+   con el estilo ERP: banners verdes, sidebar navy, KPIs y tarjetas
+   sobrias. Se conservan los acentos --header-neon-color (= var(--brand))
+   en los estados activos intencionales (botones .active, .tour-dot,
+   pills/chips de datos). */
+header {
+  /* Chrome unificado: mismo fondo neutro del sidebar (--sidebar-bg) para que
+     banner superior e izquierdo compartan fondo y sean coherentes (sin azul). */
+  background: var(--sidebar-bg);
+  border-bottom: 1px solid var(--border);
+  box-shadow: none !important;
+}
+nav.bottom-nav {
+  border-top: 1px solid var(--border-subtle);
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.5) !important;
+}
+body::after {
+  display: none !important;
+}
 .theme-dot.active::after {
   content: '';
   width: 12px;
@@ -82,4 +174,139 @@
   background: #000;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* =========================================================================
+   MENÚS / TABSTRIP DE ESCRITORIO (≥1024px) — neutraliza patrones mobile-first
+   del maestro (styles.css, read-only). No se toca el maestro; todo va en este
+   media query para preservar el layout móvil/tablet.
+   Combinación: B (carrusel → tab-strip) + A (barra de acción → toolbar fija)
+   + C (grids de acción de ancho fijo + submenú de registros → popover).
+   ========================================================================= */
+@media (min-width: 1024px) {
+
+  /* ── B · Carrusel de pestañas → tab-strip fijo (sin flechas/dots) ── */
+  .carrusel-modulo {
+    position: relative;          /* ancla el .carrusel-menu dropdown */
+    margin-left: 0;
+    margin-right: 0;
+    padding: 10px 0 6px;
+    background: transparent;
+    backdrop-filter: none;
+  }
+  .carrusel-pestanas {
+    justify-content: flex-start;
+    gap: 4px;
+    width: auto;
+  }
+  .carrusel-marco {
+    flex: 0 0 auto !important;  /* deja de estirarse al 100% del ancho */
+    min-width: 0;
+    padding: 8px 16px;
+    height: 38px;
+    font-size: 0.72rem;
+    border-radius: var(--r-sm);
+    box-shadow: none;
+    background: var(--surface-light);
+  }
+  .carrusel-marco[aria-expanded="true"],
+  .carrusel-marco:hover {
+    background: var(--brand);
+    color: #fff;
+  }
+  .carrusel-flecha { display: none; }
+  .carrusel-dots { display: none; }
+  .carrusel-menu {
+    position: absolute;
+    left: 0;
+    transform: none;
+    width: 260px;
+    max-height: 320px;
+  }
+  .carrusel-menu.open { transform: none; }
+
+  /* ── A · Barra de acción de módulo → toolbar fija a la derecha ── */
+  .module-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .module-header-primary-action {
+    margin-bottom: 0;
+    flex: 0 0 auto;
+  }
+  /* El botón primario full-width (mobile) pasa a ancho de contenido, compacto */
+  .module-header-primary-action .btn,
+  .btn.btn-create.btn-lg.w-full {
+    width: auto !important;
+    min-width: 200px;
+    height: 40px;
+    padding: 0 20px;
+    border-radius: var(--r-sm);
+    font-size: 0.85rem;
+  }
+  /* Acciones secundarias: de scroll horizontal a fila de chips a la derecha */
+  .module-header-secondary-actions {
+    overflow-x: visible;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+  }
+  .module-header-secondary-actions .widget-link-btn--neon {
+    flex-direction: row;
+    min-height: 40px;
+    min-width: 0;
+    padding: 8px 14px;
+    gap: 8px;
+  }
+  .module-header-secondary-actions .widget-link-btn--neon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* ── C · Grids de acción → columnas fijas con wrap + popover registros ── */
+  /* Dashboard "Registro Rápido": define el grid de 12 cols con celdas fijas */
+  .grid.grid-cols-12 {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 200px));
+  }
+  .card-registro-quick,
+  .card-registro-quick.col-span-4,
+  .card-registro-quick.col-span-12 {
+    grid-column: auto !important;
+    width: 200px;
+    min-width: 0;
+  }
+
+  /* Patrimonio "Accesos directos": ancho fijo en vez de 1fr 1fr 1fr */
+  .grid.grid-cols-3 {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 200px));
+  }
+  .grid.grid-cols-3 .widget-link-btn--neon {
+    width: 200px;
+    min-height: 64px;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  /* Submenú de registros: de hoja inferior a popover centrado arriba */
+  #submenu-registros-overlay.bottom-sheet-overlay {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 80px 24px !important;
+  }
+  #submenu-registros-overlay .bottom-sheet-content {
+    max-width: 720px !important;
+    border-radius: var(--r-md) !important;
+    border-top: none !important;
+    width: auto !important;
+  }
+  #submenu-registros-overlay .grid.grid-cols-2 {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 220px)) !important;
+  }
+  #submenu-registros-overlay .card {
+    width: 220px;
+  }
 }

@@ -62,12 +62,24 @@
     --brand-soft: #E7F0FB;    /* Fila activa / fondo tintado */
     --focus:    #2B7DE9;      /* Anillo de foco (accesibilidad) */
 
+    /* ── ALIAS LEGADOS DEL MAESTRO (neutralizan neón) ──
+       styles.css / layout.css usan estas vars con fallback #C5FA50 (lima):
+         .nav-item.active, body::after (marco), FAB, glows de header…
+       Al definirlas en la capa ERP, el fallback lima NUNCA se aplica y
+       todo resuelve a la paleta corporativa. (Capa solo-escritura desktop.) */
+    --header-neon-color: var(--brand);   /* activo de nav / glows → azul ERP */
+    --haz-luz-color:      transparent;     /* marco y haz lateral → sin neón */
+    --fab-neon-color:     var(--brand);   /* FAB flotante → azul ERP */
+    --accent:             var(--brand);
+    --neon-color:         var(--brand);
+    --theme-color:        var(--brand);
+
     /* ── COLOR MARCA SECUNDARIO (Oro Premium / REGA) ── */
     --p-gold:        #FFB300; /* Oro Premium - identificadores y REGA */
     --p-gold-dark:   #CC8F00;
 
     /* ── COLOR SIDEBAR ── */
-    --sidebar-bg:    #0F1B2D;   /* Barra lateral navy acero */
+    --sidebar-bg:    #1E1E1E;   /* Chrome neutro Dark Pro (sin azul): sidebar + header */
     --sidebar-active-bg: #1F5FA8; /* Ítem activo del sidebar */
     --sidebar-text:  #C3D0DE;   /* Texto lateral */
 

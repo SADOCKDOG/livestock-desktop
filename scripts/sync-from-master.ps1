@@ -40,6 +40,7 @@ $preservedList = @(
     'js\views\contratos-view.js',      # Toggle Tarjetas/Tabla ERP
     'js\views\documentos-view.js',     # Toggle Tarjetas/Tabla ERP (registro documental)
     'js\views\fitosanitarios-view.js', # Toggle Tarjetas/Tabla ERP
+    'js\views\comercializacion-view.js', # Banner/KPI cromo ERP unificado (neutro)
     'css\design-tokens.css',         # Paleta ERP profesional
     'css\erp-sidebar.css',           # Sidebar colapsable (solo desktop)
     'css\erp-data-table.css',        # Tablas densas ERP (solo desktop)
