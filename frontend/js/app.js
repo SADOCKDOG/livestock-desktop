@@ -167,6 +167,7 @@ const App = {
       App._setupHardwareBackButton();
       App._setupSidebar();
       App._observarVerMas();
+      App._recordarFoco();
       await App._ejecutarMigracionesFondo();
       App._initScrollShadows();
       // Cargar preferencias visuales
@@ -1987,6 +1988,49 @@ const App = {
     });
   },
 
+  /** Varias vistas repintan su contenido entero en cada pulsacion del buscador
+   *  (oninput -> render()). Eso destruye el <input>, el foco cae al body y hay
+   *  que volver a hacer clic para escribir la siguiente letra. Aqui se recuerda
+   *  cual era el campo activo y se le devuelve el foco y la posicion del cursor
+   *  cuando reaparece, para no tener que reescribir cada vista. */
+  _recordarFoco() {
+    if (this._focoBound) return;
+    // Se escucha en document y no en #app-content: ese contenedor se reemplaza
+    // en algunos flujos, y con el se perderia el listener.
+    // Se registra en 'input' ademas de 'focusin' porque el caso a cubrir es
+    // justo escribir en el buscador, y asi no depende de eventos de foco.
+    const anotar = (e) => {
+      const el = e.target;
+      if (!el || !el.id || !/^(INPUT|TEXTAREA)$/.test(el.tagName)) return;
+      this._focoUltimo = { id: el.id, pos: el.selectionStart, cuando: Date.now() };
+    };
+    document.addEventListener('focusin', anotar);
+    document.addEventListener('input', anotar);
+    this._focoBound = true;
+  },
+
+  /** Devuelve el foco al campo que lo tenia antes del repintado. */
+  _restaurarFoco() {
+    const f = this._focoUltimo;
+    if (!f) return;
+    // Solo dentro de la ventana en que un repintado puede haberlo robado: pasado
+    // ese margen se asume que el usuario movio el foco a proposito.
+    if (Date.now() - f.cuando > 3000) return;
+    const activo = document.activeElement;
+    if (activo && activo !== document.body && activo.id !== f.id) return;
+
+    const el = document.getElementById(f.id);
+    if (!el || el === activo) return;
+    el.focus();
+    try {
+      const pos = f.pos != null ? f.pos : (el.value || '').length;
+      el.setSelectionRange(pos, pos);
+    } catch (e) {
+      // input type=number o date no admiten setSelectionRange
+    }
+    f.cuando = Date.now();
+  },
+
   /** Observa #app-content para recortar también los listados que repintan las
    *  propias vistas (buscadores, cambios de pestaña, toggle Tarjetas/Tabla),
    *  que no pasan por route(). Cada contenedor se procesa una sola vez. */
@@ -1997,8 +2041,13 @@ const App = {
     this._verMasObserver = new MutationObserver(() => {
       if (this._verMasPendiente) return;
       this._verMasPendiente = true;
-      requestAnimationFrame(() => {
+      // setTimeout y no requestAnimationFrame: rAF no corre con la ventana
+      // oculta o minimizada, y entonces el flag se quedaba en true para
+      // siempre, dejando el observador muerto (sin filtros, sin «Ver mas» y
+      // sin restaurar el foco) hasta recargar.
+      setTimeout(() => {
           this._verMasPendiente = false;
+        try { this._restaurarFoco(); } catch (e) {}
         try { this._recolocarMarcoRegistro(main); } catch (e) { console.warn('[Marco]', e); }
         try { this._recolocarToggleVista(main); } catch (e) { console.warn('[Toggle]', e); }
         try { this.aplicarFiltrosListadoAuto(main); } catch (e) { console.warn('[Filtros]', e); }
