@@ -285,7 +285,11 @@ const DocumentosView = {
             <button class="btn-erp-secondary btn-sm" id="btn-docs-vista-tabla" onclick="DocumentosView._setVistaModo('tabla')">Tabla ERP</button>
           </div>
         </div>
-        <div id="docs-lista">${this._renderLista(docsRecientes, ventaMap)}</div>
+        <div class="erp-filtros" data-filtros-para="docs-lista">
+          <input type="search" class="form-input search-input" placeholder="Buscar documento por tipo, número o fecha...">
+          <select class="form-select" data-etiqueta-todos="Todos los tipos"></select>
+        </div>
+        <div id="docs-lista" data-ver-mas="10">${this._renderLista(docsRecientes, ventaMap)}</div>
         <div id="docs-erp-table-container" class="mt-12" style="display:none;"></div>
         ${docs.length > 5 ? `<div id="docs-mas-nota" class="text-center mt-6 pt-6 border-top-222"><span class="text-[0.6rem] text-gray font-900 uppercase tracking-wider">${docs.length - 5} documentos más · usa "Consultar / Imprimir" para ver todos</span></div>` : ''}
       </div>

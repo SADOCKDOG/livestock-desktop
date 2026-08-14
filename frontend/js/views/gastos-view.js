@@ -204,7 +204,11 @@ const GastosView = {
             <button class="btn-erp-secondary btn-sm" id="btn-gastos-vista-tabla" onclick="GastosView._setVistaModo('tabla')">Tabla ERP</button>
           </div>
         </div>
-        <div id="gastos-cards-container">${recordsHtml}</div>
+        <div class="erp-filtros" data-filtros-para="gastos-cards-container">
+          <input type="search" class="form-input search-input" placeholder="Buscar gasto por concepto, proveedor o importe...">
+          <select class="form-select" data-etiqueta-todos="Toda categoría"></select>
+        </div>
+        <div id="gastos-cards-container" data-ver-mas="10">${recordsHtml}</div>
         <div id="gastos-erp-table-container" class="mt-12" style="display:none;"></div>
       </div>
 `;

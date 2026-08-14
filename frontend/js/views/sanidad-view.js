@@ -226,8 +226,8 @@ const SanidadView = {
         </div>
 
         <div class="flex justify-end gap-6 mb-8">
-          <button class="btn-erp-secondary btn-sm" id="btn-san-hist-cards" onclick="SanidadView._setVistaModo('cards')">Tarjetas</button>
-          <button class="btn-erp-secondary btn-sm" id="btn-san-hist-tabla" onclick="SanidadView._setVistaModo('tabla')">Tabla ERP</button>
+          <button class="btn-erp-secondary btn-sm" id="btn-san-vista-cards" onclick="SanidadView._setVistaModo('cards')">Tarjetas</button>
+          <button class="btn-erp-secondary btn-sm" id="btn-san-vista-tabla" onclick="SanidadView._setVistaModo('tabla')">Tabla ERP</button>
         </div>
 
         <fieldset class="erp-action-group">
@@ -276,8 +276,8 @@ const SanidadView = {
       try { localStorage.setItem('sanidad_view_mode', modo); } catch (_) {}
     }
 
-    const btnCards = document.getElementById('btn-san-hist-cards');
-    const btnTabla = document.getElementById('btn-san-hist-tabla');
+    const btnCards = document.getElementById('btn-san-vista-cards');
+    const btnTabla = document.getElementById('btn-san-vista-tabla');
     const contenedorCards = document.getElementById('sanidad-historial-lista');
     const contenedorTabla = document.getElementById('sanidad-erp-table-container');
 

@@ -1862,6 +1862,18 @@ const App = {
     marco.parentElement.insertBefore(contenedor, marco);
   },
 
+  /** Algunas vistas envuelven los registros en un contenedor intermedio
+   *  (`#docs-lista > div.grid > .card-registro`). Si no se desciende, el filtro
+   *  y el recorte actuarian sobre ese unico envoltorio en vez de sobre las
+   *  fichas. Se baja un nivel solo cuando hay un unico hijo que agrupa a varios,
+   *  para no confundirlo con un listado que de verdad tiene un solo registro. */
+  _contenedorReal(cont) {
+    if (!cont) return cont;
+    const hijos = Array.from(cont.children).filter((e) => !e.classList.contains('erp-ver-mas'));
+    if (hijos.length === 1 && hijos[0].children.length > 1) return hijos[0];
+    return cont;
+  },
+
   /** Engancha una fila de filtros `.erp-filtros[data-filtros-para="idListado"]`
    *  al listado indicado: el buscador oculta las tarjetas cuyo texto no coincide
    *  y el desplegable filtra por su atributo `data-tipo`. El desplegable se
@@ -1869,8 +1881,9 @@ const App = {
    *  se oculta. Filtra en el DOM, así que no hace falta re-renderizar la vista. */
   aplicarFiltrosListado(fila) {
     if (!fila || fila.dataset.filtrosAplicados === '1') return;
-    const lista = document.getElementById(fila.dataset.filtrosPara);
-    if (!lista) return;
+    const listaMarcada = document.getElementById(fila.dataset.filtrosPara);
+    if (!listaMarcada) return;
+    const lista = this._contenedorReal(listaMarcada);
     fila.dataset.filtrosAplicados = '1';
 
     const input = fila.querySelector('input');
@@ -1902,8 +1915,8 @@ const App = {
       });
       // Al filtrar se muestran todas las coincidencias: el recorte de 10 se
       // recalcula sobre el subconjunto resultante.
-      lista.dataset.verMasAplicado = '';
-      this.aplicarVerMas(lista);
+      listaMarcada.dataset.verMasAplicado = '';
+      this.aplicarVerMas(listaMarcada);
       // ...y las descartadas por el filtro se ocultan pase lo que pase
       items().forEach((el) => { if (el.dataset.filtrado === '1') el.style.display = 'none'; });
 
@@ -1940,8 +1953,10 @@ const App = {
    *  añade debajo un botón «Ver más» que revela el resto.
    *  Se aplica solo a contenedores marcados con data-ver-mas="N". */
   aplicarVerMas(contenedor, limite) {
-    const cont = typeof contenedor === 'string' ? document.getElementById(contenedor) : contenedor;
+    let cont = typeof contenedor === 'string' ? document.getElementById(contenedor) : contenedor;
     if (!cont) return;
+    const marcado = cont;
+    cont = this._contenedorReal(cont);
     const n = Number(limite || cont.dataset.verMas || 10);
     const previo = cont.nextElementSibling;
     if (previo && previo.classList && previo.classList.contains('erp-ver-mas')) previo.remove();
@@ -1960,7 +1975,7 @@ const App = {
       items.forEach((el) => { el.style.display = ''; });
       pie.remove();
     });
-    cont.insertAdjacentElement('afterend', pie);
+    marcado.insertAdjacentElement('afterend', pie);
   },
 
   /** Aplica «Ver más» a todos los listados marcados de la vista recién pintada. */
