@@ -17,11 +17,13 @@ window.MovimientoBalanceWizard = {
       return;
     }
 
+    const esEdicion = !!(movimiento && movimiento.id);
+
     const wizardSteps = [
       {
         content: (data) => `
           <div class="card card-accent card-accent-gold p-16 mt-10 mb-16">
-            <div class="section-header-theme mb-12" style="--theme-color: var(--p-gold)">NUEVO MOVIMIENTO DE BALANCE</div>
+            <div class="section-header-theme mb-12" style="--theme-color: var(--p-gold)">${esEdicion ? 'EDITAR' : 'NUEVO'} MOVIMIENTO DE BALANCE</div>
 
             <div class="wizard-input-group mb-12">
               <label class="wizard-label">TANQUE</label>
@@ -86,7 +88,6 @@ window.MovimientoBalanceWizard = {
       }
     ];
 
-    const esEdicion = !!(movimiento && movimiento.id);
 
     window.WizardManager.create({
       id: esEdicion ? 'wizard-movimiento-balance-editar' : 'wizard-movimiento-balance-nuevo',

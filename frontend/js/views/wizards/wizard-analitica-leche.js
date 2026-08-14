@@ -12,11 +12,13 @@ window.AnaliticaLecheWizard = {
     const fincaId = await window.Fincas.getActiveId();
     const tanques = window.TanquesLeche ? await window.TanquesLeche.getActivos(fincaId) : [];
 
+    const esEdicion = !!(analitica && analitica.id);
+
     const wizardSteps = [
       {
         content: (data) => `
           <div class="card card-accent card-accent-gold p-16 mt-10 mb-16">
-            <div class="section-header-theme mb-12" style="--theme-color: var(--p-gold)">NUEVA ANALÍTICA DE LECHE</div>
+            <div class="section-header-theme mb-12" style="--theme-color: var(--p-gold)">${esEdicion ? 'EDITAR' : 'NUEVA'} ANALÍTICA DE LECHE</div>
 
             <div class="grid grid-cols-2 gap-10 mb-12">
               <div class="wizard-input-group">
@@ -101,7 +103,6 @@ window.AnaliticaLecheWizard = {
       }
     ];
 
-    const esEdicion = !!(analitica && analitica.id);
 
     window.WizardManager.create({
       id: esEdicion ? 'wizard-analitica-leche-editar' : 'wizard-analitica-leche-nueva',

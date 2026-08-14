@@ -266,6 +266,10 @@ window.ExplotacionLacteaView = {
               <div class="text-xs font-800">${a.laboratorio_nombre || '—'}</div>
             </div>
           </div>
+          <div class="flex gap-6 mt-10 justify-end">
+            <button class="btn-erp-secondary btn-sm" onclick="ExplotacionLacteaView._editarAnalitica(${a.id})">Editar</button>
+            <button class="btn-erp-secondary btn-sm" onclick="ExplotacionLacteaView._eliminarAnalitica(${a.id})">Eliminar</button>
+          </div>
         </div>
       `;
     }).join('');
