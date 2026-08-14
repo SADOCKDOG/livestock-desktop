@@ -72,6 +72,8 @@ const App = {
     "/botiquin-producto": "renderDetalleBotiquin",
     "/animal-bitacora": "renderBitacoraAnimal",
     "/animales": "renderAnimales",
+    "/patrimonio": "renderPatrimonio",
+    "/sanidad": "renderSanidad",
     "/animal": "renderDetalleAnimal",
     "/explotacion": "renderExplotacion",
     "/gastos": "renderGastos",
@@ -3362,6 +3364,23 @@ const App = {
   async renderRebanos() {
     if (window.GanaderiaView) {
       GanaderiaView._activeSubModule = 'rebanos';
+      await this.renderGanaderia();
+    }
+  },
+
+  /** Patrimonio y Sanidad se pintan dentro de GeGan segun ?tab=. Se les da
+   *  ruta corta propia, como ya tenian /animales, /rebanos y /zonas: sin ella
+   *  un marcador o un enlace a /patrimonio caia en el 404. */
+  async renderPatrimonio() {
+    if (window.GanaderiaView) {
+      GanaderiaView._activeSubModule = 'patrimonio';
+      await this.renderGanaderia();
+    }
+  },
+
+  async renderSanidad() {
+    if (window.GanaderiaView) {
+      GanaderiaView._activeSubModule = 'sanidad';
       await this.renderGanaderia();
     }
   },
