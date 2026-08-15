@@ -16,61 +16,73 @@
  *   - opción { skipPreflight } para que la UI sea dueña del mensaje
  *   - tabla de avisos confirmable antes de descargar; REGA inválido bloquea
  */
-import { invoke } from '@tauri-apps/api/invoke';
 
+// ── Constantes oficiales ────────────────────────────────────────────────────
 const REGA_REGEX = /^ES\d{12}$/;
 
+// Sexo: código oficial del Ministerio (M = macho, H = hembra)
 const SEXO_MAP = {
   'm': 'M', 'macho': 'M', 'male': 'M',
   'h': 'H', 'hembra': 'H', 'female': 'H'
 };
 
+// Especies admitidas (nombre canónico en minúscula)
 const ESPECIES_VALIDAS = new Set([
   'bovino', 'ovino', 'caprino', 'porcino', 'equino', 'avicola', 'cunicola', 'apicola'
 ]);
 const ESPECIE_ALIAS = {
   'vacuno': 'bovino', 'vaca': 'bovino', 'bovina': 'bovino',
   'oveja': 'ovino', 'ovina': 'ovino',
-  'cabra': 'caprino', 'caprina': 'caprino', 'cochino': 'porcino',
-  'caballo': 'equino', 'hembra': 'equino',
+  'cabra': 'caprino', 'caprina': 'caprino',
+  'cerdo': 'porcino', 'porcina': 'porcino', 'cochino': 'porcino',
+  'caballo': 'equino', 'equina': 'equino',
   'ave': 'avicola', 'aves': 'avicola', 'avícola': 'avicola',
   'conejo': 'cunicola', 'cunícola': 'cunicola',
   'abeja': 'apicola', 'apícola': 'apicola'
 };
 
-const escCsv = (val) => {
+// ── Helpers de formato ───────────────────────────────────────────────────────
+
+/** Escapa un valor CSV: neutraliza saltos de línea y entrecomilla si lleva ';' o '"' */
+function escCsv(val) {
   if (val === null || val === undefined) return '';
   const str = String(val).replace(/\r?\n|\r/g, ' ');
   return (str.includes(';') || str.includes('"')) ? `"${str.replace(/"/g, '""')}"` : str;
-};
+}
 
-const formatFecha = (dateStr) => {
+/** Normaliza una fecha a AAAA-MM-DD; devuelve '' si es inválida */
+function formatFecha(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr);
   return isNaN(d.getTime()) ? '' : d.toISOString().split('T')[0];
-};
+}
 
-const escXml = (str) => {
+/** Escapa caracteres especiales XML */
+function escXml(str) {
   if (str === null || str === undefined) return '';
   return String(str)
-    .replace(/&/g, '&')
-    .replace(/</g, '<')
-    .replace(/>/g, '>')
-    .replace(/"/g, '"')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
-};
+}
 
-const normalizarSexo = (sexo) => {
+// ── Helpers de normalización oficial ─────────────────────────────────────────
+
+/** Normaliza el sexo a código oficial M/H. Devuelve '' si no se reconoce. */
+function normalizarSexo(sexo) {
   if (!sexo) return '';
   return SEXO_MAP[String(sexo).trim().toLowerCase()] || '';
-};
+}
 
-const normalizarEspecie = (especie) => {
+/** Normaliza el nombre de especie a su forma canónica. Devuelve '' si no es válida. */
+function normalizarEspecie(especie) {
   if (!especie) return '';
   let e = String(especie).trim().toLowerCase();
   if (ESPECIE_ALIAS[e]) e = ESPECIE_ALIAS[e];
   return ESPECIES_VALIDAS.has(e) ? e : '';
-};
+}
 
 const ExportService = {
 
@@ -328,6 +340,7 @@ const ExportService = {
     lines.push(`EXPLOTACION;;${escCsv(finca?.nombre)};;`);
     lines.push(`REGA;;${escCsv(finca?.codigo_REGA || finca?.rega)};;`);
     lines.push('');
+
     lines.push('FECHA;TIPO_MOVIMIENTO;ANIMAL_ID;CROTAL;ESPECIE;MOTIVO;DESTINO_ORIGEN;OBSERVACIONES');
     const sorted = [...(eventos || [])]
       .filter(e => e.fecha)
@@ -463,18 +476,44 @@ const ExportService = {
    * @param {string} filename - nombre del fichero
    * @param {string} mime - tipo MIME
    */
-  async descargar(content, filename, mime = 'text/csv;charset=utf-8') {
-    // 1️⃣ Escritura nativa con Tauri (funciona en Android, Windows, macOS y Linux)
+   async descargar(content, filename, mime = 'text/csv;charset=utf-8') {
+    if (window.PremiumManager && window.PremiumManager.isFree()) {
+      if (window.App?.toast) App.toast('La exportación solo está disponible en Premium', 'error');
+      return;
+    }
+    // 1️⃣ Capacitor Filesystem + Share (funciona en Android nativo)
     try {
-      // Tauri's fs::write acepta un string; usamos invoke para llamarla
-      await invoke('fs::write', { path: filename, data: content });
-      App.toast(`${filename} guardado`, 'success');
-      return true;
+      const cap = window.Capacitor;
+      const fsPlugin = cap?.Plugins?.Filesystem;
+      const sharePlugin = cap?.Plugins?.Share;
+      if (fsPlugin && sharePlugin) {
+        // Convertir string a base64
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(content);
+        let binary = '';
+        bytes.forEach(b => { binary += String.fromCharCode(b); });
+        const base64 = btoa(binary);
+
+        const result = await fsPlugin.writeFile({
+          path: filename,
+          data: base64,
+          directory: 'CACHE'
+        });
+        await sharePlugin.share({
+          title: filename,
+          text: `Exportación: ${filename}`,
+          url: result.uri,
+          files: [result.uri],
+          dialogTitle: `Compartir ${filename} con…`
+        });
+        App.toast(`${filename} compartido`, 'success');
+        return;
+      }
     } catch (e) {
-      console.warn('[ExportService] Escritura nativa falló:', e?.message);
+      console.warn(`[ExportService] Capacitor falló:`, e?.message || e);
     }
 
-    // 2️⃣ Fallback Blob download (para entornos web)
+    // 2️⃣ Fallback: blob download (funciona en navegador)
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -485,7 +524,6 @@ const ExportService = {
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 10000);
     App.toast(`${filename} descargado`, 'success');
-    return false;
   },
 
   /**
@@ -512,6 +550,7 @@ const ExportService = {
    * Exportación completa REGA (CSV + XML) con descarga directa.
    * Bloquea si el código REGA no es válido.
    * @param {object} [opts] - { skipPreflight } omite la validación interna
+   *   cuando la capa de UI ya la ha mostrado y confirmado.
    */
   async exportarREGA(finca, animales, rebanos, opts = {}) {
     if (!opts.skipPreflight) {
@@ -533,9 +572,6 @@ const ExportService = {
 
   /**
    * Exportación movimientos SIA/PIGGAN. Bloquea si el código REGA no es válido.
-   * @param {object[]} eventos - registro_eventos
-   * @param {object[]} animales
-   * @param {object} finca
    * @param {object} [opts] - { skipPreflight } omite la validación interna.
    */
   async exportarMovimientos(eventos, animales, finca, opts = {}) {
@@ -575,3 +611,7 @@ const ExportService = {
 };
 
 window.ExportService = ExportService;
+
+// Añadir nuevos métodos al objeto ExportService (para mantener compatibilidad)
+ExportService.generarCSV_LetraQ = ExportService.generarCSV_LetraQ.bind(ExportService);
+ExportService.exportarLetraQ = ExportService.exportarLetraQ.bind(ExportService);
