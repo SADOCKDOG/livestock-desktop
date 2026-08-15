@@ -63,7 +63,7 @@
       {
         title: 'Registrar Nuevo Transportista',
         body: 'Botón «Nuevo Transportista» (marco de registro verde, arriba del listado) abre **wizard modal centrado** (card-registro, z-index 6000): nombre, NIF/CIF, matrícula, nº registro transporte, ATG (obligatorio), desinsectación (fecha + vencimiento), teléfono, email, dirección/CP/ciudad/provincia, tipo vehículo (camión/furgoneta/remolque/cisterna), capacidad (animales), certificado bienestar (check + vencimiento), termoneutral (check), activo (check), notas. Guarda en `config_transportistas`.',
-        target: 'button[onclick*="TransportistasView._crearTransportista()"]',
+        target: 'button[onclick*="TransportistasView._abrirFormulario()"]',
         waitFor: 1500,
         position: 'above'
       },

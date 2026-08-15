@@ -1,0 +1,324 @@
+- generic [ref=f1e2]:
+  - banner [ref=f1e3]:
+    - paragraph [ref=f1e4]: Livestock Desktop · v7.29
+    - heading "Validación física de la piel ERP" [level=1] [ref=f1e5]
+    - paragraph [ref=f1e6]: "Lo que no he podido comprobar desde el navegador: interacción real, ficheros que se generan y comportamiento de la ventana Tauri. Los puntos ya verificados automáticamente van marcados, para que no repitas trabajo salvo que quieras confirmarlos con tus ojos."
+  - generic [ref=f1e7]:
+    - generic [ref=f1e10]: 3 / 37
+    - button "Desmarcar todo" [ref=f1e11] [cursor=pointer]
+  - generic [ref=f1e12]:
+    - heading "Antes de empezar" [level=3] [ref=f1e13]
+    - paragraph [ref=f1e14]:
+      - text: Abre la app con
+      - strong [ref=f1e15]: Ctrl+Shift+R
+      - text: "la primera vez: hay cambios de CSS y JS, y sin recarga dura verás la versión anterior en caché."
+    - paragraph [ref=f1e16]:
+      - text: Trabaja sobre la
+      - strong [ref=f1e17]: demo CHAMORRO
+      - text: ", no sobre datos reales: varios puntos piden crear y borrar registros."
+    - paragraph [ref=f1e18]:
+      - text: El progreso se guarda
+      - strong [ref=f1e19]: en este navegador
+      - text: . Si abres la lista en otro equipo empezaras de cero, asi que marca desde el mismo sitio.
+    - generic [ref=f1e20]:
+      - generic [ref=f1e21]:
+        - generic [ref=f1e22]: verificado
+        - text: ya comprobado por mí
+      - generic [ref=f1e23]:
+        - generic [ref=f1e24]: tu ojo
+        - text: requiere juicio humano
+  - generic [ref=f1e25]:
+    - generic [ref=f1e26]:
+      - heading "Arranque y chrome" [level=2] [ref=f1e27]
+      - generic [ref=f1e28]: al abrir la app
+    - list [ref=f1e29]:
+      - listitem [ref=f1e30]:
+        - generic [ref=f1e31] [cursor=pointer]:
+          - checkbox "El sidebar se pliega y despliega Botón superior izquierdo o Alt+S. Al plegarse quedan solo iconos; el botón no debe taparse con «Inicio»." [checked] [ref=f1e32]
+          - generic [ref=f1e33]:
+            - strong [ref=f1e34]: El sidebar se pliega y despliega
+            - generic [ref=f1e35]:
+              - text: Botón superior izquierdo o
+              - code [ref=f1e36]: Alt+S
+              - text: . Al plegarse quedan solo iconos; el botón no debe taparse con «Inicio».
+      - listitem [ref=f1e37]:
+        - generic [ref=f1e38] [cursor=pointer]:
+          - checkbox "El estado plegado se recuerda al reabrir Cierra y vuelve a abrir la app con el menú plegado." [ref=f1e39]
+          - generic [ref=f1e40]:
+            - strong [ref=f1e41]: El estado plegado se recuerda al reabrir
+            - generic [ref=f1e42]: Cierra y vuelve a abrir la app con el menú plegado.
+      - listitem [ref=f1e43]:
+        - generic [ref=f1e44] [cursor=pointer]:
+          - checkbox "El pie del menú muestra los cuatro datos verificado Versión, plan (Free/Premium), fecha de hoy y nombre de la finca activa. Cambia de finca y comprueba que el nombre se actualiza solo." [ref=f1e45]
+          - generic [ref=f1e46]:
+            - strong [ref=f1e47]: El pie del menú muestra los cuatro datos
+            - generic [ref=f1e48]: verificado
+            - generic [ref=f1e49]: Versión, plan (Free/Premium), fecha de hoy y nombre de la finca activa. Cambia de finca y comprueba que el nombre se actualiza solo.
+      - listitem [ref=f1e50]:
+        - generic [ref=f1e51] [cursor=pointer]:
+          - 'checkbox "Barra superior: migas, buscador global y campana tu ojo Las migas deben seguir la ruta (GeGan › Animales). Busca un crotal real y comprueba que lleva a su ficha." [ref=f1e52]'
+          - generic [ref=f1e53]:
+            - strong [ref=f1e54]: "Barra superior: migas, buscador global y campana"
+            - generic [ref=f1e55]: tu ojo
+            - generic [ref=f1e56]: Las migas deben seguir la ruta (GeGan › Animales). Busca un crotal real y comprueba que lleva a su ficha.
+      - listitem [ref=f1e57]:
+        - generic [ref=f1e58] [cursor=pointer]:
+          - checkbox "Sin huecos ni solapes al redimensionar la ventana tu ojo Prueba a 1280, 1440 y pantalla completa. Los marcos de acciones no deben montarse unos sobre otros." [ref=f1e59]
+          - generic [ref=f1e60]:
+            - strong [ref=f1e61]: Sin huecos ni solapes al redimensionar la ventana
+            - generic [ref=f1e62]: tu ojo
+            - generic [ref=f1e63]: Prueba a 1280, 1440 y pantalla completa. Los marcos de acciones no deben montarse unos sobre otros.
+      - listitem [ref=f1e64]:
+        - generic [ref=f1e65] [cursor=pointer]:
+          - 'checkbox "Por debajo de 1024 px vuelve el aspecto móvil Estrecha la ventana: deben aparecer los FAB y la barra inferior, y desaparecer el sidebar." [ref=f1e66]'
+          - generic [ref=f1e67]:
+            - strong [ref=f1e68]: Por debajo de 1024 px vuelve el aspecto móvil
+            - generic [ref=f1e69]: "Estrecha la ventana: deben aparecer los FAB y la barra inferior, y desaparecer el sidebar."
+  - generic [ref=f1e70]:
+    - generic [ref=f1e71]:
+      - heading "Navegación" [level=2] [ref=f1e72]
+      - generic [ref=f1e73]: menú lateral
+    - list [ref=f1e74]:
+      - listitem [ref=f1e75]:
+        - generic [ref=f1e76] [cursor=pointer]:
+          - checkbox "Las 77 entradas abren su vista verificado Recorridas sin un solo error. Repásalas por encima si quieres confirmarlo." [ref=f1e77]
+          - generic [ref=f1e78]:
+            - strong [ref=f1e79]: Las 77 entradas abren su vista
+            - generic [ref=f1e80]: verificado
+            - generic [ref=f1e81]: Recorridas sin un solo error. Repásalas por encima si quieres confirmarlo.
+      - listitem [ref=f1e82]:
+        - generic [ref=f1e83] [cursor=pointer]:
+          - checkbox "El grupo y la entrada activos se resaltan Al entrar por enlace directo, el acordeón debe abrirse hasta la entrada correcta, incluso en Informes (tres niveles)." [ref=f1e84]
+          - generic [ref=f1e85]:
+            - strong [ref=f1e86]: El grupo y la entrada activos se resaltan
+            - generic [ref=f1e87]: Al entrar por enlace directo, el acordeón debe abrirse hasta la entrada correcta, incluso en Informes (tres niveles).
+      - listitem [ref=f1e88]:
+        - generic [ref=f1e89] [cursor=pointer]:
+          - 'checkbox "Rutas cortas recién corregidas Prueba #/patrimonio y #/sanidad en la barra de direcciones: daban 404." [ref=f1e90]'
+          - generic [ref=f1e91]:
+            - strong [ref=f1e92]: Rutas cortas recién corregidas
+            - generic [ref=f1e93]:
+              - text: Prueba
+              - code [ref=f1e94]: "#/patrimonio"
+              - text: "y"
+              - code [ref=f1e95]: "#/sanidad"
+              - text: "en la barra de direcciones: daban 404."
+      - listitem [ref=f1e96]:
+        - generic [ref=f1e97] [cursor=pointer]:
+          - checkbox "Los sub-grupos llevan al sitio correcto Láctea (Dashboard/Tanques/Control/Balance/Gráficos), Finanzas por categoría, Trámites y las cinco categorías de Informes." [ref=f1e98]
+          - generic [ref=f1e99]:
+            - strong [ref=f1e100]: Los sub-grupos llevan al sitio correcto
+            - generic [ref=f1e101]: Láctea (Dashboard/Tanques/Control/Balance/Gráficos), Finanzas por categoría, Trámites y las cinco categorías de Informes.
+  - generic [ref=f1e102]:
+    - generic [ref=f1e103]:
+      - heading "Listados" [level=2] [ref=f1e104]
+      - generic [ref=f1e105]: los 18 módulos con tabla
+    - paragraph [ref=f1e106]:
+      - text: El conmutador, los filtros y el «Ver más» los he probado uno a uno. Lo que falta es el juicio sobre si
+      - emphasis [ref=f1e107]: se leen bien
+      - text: .
+    - list [ref=f1e108]:
+      - listitem [ref=f1e109]:
+        - generic [ref=f1e110] [cursor=pointer]:
+          - checkbox "Las columnas se leen sin scroll horizontal incómodo tu ojo Mira sobre todo Animales, Documentos y Libro de Ventas, que son las de más columnas." [checked] [ref=f1e111]
+          - generic [ref=f1e112]:
+            - strong [ref=f1e113]: Las columnas se leen sin scroll horizontal incómodo
+            - generic [ref=f1e114]: tu ojo
+            - generic [ref=f1e115]: Mira sobre todo Animales, Documentos y Libro de Ventas, que son las de más columnas.
+      - listitem [ref=f1e116]:
+        - generic [ref=f1e117] [cursor=pointer]:
+          - checkbox "Los colores de campo significan algo tu ojo Identificador en dorado, alertas en rojo, importes en verde. ¿Ayudan o distraen?" [ref=f1e118]
+          - generic [ref=f1e119]:
+            - strong [ref=f1e120]: Los colores de campo significan algo
+            - generic [ref=f1e121]: tu ojo
+            - generic [ref=f1e122]: Identificador en dorado, alertas en rojo, importes en verde. ¿Ayudan o distraen?
+      - listitem [ref=f1e123]:
+        - generic [ref=f1e124] [cursor=pointer]:
+          - checkbox "Ordenar por columna funciona en las que importan Fecha, importe y censo son las más útiles. Comprueba que ordena de verdad, no solo alfabéticamente." [ref=f1e125]
+          - generic [ref=f1e126]:
+            - strong [ref=f1e127]: Ordenar por columna funciona en las que importan
+            - generic [ref=f1e128]: Fecha, importe y censo son las más útiles. Comprueba que ordena de verdad, no solo alfabéticamente.
+      - listitem [ref=f1e129]:
+        - generic [ref=f1e130] [cursor=pointer]:
+          - checkbox "El conmutador Tarjetas / Tabla recuerda tu elección verificado Cambia a Tarjetas en un módulo, navega fuera y vuelve." [ref=f1e131]
+          - generic [ref=f1e132]:
+            - strong [ref=f1e133]: El conmutador Tarjetas / Tabla recuerda tu elección
+            - generic [ref=f1e134]: verificado
+            - generic [ref=f1e135]: Cambia a Tarjetas en un módulo, navega fuera y vuelve.
+      - listitem [ref=f1e136]:
+        - generic [ref=f1e137] [cursor=pointer]:
+          - 'checkbox "Buscador y desplegable filtran de verdad verificado Comprobado en nueve módulos. El desplegable se oculta si esos registros no tienen categoría: es a propósito." [ref=f1e138]'
+          - generic [ref=f1e139]:
+            - strong [ref=f1e140]: Buscador y desplegable filtran de verdad
+            - generic [ref=f1e141]: verificado
+            - generic [ref=f1e142]: "Comprobado en nueve módulos. El desplegable se oculta si esos registros no tienen categoría: es a propósito."
+      - listitem [ref=f1e143]:
+        - generic [ref=f1e144] [cursor=pointer]:
+          - 'checkbox "«Ver más» revela el resto verificado En Finanzas: 10 de 15 y el pie dice «5 registros más». Requiere estar en modo Tarjetas." [ref=f1e145]'
+          - generic [ref=f1e146]:
+            - strong [ref=f1e147]: «Ver más» revela el resto
+            - generic [ref=f1e148]: verificado
+            - generic [ref=f1e149]: "En Finanzas: 10 de 15 y el pie dice «5 registros más». Requiere estar en modo Tarjetas."
+  - generic [ref=f1e150]:
+    - generic [ref=f1e151]:
+      - heading "Altas, edición y borrado" [level=2] [ref=f1e152]
+      - generic [ref=f1e153]: escribe en la base de datos
+    - paragraph [ref=f1e154]: "Aquí es donde más falta hace tu prueba: yo he validado las operaciones contra la base de datos, pero no el recorrido completo por los asistentes."
+    - list [ref=f1e155]:
+      - listitem [ref=f1e156]:
+        - generic [ref=f1e157] [cursor=pointer]:
+          - checkbox "Cada módulo da de alta desde su marco de registro Animales, Rebaños, Zonas, Compradores, Contratos, Transportistas, Proveedores, Botiquín, Instalaciones, Saneamientos, Subexplotaciones, Silos y Tanques." [ref=f1e158]
+          - generic [ref=f1e159]:
+            - strong [ref=f1e160]: Cada módulo da de alta desde su marco de registro
+            - generic [ref=f1e161]: Animales, Rebaños, Zonas, Compradores, Contratos, Transportistas, Proveedores, Botiquín, Instalaciones, Saneamientos, Subexplotaciones, Silos y Tanques.
+      - listitem [ref=f1e162]:
+        - generic [ref=f1e163] [cursor=pointer]:
+          - checkbox "El registro nuevo aparece en el listado sin recargar Y en la tabla, no solo en tarjetas." [ref=f1e164]
+          - generic [ref=f1e165]:
+            - strong [ref=f1e166]: El registro nuevo aparece en el listado sin recargar
+            - generic [ref=f1e167]: Y en la tabla, no solo en tarjetas.
+      - listitem [ref=f1e168]:
+        - generic [ref=f1e169] [cursor=pointer]:
+          - 'checkbox "Editar carga los datos existentes tu ojo Que no aparezca un formulario en blanco: es el fallo típico y se nota enseguida." [ref=f1e170]'
+          - generic [ref=f1e171]:
+            - strong [ref=f1e172]: Editar carga los datos existentes
+            - generic [ref=f1e173]: tu ojo
+            - generic [ref=f1e174]: "Que no aparezca un formulario en blanco: es el fallo típico y se nota enseguida."
+      - listitem [ref=f1e175]:
+        - generic [ref=f1e176] [cursor=pointer]:
+          - checkbox "Borrar pide confirmación y no deja rastro Comprueba que el registro desaparece del listado y de los totales." [ref=f1e177]
+          - generic [ref=f1e178]:
+            - strong [ref=f1e179]: Borrar pide confirmación y no deja rastro
+            - generic [ref=f1e180]: Comprueba que el registro desaparece del listado y de los totales.
+      - listitem [ref=f1e181]:
+        - generic [ref=f1e182] [cursor=pointer]:
+          - 'checkbox "Láctea › Control: editar y borrar analíticas Estos botones faltaban y se han añadido hoy. Es el punto más importante de esta lista." [checked] [ref=f1e183]'
+          - generic [ref=f1e184]:
+            - strong [ref=f1e185]: "Láctea › Control: editar y borrar analíticas"
+            - generic [ref=f1e186]:
+              - text: Estos botones
+              - strong [ref=f1e187]: faltaban
+              - text: y se han añadido hoy. Es el punto más importante de esta lista.
+      - listitem [ref=f1e188]:
+        - generic [ref=f1e189] [cursor=pointer]:
+          - 'checkbox "Láctea › Balance: editar y borrar movimientos Al cambiar los litros, el stock del tanque debe recalcularse solo. Verificado en base de datos (300 → 400 → 550 → 300), pero confírmalo en pantalla." [ref=f1e190]'
+          - generic [ref=f1e191]:
+            - strong [ref=f1e192]: "Láctea › Balance: editar y borrar movimientos"
+            - generic [ref=f1e193]: Al cambiar los litros, el stock del tanque debe recalcularse solo. Verificado en base de datos (300 → 400 → 550 → 300), pero confírmalo en pantalla.
+      - listitem [ref=f1e194]:
+        - generic [ref=f1e195] [cursor=pointer]:
+          - 'checkbox "El asistente dice «EDITAR», no «NUEVA» Corregido hoy: el encabezado interno seguía diciendo «Nueva analítica» al editar." [ref=f1e196]'
+          - generic [ref=f1e197]:
+            - strong [ref=f1e198]: El asistente dice «EDITAR», no «NUEVA»
+            - generic [ref=f1e199]: "Corregido hoy: el encabezado interno seguía diciendo «Nueva analítica» al editar."
+      - listitem [ref=f1e200]:
+        - generic [ref=f1e201] [cursor=pointer]:
+          - checkbox "Los registros rápidos del Inicio funcionan El FAB «Nueva Actividad» y sus siete accesos de producción." [ref=f1e202]
+          - generic [ref=f1e203]:
+            - strong [ref=f1e204]: Los registros rápidos del Inicio funcionan
+            - generic [ref=f1e205]: El FAB «Nueva Actividad» y sus siete accesos de producción.
+  - generic [ref=f1e206]:
+    - generic [ref=f1e207]:
+      - heading "Guías interactivas" [level=2] [ref=f1e208]
+      - generic [ref=f1e209]: botón Guía de cada módulo
+    - paragraph [ref=f1e210]:
+      - text: Comprobé que los 21 catálogos encuentran su elemento en el DOM, pero no que el recorrido
+      - emphasis [ref=f1e211]: se entienda
+      - text: .
+    - list [ref=f1e212]:
+      - listitem [ref=f1e213]:
+        - generic [ref=f1e214] [cursor=pointer]:
+          - checkbox "El foco ilumina el elemento del que habla tu ojo Era el fallo que reportaste al principio. Fíjate en Compradores y Contratos, cuyos pasos re-apunté al menú." [ref=f1e215]
+          - generic [ref=f1e216]:
+            - strong [ref=f1e217]: El foco ilumina el elemento del que habla
+            - generic [ref=f1e218]: tu ojo
+            - generic [ref=f1e219]: Era el fallo que reportaste al principio. Fíjate en Compradores y Contratos, cuyos pasos re-apunté al menú.
+      - listitem [ref=f1e220]:
+        - generic [ref=f1e221] [cursor=pointer]:
+          - checkbox "El cartel no tapa lo que resalta tu ojo Sobre todo con elementos del menú lateral." [ref=f1e222]
+          - generic [ref=f1e223]:
+            - strong [ref=f1e224]: El cartel no tapa lo que resalta
+            - generic [ref=f1e225]: tu ojo
+            - generic [ref=f1e226]: Sobre todo con elementos del menú lateral.
+      - listitem [ref=f1e227]:
+        - generic [ref=f1e228] [cursor=pointer]:
+          - checkbox "Los pasos que apuntan a listados resaltan una fila Con la tabla activa no hay tarjetas, así que ahora señalan la primera fila." [ref=f1e229]
+          - generic [ref=f1e230]:
+            - strong [ref=f1e231]: Los pasos que apuntan a listados resaltan una fila
+            - generic [ref=f1e232]: Con la tabla activa no hay tarjetas, así que ahora señalan la primera fila.
+      - listitem [ref=f1e233]:
+        - generic [ref=f1e234] [cursor=pointer]:
+          - checkbox "«No mostrar de nuevo» se respeta Y la guía sigue disponible desde su botón." [ref=f1e235]
+          - generic [ref=f1e236]:
+            - strong [ref=f1e237]: «No mostrar de nuevo» se respeta
+            - generic [ref=f1e238]: Y la guía sigue disponible desde su botón.
+  - generic [ref=f1e239]:
+    - generic [ref=f1e240]:
+      - heading "Documentos y exportación" [level=2] [ref=f1e241]
+      - generic [ref=f1e242]: no he podido comprobarlo
+    - paragraph [ref=f1e243]: "Nada de esto es verificable desde el navegador integrado: hay que abrir los ficheros generados."
+    - list [ref=f1e244]:
+      - listitem [ref=f1e245]:
+        - generic [ref=f1e246] [cursor=pointer]:
+          - 'checkbox "Informes: PDF, Excel y Completo tu ojo En varias categorías. Que el fichero se genere, se abra y tenga los datos correctos." [ref=f1e247]'
+          - generic [ref=f1e248]:
+            - strong [ref=f1e249]: "Informes: PDF, Excel y Completo"
+            - generic [ref=f1e250]: tu ojo
+            - generic [ref=f1e251]: En varias categorías. Que el fichero se genere, se abra y tenga los datos correctos.
+      - listitem [ref=f1e252]:
+        - generic [ref=f1e253] [cursor=pointer]:
+          - 'checkbox "Cuaderno: PDF completo, CSV SIGGAN e imprimir tu ojo" [ref=f1e254]'
+          - generic [ref=f1e255]:
+            - strong [ref=f1e256]: "Cuaderno: PDF completo, CSV SIGGAN e imprimir"
+            - generic [ref=f1e257]: tu ojo
+      - listitem [ref=f1e258]:
+        - generic [ref=f1e259] [cursor=pointer]:
+          - checkbox "Exportar CSV desde las tablas El botón CSV de la barra de la tabla. Comprueba acentos y separadores al abrirlo en Excel." [ref=f1e260]
+          - generic [ref=f1e261]:
+            - strong [ref=f1e262]: Exportar CSV desde las tablas
+            - generic [ref=f1e263]: El botón CSV de la barra de la tabla. Comprueba acentos y separadores al abrirlo en Excel.
+      - listitem [ref=f1e264]:
+        - generic [ref=f1e265] [cursor=pointer]:
+          - checkbox "Imprimir albaranes y documentos DIMOE tu ojo Desde Libro de Ventas y Documentos, por fila." [ref=f1e266]
+          - generic [ref=f1e267]:
+            - strong [ref=f1e268]: Imprimir albaranes y documentos DIMOE
+            - generic [ref=f1e269]: tu ojo
+            - generic [ref=f1e270]: Desde Libro de Ventas y Documentos, por fila.
+      - listitem [ref=f1e271]:
+        - generic [ref=f1e272] [cursor=pointer]:
+          - 'checkbox "Trámites: guía DIMOE, censo, crotales y traslados Los cuatro asistentes, hasta generar el documento." [ref=f1e273]'
+          - generic [ref=f1e274]:
+            - strong [ref=f1e275]: "Trámites: guía DIMOE, censo, crotales y traslados"
+            - generic [ref=f1e276]: Los cuatro asistentes, hasta generar el documento.
+  - generic [ref=f1e277]:
+    - generic [ref=f1e278]:
+      - heading "Aplicación de escritorio" [level=2] [ref=f1e279]
+      - generic [ref=f1e280]: solo en Tauri, no en navegador
+    - list [ref=f1e281]:
+      - listitem [ref=f1e282]:
+        - generic [ref=f1e283] [cursor=pointer]:
+          - checkbox "Arranca sin pantalla en blanco Y sin quedarse en «Iniciando aplicación…»." [ref=f1e284]
+          - generic [ref=f1e285]:
+            - strong [ref=f1e286]: Arranca sin pantalla en blanco
+            - generic [ref=f1e287]: Y sin quedarse en «Iniciando aplicación…».
+      - listitem [ref=f1e288]:
+        - generic [ref=f1e289] [cursor=pointer]:
+          - checkbox "Los datos persisten entre sesiones Crea un registro, cierra del todo y reabre." [ref=f1e290]
+          - generic [ref=f1e291]:
+            - strong [ref=f1e292]: Los datos persisten entre sesiones
+            - generic [ref=f1e293]: Crea un registro, cierra del todo y reabre.
+      - listitem [ref=f1e294]:
+        - generic [ref=f1e295] [cursor=pointer]:
+          - checkbox "Guardar y abrir ficheros usa el diálogo del sistema tu ojo Exportaciones, importar backup e importar PDF del catastro." [ref=f1e296]
+          - generic [ref=f1e297]:
+            - strong [ref=f1e298]: Guardar y abrir ficheros usa el diálogo del sistema
+            - generic [ref=f1e299]: tu ojo
+            - generic [ref=f1e300]: Exportaciones, importar backup e importar PDF del catastro.
+      - listitem [ref=f1e301]:
+        - generic [ref=f1e302] [cursor=pointer]:
+          - 'checkbox "El indicador Free/Premium coincide con el build Corregido hoy: mostraba «Free» siempre, incluso en build Premium." [ref=f1e303]'
+          - generic [ref=f1e304]:
+            - strong [ref=f1e305]: El indicador Free/Premium coincide con el build
+            - generic [ref=f1e306]: "Corregido hoy: mostraba «Free» siempre, incluso en build Premium."
+  - contentinfo [ref=f1e307]:
+    - paragraph [ref=f1e308]: Marca los puntos según los pruebes; el estado se guarda en este navegador. Lo que falle, anótalo con el módulo y la ruta — con eso puedo reproducirlo sin más contexto.

@@ -74,7 +74,7 @@ const CompradoresView = {
         <fieldset class="erp-action-group">
           <legend>Registro de Compradores</legend>
           <div class="erp-action-group-body">
-            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="CompradoresView._crearComprador()">${Icons.agregar()}<span class="widget-link-label">Nuevo Comprador</span></button>
+            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="CompradoresView.renderFormulario()">${Icons.agregar()}<span class="widget-link-label">Nuevo Comprador</span></button>
           </div>
         </fieldset>
       </div>

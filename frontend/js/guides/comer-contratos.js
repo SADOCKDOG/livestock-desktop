@@ -63,7 +63,7 @@
       {
         title: 'Registrar Nuevo Contrato (libre)',
         body: 'Botón «Nuevo Contrato» (marco de registro verde, arriba del listado) abre **wizard modal**: comprador (selector obligatorio), nº contrato, tipo (leche/carne), fechas inicio/fin, condiciones, precios (array: producto, precio_unitario, unidad), activo. Guarda en `config_contratos`. También se puede crear desde ficha comprador («Nuevo Contrato» pre-rellena el comprador).',
-        target: 'button[onclick*="ContratosView._crearContrato()"]',
+        target: 'button[onclick*="ContratosView.renderFormulario()"]',
         waitFor: 1500,
         position: 'above'
       },

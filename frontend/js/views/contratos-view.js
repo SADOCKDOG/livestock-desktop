@@ -79,7 +79,7 @@ const ContratosView = {
         <fieldset class="erp-action-group">
           <legend>Registro de Contratos</legend>
           <div class="erp-action-group-body">
-            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="ContratosView._crearContrato()">${Icons.agregar()}<span class="widget-link-label">Nuevo Contrato</span></button>
+            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="ContratosView.renderFormulario()">${Icons.agregar()}<span class="widget-link-label">Nuevo Contrato</span></button>
           </div>
         </fieldset>
       </div>

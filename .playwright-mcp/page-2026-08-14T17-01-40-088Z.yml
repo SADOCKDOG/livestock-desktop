@@ -1,0 +1,236 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]: Sin conexión
+  - banner [ref=f3e3]:
+    - navigation "Ruta de navegación" [ref=f3e62]:
+      - link "Ajustes" [ref=f3e63] [cursor=pointer]:
+        - /url: javascript:void(0)
+    - img "Livestock Manager" [ref=f3e5] [cursor=pointer]
+    - generic [ref=f3e6] [cursor=pointer]
+    - searchbox "Buscar por crotal, CNI o nombre…" [ref=f3e12]
+    - button "Ver alertas" [ref=f3e13] [cursor=pointer]:
+      - generic [ref=f3e14]: "1"
+    - generic [ref=f3e16] [cursor=pointer]:
+      - generic [ref=f3e17]: ES210050001234
+      - generic [ref=f3e18]:
+        - text: "Tipo Explo:"
+        - generic [ref=f3e19]: Híbrida
+  - main [ref=f3e20]:
+    - generic [ref=f3e66]:
+      - generic [ref=f3e73]:
+        - generic [ref=f3e74]: Livestock Manager FREE
+        - paragraph [ref=f3e75]: Actualiza a Premium para funciones profesionales.
+      - button "ACTUALIZAR A PREMIUM" [ref=f3e76] [cursor=pointer]
+    - generic [ref=f3e77]:
+      - heading "| SISTEMA Y SEGURIDAD" [level=3] [ref=f3e78]:
+        - generic [ref=f3e79]: "|"
+        - text: SISTEMA Y SEGURIDAD
+      - paragraph [ref=f3e83]: Centro de control técnico. Gestiona la apariencia OLED, integridad de datos (Backups) y registros de auditoría.
+      - generic [ref=f3e85]:
+        - generic [ref=f3e86]:
+          - generic [ref=f3e87]: ESTADO SEGURIDAD
+          - strong [ref=f3e88]: BACKUP MANUAL
+        - generic [ref=f3e91]:
+          - generic [ref=f3e92]: TEMA VISUAL
+          - strong [ref=f3e93]: OLED DARK
+        - generic [ref=f3e94]:
+          - generic [ref=f3e95]: ACENTO / LUZ
+          - strong [ref=f3e96]: GOLD / 40%
+        - generic [ref=f3e97]:
+          - generic [ref=f3e98]: BANNERS
+          - strong [ref=f3e99]: 77% OPACIDAD
+        - generic [ref=f3e100]:
+          - generic [ref=f3e101]: VER. v4.10.1
+          - generic [ref=f3e104]: 9 ANIMALES EN IDB
+      - button "Gestionar Sistema" [ref=f3e106] [cursor=pointer]
+    - generic [ref=f3e111]:
+      - heading "| FINCA ACTIVA" [level=3] [ref=f3e112]:
+        - generic [ref=f3e113]: "|"
+        - text: FINCA ACTIVA
+      - generic [ref=f3e118]:
+        - generic [ref=f3e119]:
+          - text: "Finca:"
+          - strong [ref=f3e120]: Ganadería CHAMORRO (DEMO)
+        - generic [ref=f3e121]:
+          - text: "REGA:"
+          - strong [ref=f3e122]: ES210050001234
+        - generic [ref=f3e123]:
+          - text: "CCAA:"
+          - strong [ref=f3e124]: ANDALUCIA
+        - generic [ref=f3e125]:
+          - text: "Animales:"
+          - strong [ref=f3e126]: "9"
+      - button "Editar Datos" [ref=f3e128] [cursor=pointer]
+    - generic [ref=f3e133]:
+      - heading "| MIS FINCAS" [level=3] [ref=f3e134]:
+        - generic [ref=f3e135]: "|"
+        - text: MIS FINCAS
+      - paragraph [ref=f3e139]: Cambia la explotación activa o añade nuevas.
+      - generic [ref=f3e141]:
+        - generic [ref=f3e142]:
+          - generic [ref=f3e143]: Ganadería CHAMORRO (DEMO)
+          - generic [ref=f3e144]: "REGA: ES210050001234"
+        - generic [ref=f3e145]: ACTIVA
+    - generic [ref=f3e147]:
+      - heading "| SANIDAD GANADERA (ADSG)" [level=3] [ref=f3e148]:
+        - generic [ref=f3e149]: "|"
+        - text: SANIDAD GANADERA (ADSG)
+      - generic [ref=f3e153]:
+        - generic [ref=f3e154]:
+          - generic [ref=f3e155]: ADSG El Condado
+          - generic [ref=f3e156]: "CÓDIGO: ADSG-AN-21005"
+        - button [ref=f3e157] [cursor=pointer]
+      - button "Nueva ADSG" [ref=f3e161] [cursor=pointer]
+    - generic [ref=f3e164]:
+      - heading "| OBJETIVOS DE EXPLOTACIÓN" [level=3] [ref=f3e165]:
+        - generic [ref=f3e166]: "|"
+        - text: OBJETIVOS DE EXPLOTACIÓN
+      - paragraph [ref=f3e171]: Metas de rendimiento para el Panel de Eficiencia Técnica.
+      - generic [ref=f3e172]:
+        - generic [ref=f3e173]:
+          - generic [ref=f3e174]: GMD (kg/día)
+          - spinbutton "GMD (kg/día)" [ref=f3e175]: "0.8"
+        - generic [ref=f3e176]:
+          - generic [ref=f3e177]: Fertilidad (%)
+          - spinbutton "Fertilidad (%)" [ref=f3e178]: "85"
+    - generic [ref=f3e179]:
+      - heading "| ESPECIES Y RAZAS" [level=3] [ref=f3e180]:
+        - generic [ref=f3e181]: "|"
+        - text: ESPECIES Y RAZAS
+      - generic [ref=f3e184]: Sin especies configuradas.
+      - button "Añadir Especie" [ref=f3e186] [cursor=pointer]
+    - generic [ref=f3e189]:
+      - heading "| CONFIGURACIÓN DE ALERTAS" [level=3] [ref=f3e190]:
+        - generic [ref=f3e191]: "|"
+        - text: CONFIGURACIÓN DE ALERTAS
+      - generic [ref=f3e195]:
+        - generic [ref=f3e196] [cursor=pointer]:
+          - checkbox "Alertas Sanitarias" [ref=f3e197]
+          - text: Alertas Sanitarias
+        - generic [ref=f3e198] [cursor=pointer]:
+          - checkbox "Alertas Trazabilidad" [checked] [ref=f3e199]
+          - text: Alertas Trazabilidad
+        - generic [ref=f3e200] [cursor=pointer]:
+          - checkbox "Alertas PAC" [checked] [ref=f3e201]
+          - text: Alertas PAC
+    - generic [ref=f3e202]:
+      - heading "| GUÍAS INTERACTIVAS" [level=3] [ref=f3e203]:
+        - generic [ref=f3e204]: "|"
+        - text: GUÍAS INTERACTIVAS
+      - paragraph [ref=f3e208]: Activa/desactiva el asistente paso a paso y gestiona qué guías se han visto.
+      - generic [ref=f3e210] [cursor=pointer]:
+        - checkbox "Guías interactivas activadas" [checked] [ref=f3e211]
+        - text: Guías interactivas activadas
+      - button "Reiniciar todas las guías" [ref=f3e213] [cursor=pointer]
+    - generic [ref=f3e218]:
+      - heading "| AYUDA Y SOPORTE" [level=3] [ref=f3e219]:
+        - generic [ref=f3e220]: "|"
+        - text: AYUDA Y SOPORTE
+      - button "Manual de Usuario" [ref=f3e225] [cursor=pointer]
+    - generic [ref=f3e230]:
+      - img "Livestock Manager Premium" [ref=f3e231]
+      - generic [ref=f3e232]: David Asuar Arteaga
+      - generic [ref=f3e233]: © 2026 Livestock Manager Premium · v4.10.1 Todos los derechos reservados.
+  - complementary "Menú principal" [ref=f3e22]:
+    - button "Plegar menú" [expanded] [ref=f3e234] [cursor=pointer]
+    - navigation "Navegación de módulos" [ref=f3e25]:
+      - link "Inicio" [ref=f3e26] [cursor=pointer]:
+        - /url: "#/"
+      - generic [ref=f3e31]:
+        - button "GeGan" [expanded] [ref=f3e32] [cursor=pointer]
+        - generic [ref=f3e240]:
+          - link "Animales" [ref=f3e241] [cursor=pointer]:
+            - /url: "#/ganaderia?tab=animales"
+          - link "Rebaños" [ref=f3e247] [cursor=pointer]:
+            - /url: "#/ganaderia?tab=rebanos"
+          - link "Patrimonio" [ref=f3e252] [cursor=pointer]:
+            - /url: "#/ganaderia?tab=patrimonio"
+          - link "Zonas" [ref=f3e258] [cursor=pointer]:
+            - /url: "#/ganaderia?tab=zonas"
+          - link "Sanidad" [ref=f3e264] [cursor=pointer]:
+            - /url: "#/ganaderia?tab=sanidad"
+      - generic [ref=f3e36]:
+        - button "ExPro" [expanded] [ref=f3e37] [cursor=pointer]
+        - generic [ref=f3e273]:
+          - link "Explotación" [ref=f3e274] [cursor=pointer]:
+            - /url: "#/explotacion?tab=explotacion"
+          - generic [ref=f3e280]:
+            - button "Láctea" [expanded] [ref=f3e281] [cursor=pointer]
+            - generic [ref=f3e290]:
+              - link "Dashboard" [ref=f3e291] [cursor=pointer]:
+                - /url: "#/explotacion?tab=lacteo&sub=dashboard"
+              - link "Tanques" [ref=f3e299] [cursor=pointer]:
+                - /url: "#/explotacion?tab=lacteo&sub=tanques"
+              - link "Control" [ref=f3e306] [cursor=pointer]:
+                - /url: "#/explotacion?tab=lacteo&sub=control"
+              - link "Balance" [ref=f3e311] [cursor=pointer]:
+                - /url: "#/explotacion?tab=lacteo&sub=balance"
+              - link "Gráficos" [ref=f3e317] [cursor=pointer]:
+                - /url: "#/explotacion?tab=lacteo&sub=graficos"
+          - link "Silos" [ref=f3e321] [cursor=pointer]:
+            - /url: "#/explotacion?tab=silos"
+          - link "Fitosanitarios" [ref=f3e328] [cursor=pointer]:
+            - /url: "#/explotacion?tab=fitosanitarios"
+          - button "Finanzas" [ref=f3e334] [cursor=pointer]
+          - link "Proveedores" [ref=f3e342] [cursor=pointer]:
+            - /url: "#/explotacion?tab=proveedores"
+          - button "Trámites" [ref=f3e349] [cursor=pointer]
+      - button "CoMer" [ref=f3e43] [cursor=pointer]
+      - generic [ref=f3e50]:
+        - button "Informes y Doc" [expanded] [ref=f3e51] [cursor=pointer]
+        - generic [ref=f3e366]:
+          - generic [ref=f3e367]:
+            - button "Informes" [expanded] [ref=f3e368] [cursor=pointer]
+            - generic [ref=f3e377]:
+              - button "General" [ref=f3e379] [cursor=pointer]
+              - generic [ref=f3e386]:
+                - button "GeGan" [expanded] [ref=f3e387] [cursor=pointer]
+                - generic [ref=f3e396]:
+                  - link "Censo" [ref=f3e397] [cursor=pointer]:
+                    - /url: "#/informes?cat=gegan&tab=censo"
+                  - link "Rotación" [ref=f3e402] [cursor=pointer]:
+                    - /url: "#/informes?cat=gegan&tab=rotacion"
+                  - link "Repro" [ref=f3e408] [cursor=pointer]:
+                    - /url: "#/informes?cat=gegan&tab=reproductivo"
+                  - link "Sanidad" [ref=f3e413] [cursor=pointer]:
+                    - /url: "#/informes?cat=gegan&tab=sanidad"
+                  - link "Cárnico" [ref=f3e418] [cursor=pointer]:
+                    - /url: "#/informes?cat=gegan&tab=carne"
+                  - link "Coste/Animal" [ref=f3e424] [cursor=pointer]:
+                    - /url: "#/informes?cat=gegan&tab=coste-prod"
+              - button "ExPro" [ref=f3e431] [cursor=pointer]
+              - button "CoMer" [ref=f3e441] [cursor=pointer]
+              - button "Libros" [ref=f3e453] [cursor=pointer]
+          - link "Cuaderno Digital" [ref=f3e462] [cursor=pointer]:
+            - /url: "#/cuaderno"
+          - link "Alertas" [ref=f3e468] [cursor=pointer]:
+            - /url: "#/alertas"
+          - link "Informe REga" [ref=f3e474] [cursor=pointer]:
+            - /url: "#/informes?cat=libros&tab=rega"
+          - link "Exportación Oficial" [ref=f3e480] [cursor=pointer]:
+            - /url: "#/informes?cat=libros&tab=exportar"
+          - link "Documentos DIMOE" [ref=f3e486] [cursor=pointer]:
+            - /url: "#/documentos"
+          - link "Manuales" [ref=f3e492] [cursor=pointer]:
+            - /url: "#/manuales"
+      - generic [ref=f3e56]:
+        - button "Herramientas" [expanded] [ref=f3e57] [cursor=pointer]
+        - generic [ref=f3e502]:
+          - link "Ajustes" [ref=f3e503] [cursor=pointer]:
+            - /url: "#/ajustes"
+          - link "Importar RFID" [ref=f3e509] [cursor=pointer]:
+            - /url: "#/importar-rfid"
+          - button "Agenda" [ref=f3e516] [cursor=pointer]
+    - generic "Estado de la aplicación" [ref=f3e524]:
+      - generic [ref=f3e525]:
+        - generic [ref=f3e526]: Versión
+        - generic [ref=f3e527]: 4.10.1
+      - generic [ref=f3e528]:
+        - generic [ref=f3e529]: Plan
+        - generic [ref=f3e530]: Free
+      - generic [ref=f3e531]:
+        - generic [ref=f3e532]: Fecha
+        - generic [ref=f3e533]: 14 ago 2026
+      - generic [ref=f3e534]:
+        - generic [ref=f3e535]: Finca
+        - generic [ref=f3e536]: Ganadería CHAMORRO (DEMO)
+  - status

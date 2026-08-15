@@ -4,7 +4,7 @@
   "private": true,
   "description": "Livestock Manager PREMIUM - app de escritorio nativa (Tauri) para gestion ganadera.",
   "scripts": {
-    "serve": "npx --yes http-server frontend -p 8080 -c-1",
+    "serve": "npx --yes http-server frontend -p 8088 -c-1",
     "tauri": "tauri",
     "dev": "tauri dev",
     "build": "tauri build",

@@ -1,0 +1,42 @@
+- generic [ref=f2e1]:
+  - generic [ref=f2e2]: Sin conexión
+  - banner [ref=f2e3]:
+    - navigation "Ruta de navegación" [ref=f2e4]:
+      - link "Livestock" [ref=f2e388] [cursor=pointer]:
+        - /url: javascript:void(0)
+    - img "Livestock Manager" [ref=f2e7] [cursor=pointer]
+    - generic [ref=f2e8] [cursor=pointer]
+    - searchbox "Buscar por crotal, CNI o nombre…" [ref=f2e14]
+    - button "Ver alertas" [ref=f2e15] [cursor=pointer]:
+      - generic [ref=f2e16]: "1"
+    - generic [ref=f2e18] [cursor=pointer]:
+      - generic [ref=f2e19]: ES210050001234
+      - generic [ref=f2e20]:
+        - text: "Tipo Explo:"
+        - generic [ref=f2e21]: Híbrida
+  - main [ref=f2e22]:
+    - generic [ref=f2e389]: Cargando...
+  - complementary "Menú principal" [ref=f2e312]:
+    - button "Plegar menú" [expanded] [active] [ref=f2e387] [cursor=pointer]
+    - navigation "Navegación de módulos" [ref=f2e315]:
+      - link "Inicio" [ref=f2e316] [cursor=pointer]:
+        - /url: "#/"
+      - button "GeGan" [ref=f2e323] [cursor=pointer]
+      - button "ExPro" [ref=f2e332] [cursor=pointer]
+      - button "CoMer" [ref=f2e342] [cursor=pointer]
+      - button "Informes y Doc" [ref=f2e354] [cursor=pointer]
+      - button "Herramientas" [ref=f2e364] [cursor=pointer]
+    - generic "Estado de la aplicación" [ref=f2e373]:
+      - generic [ref=f2e374]:
+        - generic [ref=f2e375]: Versión
+        - generic [ref=f2e376]: 4.10.1
+      - generic [ref=f2e377]:
+        - generic [ref=f2e378]: Plan
+        - generic [ref=f2e379]: Free
+      - generic [ref=f2e380]:
+        - generic [ref=f2e381]: Fecha
+        - generic [ref=f2e382]: 14 ago 2026
+      - generic [ref=f2e383]:
+        - generic [ref=f2e384]: Finca
+        - generic [ref=f2e385]: Ganadería CHAMORRO (DEMO)
+  - status

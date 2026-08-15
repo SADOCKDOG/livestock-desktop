@@ -113,7 +113,7 @@ const TransportistasView = {
         <fieldset class="erp-action-group">
           <legend>Registro de Transportistas</legend>
           <div class="erp-action-group-body">
-            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="TransportistasView._crearTransportista()">${Icons.agregar()}<span class="widget-link-label">Nuevo Transportista</span></button>
+            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="TransportistasView._abrirFormulario()">${Icons.agregar()}<span class="widget-link-label">Nuevo Transportista</span></button>
           </div>
         </fieldset>
       </div>

@@ -1,0 +1,35 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Sin conexión
+  - banner [ref=e3]:
+    - navigation "Ruta de navegación"
+    - img "Livestock Manager" [ref=e5] [cursor=pointer]
+    - generic [ref=e6] [cursor=pointer]
+    - searchbox "Buscar por crotal, CNI o nombre…" [ref=e8]
+    - button "Ver alertas" [ref=e9] [cursor=pointer]
+    - generic [ref=e10]: Cargando...
+  - main [ref=e13]:
+    - generic [ref=e14]: Iniciando aplicación...
+  - complementary "Menú principal" [ref=e15]:
+    - button "Plegar/Desplegar menú" [expanded] [ref=e16] [cursor=pointer]
+    - navigation "Navegación de módulos" [ref=e18]
+    - generic "Estado de la aplicación" [ref=e19]
+  - status
+  - generic [ref=e21]:
+    - generic [ref=e22]:
+      - img "Livestock Manager" [ref=e23]
+      - heading "Bienvenido" [level=1] [ref=e24]
+      - paragraph [ref=e25]: Gestión ganadera profesional v4.10.1 Premium
+      - button "Primeros pasos" [ref=e26] [cursor=pointer]
+    - generic [ref=e27]:
+      - button "Importar Backup Restaura tu base de datos desde un archivo JSON" [ref=e28] [cursor=pointer]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: Importar Backup
+          - generic [ref=e35]: Restaura tu base de datos desde un archivo JSON
+      - button "Nueva Finca Configura una explotación desde cero" [ref=e36] [cursor=pointer]:
+        - generic [ref=e42]:
+          - generic [ref=e43]: Nueva Finca
+          - generic [ref=e44]: Configura una explotación desde cero
+      - button "Cargar Demo CHAMORRO Explora la app con una explotación de ejemplo con datos en todos los módulos" [ref=e45] [cursor=pointer]:
+        - generic [ref=e50]:
+          - generic [ref=e51]: Cargar Demo CHAMORRO
+          - generic [ref=e52]: Explora la app con una explotación de ejemplo con datos en todos los módulos

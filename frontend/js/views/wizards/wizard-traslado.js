@@ -36,13 +36,20 @@ window.WizardTraslado = {
       return;
     }
 
+    const rebanosConAnimales = await Promise.all(
+      rebanos.map(async (rebano) => {
+        const animales = (await Animales.list()).filter((a) => !a?.anulado && (a.estado || "activo") === "activo" && a.rebanoId === rebano.id);
+        return {...rebano, allAnimales: animales};
+      })
+    );
+
     const wizardSteps = [
       {
         content: (data) => `
           <div class="mt-10">
             <div class="wizard-input-group">
               <label class="wizard-label">SELECCIONA EL REBAÑO DESTINO</label>
-              <div id="w-tras-rebano-list" class="rounded-sm bg-card wizard-list-scroll">
+              <div class="rounded-sm bg-card wizard-list-scroll">
                 ${rebanos.map((rebano) => `
                   <label class="flex items-start gap-10 p-10 wizard-list-item">
                     <input type="radio" name="rebanoId" value="${rebano.id}" ${data.selectedRebanoId === rebano.id ? "checked" : ""} class="w-tras-rebano-radio">
@@ -329,24 +336,53 @@ window.WizardTraslado = {
                   fecha_presentacion: data.fecha_presentacion || null,
                   numero_registro_oficial: data.numero_registro_oficial || null,
                   acuse_recibo: data.acuse_recibo || null,
-                  descripcion: `Traslado interno · ${a.numero_identificacion || "#" + id} → rebaño "${data.rebano.nombre}"${data.rebano.zonaActual ? " (zona " + data.rebano.zonaActual + ")" : ""}`,
                   creadoEn: ahoraIso,
+                  actualizadoEn: ahoraIso
                 });
               } catch (e) {
                 console.warn("[Traslado] No se pudo registrar el evento de movimiento:", e?.message);
               }
             }
             App.toast(`Traslado completado · ${trasladados} ${trasladados === 1 ? 'animal' : 'animales'}`);
-            App.renderDetalleRebano(new URLSearchParams(`id=${data.rebano.id}`));
-          } catch (error) {
-            console.error("[WizardTraslado] Error en onComplete:", error);
-            App.toastError("Error al completar el traslado: " + error.message);
+
+            // === NUEVO: Generar y guardar PDF de traslado con html2pdf.js ===
+            const pdfContent = `
+              <h1>Guía de Traslado</h1>
+              <p><strong>Destino:</strong> ${data.rebano.nombre}</p>
+              <p><strong>Zona destino:</strong> ${data.rebano.zonaActual || "—"}</p>
+              <p><strong>Animales trasladados:</strong> ${data.selectedIds.length}</p>
+              <p><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-ES')}</p>
+              <hr>
+              <p><em>Generado por Livestock Manager Desktop</em></p>
+            `;
+            const element = document.createElement('div');
+            element.innerHTML = pdfContent;
+            // Usar html2pdf para convertir a PDF Blob
+            const blobPromise = await window.html2pdf()
+              .set({
+                margin: 10,
+                filename: `traslado_${Date.now()}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+              })
+              .from(element)
+              .output('blob');
+            const blob = await blobPromise;
+            const encoder = new TextEncoder();
+            const uint8Array = encoder.encode(await blob.arrayBuffer());
+            // Guardar en el sistema de archivos nativo de Tauri
+            await invoke('fs::write', { path: `traslado_${Date.now()}.pdf`, data: await blob.arrayBuffer() });
+            App.toast('PDF de traslado generado', 'success');
+          } catch (e) {
+            console.error('[WizardTraslado] Error en onComplete:', e);
+            App.toastError('Error al completar el traslado: ' + e.message);
           }
         }
       });
     } catch (error) {
-      console.error("[WizardTraslado] Error al abrir selector de animales:", error);
-      App.toastError("Error al cargar los animales: " + error.message);
+      console.error('[WizardTraslado] Error al abrir selector de animales:', error);
+      App.toastError('Error al cargar los animales: ' + error.message);
     }
   }
 };

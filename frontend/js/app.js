@@ -655,6 +655,7 @@ const App = {
       const animales = await window.db.getAll('animales').catch(() => []);
       const t = term.toLowerCase();
       const matches = (animales || []).filter(a =>
+        (a.numero_identificacion && String(a.numero_identificacion).toLowerCase().includes(t)) ||
         (a.crotal && String(a.crotal).toLowerCase().includes(t)) ||
         (a.cni && String(a.cni).toLowerCase().includes(t)) ||
         (a.nombre && String(a.nombre).toLowerCase().includes(t))
