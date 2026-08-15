@@ -162,14 +162,19 @@ class ErpDataTable {
       }).join(';');
     });
 
-    const csvContent = 'data:text/csv;charset=utf-8,﻿' + [headers, ...rows].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    // Blob y no data: URI. encodeURI no escapa la almohadilla, asi que un valor
+    // con «#» (referencias tipo «Fra. #123», lotes) truncaba el fichero por ahi
+    // sin avisar. El Blob ademas no tiene el limite de tamano del data: URI.
+    const csvContent = '﻿' + [headers, ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
+    link.setAttribute('href', url);
     link.setAttribute('download', `${this.title.toLowerCase().replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
   }
 
   render() {
