@@ -7,3 +7,7 @@ src-tauri/target/
 private/
 .ai/
 .vscode/
+
+# Instaladores descargados localmente (no se suben al repo)
+vs_buildtools.exe
+vs_components.txt

@@ -4,6 +4,6 @@ App de escritorio nativa (Tauri v2) para Livestock Manager. El frontend se sincr
 
 ## Nueva funcionalidad
 
-- Exportación nativa de PDF para traslados de animales, accesible mediante el wizard de traslado. Genera PDF con datos del traslado y guarda mediante diálogo nativo de Tauri (`invoke('fs::write')`). Muestra el toast **'PDF de traslado generado'** al completar.
+- Exportación de listados e informes (CSV, PDF, Excel) vía `ExportService` (`frontend/js/services/export-service.js`): descarga directa del WebView al navegador (blob), sin diálogo nativo de Tauri (no hay `tauri-plugin-dialog`/`fs` ni comandos en `main.rs`). El wizard de traslado no genera PDF.
 
 <!-- Resto del README -->
