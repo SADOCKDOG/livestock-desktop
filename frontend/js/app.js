@@ -3752,7 +3752,13 @@ const App = {
     }
     try {
       App.toast("Generando copia de seguridad...");
-      const stores = [
+      // Todos los almacenes de la base, no una lista fija. La lista anterior se
+      // quedo congelada en 20 y dejaba fuera 18 almacenes con datos del ganadero
+      // (analiticas de leche, balance lacteo, tanques, guias de movimiento,
+      // saneamientos, vacunaciones, agenda, crotales, botiquin, silos, ADSG...).
+      // El backup se generaba sin error y sin avisar de lo que faltaba.
+      // Se ordenan los conocidos primero para no alterar el formato del fichero.
+      const ORDEN_PREFERENTE = [
         "fincas",
         "rebanos",
         "animales",
@@ -3773,6 +3779,11 @@ const App = {
         "transportistas",
         "documentos_legales",
         "meta",
+      ];
+      const todosLosStores = Array.from(window.db.objectStoreNames);
+      const stores = [
+        ...ORDEN_PREFERENTE.filter((s) => todosLosStores.includes(s)),
+        ...todosLosStores.filter((s) => !ORDEN_PREFERENTE.includes(s)),
       ];
       const backupData = {};
       let totalRegistros = 0;
