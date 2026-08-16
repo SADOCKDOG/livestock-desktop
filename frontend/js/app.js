@@ -765,6 +765,13 @@ const App = {
       collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
     } catch (_) {}
     this._setSidebarCollapsed(collapsed, false);
+    this._adaptSidebarToBreakpoint(); // Ajustar visibilidad según breakpoint
+
+    // Escuchar cambios de tamaño de pantalla para actualizar el bottom‑nav
+    if (!this._breakpointListenerAttached) {
+      window.addEventListener('resize', () => this._adaptSidebarToBreakpoint());
+      this._breakpointListenerAttached = true;
+    }
 
     // Atajos de teclado de escritorio sin interferir con campos editables.
     document.addEventListener('keydown', (event) => {
