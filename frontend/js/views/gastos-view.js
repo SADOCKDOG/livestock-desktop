@@ -154,6 +154,7 @@ const GastosView = {
 this.renderList = function(records) {
   // Build HTML for each record respecting column preferences
   const prefs = JSON.parse(localStorage.getItem('gastosColumnPreferences') || '{"title":true,"subtitle":true,"value":true}');
+  // Normalize preferences – ensure showSubtitle and showValue are always defined
   const showSubtitle = prefs.subtitle ?? true;
   const showValue = prefs.value ?? true;
   const footerRight = '<span style="display:inline-block; font-size:0.75rem; font-weight:600; border:1px solid var(--c-warning); color:var(--c-warning); background:rgba(255,215,0,0.1); padding:2px 6px; border-radius:4px; margin-top:4px;">Ficha -></span>';
