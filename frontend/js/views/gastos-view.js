@@ -5,6 +5,16 @@
  * Copia espejo de js/views/gastos-view.js
  */
 
+function guardarSeleccionFiltros(cb) {
+  const col = cb.getAttribute('data-col');
+  const prefs = JSON.parse(localStorage.getItem('gastosColumnPreferences') || '{"title":true,"subtitle":true,"value":true}');
+  prefs[col] = cb.checked;
+  localStorage.setItem('gastosColumnPreferences', JSON.stringify(prefs));
+  // Re‑render with the current filtered records
+  if (typeof GastosView !== 'undefined' && GastosView._filteredRecords) {
+    GastosView.renderList(GastosView._filteredRecords);
+  }
+}
 const GastosView = {
   _currentTab: 'todos',
   _cachedData: null,
@@ -101,6 +111,70 @@ const GastosView = {
       <div id="gasto-content"><div class="loader">Cargando gastos...</div></div>`;
 
     this._cachedData = { gastosRecords, kpis };
+    // Store master record list and set up filter controls
+    this._gastosRecords = gastosRecords;
+    this._searchTerm = '';
+    this._selectedCategory = '';
+    // Enhanced filter handling
+    const applyFilters = () => {
+      let filtered = this._gastosRecords;
+      // Búsqueda global
+      if (this._searchTerm) {
+        const term = this._searchTerm.toLowerCase();
+        filtered = filtered.filter(g => {
+          const searchable = [g.concepto, g.categoria, UI.formatCurrency(g.monto || 0)].join(' ').toLowerCase();
+          return searchable.includes(term);
+        });
+      }
+      // Filtrado por categoría
+      if (this._selectedCategory) {
+        const cat = this._selectedCategory;
+        filtered = filtered.filter(g => (cat === '' || g.categoria === cat));
+      }
+      // Render filtered records
+      this.renderList(filtered);
+    };
+    if (this._searchInput) {
+      this._searchInput.addEventListener('input', (e) => {
+        this._searchTerm = e.target.value;
+        applyFilters();
+      });
+    }
+    if (this._categorySelect) {
+      this._categorySelect.addEventListener('change', (e) => {
+        this._selectedCategory = e.target.value;
+        applyFilters();
+      });
+    }
+    // Initial render
+    this.renderList(this._gastosRecords);
+}
+
+/* Dynamic column rendering */
+this.renderList = function(records) {
+  // Build HTML for each record respecting column preferences
+  const prefs = JSON.parse(localStorage.getItem('gastosColumnPreferences') || '{"title":true,"subtitle":true,"value":true}');
+  const showSubtitle = prefs.subtitle ?? true;
+  const showValue = prefs.value ?? true;
+  const footerRight = '<span style="display:inline-block; font-size:0.75rem; font-weight:600; border:1px solid var(--c-warning); color:var(--c-warning); background:rgba(255,215,0,0.1); padding:2px 6px; border-radius:4px; margin-top:4px;">Ficha -></span>';
+  const buildCard = (record) => {
+    const title = (record.concepto || record.categoria || 'Gasto');
+    const subtitle = `<span class="flex items-center gap-4">${Icons.calendar()} ${record.fecha ? UI.formatDate(record.fecha) : '-'}${record.snap_zona ? ' | ' + Icons.zonas() + ' ' + record.snap_zona : ''}${record.categoria ? ' | ' + Icons.paquete() + ' ' + record.categoria.toUpperCase() : ''}</span>`;
+    const rightSide = `<div class="font-950" style="font-size:1.1rem; color:${prefs.value ? prefs.value : 'var(--c-primary)'};">${UI.formatCurrency(record.monto || 0)}</div>`;
+    const showSubtitleHtml = showSubtitle ? `<div class="registro-sub">${subtitle}</div>` : '';
+    const showValueHtml = showValue ? `${rightSide}` : '';
+    let html = `<div class="card-registro">`;
+    html += `<div class="registro-titulo">${title}</div>`;
+    if (showSubtitleHtml) { html += `<div class="registro-sub">${subtitle}</div>`; }
+    if (showValueHtml) { html += `${rightSide}`; }
+    html += `${footerRight}`;
+    html += `</div>`;
+    return html;
+  };
+  const cardsHtml = records.map(buildCard).join('');
+  const container = this._cardsContainer;
+  if (container) { container.innerHTML = cardsHtml; }
+};
 
     this._renderTabActual();
   },
@@ -205,9 +279,29 @@ const GastosView = {
           </div>
         </div>
         <div class="erp-filtros" data-filtros-para="gastos-cards-container">
-          <input type="search" class="form-input search-input" placeholder="Buscar gasto por concepto, proveedor o importe...">
-          <select class="form-select" data-etiqueta-todos="Toda categoría"></select>
+          <input type="search" id="gastos-filtro-busqueda" class="form-input search-input" placeholder="Buscar gasto por concepto, proveedor o importe...">
+          <select id="gastos-filtro-categoria" class="form-select" data-etiqueta-todos="Toda categoría"></select>
         </div>
+        <div id="gastos-column-selector" class="erp-column-selector mt-2 flex flex-wrap gap-2" aria-label="Selección de columnas de gastos">
+  <label class="checkbox">
+    <input type="checkbox" class="column-selector-checkbox" data-col="fecha" checked onchange="GastosView._guardarSeleccionFiltros(this)" aria-label="Mostrar columna de Fecha"><span aria-hidden="true">Fecha</span>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" class="column-selector-checkbox" data-col="concepto" checked onchange="GastosView._guardarSeleccionFiltros(this)" aria-label="Mostrar columna de Concepto"><span aria-hidden="true">Concepto</span>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" class="column-selector-checkbox" data-col="categoria" checked onchange="GastosView._guardarSeleccionFiltros(this)" aria-label="Mostrar columna de Categoría"><span aria-hidden="true">Categoría</span>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" class="column-selector-checkbox" data-col="zona" checked onchange="GastosView._guardarSeleccionFiltros(this)" aria-label="Mostrar columna de Zona"><span aria-hidden="true">Zona</span>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" class="column-selector-checkbox" data-col="monto" checked onchange="GastosView._guardarSeleccionFiltros(this)" aria-label="Mostrar columna de Importe"><span aria-hidden="true">Importe</span>
+  </label>
+  <label class="checkbox">
+    <input type="checkbox" class="column-selector-checkbox" data-col="id" checked onchange="GastosView._guardarSeleccionFiltros(this)" aria-label="Mostrar columna de Ficha"><span aria-hidden="true">Ficha</span>
+  </label>
+</div>
         <div id="gastos-cards-container" data-ver-mas="10">${recordsHtml}</div>
         <div id="gastos-erp-table-container" class="mt-12" style="display:none;"></div>
       </div>

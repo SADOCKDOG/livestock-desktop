@@ -773,3 +773,10 @@ main#app-content.manual-open {
     box-shadow: 0 0 6px rgba(239,68,68,0.6);
   }
 }
+
+
+@media (max-width: 1023px) {
+  .erp-sidebar { display: none; }
+  #bottomNavWrap { display: flex !important; }
+}
+

@@ -618,10 +618,12 @@ const App = {
     }
     el.innerHTML = crumbs.map((c, i) => {
       const sep = i > 0 ? '<span class="bc-sep">›</span>' : '';
+      const isActive = i === 0 && c.route === (path || '/').split('?')[0];
       if (c.route && i === 0) {
-        return sep + '<a class="bc-crumb bc-link" href="javascript:void(0)" onclick="location.hash=\'#' + c.route + '\'">' + c.label + '</a>';
+        const isActive = i === 0 && c.route === (path || '/').split('?')[0];
+        return sep + `<a class="bc-crumb bc-link${isActive ? ' bc-active' : ''}" href="javascript:void(0)" onclick="location.hash='${c.route}'${isActive ? ' aria-current="page"' : ''}">${c.label}</a>`;
       }
-      return sep + '<span class="bc-crumb">' + c.label + '</span>';
+      return sep + `<span class="bc-crumb${isActive ? ' bc-active' : ''}">${c.label}</span>`;
     }).join('');
   },
 

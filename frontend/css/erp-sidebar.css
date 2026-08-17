@@ -399,3 +399,8 @@ body[data-modo="claro"] .erp-sidebar[data-collapsed="true"] .sidebar-link:hover:
   outline: 2px solid var(--focus);
   outline-offset: -2px;
 }
+
+.sidebar-link.active {
+  background-color: var(--c-success) !important;
+}
+
