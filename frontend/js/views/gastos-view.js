@@ -7,7 +7,15 @@
 
 function guardarSeleccionFiltros(cb) {
   const col = cb.getAttribute('data-col');
-  const prefs = JSON.parse(localStorage.getItem('gastosColumnPreferences') || '{"title":true,"subtitle":true,"value":true}');
+  const prefs = (() => {
+  try {
+    const raw = localStorage.getItem('gastosColumnPreferences');
+    return raw ? JSON.parse(raw) : {'title':true,'subtitle':true,'value':true};
+  } catch (_) {
+    // If parsing fails, fall back to defaults
+    return {'title':true,'subtitle':true,'value':true};
+  }
+})();
   prefs[col] = cb.checked;
   localStorage.setItem('gastosColumnPreferences', JSON.stringify(prefs));
   // Re‑render with the current filtered records
@@ -153,7 +161,15 @@ const GastosView = {
 /* Dynamic column rendering */
 this.renderList = function(records) {
   // Build HTML for each record respecting column preferences
-  const prefs = JSON.parse(localStorage.getItem('gastosColumnPreferences') || '{"title":true,"subtitle":true,"value":true}');
+  const prefs = (() => {
+  try {
+    const raw = localStorage.getItem('gastosColumnPreferences');
+    return raw ? JSON.parse(raw) : {'title':true,'subtitle':true,'value':true};
+  } catch (_) {
+    // If parsing fails, fall back to defaults
+    return {'title':true,'subtitle':true,'value':true};
+  }
+})();
   // Normalize preferences – ensure showSubtitle and showValue are always defined
   const showSubtitle = prefs.subtitle ?? true;
   const showValue = prefs.value ?? true;

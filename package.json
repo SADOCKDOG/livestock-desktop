@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "livestock-desktop",
   "version": "0.1.0",
   "private": true,
@@ -10,10 +10,12 @@
     "build": "tauri build",
     "build:free": "pwsh -Command \"Copy-Item frontend/js/mode-config.free.js frontend/js/mode-config.js -Force\" && tauri build",
     "build:premium": "pwsh -Command \"Copy-Item frontend/js/mode-config.premium.js frontend/js/mode-config.js -Force\" && tauri build",
-    "sync": "pwsh scripts/sync-from-master.ps1"
+    "sync": "pwsh scripts/sync-from-master.ps1",
+    "test:e2e": "cypress run"
   },
   "devDependencies": {
+    "@tauri-apps/api": "latest",
     "@tauri-apps/cli": "latest",
-    "@tauri-apps/api": "latest"
+    "cypress": "^15.20.1"
   }
 }
