@@ -22,14 +22,15 @@
 (function () {
   'use strict';
 
-  const PDFJS_CDN = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.min.js';
-  const PDFJS_WORKER = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js';
+  const PDFJS_CDN = '/js/vendor/pdf.min.mjs';
+  const PDFJS_WORKER = '/js/vendor/pdf.worker.min.mjs';
 
   let _cargaPdfJs = null;
 
   /**
    * Carga pdf.js bajo demanda. Devuelve false si no se pudo (típicamente, sin red).
-   * La CSP de index.html ya permite cdn.jsdelivr.net.
+   * Servido en local (js/vendor): la app es offline-first y la 3.11.174
+   * del CDN arrastraba GHSA-wgrm-67xf-hhpq.
    */
   async function asegurarPdfJs() {
     if (typeof pdfjsLib !== 'undefined') {
@@ -37,13 +38,9 @@
       return true;
     }
     if (!_cargaPdfJs) {
-      _cargaPdfJs = new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = PDFJS_CDN;
-        s.onload = resolve;
-        s.onerror = reject;
-        document.body.appendChild(s);
-      });
+      // pdf.js 4.x es un modulo ES: no vale <script src>, hay que importarlo
+      // y publicar el namespace como pdfjsLib para el resto del fichero.
+      _cargaPdfJs = import('/js/vendor/pdf.min.mjs').then((mod) => { window.pdfjsLib = mod; return mod; });
     }
     try {
       await _cargaPdfJs;
