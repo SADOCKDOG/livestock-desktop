@@ -1,6 +1,3 @@
-// Validación visual + funcional del desktop con CDP (solo Node native WebSocket).
-// Lanza Chrome headless, espera a que la app arranque, navega, captura pantallas
-// y extrae un informe textual (guías registradas, GastosView, state de Gastos).
 const { spawn } = require('child_process');
 const http = require('http');
 const fs = require('fs');
@@ -66,7 +63,6 @@ async function cdpFlush(frames = 3) {
   }
 }
 
-// Espera a que el viewport sea suficientemente ancho (≥1024 CSS px)
 async function waitSuitableViewport(push) {
   const MAX_TRIES = 30;
   for (let i = 0; i < MAX_TRIES; i++) {
@@ -79,14 +75,13 @@ async function waitSuitableViewport(push) {
   return false;
 }
 
-// Espera a que el contenido de la vista de Gastos haya terminado de cargar
 async function waitGastosLoaded(push) {
   const MAX_TRIES = 30;
   for (let i = 0; i < MAX_TRIES; i++) {
     const raw = await cdpEval('() => document.querySelector("#gastos-content")?.innerText || ""');
     const txt = typeof raw === 'string' ? raw : String(raw);
     push(`[GASTOS-LOAD] text="${txt.substring(0, 30)}"`);
-    if (!txt.includes('Cargando gastos...')) return true;
+    if (typeof txt === 'string' && !txt.includes('Cargando gastos...')) return true;
     await sleep(500);
   }
   push('[GASTOS-LOAD] ERROR: still shows "Cargando gastos..." after ${MAX_TRIES} tries');
@@ -96,6 +91,7 @@ async function waitGastosLoaded(push) {
 (async () => {
   const informe = [];
   const push = (s) => { informe.push(s); console.log(s); };
+  let previousHash = null;
 
   try {
     fs.mkdirSync(OUTDIR, { recursive: true });
@@ -144,6 +140,14 @@ async function waitGastosLoaded(push) {
     }
     push('[ARRANQUE] OK: app pinto contenido en app-content');
 
+    // Sembrar datos demo para que la app muestre contenido real
+    push('[DEMO] sembrando datos demo antes de capturar');
+    try {
+      await cdpEval('window.SeedData?.run?.(true)');
+    } catch (e) {
+      push('[DEMO] error sembrando: ' + (e as string));
+    }
+
     // Aseguramos viewport >= 1024 CSS px
     const viewportOk = await waitSuitableViewport(push);
     if (!viewportOk) throw new Error('Viewport never reached >=1024 CSS px');
@@ -173,6 +177,11 @@ async function waitGastosLoaded(push) {
     await cdpFlush(4);
     const gastoss = await cdpShot('val-gastos.png');   // captura 2: Gastos
     push('[SHOT] val-gastos.png guardada, hash=' + gastoss.hash);
+    if (previousHash && previousHash === gastoss.hash) {
+      push('[ABORT] Duplicate hash detected – aborting further captures');
+      throw new Error('Duplicate hash detected – abort script');
+    }
+    previousHash = gastoss.hash;
 
     // DIAGNÓSTICO: forzar la carga del grupo 'expro' y ver si GastosView queda
     const diag = await cdpEval(`(async () => {
@@ -192,6 +201,11 @@ async function waitGastosLoaded(push) {
     await cdpFlush(4);
     const dash2 = await cdpShot('val-dashboard2.png');
     push('[SHOT] val-dashboard2.png guardada, hash=' + dash2.hash);
+    if (previousHash && previousHash === dash2.hash) {
+      push('[ABORT] Duplicate hash detected – aborting further captures');
+      throw new Error('Duplicate hash detected – abort script');
+    }
+    previousHash = dash2.hash;
 
     // Esperar a que la carga de gastos finalice antes de cerrar
     const cargado = await waitGastosLoaded(push);
