@@ -83,6 +83,8 @@ const EXPECT = {
   '#/': [],
   '#/explotacion?tab=lacteo&sub=tanques': ['erp-action-group', 'data-ver-mas'],
   '#/agenda': ['erp-action-group', 'data-ver-mas'],
+  '#/cuaderno': ['erp-action-group'],
+  '#/ajustes': [],
 };
 
 function makeCheck(mobile, expected) {

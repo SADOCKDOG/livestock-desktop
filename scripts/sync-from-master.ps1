@@ -60,9 +60,9 @@ $preservedList = @(
     'js\views\zonas-view.js',            # CTA cabecera + acción secundaria Importar PDF
     'js\views\sanidad-view.js',          # Acciones de registro agrupadas (fieldset erp-action-group)
     'js\views\patrimonio-view.js',       # Acciones de registro agrupadas (fieldset erp-action-group)
-    'js\views\cuaderno-view.js',         # Acciones de documento agrupadas (exportar PDF/CSV/imprimir)
+    # 'js\views\cuaderno-view.js',       # UNIFICADA en el maestro (fase 3 lote 1): fieldset erp-action-group (exportar PDF/CSV/imprimir)
     'js\views\albaranes-ventas-view.js', # Libro de Ventas: tabla ERP
-    'js\views\ajustes-view.js',          # Altas (finca/ADSG/especie) al formato de chip
+    # 'js\views\ajustes-view.js',        # UNIFICADA en el maestro (fase 3 lote 1): chips de alta + feature Zonas/Parcelas conservada
     'js\guides\inicio-dashboard.js',  # Guía del Inicio/Dashboard (propia del desktop; el maestro no la trae)
     # --- Guías re-apuntadas a la piel ERP (sidebar / erp-action-group). Sin esto, el
     #     sync desde el mástro revertiría el re-apuntado (el mástro usa targets de carrusel). ---

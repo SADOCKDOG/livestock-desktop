@@ -1,10 +1,19 @@
 [DEMO] {"ok":true,"fincaActiva":1,"guias":22}
-[MODOMODO] MOVIL@411
+[MODOMODO] ESCRITORIO@1440
 [NAV] #/
-[CHECK] #/ -> {"ok":true,"why":[],"mode":"mobile","fab":true,"appLen":5975,"route":"#/"}
+[CHECK] #/ -> {"ok":true,"why":[],"mode":"desktop","sidebarW":240,"appLen":5975,"route":"#/"}
+[NAV] #/explotacion?tab=lacteo&sub=tanques (espera: erp-action-group,data-ver-mas)
+[CHECK] #/explotacion?tab=lacteo&sub=tanques -> {"ok":true,"why":[],"mode":"desktop","sidebarW":240,"appLen":2911,"has_erp-action-group":true,"has_data-ver-mas":true,"route":"#/explotacion?tab=lacteo&sub=tanques"}
 [NAV] #/agenda (espera: erp-action-group,data-ver-mas)
-[CHECK] #/agenda -> {"ok":true,"why":[],"mode":"mobile","fab":true,"appLen":4561,"route":"#/agenda"}
-[RESUMEN] vistas validas: 2/2
+[CHECK] #/agenda -> {"ok":true,"why":[],"mode":"desktop","sidebarW":240,"appLen":4561,"has_erp-action-group":true,"has_data-ver-mas":true,"route":"#/agenda"}
+[NAV] #/cuaderno (espera: erp-action-group)
+[CHECK] #/cuaderno -> {"ok":true,"why":[],"mode":"desktop","sidebarW":240,"appLen":7839,"has_erp-action-group":true,"route":"#/cuaderno"}
+[NAV] #/ajustes
+[CHECK] #/ajustes -> {"ok":true,"why":[],"mode":"desktop","sidebarW":240,"appLen":2824,"route":"#/ajustes"}
+[RESUMEN] vistas validas: 5/5
   - #/: OK
+  - #/explotacion?tab=lacteo&sub=tanques: OK
   - #/agenda: OK
+  - #/cuaderno: OK
+  - #/ajustes: OK
 [RESUMEN] VERIFICACION COMPLETA

@@ -1,5 +1,5 @@
 [ADB] dispositivo=emulator-5554
-[ADB] pid=5774
+[ADB] pid=6346
 [CDP] target=https://localhost/
 [ARRANQUE] OK
 [DEMO] {"ok":true,"fincaActiva":1,"guias":21}
@@ -10,8 +10,14 @@
 [CHECK] #/agenda -> {"ok":true,"why":[],"mode":"android-webview","fab":true,"appLen":5975,"w":411,"route":"#/agenda"}
 [NAV] #/explotacion?tab=lacteo&sub=tanques
 [CHECK] #/explotacion?tab=lacteo&sub=tanques -> {"ok":true,"why":[],"mode":"android-webview","fab":false,"appLen":2564,"w":411,"route":"#/explotacion?tab=lacteo&sub=tanques"}
-[RESUMEN] vistas validas: 3/3
+[NAV] #/cuaderno
+[CHECK] #/cuaderno -> {"ok":true,"why":[],"mode":"android-webview","fab":false,"appLen":7839,"w":411,"route":"#/cuaderno"}
+[NAV] #/ajustes
+[CHECK] #/ajustes -> {"ok":true,"why":[],"mode":"android-webview","fab":false,"appLen":2824,"w":411,"route":"#/ajustes"}
+[RESUMEN] vistas validas: 5/5
   - #/: OK
   - #/agenda: OK
   - #/explotacion?tab=lacteo&sub=tanques: OK
+  - #/cuaderno: OK
+  - #/ajustes: OK
 [RESUMEN] VERIFICACION COMPLETA
