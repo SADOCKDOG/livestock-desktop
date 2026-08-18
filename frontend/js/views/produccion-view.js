@@ -711,7 +711,8 @@ const ProduccionView = {
         App.clearExitGuard();
         App.toast("Registro actualizado correctamente");
         overlay.remove();
-        ProduccionView.render();
+        if (window.ExplotacionView && ExplotacionView._cachedData) ExplotacionView.render();
+        else ProduccionView.render();
       };
 
       overlay.querySelector('#btn-del-reg').onclick = async () => {
@@ -721,7 +722,8 @@ const ProduccionView = {
         App.clearExitGuard();
         App.toast("Registro eliminado");
         overlay.remove();
-        ProduccionView.render();
+        if (window.ExplotacionView && ExplotacionView._cachedData) ExplotacionView.render();
+        else ProduccionView.render();
       };
     } catch (e) {
       App.toastError(e.message);
