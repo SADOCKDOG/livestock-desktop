@@ -16,6 +16,6 @@
   "devDependencies": {
     "@tauri-apps/api": "latest",
     "@tauri-apps/cli": "latest",
-    "cypress": "13.17.0"
+    "cypress": "15.20.1"
   }
 }
