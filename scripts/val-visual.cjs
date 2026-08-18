@@ -5,6 +5,7 @@ const { spawn } = require('child_process');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const BASE = 'http://localhost:8089';
@@ -16,11 +17,11 @@ const UDDIR = path.join(require('os').tmpdir(), 'cdp-val-' + Date.now());
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 function get(url) { return new Promise((res, rej) => { http.get(url, r => { let d=''; r.on('data', c => d+=c); r.on('end', () => res(d)); }).on('error', rej); }); }
 
-// Lanzar Chrome headless con remote-debugging
 const chrome = spawn(CHROME, [
   '--headless=new', '--no-sandbox', '--hide-scrollbars',
-  '--window-size=1280,720', `--remote-debugging-port=${PORT}`,
-  '--no-first-run', `--user-data-dir=${UDDIR}`, `--disable-extensions`,
+  '--window-size=1440,900', '--force-device-scale-factor=1',
+  '--remote-debugging-port=' + PORT,
+  '--no-first-run', `--user-data-dir=${UDDIR}`, '--disable-extensions',
   '--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--run-all-compositor-stages-before-draw',
   BASE + '/'
 ], { stdio: 'ignore' });
@@ -32,7 +33,7 @@ function cdpSend(method, params = {}) {
     const id = Math.floor(Math.random() * 1e7);
     const onMsg = async (ev) => {
       const data = ev.data && typeof ev.data === 'object' && typeof ev.data.text === 'function'
-        ? await ev.data.text()   // MessageEvent.data puede ser un Blob en el WebSocket nativo de Node
+        ? await ev.data.text()
         : String(ev.data);
       const m = JSON.parse(data);
       if (m.id === id) { ws.removeEventListener('message', onMsg); resolve(m); }
@@ -48,13 +49,16 @@ function cdpEval(expr) {
 function cdpShot(name) {
   return cdpSend('Page.captureScreenshot', { format: 'png' }).then(r => {
     if (r && r.result && r.result.data) {
-      fs.writeFileSync(path.join(OUTDIR, name), Buffer.from(r.result.data, 'base64'));
-      return name;
+      const filePath = path.join(OUTDIR, name);
+      fs.writeFileSync(filePath, Buffer.from(r.result.data, 'base64'));
+      // ---- NEW: store hash of the just‑saved screenshot ----
+      const buf = fs.readFileSync(filePath);
+      const hash = crypto.createHash('sha256').update(buf).digest('hex');
+      return { filePath, hash };
     }
-    return null;
+    return { filePath: null, hash: null };
   });
 }
-// Fuerza un repaint real antes de capturar (headless no repinta la navegación sin esto)
 async function cdpFlush(frames = 3) {
   for (let i = 0; i < frames; i++) {
     await cdpEval(`new Promise(r => requestAnimationFrame(() => r()))`);
@@ -62,7 +66,37 @@ async function cdpFlush(frames = 3) {
   }
 }
 
+// Espera a que el viewport sea suficientemente ancho (≥1024 CSS px)
+async function waitSuitableViewport(push) {
+  const MAX_TRIES = 30;
+  for (let i = 0; i < MAX_TRIES; i++) {
+    const width = await cdpEval('window.innerWidth');
+    push(`[VIEWPORT] width=${width}`);
+    if (width >= 1024) return true;
+    await sleep(500);
+  }
+  push('[VIEWPORT] ERROR: width stayed < 1024 after ${MAX_TRIES} tries');
+  return false;
+}
+
+// Espera a que el contenido de la vista de Gastos haya terminado de cargar
+async function waitGastosLoaded(push) {
+  const MAX_TRIES = 30;
+  for (let i = 0; i < MAX_TRIES; i++) {
+    const raw = await cdpEval('() => document.querySelector("#gastos-content")?.innerText || ""');
+    const txt = typeof raw === 'string' ? raw : String(raw);
+    push(`[GASTOS-LOAD] text="${txt.substring(0, 30)}"`);
+    if (!txt.includes('Cargando gastos...')) return true;
+    await sleep(500);
+  }
+  push('[GASTOS-LOAD] ERROR: still shows "Cargando gastos..." after ${MAX_TRIES} tries');
+  return false;
+}
+
 (async () => {
+  const informe = [];
+  const push = (s) => { informe.push(s); console.log(s); };
+
   try {
     fs.mkdirSync(OUTDIR, { recursive: true });
 
@@ -90,77 +124,87 @@ async function cdpFlush(frames = 3) {
     await cdpSend('Page.enable');
     await cdpSend('Runtime.enable');
 
-    // Esperar ARRANQUE REAL de la app: app-content deja de ser el loader y aparece App
+    // Esperar ARRANQUE REAL de la app
     let ready = false;
-    for (let i = 0; i < 90; i++) { // hasta ~45s
+    for (let i = 0; i < 90; i++) {
       const v = await cdpEval('(!!window.App && document.getElementById("app-content") && document.getElementById("app-content").children.length > 0)');
       if (v) { ready = true; break; }
       await sleep(500);
     }
-
-    const informe = [];
-    const push = (s) => { informe.push(s); console.log(s); };
-
     if (!ready) {
-      push('[ARRANQUE] FAIL: la app no pinto #app-content en 45s');
       const html = await cdpEval('document.body.innerHTML.slice(0,200)');
+      push('[ARRANQUE] FAIL: la app no pinto #app-content en 45s');
       push('[ARRANQUE] body head: ' + String(html).slice(0,150));
       await cdpShot('val-arranque-FAIL.png');
-    } else {
-      push('[ARRANQUE] OK: app pinto contenido en app-content');
-      await sleep(1500);                    // espera extra a que el dashboard se pinte del todo
-      await cdpFlush(4);
-      await cdpShot('val-dashboard.png');   // captura 1: Dashboard/Inicio
-
-      // Guías registradas
-      const g = await cdpEval('window.GuideRegistry ? window.GuideRegistry.getAll().map(x=>x.id) : []');
-      const ids = Array.isArray(g) ? g.slice().sort() : [];
-      push('[REGISTRY] guias=' + ids.length + (ids.length === 22 ? ' OK' : ' (esperado 22)'));
-      push('[REGISTRY] ids: ' + ids.join(', '));
-      push('[REGISTRY] inicio.dashboard presente: ' + ids.includes('inicio.dashboard'));
-      push('[REGISTRY] expro.gastos presente: ' + ids.includes('expro.gastos'));
-
-      // GastosView
-      push('[GASTOSVIEW] typeof window.GastosView = ' + await cdpEval('typeof window.GastosView'));
-      push('[GASTOSVIEW] GastosView.render es fn: ' + await cdpEval('typeof (window.GastosView && window.GastosView.render)'));
-
-      // Navegar a Gastos (ExPro), FORZANDO la carga del grupo expro y esperando redraw
-      await cdpEval(`(async () => {
-        try { await App._ensureViewGroup('expro'); } catch (e) { window.__gd = String(e && e.message || e); }
-        location.hash = '#/explotacion?tab=gastos';
-        return true;
-      })()`);
-      await sleep(2500);
-      const gastosReady = await cdpEval('!!window.GastosView && document.getElementById("app-content") && (document.getElementById("app-content").textContent.length > 50)');
-      push('[GASTOS] renderizado tras hash (grupo cargado): ' + gastosReady + ' | err=' + await cdpEval('window.__gd'));
-      await cdpFlush(4);
-      await cdpShot('val-gastos.png');      // captura 2: Gastos
-
-      // DIAGNÓSTICO: forzar la carga del grupo 'expro' y ver si GastosView queda
-      const diag = await cdpEval(`(async () => {
-        const before = typeof window.GastosView;
-        let forced = 'not-run';
-        let loadErr = null;
-        try { forced = await App._ensureViewGroup('expro'); } catch (e) { loadErr = String(e && e.message || e); }
-        const after = typeof window.GastosView;
-        const scripts = Array.from(document.querySelectorAll('script[src*="gastos-view"]')).map(s => s.src);
-        return JSON.stringify({ before, forced, loadErr, after, scripts });
-      })()`);
-      push('[DIAG] ' + diag);
-
-      // Reintento captura dashboard tras navegar atrás (para ver el FAB guía)
-      await cdpEval('location.hash = "#/"');
-      await sleep(2000);
-      await cdpFlush(4);
-      await cdpShot('val-dashboard2.png');
+      informe.push('[FIN] done');
+      fs.writeFileSync(path.join(OUTDIR, 'val-informe.txt'), informe.join('\n'));
+      try { server.kill(); } catch (_) {}
+      try { server.stdin.end(); } catch (_) {}
+      return;
     }
+    push('[ARRANQUE] OK: app pinto contenido en app-content');
+
+    // Aseguramos viewport >= 1024 CSS px
+    const viewportOk = await waitSuitableViewport(push);
+    if (!viewportOk) throw new Error('Viewport never reached >=1024 CSS px');
+
+    // Esperar a que la app haya cargado el contenido inicial
+    await sleep(1500);
+    await cdpFlush(4);
+    await cdpShot('val-dashboard.png');   // captura 1: Dashboard/Inicio
+
+    // ---- GUÍAS REGISTRADAS ----
+    const g = await cdpEval('window.GuideRegistry ? window.GuideRegistry.getAll().map(x=>x.id).sort() : []');
+    const ids = Array.isArray(g) ? g.slice().sort() : [];
+    push('[REGISTRY] guias=' + ids.length + (ids.length === 22 ? ' OK' : ' (esperado 22)'));
+    push('[REGISTRY] ids: ' + ids.join(', '));
+    push('[REGISTRY] inicio.dashboard presente: ' + ids.includes('inicio.dashboard'));
+    push('[REGISTRY] expro.gastos presente: ' + ids.includes('expro.gastos'));
+
+    // Navegar a Gastos (ExPro), FORZANDO la carga del grupo expro y esperando redraw
+    await cdpEval(`(async () => {
+      try { await App._ensureViewGroup('expro'); } catch (e) { window.__gd = String(e && e.message || e); }
+      location.hash = '#/explotacion?tab=gastos';
+      return 'navegado';
+    })()`);
+    await sleep(2500);
+    const gastosReady = await cdpEval('!!window.GastosView && document.getElementById("app-content") && (document.getElementById("app-content").textContent.length > 50)');
+    push('[GASTOS] renderizado tras hash (grupo cargado): ' + gastosReady + ' | err=' + await cdpEval('window.__gd'));
+    await cdpFlush(4);
+    const gastoss = await cdpShot('val-gastos.png');   // captura 2: Gastos
+    push('[SHOT] val-gastos.png guardada, hash=' + gastoss.hash);
+
+    // DIAGNÓSTICO: forzar la carga del grupo 'expro' y ver si GastosView queda
+    const diag = await cdpEval(`(async () => {
+      const before = typeof window.GastosView;
+      let forced = 'not-run';
+      let loadErr = null;
+      try { forced = await App._ensureViewGroup('expro'); } catch (e) { loadErr = String(e && e.message || e); }
+      const after = typeof window.GastosView;
+      const scripts = Array.from(document.querySelectorAll('script[src*="gastos-view"]')).map(s => s.src);
+      return JSON.stringify({ before, forced, loadErr, after, scripts });
+    })()`);
+    push('[DIAG] ' + diag);
+
+    // Reintento captura dashboard tras navegar atrás (para ver el FAB guía)
+    await cdpEval('location.hash = "#/"');
+    await sleep(2000);
+    await cdpFlush(4);
+    const dash2 = await cdpShot('val-dashboard2.png');
+    push('[SHOT] val-dashboard2.png guardada, hash=' + dash2.hash);
+
+    // Esperar a que la carga de gastos finalice antes de cerrar
+    const cargado = await waitGastosLoaded(push);
+    if (!cargado) throw new Error('Los gastos no terminaron de cargar');
 
     push('[FIN] done');
     fs.writeFileSync(path.join(OUTDIR, 'val-informe.txt'), informe.join('\n'));
   } catch (e) {
-    console.error('ERROR:', e.message);
+    push('[ERROR] ' + e.message);
   } finally {
     try { ws && ws.close(); } catch (_) {}
     try { chrome.kill(); } catch (_) {}
+    try { server?.kill(); } catch (_) {}
+    try { server?.stdin.end(); } catch (_) {}
   }
 })();
