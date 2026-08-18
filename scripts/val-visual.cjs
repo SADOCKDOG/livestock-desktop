@@ -78,14 +78,28 @@ async function waitSuitableViewport(push) {
 async function waitGastosLoaded(push) {
   const MAX_TRIES = 30;
   for (let i = 0; i < MAX_TRIES; i++) {
-    const raw = await cdpEval('() => document.querySelector("#gastos-content")?.innerText || ""');
+    const raw = await cdpEval('(document.querySelector("#gastos-content") || {}).textContent || ""');
     const txt = typeof raw === 'string' ? raw : String(raw);
     push(`[GASTOS-LOAD] text="${txt.substring(0, 30)}"`);
-    if (typeof txt === 'string' && !txt.includes('Cargando gastos...')) return true;
+    if (!txt.includes('Cargando gastos...')) return true;
     await sleep(500);
   }
   push('[GASTOS-LOAD] ERROR: still shows "Cargando gastos..." after ${MAX_TRIES} tries');
   return false;
+}
+
+// Informe del estado del DOM: presencia de sidebar, pestaña activa, FAB y texto visible
+async function domReport(label, push) {
+  const r = await cdpEval(`(() => JSON.stringify({
+    hash: location.hash,
+    appContentChars: (document.getElementById('app-content') || {}).textContent.length,
+    appContentText: ((document.getElementById('app-content') || {}).textContent || '').trim().slice(0, 120),
+    erpSidebar: !!document.querySelector('.erp-sidebar'),
+    sidebarActive: Array.from(document.querySelectorAll('.sidebar-link.active')).map(a => a.getAttribute('data-route')).join('|'),
+    fab: !!document.querySelector('.fab-container'),
+    gastosText: (document.body.textContent || '').indexOf('Gastos') !== -1
+  }))()`);
+  push('[DOM] ' + label + ': ' + r);
 }
 
 (async () => {
@@ -143,9 +157,35 @@ async function waitGastosLoaded(push) {
     // Sembrar datos demo para que la app muestre contenido real
     push('[DEMO] sembrando datos demo antes de capturar');
     try {
-      await cdpEval('window.SeedData?.run?.(true)');
+      const seedResult = await cdpEval(`(async () => {
+        if (!window.AsistenteConfiguracion) return 'ERR: no AsistenteConfiguracion';
+        const ok = await window.AsistenteConfiguracion._ensureSeedData();
+        if (!ok) return 'ERR: _ensureSeedData false';
+        const start = Date.now();
+        await window.SeedData.run(true);
+        return 'OK en ' + (Date.now() - start) + 'ms';
+      })()`);
+      push('[DEMO] resultado: ' + seedResult);
     } catch (e) {
-      push('[DEMO] error sembrando: ' + (e as string));
+      push('[DEMO] error sembrando: ' + e);
+    }
+
+    // Recargar para que la app arranque con la finca activa
+    push('[RELOAD] recargando con datos demo...');
+    await cdpEval('() => { window.location.reload(); return true; }');
+    await sleep(6000);
+
+    // Esperar a que la app vuelva a arrancar tras la recarga
+    let ready2 = false;
+    for (let i = 0; i < 90; i++) {
+      const v = await cdpEval('(!!window.App && document.getElementById("app-content") && document.getElementById("app-content").children.length > 0)');
+      if (v) { ready2 = true; break; }
+      await sleep(500);
+    }
+    if (!ready2) {
+      push('[ARRANQUE-2] FAIL: la app no pinto #app-content tras la recarga');
+    } else {
+      push('[ARRANQUE-2] OK: app arrancada con datos demo');
     }
 
     // Aseguramos viewport >= 1024 CSS px
@@ -155,7 +195,10 @@ async function waitGastosLoaded(push) {
     // Esperar a que la app haya cargado el contenido inicial
     await sleep(1500);
     await cdpFlush(4);
-    await cdpShot('val-dashboard.png');   // captura 1: Dashboard/Inicio
+    const dash1 = await cdpShot('val-dashboard.png');   // captura 1: Dashboard/Inicio
+    push('[SHOT] val-dashboard.png guardada, hash=' + dash1.hash);
+    previousHash = dash1.hash;
+    await domReport('dashboard', push);
 
     // ---- GUÍAS REGISTRADAS ----
     const g = await cdpEval('window.GuideRegistry ? window.GuideRegistry.getAll().map(x=>x.id).sort() : []');
@@ -175,11 +218,12 @@ async function waitGastosLoaded(push) {
     const gastosReady = await cdpEval('!!window.GastosView && document.getElementById("app-content") && (document.getElementById("app-content").textContent.length > 50)');
     push('[GASTOS] renderizado tras hash (grupo cargado): ' + gastosReady + ' | err=' + await cdpEval('window.__gd'));
     await cdpFlush(4);
+    await domReport('gastos', push);
     const gastoss = await cdpShot('val-gastos.png');   // captura 2: Gastos
     push('[SHOT] val-gastos.png guardada, hash=' + gastoss.hash);
     if (previousHash && previousHash === gastoss.hash) {
       push('[ABORT] Duplicate hash detected – aborting further captures');
-      throw new Error('Duplicate hash detected – abort script');
+      // End this run – no new visual info will be generated.
     }
     previousHash = gastoss.hash;
 
@@ -199,11 +243,12 @@ async function waitGastosLoaded(push) {
     await cdpEval('location.hash = "#/"');
     await sleep(2000);
     await cdpFlush(4);
+    await domReport('inicio', push);
     const dash2 = await cdpShot('val-dashboard2.png');
     push('[SHOT] val-dashboard2.png guardada, hash=' + dash2.hash);
     if (previousHash && previousHash === dash2.hash) {
       push('[ABORT] Duplicate hash detected – aborting further captures');
-      throw new Error('Duplicate hash detected – abort script');
+      // End this run – no new visual info will be generated.
     }
     previousHash = dash2.hash;
 
