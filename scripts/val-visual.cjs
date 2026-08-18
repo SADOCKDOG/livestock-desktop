@@ -1,0 +1,166 @@
+// Validación visual + funcional del desktop con CDP (solo Node native WebSocket).
+// Lanza Chrome headless, espera a que la app arranque, navega, captura pantallas
+// y extrae un informe textual (guías registradas, GastosView, state de Gastos).
+const { spawn } = require('child_process');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+const BASE = 'http://localhost:8089';
+const OUTDIR = path.join(__dirname, '..', 'cypress', 'screenshots');
+const PORT = 9222;
+const WS_LIST = 'http://127.0.0.1:' + PORT + '/json/list';
+const UDDIR = path.join(require('os').tmpdir(), 'cdp-val-' + Date.now());
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function get(url) { return new Promise((res, rej) => { http.get(url, r => { let d=''; r.on('data', c => d+=c); r.on('end', () => res(d)); }).on('error', rej); }); }
+
+// Lanzar Chrome headless con remote-debugging
+const chrome = spawn(CHROME, [
+  '--headless=new', '--no-sandbox', '--hide-scrollbars',
+  '--window-size=1280,720', `--remote-debugging-port=${PORT}`,
+  '--no-first-run', `--user-data-dir=${UDDIR}`, `--disable-extensions`,
+  '--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--run-all-compositor-stages-before-draw',
+  BASE + '/'
+], { stdio: 'ignore' });
+
+let ws;
+function cdpSend(method, params = {}) {
+  return new Promise((resolve) => {
+    if (!ws || ws.readyState !== 1) return resolve(null);
+    const id = Math.floor(Math.random() * 1e7);
+    const onMsg = async (ev) => {
+      const data = ev.data && typeof ev.data === 'object' && typeof ev.data.text === 'function'
+        ? await ev.data.text()   // MessageEvent.data puede ser un Blob en el WebSocket nativo de Node
+        : String(ev.data);
+      const m = JSON.parse(data);
+      if (m.id === id) { ws.removeEventListener('message', onMsg); resolve(m); }
+    };
+    ws.addEventListener('message', onMsg);
+    ws.send(JSON.stringify({ id, method, params }));
+  });
+}
+function cdpEval(expr) {
+  return cdpSend('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true })
+    .then(r => r && r.result ? r.result.result.value : null);
+}
+function cdpShot(name) {
+  return cdpSend('Page.captureScreenshot', { format: 'png' }).then(r => {
+    if (r && r.result && r.result.data) {
+      fs.writeFileSync(path.join(OUTDIR, name), Buffer.from(r.result.data, 'base64'));
+      return name;
+    }
+    return null;
+  });
+}
+// Fuerza un repaint real antes de capturar (headless no repinta la navegación sin esto)
+async function cdpFlush(frames = 3) {
+  for (let i = 0; i < frames; i++) {
+    await cdpEval(`new Promise(r => requestAnimationFrame(() => r()))`);
+    await sleep(120);
+  }
+}
+
+(async () => {
+  try {
+    fs.mkdirSync(OUTDIR, { recursive: true });
+
+    // Esperar a que Chrome exponga el endpoint debugging
+    let target = null;
+    let lastList = '[]';
+    for (let i = 0; i < 120; i++) {
+      try {
+        lastList = await get(WS_LIST);
+        const list = JSON.parse(lastList);
+        target = (list || []).find(t => t.type === 'page' && String(t.url).indexOf('localhost:8089') !== -1) || null;
+        if (target) break;
+      } catch (_) { /* retry */ }
+      await sleep(500);
+    }
+    if (!target) {
+      console.error('[CDP] list raw:', lastList.slice(0, 300));
+      throw new Error('Chrome no expuso target de la app en /json/list');
+    }
+
+    // Conectar por WebSocket (nativo de Node)
+    ws = new WebSocket(target.webSocketDebuggerUrl);
+    await new Promise((res, rej) => { ws.addEventListener('open', res); ws.addEventListener('error', rej); });
+
+    await cdpSend('Page.enable');
+    await cdpSend('Runtime.enable');
+
+    // Esperar ARRANQUE REAL de la app: app-content deja de ser el loader y aparece App
+    let ready = false;
+    for (let i = 0; i < 90; i++) { // hasta ~45s
+      const v = await cdpEval('(!!window.App && document.getElementById("app-content") && document.getElementById("app-content").children.length > 0)');
+      if (v) { ready = true; break; }
+      await sleep(500);
+    }
+
+    const informe = [];
+    const push = (s) => { informe.push(s); console.log(s); };
+
+    if (!ready) {
+      push('[ARRANQUE] FAIL: la app no pinto #app-content en 45s');
+      const html = await cdpEval('document.body.innerHTML.slice(0,200)');
+      push('[ARRANQUE] body head: ' + String(html).slice(0,150));
+      await cdpShot('val-arranque-FAIL.png');
+    } else {
+      push('[ARRANQUE] OK: app pinto contenido en app-content');
+      await sleep(1500);                    // espera extra a que el dashboard se pinte del todo
+      await cdpFlush(4);
+      await cdpShot('val-dashboard.png');   // captura 1: Dashboard/Inicio
+
+      // Guías registradas
+      const g = await cdpEval('window.GuideRegistry ? window.GuideRegistry.getAll().map(x=>x.id) : []');
+      const ids = Array.isArray(g) ? g.slice().sort() : [];
+      push('[REGISTRY] guias=' + ids.length + (ids.length === 22 ? ' OK' : ' (esperado 22)'));
+      push('[REGISTRY] ids: ' + ids.join(', '));
+      push('[REGISTRY] inicio.dashboard presente: ' + ids.includes('inicio.dashboard'));
+      push('[REGISTRY] expro.gastos presente: ' + ids.includes('expro.gastos'));
+
+      // GastosView
+      push('[GASTOSVIEW] typeof window.GastosView = ' + await cdpEval('typeof window.GastosView'));
+      push('[GASTOSVIEW] GastosView.render es fn: ' + await cdpEval('typeof (window.GastosView && window.GastosView.render)'));
+
+      // Navegar a Gastos (ExPro), FORZANDO la carga del grupo expro y esperando redraw
+      await cdpEval(`(async () => {
+        try { await App._ensureViewGroup('expro'); } catch (e) { window.__gd = String(e && e.message || e); }
+        location.hash = '#/explotacion?tab=gastos';
+        return true;
+      })()`);
+      await sleep(2500);
+      const gastosReady = await cdpEval('!!window.GastosView && document.getElementById("app-content") && (document.getElementById("app-content").textContent.length > 50)');
+      push('[GASTOS] renderizado tras hash (grupo cargado): ' + gastosReady + ' | err=' + await cdpEval('window.__gd'));
+      await cdpFlush(4);
+      await cdpShot('val-gastos.png');      // captura 2: Gastos
+
+      // DIAGNÓSTICO: forzar la carga del grupo 'expro' y ver si GastosView queda
+      const diag = await cdpEval(`(async () => {
+        const before = typeof window.GastosView;
+        let forced = 'not-run';
+        let loadErr = null;
+        try { forced = await App._ensureViewGroup('expro'); } catch (e) { loadErr = String(e && e.message || e); }
+        const after = typeof window.GastosView;
+        const scripts = Array.from(document.querySelectorAll('script[src*="gastos-view"]')).map(s => s.src);
+        return JSON.stringify({ before, forced, loadErr, after, scripts });
+      })()`);
+      push('[DIAG] ' + diag);
+
+      // Reintento captura dashboard tras navegar atrás (para ver el FAB guía)
+      await cdpEval('location.hash = "#/"');
+      await sleep(2000);
+      await cdpFlush(4);
+      await cdpShot('val-dashboard2.png');
+    }
+
+    push('[FIN] done');
+    fs.writeFileSync(path.join(OUTDIR, 'val-informe.txt'), informe.join('\n'));
+  } catch (e) {
+    console.error('ERROR:', e.message);
+  } finally {
+    try { ws && ws.close(); } catch (_) {}
+    try { chrome.kill(); } catch (_) {}
+  }
+})();

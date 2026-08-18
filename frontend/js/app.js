@@ -818,6 +818,15 @@ const App = {
     }
   },
 
+  /** Ajusta el sidebar según el breakpoint (1024px). En escritorio restaura el
+   *  estado colapsado persistido; en móvil el CSS lo oculta y muestra el bottom-nav. */
+  _adaptSidebarToBreakpoint() {
+    const desktop = window.innerWidth >= 1024;
+    let collapsed = false;
+    try { collapsed = localStorage.getItem('sidebar-collapsed') === 'true'; } catch (_) {}
+    this._setSidebarCollapsed(desktop ? collapsed : true, false);
+  },
+
   /** Construye el acordeón del sidebar a partir de App.NAV_GROUPS.
    *  Soporta subgrupos anidados: un item con `items` se renderiza como un
    *  subgrupo plegable (p.ej. los filtros de Agenda cuelgan bajo "Agenda").
