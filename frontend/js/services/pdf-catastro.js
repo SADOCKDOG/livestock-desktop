@@ -22,7 +22,7 @@
 (function () {
   'use strict';
 
-  const PDFJS_CDN = '/js/vendor/pdf.min.mjs';
+  const PDFJS_CDN = 'js/vendor/pdf.min.mjs';
   const PDFJS_WORKER = '/js/vendor/pdf.worker.min.mjs';
 
   let _cargaPdfJs = null;

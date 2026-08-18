@@ -1,0 +1,10 @@
+[DEMO] {"ok":true,"fincaActiva":1,"guias":22}
+[MODOMODO] MOVIL@411
+[NAV] #/
+[CHECK] #/ -> {"ok":true,"why":[],"mode":"mobile","fab":true,"appLen":5975,"route":"#/"}
+[NAV] #/agenda (espera: erp-action-group,data-ver-mas)
+[CHECK] #/agenda -> {"ok":true,"why":[],"mode":"mobile","fab":true,"appLen":4561,"route":"#/agenda"}
+[RESUMEN] vistas validas: 2/2
+  - #/: OK
+  - #/agenda: OK
+[RESUMEN] VERIFICACION COMPLETA

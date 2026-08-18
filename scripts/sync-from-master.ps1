@@ -45,9 +45,9 @@ $preservedList = @(
     'js\views\comercializacion-view.js', # Banner/KPI cromo ERP unificado (neutro)
     'js\views\manuales-view.js',      # Visor de manuales embebido en #app-content (no overlay full-screen)
     # --- Estandarización de botones / limpieza de FAB y sub-tabs (piel ERP) ---
-    'js\views\agenda-view.js',           # CTA cabecera, sin FAB; filtros al sidebar
+    # 'js\views\agenda-view.js',         # UNIFICADA en el maestro (fase 3 piloto): CTA cabecera + erp-action-group + erp-filtros; fab-container móvil CONSERVADO
     'js\views\botiquin-view.js',         # CTA cabecera "Nuevo Producto", sin FAB
-    'js\views\dashboard-view.js',        # FAB "Nueva Actividad" + FAB de guía del Inicio
+    # 'js\views\dashboard-view.js',      # UNIFICADA en el maestro (fase 3 piloto): FAB "Nueva Actividad" + renderGuideFab; nav móvil intacta
     'js\views\explotacion-view.js',      # Láctea/Trámites como subgrupos del sidebar (?sub=)
     'js\views\explotacion-lactea-view.js', # Sin botones inline; empty-state al sub-tab Tanques
     'js\views\informes-view.js',         # Navegación cat/tab movida al sidebar
@@ -56,7 +56,7 @@ $preservedList = @(
     'js\views\saneamientos-view.js',     # CTA cabecera "Nuevo Saneamiento", sin FAB
     'js\views\silos-view.js',            # CTA cabecera "Nuevo Silo", sin FAB
     'js\views\subexplotaciones-view.js', # CTA cabecera "Nueva Subexplotación", sin FAB
-    'js\views\tanques-view.js',          # CTA normalizada al patrón module-header-primary-action
+    # 'js\views\tanques-view.js',        # UNIFICADA en el maestro (fase 3 piloto): erp-action-group + erp-filtros + data-ver-mas
     'js\views\zonas-view.js',            # CTA cabecera + acción secundaria Importar PDF
     'js\views\sanidad-view.js',          # Acciones de registro agrupadas (fieldset erp-action-group)
     'js\views\patrimonio-view.js',       # Acciones de registro agrupadas (fieldset erp-action-group)
