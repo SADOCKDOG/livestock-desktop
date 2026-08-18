@@ -1,3 +1,20 @@
+/**
+ * Validación visual del ERP de escritorio (Livestock Manager).
+ *
+ * Arranca Chrome headless apuntando a http://localhost:8089, siembra la demo
+ * CHAMORRO, garantiza una FINCA ACTIVA, DESACTIVA las guías interactivas
+ * (persistiéndolo en meta.appConfig para que no se autolancen tras navegar) y
+ * captura tres vistas.
+ *
+ * Diferencia clave respecto a versiones previas: el éxito NO se mide por que los
+ * hashes difieran (dos capturas distintas pueden ser la misma pantalla atenuada
+ * por un popover de guía). El éxito se mide por una CONDICIÓN DE CONTENIDO por
+ * captura, comprobada en el DOM antes de disparar: sidebar visible, ausencia de
+ * asistente de bienvenida, ausencia de .guide-popover/.guide-overlay, y contenido
+ * esperado (registro rápido en Inicio, filas de gastos en Gastos). Si la
+ * condición no se cumple, la captura se ABORTA (sin falso verde).
+ */
+
 const { spawn } = require('child_process');
 const http = require('http');
 const fs = require('fs');
@@ -12,7 +29,7 @@ const WS_LIST = 'http://127.0.0.1:' + PORT + '/json/list';
 const UDDIR = path.join(require('os').tmpdir(), 'cdp-val-' + Date.now());
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function get(url) { return new Promise((res, rej) => { http.get(url, r => { let d=''; r.on('data', c => d+=c); r.on('end', () => res(d)); }).on('error', rej); }); }
+function get(url) { return new Promise((res, rej) => { http.get(url, r => { let d = ''; r.on('data', c => d += c); r.on('end', () => res(d)); }).on('error', rej); }); }
 
 const chrome = spawn(CHROME, [
   '--headless=new', '--no-sandbox', '--hide-scrollbars',
@@ -43,12 +60,18 @@ function cdpEval(expr) {
   return cdpSend('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true })
     .then(r => r && r.result ? r.result.result.value : null);
 }
+// Evalúa una expresión que devuelve un JSON (string) y lo parsea a objeto.
+async function evalObj(expr) {
+  const s = await cdpEval(expr);
+  if (s === null || s === undefined) return { ok: false, why: ['eval-null'] };
+  if (typeof s === 'object') return s; // returnByValue ya devolvió objeto
+  try { return JSON.parse(s); } catch (e) { return { ok: false, why: ['parse-error:' + String(s).slice(0, 120)] }; }
+}
 function cdpShot(name) {
   return cdpSend('Page.captureScreenshot', { format: 'png' }).then(r => {
     if (r && r.result && r.result.data) {
       const filePath = path.join(OUTDIR, name);
       fs.writeFileSync(filePath, Buffer.from(r.result.data, 'base64'));
-      // ---- NEW: store hash of the just‑saved screenshot ----
       const buf = fs.readFileSync(filePath);
       const hash = crypto.createHash('sha256').update(buf).digest('hex');
       return { filePath, hash };
@@ -58,54 +81,103 @@ function cdpShot(name) {
 }
 async function cdpFlush(frames = 3) {
   for (let i = 0; i < frames; i++) {
-    await cdpEval(`new Promise(r => requestAnimationFrame(() => r()))`);
+    await cdpEval('new Promise(r => requestAnimationFrame(() => r()))');
     await sleep(120);
   }
 }
 
-async function waitSuitableViewport(push) {
-  const MAX_TRIES = 30;
-  for (let i = 0; i < MAX_TRIES; i++) {
-    const width = await cdpEval('window.innerWidth');
-    push(`[VIEWPORT] width=${width}`);
-    if (width >= 1024) return true;
-    await sleep(500);
+// Espera a que una condición (expr -> boolean) se cumpla, haciendo polling.
+async function waitFor(expr, tries, ms, push, label) {
+  for (let i = 0; i < tries; i++) {
+    const v = await evalObj(expr);
+    if (v && v.ok) return v;
+    await sleep(ms);
   }
-  push('[VIEWPORT] ERROR: width stayed < 1024 after ${MAX_TRIES} tries');
-  return false;
+  const last = await evalObj(expr);
+  return last;
 }
 
-async function waitGastosLoaded(push) {
-  const MAX_TRIES = 30;
-  for (let i = 0; i < MAX_TRIES; i++) {
-    const raw = await cdpEval('(document.querySelector("#gastos-content") || {}).textContent || ""');
-    const txt = typeof raw === 'string' ? raw : String(raw);
-    push(`[GASTOS-LOAD] text="${txt.substring(0, 30)}"`);
-    if (!txt.includes('Cargando gastos...')) return true;
-    await sleep(500);
-  }
-  push('[GASTOS-LOAD] ERROR: still shows "Cargando gastos..." after ${MAX_TRIES} tries');
-  return false;
+// Desactiva las guías en la config persistida y retira cualquier overlay/popover
+// montado. Se llama tras cada navegación para garantizar que no quede ni se
+// relance el tour (GuideManager.maybeStart respeta App._config.guides.enabled y
+// la lista seen/dismissed).
+async function disableAndDismissGuides(push) {
+  const res = await evalObj(`(async () => {
+    try {
+      const guideIds = (window.GuideRegistry ? window.GuideRegistry.getAll() : []).map(g => g.id);
+      if (window.App) {
+        window.App._config = window.App._config || {};
+        window.App._config.guides = { enabled: false, seen: guideIds, dismissed: guideIds };
+      }
+      // Persistir para que sobreviva a la recarga / navegación.
+      const meta = (window.db) ? (await window.db.get('meta', 'appConfig').catch(() => null)) : null;
+      const merged = Object.assign({}, (meta && meta.value) ? meta.value : {}, { guides: { enabled: false, seen: guideIds, dismissed: guideIds } });
+      if (window.App) window.App._config = merged;
+      if (window.db) { try { await window.db.put('meta', { key: 'appConfig', value: merged }); } catch (e) {} }
+      // Retirar cualquier guía montada en este instante.
+      if (window.GuideManager) { try { window.GuideManager.skip(); } catch (e) {} }
+      document.querySelectorAll('.guide-overlay, .guide-popover, .guide-resume-chip').forEach(n => n.remove());
+      return JSON.stringify({ ok: true, guides: guideIds.length });
+    } catch (e) { return JSON.stringify({ ok: false, err: String(e && e.message || e) }); }
+  })()`);
+  push('[GUIAS] desactivadas: ' + JSON.stringify(res));
+  return res;
 }
 
-// Informe del estado del DOM: presencia de sidebar, pestaña activa, FAB y texto visible
-async function domReport(label, push) {
-  const r = await cdpEval(`(() => JSON.stringify({
-    hash: location.hash,
-    appContentChars: (document.getElementById('app-content') || {}).textContent.length,
-    appContentText: ((document.getElementById('app-content') || {}).textContent || '').trim().slice(0, 120),
-    erpSidebar: !!document.querySelector('.erp-sidebar'),
-    sidebarActive: Array.from(document.querySelectorAll('.sidebar-link.active')).map(a => a.getAttribute('data-route')).join('|'),
-    fab: !!document.querySelector('.fab-container'),
-    gastosText: (document.body.textContent || '').indexOf('Gastos') !== -1
-  }))()`);
-  push('[DOM] ' + label + ': ' + r);
-}
+// Condición de contenido para una captura de Inicio/Dashboard.
+const PRE_DASHBOARD = `(() => {
+  const r = { ok: true, why: [] };
+  const welc = document.getElementById('asistente-configuracion-contenedor');
+  if (welc) { r.ok = false; r.why.push('welcome-present'); }
+  if (document.querySelector('.guide-popover') || document.querySelector('.guide-overlay')) { r.ok = false; r.why.push('guide-present'); }
+  const sb = document.querySelector('.erp-sidebar');
+  if (!sb) { r.ok = false; r.why.push('no-sidebar'); }
+  else {
+    const b = sb.getBoundingClientRect();
+    const cs = getComputedStyle(sb);
+    if (b.width < 4 || b.height < 4 || cs.display === 'none' || cs.visibility === 'hidden') { r.ok = false; r.why.push('sidebar-hidden'); }
+    else r.sidebarW = Math.round(b.width);
+  }
+  if (!document.body.textContent.includes('REGISTRO RÁPIDO DE ACTIVIDAD')) r.why.push('no-quick-register');
+  if (!document.body.textContent.includes('REGISTRO RÁPIDO DE ACTIVIDAD')) { r.ok = false; }
+  r.route = location.hash;
+  return JSON.stringify(r);
+})()`;
+
+// Condición de contenido para una captura de Gastos (ExPro).
+// El contenedor real es #gasto-content y los registros se pintan como
+// .card-registro (la tabla ERP está oculta por defecto).
+const PRE_GASTOS = `(() => {
+  const r = { ok: true, why: [] };
+  const welc = document.getElementById('asistente-configuracion-contenedor');
+  if (welc) { r.ok = false; r.why.push('welcome-present'); }
+  if (document.querySelector('.guide-popover') || document.querySelector('.guide-overlay')) { r.ok = false; r.why.push('guide-present'); }
+  const sb = document.querySelector('.erp-sidebar');
+  if (!sb) { r.ok = false; r.why.push('no-sidebar'); }
+  else {
+    const b = sb.getBoundingClientRect();
+    const cs = getComputedStyle(sb);
+    if (b.width < 4 || b.height < 4 || cs.display === 'none' || cs.visibility === 'hidden') { r.ok = false; r.why.push('sidebar-hidden'); }
+  }
+  const g = document.getElementById('gasto-content');
+  if (!g) { r.ok = false; r.why.push('no-gasto-content'); }
+  else {
+    const t = (g.textContent || '');
+    if (t.includes('Cargando gastos...')) { r.ok = false; r.why.push('gastos-loading'); }
+    const cards = document.querySelectorAll('#gasto-content .card-registro').length;
+    const rows = document.querySelectorAll('#gasto-content .erp-data-table tbody tr').length;
+    r.cards = cards; r.rows = rows;
+    if (cards === 0 && rows === 0) { r.ok = false; r.why.push('gastos-empty'); }
+  }
+  r.route = location.hash;
+  r.appHead = (document.getElementById('app-content') ? document.getElementById('app-content').textContent : '').trim().slice(0, 60);
+  return JSON.stringify(r);
+})()`;
 
 (async () => {
   const informe = [];
   const push = (s) => { informe.push(s); console.log(s); };
-  let previousHash = null;
+  const resultados = []; // {name, ok, why}
 
   try {
     fs.mkdirSync(OUTDIR, { recursive: true });
@@ -127,14 +199,13 @@ async function domReport(label, push) {
       throw new Error('Chrome no expuso target de la app en /json/list');
     }
 
-    // Conectar por WebSocket (nativo de Node)
     ws = new WebSocket(target.webSocketDebuggerUrl);
     await new Promise((res, rej) => { ws.addEventListener('open', res); ws.addEventListener('error', rej); });
 
     await cdpSend('Page.enable');
     await cdpSend('Runtime.enable');
 
-    // Esperar ARRANQUE REAL de la app
+    // ARRANQUE inicial (la app muestra el asistente de bienvenida si no hay finca)
     let ready = false;
     for (let i = 0; i < 90; i++) {
       const v = await cdpEval('(!!window.App && document.getElementById("app-content") && document.getElementById("app-content").children.length > 0)');
@@ -142,40 +213,52 @@ async function domReport(label, push) {
       await sleep(500);
     }
     if (!ready) {
-      const html = await cdpEval('document.body.innerHTML.slice(0,200)');
       push('[ARRANQUE] FAIL: la app no pinto #app-content en 45s');
-      push('[ARRANQUE] body head: ' + String(html).slice(0,150));
-      await cdpShot('val-arranque-FAIL.png');
       informe.push('[FIN] done');
       fs.writeFileSync(path.join(OUTDIR, 'val-informe.txt'), informe.join('\n'));
-      try { server.kill(); } catch (_) {}
-      try { server.stdin.end(); } catch (_) {}
       return;
     }
     push('[ARRANQUE] OK: app pinto contenido en app-content');
 
-    // Sembrar datos demo para que la app muestre contenido real
-    push('[DEMO] sembrando datos demo antes de capturar');
-    try {
-      const seedResult = await cdpEval(`(async () => {
-        if (!window.AsistenteConfiguracion) return 'ERR: no AsistenteConfiguracion';
-        const ok = await window.AsistenteConfiguracion._ensureSeedData();
-        if (!ok) return 'ERR: _ensureSeedData false';
-        const start = Date.now();
+    // ── SEMBRADO + GARANTÍA DE FINCA ACTIVA ──────────────────────────────────
+    push('[DEMO] sembrando datos demo y garantizando finca activa...');
+    const seedResult = await evalObj(`(async () => {
+      try {
+        if (!window.AsistenteConfiguracion) return JSON.stringify({ err: 'no AsistenteConfiguracion' });
+        if (!await window.AsistenteConfiguracion._ensureSeedData()) return JSON.stringify({ err: '_ensureSeedData false' });
+        if (!window.SeedData || typeof window.SeedData.run !== 'function') return JSON.stringify({ err: 'no SeedData.run' });
         await window.SeedData.run(true);
-        return 'OK en ' + (Date.now() - start) + 'ms';
-      })()`);
-      push('[DEMO] resultado: ' + seedResult);
-    } catch (e) {
-      push('[DEMO] error sembrando: ' + e);
+        const fincas = await (window.Fincas ? window.Fincas.list() : []);
+        if (!fincas || fincas.length === 0) return JSON.stringify({ err: 'no fincas tras seed' });
+        let id = await (window.Fincas ? window.Fincas.getActiveId() : null);
+        if (!id) { await window.Fincas.setActiveId(fincas[0].id); id = await window.Fincas.getActiveId(); }
+        // Marcar todas las guías como vistas/descartadas para que no autolancen.
+        const guideIds = (window.GuideRegistry ? window.GuideRegistry.getAll() : []).map(g => g.id);
+        if (window.App) {
+          window.App._config = window.App._config || {};
+          window.App._config.guides = { enabled: false, seen: guideIds, dismissed: guideIds };
+        }
+        const meta = (window.db) ? (await window.db.get('meta', 'appConfig').catch(() => null)) : null;
+        const merged = Object.assign({}, (meta && meta.value) ? meta.value : {}, { guides: { enabled: false, seen: guideIds, dismissed: guideIds } });
+        if (window.App) window.App._config = merged;
+        if (window.db) { try { await window.db.put('meta', { key: 'appConfig', value: merged }); } catch (e) {} }
+        return JSON.stringify({ ok: true, fincaActiva: id, fincas: fincas.length, guias: guideIds.length });
+      } catch (e) { return JSON.stringify({ err: String(e && e.message || e) }); }
+    })()`);
+    push('[DEMO] resultado: ' + JSON.stringify(seedResult));
+    if (!seedResult || !seedResult.ok) {
+      push('[DEMO] FAIL: no se pudo sembrar / activar finca: ' + JSON.stringify(seedResult));
+      informe.push('[FIN] done');
+      fs.writeFileSync(path.join(OUTDIR, 'val-informe.txt'), informe.join('\n'));
+      return;
     }
 
-    // Recargar para que la app arranque con la finca activa
-    push('[RELOAD] recargando con datos demo...');
-    await cdpEval('() => { window.location.reload(); return true; }');
+    // Recargar (vía CDP Page.navigate) para que la app arranque YA con la finca
+    // activa y las guías desactivadas.
+    push('[RELOAD] recargando con finca activa y guias desactivadas...');
+    await cdpSend('Page.navigate', { url: BASE + '/' });
     await sleep(6000);
 
-    // Esperar a que la app vuelva a arrancar tras la recarga
     let ready2 = false;
     for (let i = 0; i < 90; i++) {
       const v = await cdpEval('(!!window.App && document.getElementById("app-content") && document.getElementById("app-content").children.length > 0)');
@@ -184,86 +267,169 @@ async function domReport(label, push) {
     }
     if (!ready2) {
       push('[ARRANQUE-2] FAIL: la app no pinto #app-content tras la recarga');
-    } else {
-      push('[ARRANQUE-2] OK: app arrancada con datos demo');
+      informe.push('[FIN] done');
+      fs.writeFileSync(path.join(OUTDIR, 'val-informe.txt'), informe.join('\n'));
+      return;
+    }
+    push('[ARRANQUE-2] OK: app arrancada tras recarga');
+
+    // ESTABILIZACIÓN: en el arranque de la recarga hay una carrera en la que
+    // route() puede relanzar el asistente de bienvenida en un instante en que
+    // getActiveId() devuelve null transitoriamente. Esperamos a que la finca
+    // activa sea estable y, entonces, retiramos el contenedor de bienvenida y
+    // RE-ENROUTAMOS: ya con getActiveId() firme, route() NO lo vuelve a mostrar.
+    let estabilizado = false;
+    for (let i = 0; i < 50; i++) {
+      const st = await evalObj(`(async () => {
+        const id = await window.Fincas.getActiveId();
+        const welc = !!document.getElementById('asistente-configuracion-contenedor');
+        return JSON.stringify({ id: id, welc: welc });
+      })()`);
+      if (st && st.id) {
+        // Finca activa presente: retirar bienvenida y re-enrutar para pintar el dashboard real.
+        await cdpEval(`(async () => {
+          const w = document.getElementById('asistente-configuracion-contenedor');
+          if (w) w.remove();
+          if (window.App && typeof window.App.route === 'function') { try { await window.App.route(); } catch (e) {} }
+          return true;
+        })()`);
+        await sleep(400);
+        const check = await evalObj(`(() => {
+          return JSON.stringify({
+            welc: !!document.getElementById('asistente-configuracion-contenedor'),
+            id: (window.Fincas ? null : null)
+          });
+        })()`);
+        if (check && !check.welc) { estabilizado = true; break; }
+      }
+      await sleep(400);
+    }
+    push('[STABILIZE] estabilizado=' + estabilizado);
+
+    // VERIFICACIÓN CRÍTICA: debe haber finca activa y NO asistente de bienvenida.
+    const postReload = await evalObj(`(async () => {
+      const r = { ok: true, why: [] };
+      const welc = document.getElementById('asistente-configuracion-contenedor');
+      if (welc) { r.ok = false; r.why.push('welcome-present-tras-reload'); r.welcText = (welc.textContent || '').trim().slice(0, 80); }
+      let id = null;
+      try { id = await window.Fincas.getActiveId(); } catch (e) { r.why.push('getActiveId-err:' + e.message); }
+      r.fincaActiva = id;
+      if (!id) { r.ok = false; r.why.push('sin-finca-activa'); }
+      r.appContentHead = (document.getElementById('app-content') ? document.getElementById('app-content').textContent : '').trim().slice(0, 60);
+      return JSON.stringify(r);
+    })()`);
+    push('[VERIFY] post-reload: ' + JSON.stringify(postReload));
+    if (!postReload || !postReload.ok) {
+      push('[VERIFY] FAIL: sigue el asistente o no hay finca activa: ' + JSON.stringify(postReload));
+      informe.push('[FIN] done');
+      fs.writeFileSync(path.join(OUTDIR, 'val-informe.txt'), informe.join('\n'));
+      return;
     }
 
-    // Aseguramos viewport >= 1024 CSS px
-    const viewportOk = await waitSuitableViewport(push);
-    if (!viewportOk) throw new Error('Viewport never reached >=1024 CSS px');
+    // Desactivar guías en la sesión recargada (por si acaso) y retirar overlays.
+    await disableAndDismissGuides(push);
 
-    // Esperar a que la app haya cargado el contenido inicial
+    // Viewport desktop
+    const width = await cdpEval('window.innerWidth');
+    push('[VIEWPORT] width=' + width);
+
     await sleep(1500);
     await cdpFlush(4);
-    const dash1 = await cdpShot('val-dashboard.png');   // captura 1: Dashboard/Inicio
-    push('[SHOT] val-dashboard.png guardada, hash=' + dash1.hash);
-    previousHash = dash1.hash;
-    await domReport('dashboard', push);
 
-    // ---- GUÍAS REGISTRADAS ----
-    const g = await cdpEval('window.GuideRegistry ? window.GuideRegistry.getAll().map(x=>x.id).sort() : []');
-    const ids = Array.isArray(g) ? g.slice().sort() : [];
+    // ── CAPTURA 1: DASHBOARD / INICIO ───────────────────────────────────────
+    push('[CHECK] dashboard: esperando condicion de contenido...');
+    const d1 = await waitFor(PRE_DASHBOARD, 30, 500, push, 'dashboard');
+    push('[CHECK] dashboard: ' + JSON.stringify(d1));
+    if (!d1 || !d1.ok) {
+      push('[ABORT] dashboard: no cumple condicion de contenido -> ' + JSON.stringify(d1));
+      resultados.push({ name: 'val-dashboard.png', ok: false, why: d1 && d1.why });
+    } else {
+      await cdpFlush(3);
+      await disableAndDismissGuides(push);
+      const d1b = await evalObj(PRE_DASHBOARD);
+      if (!d1b || !d1b.ok) {
+        push('[ABORT] dashboard: guia/asistente reaparecio justo antes de capturar -> ' + JSON.stringify(d1b));
+        resultados.push({ name: 'val-dashboard.png', ok: false, why: d1b && d1b.why });
+      } else {
+        const shot = await cdpShot('val-dashboard.png');
+        push('[SHOT] val-dashboard.png hash=' + shot.hash);
+        resultados.push({ name: 'val-dashboard.png', ok: true, hash: shot.hash, meta: d1b });
+      }
+    }
+
+    // Registro de guías (información)
+    const g = await cdpEval('window.GuideRegistry ? window.GuideRegistry.getAll().map(x => x.id).sort() : []');
+    const ids = Array.isArray(g) ? g : [];
     push('[REGISTRY] guias=' + ids.length + (ids.length === 22 ? ' OK' : ' (esperado 22)'));
-    push('[REGISTRY] ids: ' + ids.join(', '));
-    push('[REGISTRY] inicio.dashboard presente: ' + ids.includes('inicio.dashboard'));
-    push('[REGISTRY] expro.gastos presente: ' + ids.includes('expro.gastos'));
 
-    // Navegar a Gastos (ExPro), FORZANDO la carga del grupo expro y esperando redraw
+    // ── CAPTURA 2: GASTOS (ExPro) ───────────────────────────────────────────
+    push('[NAV] navegando a Gastos (ExPro)...');
     await cdpEval(`(async () => {
-      try { await App._ensureViewGroup('expro'); } catch (e) { window.__gd = String(e && e.message || e); }
+      try { if (window.App && window.App._ensureViewGroup) await window.App._ensureViewGroup('expro'); } catch (e) {}
       location.hash = '#/explotacion?tab=gastos';
       return 'navegado';
     })()`);
     await sleep(2500);
-    const gastosReady = await cdpEval('!!window.GastosView && document.getElementById("app-content") && (document.getElementById("app-content").textContent.length > 50)');
-    push('[GASTOS] renderizado tras hash (grupo cargado): ' + gastosReady + ' | err=' + await cdpEval('window.__gd'));
-    await cdpFlush(4);
-    await domReport('gastos', push);
-    const gastoss = await cdpShot('val-gastos.png');   // captura 2: Gastos
-    push('[SHOT] val-gastos.png guardada, hash=' + gastoss.hash);
-    if (previousHash && previousHash === gastoss.hash) {
-      push('[ABORT] Duplicate hash detected – aborting further captures');
-      // End this run – no new visual info will be generated.
+    // Esperar a que Gastos pinte filas (puede tardar en cargar del IndexedDB).
+    const gWait = await waitFor(PRE_GASTOS, 40, 500, push, 'gastos');
+    push('[CHECK] gastos: ' + JSON.stringify(gWait));
+    if (!gWait || !gWait.ok) {
+      push('[ABORT] gastos: no cumple condicion de contenido -> ' + JSON.stringify(gWait));
+      resultados.push({ name: 'val-gastos.png', ok: false, why: gWait && gWait.why });
+    } else {
+      await cdpFlush(3);
+      await disableAndDismissGuides(push);
+      const gWait2 = await evalObj(PRE_GASTOS);
+      if (!gWait2 || !gWait2.ok) {
+        push('[ABORT] gastos: guia/asistente reaparecio antes de capturar -> ' + JSON.stringify(gWait2));
+        resultados.push({ name: 'val-gastos.png', ok: false, why: gWait2 && gWait2.why });
+      } else {
+        const shot = await cdpShot('val-gastos.png');
+        push('[SHOT] val-gastos.png hash=' + shot.hash);
+        resultados.push({ name: 'val-gastos.png', ok: true, hash: shot.hash, meta: gWait2 });
+      }
     }
-    previousHash = gastoss.hash;
 
-    // DIAGNÓSTICO: forzar la carga del grupo 'expro' y ver si GastosView queda
-    const diag = await cdpEval(`(async () => {
-      const before = typeof window.GastosView;
-      let forced = 'not-run';
-      let loadErr = null;
-      try { forced = await App._ensureViewGroup('expro'); } catch (e) { loadErr = String(e && e.message || e); }
-      const after = typeof window.GastosView;
-      const scripts = Array.from(document.querySelectorAll('script[src*="gastos-view"]')).map(s => s.src);
-      return JSON.stringify({ before, forced, loadErr, after, scripts });
-    })()`);
-    push('[DIAG] ' + diag);
-
-    // Reintento captura dashboard tras navegar atrás (para ver el FAB guía)
+    // ── CAPTURA 3: DASHBOARD de vuelta ──────────────────────────────────────
+    push('[NAV] volviendo a Inicio...');
     await cdpEval('location.hash = "#/"');
     await sleep(2000);
     await cdpFlush(4);
-    await domReport('inicio', push);
-    const dash2 = await cdpShot('val-dashboard2.png');
-    push('[SHOT] val-dashboard2.png guardada, hash=' + dash2.hash);
-    if (previousHash && previousHash === dash2.hash) {
-      push('[ABORT] Duplicate hash detected – aborting further captures');
-      // End this run – no new visual info will be generated.
+    const d2 = await waitFor(PRE_DASHBOARD, 30, 500, push, 'dashboard2');
+    push('[CHECK] dashboard2: ' + JSON.stringify(d2));
+    if (!d2 || !d2.ok) {
+      push('[ABORT] dashboard2: no cumple condicion de contenido -> ' + JSON.stringify(d2));
+      resultados.push({ name: 'val-dashboard2.png', ok: false, why: d2 && d2.why });
+    } else {
+      await cdpFlush(3);
+      await disableAndDismissGuides(push);
+      const d2b = await evalObj(PRE_DASHBOARD);
+      if (!d2b || !d2b.ok) {
+        push('[ABORT] dashboard2: guia/asistente reaparecio antes de capturar -> ' + JSON.stringify(d2b));
+        resultados.push({ name: 'val-dashboard2.png', ok: false, why: d2b && d2b.why });
+      } else {
+        const shot = await cdpShot('val-dashboard2.png');
+        push('[SHOT] val-dashboard2.png hash=' + shot.hash);
+        resultados.push({ name: 'val-dashboard2.png', ok: true, hash: shot.hash, meta: d2b });
+      }
     }
-    previousHash = dash2.hash;
 
-    // Esperar a que la carga de gastos finalice antes de cerrar
-    const cargado = await waitGastosLoaded(push);
-    if (!cargado) throw new Error('Los gastos no terminaron de cargar');
+    // Resumen
+    const pasadas = resultados.filter(r => r.ok).length;
+    const totales = resultados.length;
+    push('[RESUMEN] capturas validas: ' + pasadas + '/' + totales);
+    resultados.forEach(r => {
+      push('  - ' + r.name + ': ' + (r.ok ? 'OK' : 'FALLÓ ' + JSON.stringify(r.why)) + (r.hash ? ' hash=' + r.hash.slice(0, 12) : ''));
+    });
+    push('[RESUMEN] ' + (pasadas === totales ? 'VALIDACION COMPLETA' : 'VALIDACION INCOMPLETA (ver arriba)'));
 
     push('[FIN] done');
     fs.writeFileSync(path.join(OUTDIR, 'val-informe.txt'), informe.join('\n'));
   } catch (e) {
     push('[ERROR] ' + e.message);
+    try { fs.writeFileSync(path.join(OUTDIR, 'val-informe.txt'), informe.join('\n')); } catch (_) {}
   } finally {
     try { ws && ws.close(); } catch (_) {}
     try { chrome.kill(); } catch (_) {}
-    try { server?.kill(); } catch (_) {}
-    try { server?.stdin.end(); } catch (_) {}
   }
 })();

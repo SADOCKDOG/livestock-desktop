@@ -38,7 +38,7 @@ En este proyecto se han añadido scripts de validación visual que capturan pant
   2. Vista de **Gastos** después de la navegación.  
   3. Dashboard tras volver al inicio.
 
-- `cypress/screenshots/val-informe.txt` – contiene el log con viewport, el resultado del sembrado, el estado del DOM de cada captura (sidebar presente, pestaña activa, FAB), y los **SHA‑256** de cada captura.
+- `cypress/screenshots/val-informe.txt` – contiene el log con viewport, el resultado del sembrado, el estado del DOM de cada captura y los **SHA‑256** de cada captura (solo como referencia).
 
 ### Cómo ejecutar la validación
 
@@ -54,22 +54,26 @@ Después, ejecuta la validación:
 node scripts/val-visual.cjs
 ```
 
-El script crea (o actualiza) los archivos en `cypress/screenshots/` y escribe un informe con los hashes. Estos hashes se usan como referencia para detectar cambios visuales no deseados: **si dos capturas comparten hash, la validación lo señala** y detiene la ejecución.
+El script crea (o actualiza) los archivos en `cypress/screenshots/` y escribe un informe. Revisa siempre visualmente las imágenes generadas para confirmar que la **sidebar** del ERP se muestra y que la vista de Gastos contiene el listado real de registros.
 
-### Hashes de referencia (última ejecución válida)
+### Qué garantiza la validación (y qué NO)
+
+La validación **no** se basa en comparar hashes. Un hash distinto entre capturas **no** prueba que sean vistas distintas: en una ejecución defectuosa las tres capturas retrataron la pantalla de bienvenida con una guía encima y aun así tenían hashes distintos. Por eso el script exige, **antes de cada captura**, una **condición de contenido** del DOM:
+
+- **Dashboard:** la sidebar del ERP es visible (ancho real por `getBoundingClientRect` + estilo calculado, no un simple `"sidebar:true"`) y la ruta activa es la de Inicio.
+- **Gastos:** el contenedor `#gasto-content` no está en estado de carga y contiene filas reales (`.card-registro` o `tbody tr` de `ErpDataTable`), con la ruta `#/explotacion?tab=gastos`.
+- **Dashboard (vuelta):** sidebar visible de nuevo y ruta de Inicio.
+
+Además, tras sembrar los datos demo se **verifica la finca activa**, se **desactivan y eliminan las guías** (22 catálogos), y se ejecuta un bucle de **estabilización** que espera a `Fincas.getActiveId()` firme y rellama `App.route()` para evitar la pantalla de bienvenida por condición de carrera. El informe final reporta `capturas validas: X/3` y `VALIDACION COMPLETA` / `VALIDACION INCOMPLETA`.
+
+> Si una captura no cumple su condición de contenido, la validación se **aborta** (no produce captura falsa verde). Los hashes SHA‑256 solo se imprimen como referencia para detectar regresiones de render, no como puerta de éxito.
+
+### Hashes de referencia (última ejecución válida, 3/3)
 
 | Captura | Vista | Hash SHA‑256 |
 | --------- | ------- | -------------- |
-| `val-dashboard.png` | Inicio | `c77ed6892c14f82f5a0f091027269b1c996d4c6da666c8b5637facc81148c0d9` |
-| `val-gastos.png` | ExPro · Finanzas | `352268cee800ed423cadd9d9032c84cec3ef2d65f9b91aacbed22ac4caa3e423` |
-| `val-dashboard2.png` | Inicio (vuelta) | `2a8186b1e5a303ebc46cc41aced6e662565131e6416bce0d8c8dc5f8c2a4d91f` |
-
-> Los hashes cambian en cada ejecución si hay cualquier variación de render; lo importante es que las **tres capturas tengan hashes distintos** (tres vistas diferentes) y que el informe muestre `erpSidebar:true` en cada una.
-
-### Próximos pasos
-
-- Revisar visualmente las imágenes generadas para confirmar que la **sidebar** del ERP se muestra correctamente.  
-- Mantener los hashes bajo control en futuros commits para facilitar detección de regresiones visuales.  
-- Documentar el flujo en el backlog del proyecto para incluirlo en la definición de “Definition of Done” de las historias relacionadas con la UI.
+| `val-dashboard.png` | Inicio | `ce2ef998a2b33aee0bbaa70aa1ec23c79c371349deab7e6737f0b8455062aac9` |
+| `val-gastos.png` | ExPro · Finanzas | `5b6d270c8eb37448545301eac0a81ac808c112396fd93e6b5c4b36487f0d71ff` |
+| `val-dashboard2.png` | Inicio (vuelta) | `6255f6dfa9059412513157904730eca6f775ebe870f7ed27d606af78f8389164` |
 
 <!-- Resto del README -->

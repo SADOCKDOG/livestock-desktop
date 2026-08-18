@@ -155,6 +155,10 @@ const GastosView = {
     }
     // Initial render
     this.renderList(this._gastosRecords);
+    // Renderizar la pestaña actual (resumen/categoría) sobreescribiendo el
+    // loader. La refactorización de renderList eliminó esta llamada y dejaba la
+    // vista perennemente en «Cargando gastos...» sin listado (regresión).
+    this._renderTabActual();
   },
 
   /* Dynamic column rendering */

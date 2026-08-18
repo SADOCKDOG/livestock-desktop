@@ -1,20 +1,28 @@
 [ARRANQUE] OK: app pinto contenido en app-content
-[DEMO] sembrando datos demo antes de capturar
-[DEMO] resultado: OK en 10406ms
-[RELOAD] recargando con datos demo...
-[ARRANQUE-2] OK: app arrancada con datos demo
+[DEMO] sembrando datos demo y garantizando finca activa...
+[DEMO] resultado: {"ok":true,"fincaActiva":1,"fincas":1,"guias":22}
+[RELOAD] recargando con finca activa y guias desactivadas...
+[ARRANQUE-2] OK: app arrancada tras recarga
+[STABILIZE] estabilizado=true
+[VERIFY] post-reload: {"ok":true,"why":[],"fincaActiva":1,"appContentHead":"| REGISTRO RÁPIDO DE ACTIVIDAD\n              \n              "}
+[GUIAS] desactivadas: {"ok":true,"guides":22}
 [VIEWPORT] width=1418
-[SHOT] val-dashboard.png guardada, hash=c77ed6892c14f82f5a0f091027269b1c996d4c6da666c8b5637facc81148c0d9
-[DOM] dashboard: {"hash":"","appContentChars":4640,"appContentText":"| REGISTRO RÁPIDO DE ACTIVIDAD\n              \n              \n                Acceso directo a operaciones de campo diari","erpSidebar":true,"sidebarActive":"","fab":true,"gastosText":false}
+[CHECK] dashboard: esperando condicion de contenido...
+[CHECK] dashboard: {"ok":true,"why":[],"sidebarW":240,"route":""}
+[GUIAS] desactivadas: {"ok":true,"guides":22}
+[SHOT] val-dashboard.png hash=ce2ef998a2b33aee0bbaa70aa1ec23c79c371349deab7e6737f0b8455062aac9
 [REGISTRY] guias=22 OK
-[REGISTRY] ids: comer.carne, comer.compradores, comer.contratos, comer.leche, comer.panoramica, comer.transportistas, expro.explotacion, expro.fitosanitarios, expro.gastos, expro.lacteo, expro.panoramica, expro.proveedores, expro.silos, expro.tramites, gegan.animales, gegan.panoramica, gegan.patrimonio, gegan.rebanos, gegan.sanidad, gegan.zonas, inicio.dashboard, onboarding.primeros-pasos
-[REGISTRY] inicio.dashboard presente: true
-[REGISTRY] expro.gastos presente: true
-[GASTOS] renderizado tras hash (grupo cargado): true | err=undefined
-[DOM] gastos: {"hash":"#/explotacion?tab=gastos","appContentChars":1724,"appContentText":"FINANZAS\n              \n            \n            \n        \n          \n          \n        \n          \n          \n      \n ","erpSidebar":true,"sidebarActive":"","fab":false,"gastosText":true}
-[SHOT] val-gastos.png guardada, hash=352268cee800ed423cadd9d9032c84cec3ef2d65f9b91aacbed22ac4caa3e423
-[DIAG] {"before":"object","forced":true,"loadErr":null,"after":"object","scripts":["http://localhost:8089/js/views/gastos-view.js?v=6.74.0"]}
-[DOM] inicio: {"hash":"#/","appContentChars":6106,"appContentText":"| REGISTRO RÁPIDO DE ACTIVIDAD\n              \n              \n                Acceso directo a operaciones de campo diari","erpSidebar":true,"sidebarActive":"","fab":true,"gastosText":false}
-[SHOT] val-dashboard2.png guardada, hash=2a8186b1e5a303ebc46cc41aced6e662565131e6416bce0d8c8dc5f8c2a4d91f
-[GASTOS-LOAD] text=""
+[NAV] navegando a Gastos (ExPro)...
+[CHECK] gastos: {"ok":true,"why":[],"cards":15,"rows":15,"route":"#/explotacion?tab=gastos","appHead":"FINANZAS\n              \n            \n            \n        \n "}
+[GUIAS] desactivadas: {"ok":true,"guides":22}
+[SHOT] val-gastos.png hash=5b6d270c8eb37448545301eac0a81ac808c112396fd93e6b5c4b36487f0d71ff
+[NAV] volviendo a Inicio...
+[CHECK] dashboard2: {"ok":true,"why":[],"sidebarW":240,"route":"#/"}
+[GUIAS] desactivadas: {"ok":true,"guides":22}
+[SHOT] val-dashboard2.png hash=6255f6dfa9059412513157904730eca6f775ebe870f7ed27d606af78f8389164
+[RESUMEN] capturas validas: 3/3
+  - val-dashboard.png: OK hash=ce2ef998a2b3
+  - val-gastos.png: OK hash=5b6d270c8eb3
+  - val-dashboard2.png: OK hash=6255f6dfa905
+[RESUMEN] VALIDACION COMPLETA
 [FIN] done
