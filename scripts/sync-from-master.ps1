@@ -50,9 +50,9 @@ $preservedList = @(
     # 'js\views\dashboard-view.js',      # UNIFICADA en el maestro (fase 3 piloto): FAB "Nueva Actividad" + renderGuideFab; nav móvil intacta
     'js\views\explotacion-view.js',      # Láctea/Trámites como subgrupos del sidebar (?sub=)
     'js\views\explotacion-lactea-view.js', # Sin botones inline; empty-state al sub-tab Tanques
-    'js\views\informes-view.js',         # Navegación cat/tab movida al sidebar
+    # 'js\views\informes-view.js',         # UNIFICADA en el maestro (fase 3 lote 2): _sectionActionsHTML como fieldset erp-action-group; nav cat/tab móvil conservada (sync la trae del maestro)
     'js\views\instalaciones-view.js',    # CTA cabecera "Nueva Instalación", sin FAB
-    'js\views\produccion-view.js',       # CTA cabecera por sección + tab de tanques
+    'js\views\produccion-view.js',       # NO unificable: ProduccionView es huérfano (nunca se renderiza por ruta/nav; solo provee _abrirOpcionesRegistro a explotacion/gastos). Se mantiene preservado (desktop conserva su versión con FAB).
     'js\views\saneamientos-view.js',     # CTA cabecera "Nuevo Saneamiento", sin FAB
     'js\views\silos-view.js',            # CTA cabecera "Nuevo Silo", sin FAB
     'js\views\subexplotaciones-view.js', # CTA cabecera "Nueva Subexplotación", sin FAB

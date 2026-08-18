@@ -85,6 +85,7 @@ const EXPECT = {
   '#/agenda': ['erp-action-group', 'data-ver-mas'],
   '#/cuaderno': ['erp-action-group'],
   '#/ajustes': [],
+  '#/informes': ['erp-action-group'],
 };
 
 function makeCheck(mobile, expected) {
@@ -249,12 +250,16 @@ function makeCheck(mobile, expected) {
       const expected = EXPECT[route] || [];
       const checkExpr = makeCheck(mobile, expected);
       push('[NAV] ' + route + (expected.length ? ' (espera: ' + expected.join(',') + ')' : ''));
-      await cdpEval(`(async () => { location.hash = ${JSON.stringify(route)}; return 'ok'; })()`);
-      // Esperar a que app-content se repinte y la ruta se asiente.
+      // Firma del contenido ANTES de navegar, para detectar snapshots obsoletos
+      // (el hash cambia pero app-content aún muestra la vista previa).
+      const prevSig = await cdpEval(`(() => { const ac = document.getElementById('app-content'); return ac ? (ac.textContent.trim().length + '|' + (ac.innerHTML || '').slice(0, 80)) : 'NO-AC'; })()`);
+      await cdpEval(`(async () => { location.hash = ${JSON.stringify(route)}; if (window.App && typeof window.App.route === 'function') { try { await window.App.route(); } catch (e) {} } return 'ok'; })()`);
+      // Esperar a que app-content se repinte (firma cambie) y la ruta se asiente.
       let res = null;
       for (let i = 0; i < 40; i++) {
+        const sig = await cdpEval(`(() => { const ac = document.getElementById('app-content'); return ac ? (ac.textContent.trim().length + '|' + (ac.innerHTML || '').slice(0, 80)) : 'NO-AC'; })()`);
         const r = await evalObj(`(async () => { return ${checkExpr}; })()`);
-        if (r && r.route === route && r.appLen >= 40) { res = r; break; }
+        if (r && r.route === route && r.appLen >= 40 && sig !== prevSig) { res = r; break; }
         await sleep(500);
       }
       if (!res) res = await evalObj(`(async () => { return ${checkExpr}; })()`);

@@ -155,7 +155,7 @@ const InformesView = {
 
     // 1. Nivel 1: Categorías
     let catsHtml = `
-      <div class="scroll-shadow-container scroll-tabs-row mb-6">
+      <div class="scroll-shadow-container scroll-tabs-row mb-6 erp-solo-movil">
         <div class="informes-categories py-4" id="inf-cat-row">
     `;
     for (const [catKey, cat] of Object.entries(this._categories)) {
@@ -178,7 +178,7 @@ const InformesView = {
     // 2. Nivel 2: Sub-tabs de la categoría activa
     const activeCat = this._categories[activeCatKey];
     let subTabsHtml = `
-      <div class="scroll-shadow-container scroll-tabs-row mb-12">
+      <div class="scroll-shadow-container scroll-tabs-row mb-12 erp-solo-movil">
         <div class="informes-tabs py-2" id="inf-tab-row">
     `;
     for (const [tabKey, tabLabel] of Object.entries(activeCat.tabs)) {
@@ -200,10 +200,7 @@ const InformesView = {
       </div>
     `;
 
-    // La navegación de Informes (categorías + sub-tabs) se movió al submenú del
-    // sidebar (colgando de "Informes"). Se devuelve vacío para no pintar las
-    // franjas horizontales, que no se desplazaban bien en escritorio.
-    return '';
+    return catsHtml + subTabsHtml;
   },
 
   /**
@@ -440,7 +437,7 @@ const InformesView = {
 
   // ===================== RENDER POR TABS =====================
 
-  /** Genera barra de acciones PDF+Excel compacta e inline */
+  /** Genera barra de acciones PDF+Excel (chrome ERP: fieldset erp-action-group, centrado). */
   _sectionActionsHTML(seccion, label) {
     return `
       <fieldset class="erp-action-group erp-action-group--centro">
