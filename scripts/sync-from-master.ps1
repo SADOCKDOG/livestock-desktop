@@ -42,14 +42,14 @@ $preservedList = @(
     'js\views\contratos-view.js',      # Toggle Tarjetas/Tabla ERP
     'js\views\documentos-view.js',     # Toggle Tarjetas/Tabla ERP (registro documental)
     'js\views\fitosanitarios-view.js', # Toggle Tarjetas/Tabla ERP
-    'js\views\comercializacion-view.js', # Banner/KPI cromo ERP unificado (neutro)
+    # 'js\views\comercializacion-view.js', # UNIFICADA en el maestro (fase 3 lote 3): cromo ERP neutro + erp-action-group + erp-filtros + data-ver-mas (sin nav móvil que preservar)
     'js\views\manuales-view.js',      # Visor de manuales embebido en #app-content (no overlay full-screen)
     # --- Estandarización de botones / limpieza de FAB y sub-tabs (piel ERP) ---
     # 'js\views\agenda-view.js',         # UNIFICADA en el maestro (fase 3 piloto): CTA cabecera + erp-action-group + erp-filtros; fab-container móvil CONSERVADO
     'js\views\botiquin-view.js',         # CTA cabecera "Nuevo Producto", sin FAB
     # 'js\views\dashboard-view.js',      # UNIFICADA en el maestro (fase 3 piloto): FAB "Nueva Actividad" + renderGuideFab; nav móvil intacta
     'js\views\explotacion-view.js',      # Láctea/Trámites como subgrupos del sidebar (?sub=)
-    'js\views\explotacion-lactea-view.js', # Sin botones inline; empty-state al sub-tab Tanques
+    # 'js\views\explotacion-lactea-view.js', # UNIFICADA en el maestro (fase 3 lote 3): erp-action-group + erp-filtros + data-ver-mas en analíticas/movimientos; botones editar/borrar intactos; +Ordeño/+Tanque re-añadidos
     # 'js\views\informes-view.js',         # UNIFICADA en el maestro (fase 3 lote 2): _sectionActionsHTML como fieldset erp-action-group; nav cat/tab móvil conservada (sync la trae del maestro)
     'js\views\instalaciones-view.js',    # CTA cabecera "Nueva Instalación", sin FAB
     'js\views\produccion-view.js',       # NO unificable: ProduccionView es huérfano (nunca se renderiza por ruta/nav; solo provee _abrirOpcionesRegistro a explotacion/gastos). Se mantiene preservado (desktop conserva su versión con FAB).

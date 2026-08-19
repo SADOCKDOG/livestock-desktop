@@ -76,6 +76,18 @@ const MOBILE_CHECK = `(() => {
   const ac = document.getElementById('app-content');
   r.appLen = ac ? ac.textContent.trim().length : 0;
   if (r.appLen < 40) { r.ok = false; r.why.push('app-content-vacio'); }
+  // Conteo de botones de edicion/borrado de analiticas y balance-lacteo
+  // (checklist 19/20): deben sobrevivir a la fusion de la piel ERP.
+  r.analiticaBtns = document.querySelectorAll('[onclick*="_editarAnalitica"],[onclick*="_eliminarAnalitica"]').length;
+  r.balanceBtns = document.querySelectorAll('[onclick*="_editarMovimiento"],[onclick*="_eliminarMovimiento"]').length;
+  // Botones de creacion (siempre presentes, prueban que la seccion existe) y
+  // contenedores de lista (erp-filtros + data-ver-mas cuelgan de ellos).
+  r.analiticaCreate = document.querySelectorAll('[onclick*="AnaliticaLecheWizard.open"]').length;
+  r.balanceCreate = document.querySelectorAll('[onclick*="MovimientoBalanceWizard.open"]').length;
+  r.erpGroups = document.querySelectorAll('.erp-action-group').length;
+  r.lacteoAnaliticas = !!document.getElementById('lacteo-analiticas-lista');
+  r.lacteoControles = !!document.getElementById('lacteo-controles-lista');
+  r.lacteoMovimientos = !!document.getElementById('lacteo-movimientos-lista');
   r.w = window.innerWidth;
   r.route = location.hash;
   return JSON.stringify(r);
@@ -93,6 +105,7 @@ const MOBILE_CHECK = `(() => {
   const log = [];
   const push = (s) => { log.push(s); console.log(s); };
   const results = [];
+  const errors = [];
 
   try {
     push('[ADB] dispositivo=' + device);
@@ -125,6 +138,19 @@ const MOBILE_CHECK = `(() => {
     await new Promise((res, rej) => { ws.addEventListener('open', res); ws.addEventListener('error', rej); });
     await cdpSend('Page.enable');
     await cdpSend('Runtime.enable');
+    ws.addEventListener('message', async (ev) => {
+      try {
+        const data = ev.data && typeof ev.data === 'object' && typeof ev.data.text === 'function'
+          ? await ev.data.text() : String(ev.data);
+        const m = JSON.parse(data);
+        if (m.method === 'Runtime.exceptionThrown') {
+          const e = m.params && m.params.exception;
+          errors.push('EXC: ' + ((e && (e.exception || e.text)) || '?'));
+        } else if (m.method === 'Runtime.consoleAPICalled' && m.params && ['error', 'warning'].includes(m.params.type)) {
+          errors.push(m.params.type + ': ' + (m.params.args || []).map(a => a.value || a.description || '').join(' '));
+        }
+      } catch (_) {}
+    });
 
     // Arranque: esperar a que la app pinte.
     let ready = false;
@@ -183,14 +209,87 @@ const MOBILE_CHECK = `(() => {
     })()`);
     await sleep(1000);
 
+    // Verifica la vista de láctea por el flujo REAL móvil: el parámetro URL
+    // ?tab=lacteo es ignorado por ExplotacionView (usa this._activeSubModule),
+    // así que hay que tocar el carrusel LÁCTEA y luego los sub-tabs Control
+    // (analíticas, checklist 19) y Balance (movimientos, checklist 20).
+    async function verifyLactea() {
+      const base = `(() => {
+        const r = { ok: true, why: [], mode: 'android-lactea' };
+        const welc = document.getElementById('asistente-configuracion-contenedor');
+        if (welc) { r.ok = false; r.why.push('welcome-present'); }
+        if (document.querySelector('.guide-popover') || document.querySelector('.guide-overlay')) { r.ok = false; r.why.push('guide-present'); }
+        const sb = document.querySelector('.erp-sidebar');
+        if (sb) { const b = sb.getBoundingClientRect(); const cs = getComputedStyle(sb); if ((b.width > 4 && b.height > 4) && cs.display !== 'none' && cs.visibility !== 'hidden') { r.ok = false; r.why.push('sidebar-visible-en-movil'); } }
+        return JSON.stringify(r);
+      })()`;
+      await cdpEval(`(async()=>{if(location.hash!=='#/explotacion'){location.hash='#/explotacion';if(window.App&&window.App.route)try{await window.App.route()}catch(e){}}return 'ok'})()`);
+      await sleep(3500);
+      // Reasegurar guías OFF (por si el reload restableció _config) para evitar
+      // que App.renderGuideFab dispare un segundo render que desengancha el
+      // sub-contenedor de láctea (raza de render asíncrono no reentrante).
+      await cdpEval(`(async () => { const g = (window.GuideRegistry ? window.GuideRegistry.getAll() : []).map(x => x.id); if (window.App) window.App._config = Object.assign(window.App._config || {}, { guides: { enabled: false, seen: g, dismissed: g } }); document.querySelectorAll('.guide-overlay,.guide-popover,.guide-resume-chip').forEach(n => n.remove()); return true; })()`);
+      // Conmutar al submódulo LÁCTEA y ESPERAR a que su render asíncrono termine.
+      // (await de la promise de render() evita el race de dos renders solapados
+      //  que deja el sub-contenido colgado en un nodo desenganchado del DOM.)
+      const sw = await cdpEval(`(async()=>{if(!window.ExplotacionView)return 'no-view';await window.ExplotacionView._cambiarSubModulo('lacteo');return 'switched'})().catch(e=>'err:'+e)`);
+      push('  [LACTEA] switch -> ' + sw);
+      let lacteoReady = false;
+      for (let i = 0; i < 20; i++) { if (await cdpEval('!!document.getElementById("expro-lacteo-subtab-content")')) { lacteoReady = true; break; } await sleep(500); }
+      push('  [LACTEA] sub-contenedor lacteo -> ' + (lacteoReady ? 'OK' : 'AUSENTE'));
+      // Sub-tab Control -> analíticas (editar/borrar + crear + erp-action-group).
+      // Se setea _lacteoSubTab y se AWAIT del render() completo (equivale a
+      // _cambiarLacteoSubTab pero sin solapar renders).
+      await cdpEval(`(async()=>{if(!window.ExplotacionView)return 'no-view';window.ExplotacionView._lacteoSubTab='control';await window.ExplotacionView.render();return 'ok'})().catch(e=>'err:'+e)`);
+      let analiticasReady = false;
+      for (let i = 0; i < 30; i++) { if (await cdpEval('!!document.getElementById("lacteo-analiticas-lista")')) { analiticasReady = true; break; } await sleep(500); }
+      push('  [LACTEA] lista analíticas -> ' + (analiticasReady ? 'OK' : 'AUSENTE'));
+      const c = await evalObj(`(async()=>{const r=JSON.parse(${base});r.hasAnaliticas=!!document.getElementById('lacteo-analiticas-lista');r.hasControles=!!document.getElementById('lacteo-controles-lista');r.analiticaBtns=document.querySelectorAll('[onclick*="_editarAnalitica"]').length;r.analiticaCreate=document.querySelectorAll('[onclick*="AnaliticaLecheWizard.open"]').length;r.erpGroups=document.querySelectorAll('.erp-action-group').length;if(!r.hasAnaliticas)r.why.push('no-lacteo-analiticas');if(r.analiticaCreate<1)r.why.push('no-analitica-create');if(r.erpGroups<1)r.why.push('no-erp-group');return JSON.stringify(r)})()`);
+      // Sub-tab Balance -> movimientos (editar/borrar + crear + erp-action-group)
+      await cdpEval(`(async()=>{if(!window.ExplotacionView)return 'no-view';window.ExplotacionView._lacteoSubTab='balance';await window.ExplotacionView.render();return 'ok'})().catch(e=>'err:'+e)`);
+      let movimientosReady = false;
+      for (let i = 0; i < 30; i++) { if (await cdpEval('!!document.getElementById("lacteo-movimientos-lista")')) { movimientosReady = true; break; } await sleep(500); }
+      push('  [LACTEA] lista movimientos -> ' + (movimientosReady ? 'OK' : 'AUSENTE'));
+      const bres = await evalObj(`(async()=>{const r=JSON.parse(${base});r.hasMovimientos=!!document.getElementById('lacteo-movimientos-lista');r.balanceBtns=document.querySelectorAll('[onclick*="_editarMovimiento"]').length;r.balanceCreate=document.querySelectorAll('[onclick*="MovimientoBalanceWizard.open"]').length;r.erpGroups=document.querySelectorAll('.erp-action-group').length;if(!r.hasMovimientos)r.why.push('no-lacteo-movimientos');if(r.balanceCreate<1)r.why.push('no-balance-create');if(r.balanceBtns<1)r.why.push('no-balance-btns');return JSON.stringify(r)})()`);
+      const baseOk = !!(c && c.ok) && !!(bres && bres.ok) && !!(c && c.hasAnaliticas) && !!(bres && bres.hasMovimientos) && (c && c.analiticaCreate > 0) && (bres && bres.balanceCreate > 0) && (c && c.erpGroups > 0) && (bres && bres.erpGroups > 0);
+      const why = [].concat((c && c.why) || [], (bres && bres.why) || []);
+      const dbg = await cdpEval(`(()=>{const ac=document.getElementById('app-content');return JSON.stringify({activeSub:window.ExplotacionView&&window.ExplotacionView._activeSubModule,lacteoSub:window.ExplotacionView&&window.ExplotacionView._lacteoSubTab,hasExproTab:!!document.getElementById('expro-tab-content'),hasLacteoSub:!!document.getElementById('expro-lacteo-subtab-content'),hasAnaliticas:!!document.getElementById('lacteo-analiticas-lista'),snippet:ac?ac.innerHTML.slice(ac.innerHTML.indexOf('expro-lacteo')>-1?ac.innerHTML.indexOf('expro-lacteo'):0,ac.innerHTML.indexOf('expro-lacteo')>-1?ac.innerHTML.indexOf('expro-lacteo')+260:200):'NO-AC'});})()`);
+      push('  [LACTEA] dbg -> ' + dbg);
+      if (errors) push('  [LACTEA] errors -> ' + (errors.length ? errors.join(' | ') : '(ninguno)'));
+      return { ok: baseOk, why, mode: 'android-lactea',
+        analiticaBtns: c && c.analiticaBtns, analiticaCreate: c && c.analiticaCreate,
+        balanceBtns: bres && bres.balanceBtns, balanceCreate: bres && bres.balanceCreate,
+        erpGroups: Math.max((c && c.erpGroups) || 0, (bres && bres.erpGroups) || 0),
+        hasAnaliticas: c && c.hasAnaliticas, hasMovimientos: bres && bres.hasMovimientos };
+    }
+
     for (const route of routes) {
       push('[NAV] ' + route);
-      await cdpEval(`(async () => { location.hash = ${JSON.stringify(route)}; return 'ok'; })()`);
       let res = null;
-      for (let i = 0; i < 30; i++) {
-        const r = await evalObj(`(async () => { return ${MOBILE_CHECK}; })()`);
-        if (r && r.route === route && r.appLen >= 40) { res = r; break; }
-        await sleep(800);
+      // La vista de láctea NO se alcanza por param URL (?tab=lacteo lo ignora
+      // ExplotacionView, que usa this._activeSubModule). Se entra por el flujo
+      // real móvil: tocar el carrusel LÁCTEA y luego el sub-tab.
+      if (route.indexOf('lacteo') !== -1) {
+        res = await verifyLactea();
+      } else {
+        // Firma del contenido ANTES de navegar, para descartar snapshots obsoletos
+        // (el hash cambia pero #app-content aun muestra la vista previa).
+        const prevSig = await cdpEval(`(() => { const ac = document.getElementById('app-content'); return ac ? (ac.textContent.trim().length + '|' + (ac.innerHTML || '').slice(0, 80)) : 'NO-AC'; })()`);
+        await cdpEval(`(async () => { location.hash = ${JSON.stringify(route)}; if (window.App && typeof window.App.route === 'function') { try { await window.App.route(); } catch (e) {} } return 'ok'; })()`);
+        // El sub-contenido de láctea (analíticas/balance) carga de forma asíncrona
+        // dentro de ExplotacionView; el primer repintado es solo el esqueleto del
+        // tab. Muestreamos todas las iteraciones y nos quedamos con la MUESTRA MÁS
+        // RICA (mayor appLen), que es cuando el sub-contenido ya pintó.
+        let bestByLen = null;
+        for (let i = 0; i < 30; i++) {
+          const sig = await cdpEval(`(() => { const ac = document.getElementById('app-content'); return ac ? (ac.textContent.trim().length + '|' + (ac.innerHTML || '').slice(0, 80)) : 'NO-AC'; })()`);
+          const r = await evalObj(`(async () => { return ${MOBILE_CHECK}; })()`);
+          if (r && r.route === route && r.appLen >= 40 && sig !== prevSig) {
+            if (!bestByLen || (r.appLen > bestByLen.appLen)) bestByLen = r;
+          }
+          await sleep(800);
+        }
+        res = bestByLen;
       }
       if (!res) res = await evalObj(`(async () => { return ${MOBILE_CHECK}; })()`);
       res = res || { ok: false, why: ['sin-respuesta'] };

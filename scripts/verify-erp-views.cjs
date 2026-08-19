@@ -86,6 +86,7 @@ const EXPECT = {
   '#/cuaderno': ['erp-action-group'],
   '#/ajustes': [],
   '#/informes': ['erp-action-group'],
+  '#/comercializacion': ['erp-action-group', 'data-ver-mas'],
 };
 
 function makeCheck(mobile, expected) {
