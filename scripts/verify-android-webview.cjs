@@ -263,6 +263,74 @@ const MOBILE_CHECK = `(() => {
         hasAnaliticas: c && c.hasAnaliticas, hasMovimientos: bres && bres.hasMovimientos };
     }
 
+    async function verifyPatrimonio() {
+      const base = `(() => {
+        const r = { ok: true, why: [], mode: 'android-patrimonio' };
+        const welc = document.getElementById('asistente-configuracion-contenedor');
+        if (welc) { r.ok = false; r.why.push('welcome-present'); }
+        if (document.querySelector('.guide-popover') || document.querySelector('.guide-overlay')) { r.ok = false; r.why.push('guide-present'); }
+        const sb = document.querySelector('.erp-sidebar');
+        if (sb) { const b = sb.getBoundingClientRect(); const cs = getComputedStyle(sb); if ((b.width > 4 && b.height > 4) && cs.display !== 'none' && cs.visibility !== 'hidden') { r.ok = false; r.why.push('sidebar-visible-en-movil'); } }
+        return JSON.stringify(r);
+      })()`;
+      // Patrimonio es un SUB-MÓDULO de GanaderíaView (ruta #/ganaderia). Se alcanza
+      // conmutando el sub-módulo, no por hash propio.
+      await cdpEval(`(async()=>{if(location.hash!=='#/ganaderia'){location.hash='#/ganaderia';if(window.App&&window.App.route)try{await window.App.route()}catch(e){}}return 'ok'})()`);
+      await sleep(3500);
+      // Patrimonio solo se muestra si flags.carne está activo: lo habilitamos en la
+      // finca activa (persistente vía ModoContextoHelper).
+      const flags = await cdpEval(`(async()=>{const fid=await (window.Fincas?window.Fincas.getActiveId():null);if(fid&&window.ModoContextoHelper){window.ModoContextoHelper.setFlags({leche:true,carne:true},fid);return 'flags:'+fid;}return 'no-flags';})().catch(e=>'err:'+e)`);
+      push('  [PATR] flags -> ' + flags);
+      await sleep(500);
+      // Reasegurar guías OFF (evita un segundo render de App.renderGuideFab que
+      // desengancha el contenido de la vista, raza de render asíncrono no reentrante).
+      await cdpEval(`(async () => { const g = (window.GuideRegistry ? window.GuideRegistry.getAll() : []).map(x => x.id); if (window.App) window.App._config = Object.assign(window.App._config || {}, { guides: { enabled: false, seen: g, dismissed: g } }); document.querySelectorAll('.guide-overlay,.guide-popover,.guide-resume-chip').forEach(n => n.remove()); return true; })()`);
+      // Conmutar al sub-módulo PATRIMONIO y ESPERAR el render asíncrono completo
+      // (await de la promise de render() evita el race de dos renders solapados).
+      const sw = await cdpEval(`(async()=>{if(!window.GanaderiaView)return 'no-view';await window.GanaderiaView._cambiarSubModulo('patrimonio');return 'switched'})().catch(e=>'err:'+e)`);
+      push('  [PATR] switch -> ' + sw);
+      let patrReady = false;
+      for (let i = 0; i < 30; i++) { if (await cdpEval('!!document.getElementById("patr-lotes-lista")')) { patrReady = true; break; } await sleep(500); }
+      push('  [PATR] lista patrimonio -> ' + (patrReady ? 'OK' : 'AUSENTE'));
+      const c = await evalObj(`(async()=>{
+        const r = JSON.parse(${base});
+        r.erpGroups = document.querySelectorAll('.erp-action-group').length;
+        r.registrarPesaje = document.querySelectorAll('.erp-action-group button[data-guide="btn-registrar-pesaje"]').length;
+        r.btnCards = !!document.getElementById('btn-patr-vista-cards');
+        r.btnTabla = !!document.getElementById('btn-patr-vista-tabla');
+        r.lista = !!document.getElementById('patr-lotes-lista');
+        r.verMas = !!document.querySelector('#patr-lotes-lista[data-ver-mas]');
+        r.cards = document.querySelectorAll('#patr-lotes-lista .card-registro').length;
+        r.accesos = document.querySelectorAll('a.widget-link-btn[href="#/animales"],a.widget-link-btn[href="#/rebanos"],a.widget-link-btn[href="#/zonas"]').length;
+        if (r.erpGroups < 1) r.why.push('no-erp-group');
+        if (r.registrarPesaje < 1) r.why.push('no-registrar-pesaje');
+        if (!r.btnCards) r.why.push('no-btn-cards');
+        if (!r.btnTabla) r.why.push('no-btn-tabla');
+        if (!r.verMas) r.why.push('no-data-ver-mas');
+        if (r.cards < 1) r.why.push('no-cards');
+        if (r.accesos < 3) r.why.push('no-accesos-directos');
+        return JSON.stringify(r);
+      })()`);
+      // Alternar a tabla ERP y comprobar que ErpDataTable pinta filas + botón Ver Ficha.
+      await cdpEval(`(async()=>{if(window.PatrimonioView)await window.PatrimonioView._setVistaModo('tabla');return 'ok'})().catch(e=>'err:'+e)`);
+      await sleep(1500);
+      const t = await evalObj(`(async()=>{
+        const r = JSON.parse(${base});
+        const cont = document.getElementById('patr-erp-table-container');
+        r.tablaVisible = !!(cont && cont.style.display !== 'none' && cont.children.length > 0);
+        r.filas = cont ? cont.querySelectorAll('tr').length : 0;
+        r.verFicha = document.querySelectorAll('#patr-erp-table-container button[onclick*="/rebano?id="]').length;
+        if (!r.tablaVisible) r.why.push('tabla-no-visible');
+        if (r.filas < 1) r.why.push('tabla-sin-filas');
+        if (r.verFicha < 1) r.why.push('no-ver-ficha');
+        return JSON.stringify(r);
+      })()`);
+      const baseOk = !!(c && c.ok) && (c && c.erpGroups > 0) && (c && c.registrarPesaje > 0) && (c && c.btnCards) && (c && c.btnTabla) && (c && c.verMas) && (c && c.cards > 0) && (c && c.accesos >= 3) && !!(t && t.tablaVisible) && (t && t.filas > 0) && (t && t.verFicha > 0);
+      const why = [].concat((c && c.why) || [], (t && t.why) || []);
+      if (errors) push('  [PATR] errors -> ' + (errors.length ? errors.join(' | ') : '(ninguno)'));
+      return { ok: baseOk, why, mode: 'android-patrimonio' };
+    }
+
     for (const route of routes) {
       push('[NAV] ' + route);
       let res = null;
@@ -271,6 +339,8 @@ const MOBILE_CHECK = `(() => {
       // real móvil: tocar el carrusel LÁCTEA y luego el sub-tab.
       if (route.indexOf('lacteo') !== -1) {
         res = await verifyLactea();
+      } else if (route.indexOf('patrimonio') !== -1 || route.indexOf('ganaderia') !== -1) {
+        res = await verifyPatrimonio();
       } else {
         // Firma del contenido ANTES de navegar, para descartar snapshots obsoletos
         // (el hash cambia pero #app-content aun muestra la vista previa).

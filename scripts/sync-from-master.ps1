@@ -59,7 +59,7 @@ $preservedList = @(
     # 'js\views\tanques-view.js',        # UNIFICADA en el maestro (fase 3 piloto): erp-action-group + erp-filtros + data-ver-mas
     'js\views\zonas-view.js',            # CTA cabecera + acción secundaria Importar PDF
     'js\views\sanidad-view.js',          # Acciones de registro agrupadas (fieldset erp-action-group)
-    'js\views\patrimonio-view.js',       # Acciones de registro agrupadas (fieldset erp-action-group)
+    # 'js\views\patrimonio-view.js',       # UNIFICADA en el maestro (fase 3 lote 4): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + data-ver-mas + tabla ErpDataTable; Accesos directos móviles conservados
     # 'js\views\cuaderno-view.js',       # UNIFICADA en el maestro (fase 3 lote 1): fieldset erp-action-group (exportar PDF/CSV/imprimir)
     'js\views\albaranes-ventas-view.js', # Libro de Ventas: tabla ERP
     # 'js\views\ajustes-view.js',        # UNIFICADA en el maestro (fase 3 lote 1): chips de alta + feature Zonas/Parcelas conservada
