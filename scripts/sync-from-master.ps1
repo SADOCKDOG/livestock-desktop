@@ -34,7 +34,7 @@ $preservedList = @(
     'js\module-colors.js',           # Mapa de colores ERP (sin neon)
     'js\purchase-manager.js',       # Emite 'premiumChanged' para el indicador Free/Premium del sidebar
     'js\views\animales-view.js',     # Toggle Tarjetas/Tabla ERP
-    'js\views\rebanos-view.js',      # Toggle Tarjetas/Tabla ERP
+    # 'js\views\rebanos-view.js',     # UNIFICADA en el maestro (fase 3 lote 5): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada
     'js\views\compradores-view.js',  # Toggle Tarjetas/Tabla ERP (módulo compradores)
     'js\views\proveedores-view.js',  # Toggle Tarjetas/Tabla ERP
     'js\views\transportistas-view.js', # Toggle Tarjetas/Tabla ERP

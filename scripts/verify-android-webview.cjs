@@ -331,6 +331,60 @@ const MOBILE_CHECK = `(() => {
       return { ok: baseOk, why, mode: 'android-patrimonio' };
     }
 
+    async function verifyRebanos() {
+      const base = `(() => {
+        const r = { ok: true, why: [], mode: 'android-rebanos' };
+        const welc = document.getElementById('asistente-configuracion-contenedor');
+        if (welc) { r.ok = false; r.why.push('welcome-present'); }
+        if (document.querySelector('.guide-popover') || document.querySelector('.guide-overlay')) { r.ok = false; r.why.push('guide-present'); }
+        const sb = document.querySelector('.erp-sidebar');
+        if (sb) { const b = sb.getBoundingClientRect(); const cs = getComputedStyle(sb); if ((b.width > 4 && b.height > 4) && cs.display !== 'none' && cs.visibility !== 'hidden') { r.ok = false; r.why.push('sidebar-visible-en-movil'); } }
+        return JSON.stringify(r);
+      })()`;
+      // Rebaños es ruta autónoma (#/rebanos); se alcanza por hash directo.
+      await cdpEval(`(async()=>{if(location.hash!=='#/rebanos'){location.hash='#/rebanos';if(window.App&&window.App.route)try{await window.App.route()}catch(e){}}return 'ok'})()`);
+      await sleep(3500);
+      // Reasegurar guías OFF (evita un segundo render de App.renderGuideFab que
+      // desengancha el contenido de la vista).
+      await cdpEval(`(async () => { const g = (window.GuideRegistry ? window.GuideRegistry.getAll() : []).map(x => x.id); if (window.App) window.App._config = Object.assign(window.App._config || {}, { guides: { enabled: false, seen: g, dismissed: g } }); document.querySelectorAll('.guide-overlay,.guide-popover,.guide-resume-chip').forEach(n => n.remove()); return true; })()`);
+      let rebReady = false;
+      for (let i = 0; i < 30; i++) { if (await cdpEval('!!document.getElementById("rebanos-content")')) { rebReady = true; break; } await sleep(500); }
+      push('  [REB] lista rebanos -> ' + (rebReady ? 'OK' : 'AUSENTE'));
+      const c = await evalObj(`(async()=>{
+        const r = JSON.parse(${base});
+        r.erpGroups = document.querySelectorAll('.erp-action-group').length;
+        r.nuevoRebano = document.querySelectorAll('.erp-action-group button[data-guide="btn-nuevo-rebano"]').length;
+        r.btnCards = !!document.getElementById('btn-reb-vista-cards');
+        r.btnTabla = !!document.getElementById('btn-reb-vista-tabla');
+        r.lista = !!document.getElementById('rebanos-content');
+        r.cards = document.querySelectorAll('#rebanos-content .card-registro').length;
+        if (r.erpGroups < 1) r.why.push('no-erp-group');
+        if (r.nuevoRebano < 1) r.why.push('no-nuevo-rebano');
+        if (!r.btnCards) r.why.push('no-btn-cards');
+        if (!r.btnTabla) r.why.push('no-btn-tabla');
+        if (r.cards < 1) r.why.push('no-cards');
+        return JSON.stringify(r);
+      })()`);
+      // Alternar a tabla ERP y comprobar que ErpDataTable pinta filas + botón Ver Ficha.
+      await cdpEval(`(async()=>{if(window.RebanosView)await window.RebanosView._setVistaModo('tabla');return 'ok'})().catch(e=>'err:'+e)`);
+      await sleep(1500);
+      const t = await evalObj(`(async()=>{
+        const r = JSON.parse(${base});
+        const cont = document.getElementById('rebanos-erp-table-container');
+        r.tablaVisible = !!(cont && cont.style.display !== 'none' && cont.children.length > 0);
+        r.filas = cont ? cont.querySelectorAll('tr').length : 0;
+        r.verFicha = document.querySelectorAll('#rebanos-erp-table-container button[onclick*="/rebano?id="]').length;
+        if (!r.tablaVisible) r.why.push('tabla-no-visible');
+        if (r.filas < 1) r.why.push('tabla-sin-filas');
+        if (r.verFicha < 1) r.why.push('no-ver-ficha');
+        return JSON.stringify(r);
+      })()`);
+      const baseOk = !!(c && c.ok) && (c && c.erpGroups > 0) && (c && c.nuevoRebano > 0) && (c && c.btnCards) && (c && c.btnTabla) && (c && c.cards > 0) && !!(t && t.tablaVisible) && (t && t.filas > 0) && (t && t.verFicha > 0);
+      const why = [].concat((c && c.why) || [], (t && t.why) || []);
+      if (errors) push('  [REB] errors -> ' + (errors.length ? errors.join(' | ') : '(ninguno)'));
+      return { ok: baseOk, why, mode: 'android-rebanos' };
+    }
+
     for (const route of routes) {
       push('[NAV] ' + route);
       let res = null;
@@ -341,6 +395,8 @@ const MOBILE_CHECK = `(() => {
         res = await verifyLactea();
       } else if (route.indexOf('patrimonio') !== -1 || route.indexOf('ganaderia') !== -1) {
         res = await verifyPatrimonio();
+      } else if (route.indexOf('rebanos') !== -1) {
+        res = await verifyRebanos();
       } else {
         // Firma del contenido ANTES de navegar, para descartar snapshots obsoletos
         // (el hash cambia pero #app-content aun muestra la vista previa).
