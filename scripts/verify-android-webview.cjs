@@ -385,6 +385,67 @@ const MOBILE_CHECK = `(() => {
       return { ok: baseOk, why, mode: 'android-rebanos' };
     }
 
+    async function verifySilos() {
+      const base = `(() => {
+        const r = { ok: true, why: [], mode: 'android-silos' };
+        const welc = document.getElementById('asistente-configuracion-contenedor');
+        if (welc) { r.ok = false; r.why.push('welcome-present'); }
+        if (document.querySelector('.guide-popover') || document.querySelector('.guide-overlay')) { r.ok = false; r.why.push('guide-present'); }
+        const sb = document.querySelector('.erp-sidebar');
+        if (sb) { const b = sb.getBoundingClientRect(); const cs = getComputedStyle(sb); if ((b.width > 4 && b.height > 4) && cs.display !== 'none' && cs.visibility !== 'hidden') { r.ok = false; r.why.push('sidebar-visible-en-movil'); } }
+        return JSON.stringify(r);
+      })()`;
+      // Silos es sub-módulo de Explotación (ruta #/silos); alcanzable por hash directo.
+      await cdpEval(`(async()=>{if(location.hash!=='#/silos'){location.hash='#/silos';if(window.App&&window.App.route)try{await window.App.route()}catch(e){}}return 'ok'})()`);
+      await sleep(3500);
+      // Reasegurar guías OFF (evita un segundo render de App.renderGuideFab que
+      // desengancha el contenido de la vista).
+      await cdpEval(`(async () => { const g = (window.GuideRegistry ? window.GuideRegistry.getAll() : []).map(x => x.id); if (window.App) window.App._config = Object.assign(window.App._config || {}, { guides: { enabled: false, seen: g, dismissed: g } }); document.querySelectorAll('.guide-overlay,.guide-popover,.guide-resume-chip').forEach(n => n.remove()); return true; })()`);
+      const nSilos = await cdpEval('window.SilosView ? (window.SilosView._cachedSilos||[]).length : 0');
+      let silReady = false;
+      for (let i = 0; i < 30; i++) { if (await cdpEval('!!document.getElementById("silos-lista")')) { silReady = true; break; } await sleep(500); }
+      push('  [SILOS] lista -> ' + (silReady ? 'OK' : 'AUSENTE') + ' (nSilos=' + nSilos + ')');
+      const c = await evalObj(`(async()=>{
+        const r = JSON.parse(${base});
+        r.erpGroups = document.querySelectorAll('.erp-action-group').length;
+        r.nuevoSilo = document.querySelectorAll('.erp-action-group button').length;
+        r.btnCards = !!document.getElementById('btn-silos-vista-cards');
+        r.btnTabla = !!document.getElementById('btn-silos-vista-tabla');
+        r.lista = !!document.getElementById('silos-lista');
+        r.cards = document.querySelectorAll('#silos-lista .card').length;
+        r.emptyState = !!document.querySelector('#silos-lista .empty-state');
+        if (r.erpGroups < 1) r.why.push('no-erp-group');
+        if (r.nuevoSilo < 1) r.why.push('no-nuevo-silo');
+        if (!r.btnCards) r.why.push('no-btn-cards');
+        if (!r.btnTabla) r.why.push('no-btn-tabla');
+        if (!r.lista) r.why.push('no-lista');
+        if (r.cards < 1 && !r.emptyState) r.why.push('no-content');
+        return JSON.stringify(r);
+      })()`);
+      // Alternar a tabla ERP y comprobar que ErpDataTable pinta filas + botón Editar.
+      // Solo si hay silos (si nSilos===0 no hay filas que pintar).
+      let t = { ok: true, why: [] };
+      if (nSilos > 0) {
+        await cdpEval(`(async()=>{if(window.SilosView)await window.SilosView._setVistaModo('tabla');return 'ok'})().catch(e=>'err:'+e)`);
+        await sleep(1500);
+        t = await evalObj(`(async()=>{
+          const r = JSON.parse(${base});
+          const cont = document.getElementById('silos-erp-table-container');
+          r.tablaVisible = !!(cont && cont.style.display !== 'none' && cont.children.length > 0);
+          r.filas = cont ? cont.querySelectorAll('tr').length : 0;
+          r.editar = document.querySelectorAll('#silos-erp-table-container button[onclick*="_abrirFormularioSilo("]').length;
+          if (!r.tablaVisible) r.why.push('tabla-no-visible');
+          if (r.filas < 1) r.why.push('tabla-sin-filas');
+          if (r.editar < 1) r.why.push('no-editar');
+          return JSON.stringify(r);
+        })()`);
+      }
+      const baseOk = !!(c && c.ok) && (c && c.erpGroups > 0) && (c && c.nuevoSilo > 0) && (c && c.btnCards) && (c && c.btnTabla) && (c && c.lista) && (c && (c.cards > 0 || c.emptyState)) && (nSilos === 0 || !!(t && t.tablaVisible)) && (nSilos === 0 || (t && t.filas > 0)) && (nSilos === 0 || (t && t.editar > 0));
+      const why = [].concat((c && c.why) || [], (t && t.why) || []);
+      if (errors) push('  [SILOS] errors -> ' + (errors.length ? errors.join(' | ') : '(ninguno)'));
+      return { ok: baseOk, why, mode: 'android-silos' };
+    }
+
     for (const route of routes) {
       push('[NAV] ' + route);
       let res = null;
@@ -397,6 +458,8 @@ const MOBILE_CHECK = `(() => {
         res = await verifyPatrimonio();
       } else if (route.indexOf('rebanos') !== -1) {
         res = await verifyRebanos();
+      } else if (route.indexOf('silos') !== -1) {
+        res = await verifySilos();
       } else {
         // Firma del contenido ANTES de navegar, para descartar snapshots obsoletos
         // (el hash cambia pero #app-content aun muestra la vista previa).
