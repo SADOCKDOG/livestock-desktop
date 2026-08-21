@@ -636,6 +636,18 @@ const MOBILE_CHECK = `(() => {
         cacheExpr: 'window.SanidadView && window.SanidadView._cacheTabla ? window.SanidadView._cacheTabla.length : 0',
         setVistaModoExpr: 'window.SanidadView._setVistaModo', btnCardsId: 'btn-san-vista-cards', btnTablaId: 'btn-san-vista-tabla',
         erpGroupAlways: true, verFichaSel: "#sanidad-erp-table-container button[onclick*=\"/sanidad/tratamiento?id=\"]"
+      },
+      'documentos': {
+        route: '#/documentos', listId: 'docs-lista', tableId: 'docs-erp-table-container',
+        cacheExpr: 'window.DocumentosView && window.DocumentosView._cachedDocs ? window.DocumentosView._cachedDocs.filter(d=>!String(d.id).startsWith("99")).length : 0',
+        setVistaModoExpr: 'window.DocumentosView._setVistaModo', btnCardsId: 'btn-docs-vista-cards', btnTablaId: 'btn-docs-vista-tabla',
+        erpGroupAlways: true, verFichaSel: "#docs-erp-table-container button[onclick*=\"DocumentosView._verDetalle(\"]"
+      },
+      'albaranes-ventas': {
+        route: '#/albaranes-ventas', listId: 'albaranes-lista', tableId: 'alb-erp-table-container',
+        cacheExpr: 'window.AlbaranesVentasView && window.AlbaranesVentasView._cachedData ? window.AlbaranesVentasView._cachedData.length : 0',
+        setVistaModoExpr: 'window.AlbaranesVentasView._setVistaModo', btnCardsId: 'btn-alb-vista-cards', btnTablaId: 'btn-alb-vista-tabla',
+        erpGroupAlways: true, verFichaSel: "#alb-erp-table-container button[onclick*=\"AlbaranesVentasView._imprimirDoc(\"]"
       }
     };
     function matchErpView(route) {
