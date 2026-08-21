@@ -546,6 +546,12 @@ const MOBILE_CHECK = `(() => {
         cacheExpr: 'window.TransportistasView && window.TransportistasView._cachedData && window.TransportistasView._cachedData.transportistas ? window.TransportistasView._cachedData.transportistas.length : 0',
         setVistaModoExpr: 'window.TransportistasView._setVistaModo', btnCardsId: 'btn-transp-vista-cards', btnTablaId: 'btn-transp-vista-tabla',
         erpGroupAlways: false, verFichaSel: "#transportistas-erp-table-container button[onclick*=\"TransportistasView._verDetalle(\"]"
+      },
+      'botiquin': {
+        route: '#/botiquin', listId: 'botiquin-lista', tableId: 'botiquin-erp-table-container',
+        cacheExpr: 'window.BotiquinView && window.BotiquinView._cache ? window.BotiquinView._cache.length : 0',
+        setVistaModoExpr: 'window.BotiquinView._setVistaModo', btnCardsId: 'btn-bot-vista-cards', btnTablaId: 'btn-bot-vista-tabla',
+        erpGroupAlways: false, verFichaSel: "#botiquin-erp-table-container button[onclick*=\"/botiquin-producto?id=\"]"
       }
     };
     function matchErpView(route) {

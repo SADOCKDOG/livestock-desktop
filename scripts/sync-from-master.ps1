@@ -46,7 +46,7 @@ $preservedList = @(
     'js\views\manuales-view.js',      # Visor de manuales embebido en #app-content (no overlay full-screen)
     # --- Estandarización de botones / limpieza de FAB y sub-tabs (piel ERP) ---
     # 'js\views\agenda-view.js',         # UNIFICADA en el maestro (fase 3 piloto): CTA cabecera + erp-action-group + erp-filtros; fab-container móvil CONSERVADO
-    'js\views\botiquin-view.js',         # CTA cabecera "Nuevo Producto", sin FAB
+    # 'js\views\botiquin-view.js',         # UNIFICADA en el maestro (fase 3 lote 11): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable + data-ver-mas; FAB móvil duplicado eliminado (erp-solo-movil)
     # 'js\views\dashboard-view.js',      # UNIFICADA en el maestro (fase 3 piloto): FAB "Nueva Actividad" + renderGuideFab; nav móvil intacta
     'js\views\explotacion-view.js',      # Láctea/Trámites como subgrupos del sidebar (?sub=)
     # 'js\views\explotacion-lactea-view.js', # UNIFICADA en el maestro (fase 3 lote 3): erp-action-group + erp-filtros + data-ver-mas en analíticas/movimientos; botones editar/borrar intactos; +Ordeño/+Tanque re-añadidos
