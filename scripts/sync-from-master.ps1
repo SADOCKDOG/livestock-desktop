@@ -57,7 +57,7 @@ $preservedList = @(
     # 'js\views\silos-view.js',         # UNIFICADA en el maestro (fase 3 lote 6): cromo ERP neutro + erp-action-group + erp-filtros + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil eliminado (CTA duplicado en erp-action-group)
     # 'js\views\subexplotaciones-view.js', # UNIFICADA en el maestro (fase 3 lote 12): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil eliminado (CTA duplicado en erp-action-group)
     # 'js\views\tanques-view.js',        # UNIFICADA en el maestro (fase 3 piloto): erp-action-group + erp-filtros + data-ver-mas
-    'js\views\zonas-view.js',            # CTA cabecera + acción secundaria Importar PDF
+    # 'js\views\zonas-view.js',            # UNIFICADA en el maestro (fase 3 lote 13): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable + erp-filtros; FAB móvil conservado (App.renderGuideFab)
     'js\views\sanidad-view.js',          # Acciones de registro agrupadas (fieldset erp-action-group)
     # 'js\views\patrimonio-view.js',       # UNIFICADA en el maestro (fase 3 lote 4): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + data-ver-mas + tabla ErpDataTable; Accesos directos móviles conservados
     # 'js\views\cuaderno-view.js',       # UNIFICADA en el maestro (fase 3 lote 1): fieldset erp-action-group (exportar PDF/CSV/imprimir)

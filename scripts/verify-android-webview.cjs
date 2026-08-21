@@ -558,6 +558,12 @@ const MOBILE_CHECK = `(() => {
         cacheExpr: 'window.SubexplotacionesView && window.SubexplotacionesView._cache ? window.SubexplotacionesView._cache.length : 0',
         setVistaModoExpr: 'window.SubexplotacionesView._setVistaModo', btnCardsId: 'btn-subexp-vista-cards', btnTablaId: 'btn-subexp-vista-tabla',
         erpGroupAlways: false, verFichaSel: "#subexp-erp-table-container button[onclick*=\"/subexplotacion?index=\"]"
+      },
+      'zonas': {
+        route: '#/zonas', listId: 'zonas-lista', tableId: 'zonas-erp-table-container',
+        cacheExpr: 'window.ZonasView && window.ZonasView._cache ? window.ZonasView._cache.length : 0',
+        setVistaModoExpr: 'window.ZonasView._setVistaModo', btnCardsId: 'btn-zonas-vista-cards', btnTablaId: 'btn-zonas-vista-tabla',
+        erpGroupAlways: false, verFichaSel: "#zonas-erp-table-container button[onclick*=\"/zona?index=\"]"
       }
     };
     function matchErpView(route) {
