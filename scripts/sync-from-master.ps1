@@ -1,4 +1,4 @@
-# Sync the web frontend from the master repo (LIVESTOCK-MANAGER) into frontend/.
+﻿# Sync the web frontend from the master repo (LIVESTOCK-MANAGER) into frontend/.
 # Only the static web app is copied; Android/Capacitor/agent artifacts are excluded.
 # The master repo is treated as read-only (source of truth for the frontend).
 #
@@ -7,6 +7,12 @@
 # El sync NUNCA los borra ni los sobrescribe. Si el maestro cambia alguno de esos
 # archivos (p.ej. views/animales-view.js), hay que fusionar a mano: el sync lo
 # anuncia con "preservado (desktop)" para que sepas que debes revisar el diff.
+
+param(
+    # Escapatoria consciente: sincroniza aunque el maestro este en otra rama.
+    # Pensado para casos puntuales; el aviso sigue saliendo.
+    [switch]$PermitirCualquierRama
+)
 
 $ErrorActionPreference = 'Stop'
 
@@ -22,6 +28,42 @@ if (-not $masterPath) {
 
 $src = $masterPath.Path
 $dst = Join-Path $repoRoot 'frontend'
+
+# --- Guarda de rama del maestro ---------------------------------------------
+# El maestro tiene varias ramas vivas a la vez (master, desktop-mvp, ramas de
+# trabajo paradas). Si el checkout hermano se queda en cualquiera de ellas, este
+# script sincroniza desde ahi sin avisar y el error no se nota hasta que algo se
+# rompe mucho despues. Se aborta salvo que la rama sea una de las previstas.
+$ramasPermitidas = @('master', 'desktop-mvp')
+$ramaMaestro = (& git -C $src rev-parse --abbrev-ref HEAD 2>$null)
+
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($ramaMaestro)) {
+    Write-Error "No se pudo leer la rama de $src. Comprueba que es un repositorio git."
+    exit 1
+}
+
+$ramaMaestro = $ramaMaestro.Trim()
+
+if ($ramasPermitidas -notcontains $ramaMaestro -and -not $PermitirCualquierRama) {
+    Write-Host ""
+    Write-Host "  SYNC ABORTADO" -ForegroundColor Red
+    Write-Host "  El maestro esta en la rama '$ramaMaestro', que no es una fuente valida." -ForegroundColor Yellow
+    Write-Host "  Ramas permitidas: $($ramasPermitidas -join ', ')"
+    Write-Host ""
+    Write-Host "  Sincronizar desde otra rama traeria trabajo a medias sin avisar."
+    Write-Host "  Deja el maestro en la rama correcta y repite:"
+    Write-Host "      git -C `"$src`" checkout desktop-mvp" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "  Si de verdad quieres sincronizar desde '$ramaMaestro', usa -PermitirCualquierRama."
+    Write-Host ""
+    exit 1
+}
+
+if ($ramasPermitidas -notcontains $ramaMaestro) {
+    Write-Host "  AVISO: sincronizando desde '$ramaMaestro' por -PermitirCualquierRama." -ForegroundColor Yellow
+} else {
+    Write-Host "  Maestro en la rama '$ramaMaestro'." -ForegroundColor DarkGray
+}
 
 # --- Archivos propios del desktop (rutas relativas a frontend/) --------------
 $preservedList = @(
