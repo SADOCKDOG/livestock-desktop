@@ -540,6 +540,12 @@ const MOBILE_CHECK = `(() => {
         cacheExpr: 'window.AnimalesView && window.AnimalesView._cache && window.AnimalesView._cache.animales ? window.AnimalesView._cache.animales.length : 0',
         setVistaModoExpr: 'window.AnimalesView._setVistaModo', btnCardsId: 'btn-vista-cards', btnTablaId: 'btn-vista-tabla',
         erpGroupAlways: false, verFichaSel: "#animales-erp-table-container button[onclick*=\"/animal?id=\"]"
+      },
+      'transportistas': {
+        route: '#/transportistas', listId: 'transportistas-content', tableId: 'transportistas-erp-table-container',
+        cacheExpr: 'window.TransportistasView && window.TransportistasView._cachedData && window.TransportistasView._cachedData.transportistas ? window.TransportistasView._cachedData.transportistas.length : 0',
+        setVistaModoExpr: 'window.TransportistasView._setVistaModo', btnCardsId: 'btn-transp-vista-cards', btnTablaId: 'btn-transp-vista-tabla',
+        erpGroupAlways: false, verFichaSel: "#transportistas-erp-table-container button[onclick*=\"TransportistasView._verDetalle(\"]"
       }
     };
     function matchErpView(route) {

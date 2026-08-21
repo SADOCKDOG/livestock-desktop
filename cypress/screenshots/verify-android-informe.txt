@@ -1,11 +1,11 @@
 [ADB] dispositivo=emulator-5554
-[ADB] pid=16188
+[ADB] pid=16553
 [CDP] target=https://localhost/
 [ARRANQUE] OK
 [DEMO] {"ok":true,"fincaActiva":1,"guias":21}
 [ARRANQUE-2] OK
-[NAV] #/animales
-[CHECK] #/animales -> {"ok":true,"why":[],"mode":"android-erp:#/animales"}
+[NAV] #/transportistas
+[CHECK] #/transportistas -> {"ok":true,"why":[],"mode":"android-erp:#/transportistas"}
 [RESUMEN] vistas validas: 1/1
-  - #/animales: OK
+  - #/transportistas: OK
 [RESUMEN] VERIFICACION COMPLETA
