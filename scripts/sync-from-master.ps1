@@ -41,7 +41,7 @@ $preservedList = @(
     'js\views\gastos-view.js',         # Toggle Tarjetas/Tabla ERP (tabs por categoría)
     'js\views\contratos-view.js',      # Toggle Tarjetas/Tabla ERP
     'js\views\documentos-view.js',     # Toggle Tarjetas/Tabla ERP (registro documental)
-    'js\views\fitosanitarios-view.js', # Toggle Tarjetas/Tabla ERP
+    # 'js\views\fitosanitarios-view.js', # UNIFICADA en el maestro (fase 3 lote 16): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable + erp-filtros; FAB móvil duplicado eliminado (erp-solo-movil)
     # 'js\views\comercializacion-view.js', # UNIFICADA en el maestro (fase 3 lote 3): cromo ERP neutro + erp-action-group + erp-filtros + data-ver-mas (sin nav móvil que preservar)
     'js\views\manuales-view.js',      # Visor de manuales embebido en #app-content (no overlay full-screen)
     # --- Estandarización de botones / limpieza de FAB y sub-tabs (piel ERP) ---

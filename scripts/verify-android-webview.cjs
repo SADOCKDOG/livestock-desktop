@@ -606,6 +606,12 @@ const MOBILE_CHECK = `(() => {
         cacheExpr: 'window.SaneamientosView && window.SaneamientosView._cache ? window.SaneamientosView._cache.length : 0',
         setVistaModoExpr: 'window.SaneamientosView._setVistaModo', btnCardsId: 'btn-san-vista-cards', btnTablaId: 'btn-san-vista-tabla',
         erpGroupAlways: false, verFichaSel: "#san-erp-table-container button[onclick*=\"/saneamiento?id=\"]"
+      },
+      'fitosanitarios': {
+        route: '#/explotacion?tab=fitosanitarios', listId: 'fito-lista', tableId: 'fito-erp-table-container',
+        cacheExpr: 'window.FitosanitariosView && window.FitosanitariosView._cachedRegistros ? window.FitosanitariosView._cachedRegistros.length : 0',
+        setVistaModoExpr: 'window.FitosanitariosView._setVistaModo', btnCardsId: 'btn-fito-vista-cards', btnTablaId: 'btn-fito-vista-tabla',
+        erpGroupAlways: false, verFichaSel: "#fito-erp-table-container button[onclick*=\"FitosanitariosView._abrirFichaTratamiento(\"]"
       }
     };
     function matchErpView(route) {
