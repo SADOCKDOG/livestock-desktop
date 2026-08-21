@@ -687,17 +687,15 @@ const DocumentosView = {
           window.WizardGuiaMovimiento.generarDocumento(finca, m);
           return;
         }
-        // Si el DIMOE no tiene representación en movimientos_ganado,
-        // se busca como documento legal archivado.
-        const doc = await window.db.get('documentos_legales', Number(id));
-        if (doc) {
-          // Genera el PDF a partir de los datos del documento archivado.
-          // WizardCrotales.generarPDF está preparado para cualquier objeto con
-          // id y tipo; usamos el propio documento como seed.
-          window.WizardCrotales.generarPDF(finca, doc, doc.id);
+        // Si el DIMOE no tiene representacion en movimientos_ganado, es un
+        // documento archivado: se emitio en SIGGAN y aqui solo se guarda copia.
+        const archivado = await window.db.get('documentos_legales', Number(id));
+        if (archivado) {
+          this._imprimirDimoeArchivado(finca, archivado);
           return;
         }
         throw new Error("Movimiento o documento no encontrado");
+      }
       if (tipo === 'albaran_carne' || tipo === 'albaran_leche') {
         if (window.AlbaranesVentasView) {
           await AlbaranesVentasView._imprimirDoc(tipo === 'albaran_carne' ? 'carne' : 'leche', id);
@@ -758,6 +756,66 @@ const DocumentosView = {
     } catch (e) {
       App.toastError("Error al imprimir: " + e.message);
     }
+  },
+
+  /**
+   * PDF de un DIMOE archivado: el que se emitio en SIGGAN y del que aqui solo
+   * se guarda copia. NO reproduce la guia oficial: ese documento lleva
+   * crotales, desinfeccion y veterinario autorizante, y este registro no los
+   * tiene. Imitar el formato oficial con esos campos en blanco seria peor que
+   * no generarlo — alguien podria presentarlo creyendolo valido. Se presenta
+   * como lo que es: la ficha de un documento archivado.
+   */
+  async _imprimirDimoeArchivado(finca, doc) {
+    const dato = (v) => v || '—';
+    const html = `
+      <div style="padding:40px; font-family:serif; color:#000;">
+        <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:20px; margin-bottom:10px;">
+          <h1 style="margin:0; font-size:1.4rem; text-transform:uppercase;">DIMOE archivado</h1>
+          <p style="margin:5px 0 0 0;">${finca.nombre} · ${finca.codigo_REGA || ''}</p>
+        </div>
+        <p style="text-align:center; font-size:0.8rem; color:#555; margin:0 0 30px 0;">
+          Copia de un documento emitido en la plataforma SIGGAN.
+          Este PDF no sustituye al original.
+        </p>
+
+        <div style="margin-bottom:20px;">
+          <p><strong>Nº de documento:</strong> ${dato(doc.numero)}</p>
+          <p><strong>Fecha de emisión:</strong> ${this._fmtFecha(doc.fecha_emision)}</p>
+          <p><strong>Motivo:</strong> ${(doc.motivo || '—').toUpperCase()}</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:25px;">
+          <div>
+            <h3 style="border-bottom:1px solid #eee; padding-bottom:5px; font-size:1rem;">ORIGEN</h3>
+            <p>${dato(doc.origen_nombre)}<br>REGA: ${dato(doc.origen_rega)}</p>
+          </div>
+          <div>
+            <h3 style="border-bottom:1px solid #eee; padding-bottom:5px; font-size:1rem;">DESTINO</h3>
+            <p>${dato(doc.destino_nombre)}<br>Código: ${dato(doc.destino)}</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="border-bottom:1px solid #eee; padding-bottom:5px; font-size:1rem;">TRANSPORTE</h3>
+          <p>
+            ${dato(doc.transportista_nombre)}<br>
+            NIF: ${dato(doc.transportista_nif)} · Matrícula: ${dato(doc.transportista_matricula)}
+          </p>
+        </div>
+
+        <p style="margin-top:40px; font-size:0.75rem; color:#666; border-top:1px solid #ddd; padding-top:10px;">
+          Los datos sanitarios (identificación individual, desinfección y veterinario
+          autorizante) constan en el documento original emitido en SIGGAN.
+        </p>
+      </div>`;
+
+    DocumentViewer.show({
+      id: 'doc-viewer-dimoe-archivado',
+      title: 'DIMOE ' + (doc.numero || ''),
+      html,
+      filename: `DIMOE_${doc.numero || doc.id}`
+    });
   },
 
   async _imprimirContratoPDF(finca, contrato) {
