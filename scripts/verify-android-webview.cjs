@@ -446,6 +446,82 @@ const MOBILE_CHECK = `(() => {
       return { ok: baseOk, why, mode: 'android-silos' };
     }
 
+    async function verifyInstalaciones() {
+      const base = `(() => {
+        const r = { ok: true, why: [], mode: 'android-instalaciones' };
+        const welc = document.getElementById('asistente-configuracion-contenedor');
+        if (welc) { r.ok = false; r.why.push('welcome-present'); }
+        if (document.querySelector('.guide-popover') || document.querySelector('.guide-overlay')) { r.ok = false; r.why.push('guide-present'); }
+        const sb = document.querySelector('.erp-sidebar');
+        if (sb) { const b = sb.getBoundingClientRect(); const cs = getComputedStyle(sb); if ((b.width > 4 && b.height > 4) && cs.display !== 'none' && cs.visibility !== 'hidden') { r.ok = false; r.why.push('sidebar-visible-en-movil'); } }
+        return JSON.stringify(r);
+      })()`;
+      // Instalaciones es ruta autónoma (#/instalaciones).
+      await cdpEval(`(async()=>{if(location.hash!=='#/instalaciones'){location.hash='#/instalaciones';if(window.App&&window.App.route)try{await window.App.route()}catch(e){}}return 'ok'})()`);
+      await sleep(3500);
+      await cdpEval(`(async () => { const g = (window.GuideRegistry ? window.GuideRegistry.getAll() : []).map(x => x.id); if (window.App) window.App._config = Object.assign(window.App._config || {}, { guides: { enabled: false, seen: g, dismissed: g } }); document.querySelectorAll('.guide-overlay,.guide-popover,.guide-resume-chip').forEach(n => n.remove()); return true; })()`);
+      const nInst = await cdpEval('window.InstalacionesView ? (window.InstalacionesView._cache||[]).length : 0');
+      let instReady = false;
+      for (let i = 0; i < 30; i++) { if (await cdpEval('!!document.getElementById("inst-lista") || !!document.querySelector("#app-content .empty-state")')) { instReady = true; break; } await sleep(500); }
+      push('  [INST] lista -> ' + (instReady ? 'OK' : 'AUSENTE') + ' (nInst=' + nInst + ')');
+      const cRaw = await cdpEval(`(()=>{
+        const r = { ok: true, why: [] };
+        const welc = document.getElementById('asistente-configuracion-contenedor');
+        if (welc) { r.ok = false; r.why.push('welcome-present'); }
+        if (document.querySelector('.guide-popover') || document.querySelector('.guide-overlay')) { r.ok = false; r.why.push('guide-present'); }
+        const sb = document.querySelector('.erp-sidebar');
+        if (sb) { const b = sb.getBoundingClientRect(); const cs = getComputedStyle(sb); if ((b.width > 4 && b.height > 4) && cs.display !== 'none' && cs.visibility !== 'hidden') { r.ok = false; r.why.push('sidebar-visible-en-movil'); } }
+        r.erpGroups = document.querySelectorAll('.erp-action-group').length;
+        r.nuevaInst = document.querySelectorAll('.erp-action-group button').length;
+        r.btnCards = !!document.getElementById('btn-inst-vista-cards');
+        r.btnTabla = !!document.getElementById('btn-inst-vista-tabla');
+        r.lista = !!document.getElementById('inst-lista');
+        r.cards = document.querySelectorAll('#inst-lista .card-registro').length;
+        r.emptyState = !!document.querySelector('#app-content .empty-state');
+        if (r.erpGroups < 1) r.why.push('no-erp-group');
+        if (r.nuevaInst < 1) r.why.push('no-nueva-inst');
+        if (!r.btnCards) r.why.push('no-btn-cards');
+        if (!r.btnTabla) r.why.push('no-btn-tabla');
+        return JSON.stringify(r);
+      })()`);
+      let c = { ok: false, why: ['eval-null'] };
+      try { const p = (typeof cRaw === 'string') ? JSON.parse(cRaw) : cRaw; if (p && typeof p === 'object') c = p; } catch (e) { c = { ok: false, why: ['parse-error:' + String(cRaw).slice(0,120)] }; }
+      // La logica de vacio/no-vacio depende de nInst (Node), no se interpola en la pagina.
+      if (nInst > 0 && !c.lista) c.why.push('no-lista');
+      if (nInst > 0 && c.cards < 1) c.why.push('no-cards');
+      if (nInst === 0 && !c.emptyState) c.why.push('no-empty-state');
+      // Alternar a tabla ERP y comprobar filas + botón Ver Ficha.
+      let t = { ok: true, why: [] };
+      if (nInst > 0) {
+        await cdpEval(`(async()=>{if(window.InstalacionesView)await window.InstalacionesView._setVistaModo('tabla');return 'ok'})().catch(e=>'err:'+e)`);
+        await sleep(1500);
+        t = await cdpEval(`(async()=>{
+          const r = { ok: true, why: [] };
+          const cont = document.getElementById('inst-erp-table-container');
+          r.tablaVisible = !!(cont && cont.style.display !== 'none' && cont.children.length > 0);
+          r.filas = cont ? cont.querySelectorAll('tr').length : 0;
+          r.verFicha = document.querySelectorAll('#inst-erp-table-container button[onclick*="/instalacion?index="]').length;
+          if (!r.tablaVisible) r.why.push('tabla-no-visible');
+          if (r.filas < 1) r.why.push('tabla-sin-filas');
+          if (r.verFicha < 1) r.why.push('no-ver-ficha');
+          return r;
+        })()`);
+      }
+      const baseOk = !!(c && c.ok)
+        && (nInst === 0 || (c && c.erpGroups > 0))
+        && (nInst === 0 || (c && c.nuevaInst > 0))
+        && (nInst === 0 || (c && c.btnCards))
+        && (nInst === 0 || (c && c.btnTabla))
+        && (nInst === 0 || (c && c.lista))
+        && (c && (c.cards > 0 || (nInst === 0 && c.emptyState)))
+        && (nInst === 0 || !!(t && t.tablaVisible))
+        && (nInst === 0 || (t && t.filas > 0))
+        && (nInst === 0 || (t && t.verFicha > 0));
+      const why = [].concat((c && c.why) || [], (t && t.why) || []);
+      if (errors) push('  [INST] errors -> ' + (errors.length ? errors.join(' | ') : '(ninguno)'));
+      return { ok: baseOk, why, mode: 'android-instalaciones' };
+    }
+
     for (const route of routes) {
       push('[NAV] ' + route);
       let res = null;
@@ -460,6 +536,8 @@ const MOBILE_CHECK = `(() => {
         res = await verifyRebanos();
       } else if (route.indexOf('silos') !== -1) {
         res = await verifySilos();
+      } else if (route.indexOf('instalaciones') !== -1) {
+        res = await verifyInstalaciones();
       } else {
         // Firma del contenido ANTES de navegar, para descartar snapshots obsoletos
         // (el hash cambia pero #app-content aun muestra la vista previa).
