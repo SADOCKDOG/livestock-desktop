@@ -68,7 +68,7 @@ if ($ramasPermitidas -notcontains $ramaMaestro) {
 # --- Archivos propios del desktop (rutas relativas a frontend/) --------------
 $preservedList = @(
     'index.html',                    # Sidebar ERP, links css/js ERP, chrome desktop
-    'js\mode-config.js',             # Generado por build:free / build:premium
+    'js\mode-config.js',             # Generado por build:pago / build:demo
     'js\erp-data-table.js',          # Componente ErpDataTable (solo desktop)
     'js\icons-desktop.js',           # Iconos extra desktop: chevronArriba, sortNeutral
     'js\app.js',                     # Handlers sidebar ERP (_setupSidebar, etc.)
