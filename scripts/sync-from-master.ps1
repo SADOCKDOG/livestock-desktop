@@ -36,7 +36,7 @@ $preservedList = @(
     'js\views\animales-view.js',     # Toggle Tarjetas/Tabla ERP
     # 'js\views\rebanos-view.js',     # UNIFICADA en el maestro (fase 3 lote 5): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada
     'js\views\compradores-view.js',  # Toggle Tarjetas/Tabla ERP (módulo compradores)
-    'js\views\proveedores-view.js',  # Toggle Tarjetas/Tabla ERP
+    # 'js\views\proveedores-view.js',     # UNIFICADA en el maestro (fase 3 lote 8): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable + fix _setVistaModo render lista en cards; FAB móvil eliminado (CTA duplicado en erp-action-group)
     'js\views\transportistas-view.js', # Toggle Tarjetas/Tabla ERP
     'js\views\gastos-view.js',         # Toggle Tarjetas/Tabla ERP (tabs por categoría)
     'js\views\contratos-view.js',      # Toggle Tarjetas/Tabla ERP

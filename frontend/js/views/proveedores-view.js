@@ -184,7 +184,10 @@ const ProveedoresView = {
             }
         } else {
             if (contenedorTabla) contenedorTabla.style.display = 'none';
-            if (contenedorCards) contenedorCards.style.display = 'block';
+            if (contenedorCards) {
+                contenedorCards.style.display = 'block';
+                if (this._cachedFiltrados) this._renderLista(this._cachedFiltrados);
+            }
         }
     },
 

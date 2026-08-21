@@ -52,6 +52,11 @@ async function evalObj(expr) {
   if (typeof s === 'object') return s;
   try { return JSON.parse(s); } catch (e) { return { ok: false, why: ['parse-error:' + String(s).slice(0, 120)] }; }
 }
+function parseObj(raw) {
+  if (raw && typeof raw === 'object') return raw;
+  if (typeof raw === 'string') { try { return JSON.parse(raw); } catch (e) { return { ok: false, why: ['parse-error:' + String(raw).slice(0, 120)] }; } }
+  return { ok: false, why: ['eval-null'] };
+}
 
 const MOBILE_CHECK = `(() => {
   const r = { ok: true, why: [], mode: 'android-webview' };
@@ -522,6 +527,65 @@ const MOBILE_CHECK = `(() => {
       return { ok: baseOk, why, mode: 'android-instalaciones' };
     }
 
+    // Mapa de vistas ERP unificadas verificables con verifyErpView (FASE 3).
+    const ERP_VIEWS = {
+      'proveedores': {
+        route: '#/proveedores', listId: 'prov-lista', tableId: 'prov-erp-table-container',
+        cacheExpr: 'window.ProveedoresView && window.ProveedoresView._cachedData ? window.ProveedoresView._cachedData.length : 0',
+        setVistaModoExpr: 'window.ProveedoresView._setVistaModo', btnCardsId: 'btn-prov-vista-cards', btnTablaId: 'btn-prov-vista-tabla',
+        erpGroupAlways: true, verFichaSel: "#prov-erp-table-container button[onclick*=\"#/proveedor?id=\"]"
+      }
+    };
+    function matchErpView(route) {
+      for (const k of Object.keys(ERP_VIEWS)) { if (route.indexOf(k) !== -1) return ERP_VIEWS[k]; }
+      return null;
+    }
+
+    // Verificador genérico de vistas ERP unificadas (toggle Tarjetas/Tabla + erp-action-group +
+    // ErpDataTable). Reutilizable para los lotes restantes de la FASE 3.
+    async function verifyErpView(opts) {
+      const {
+        route, listId, tableId, cacheExpr, cardSel = '.card-registro',
+        setVistaModoExpr, btnCardsId, btnTablaId,
+        erpGroupAlways = false, verFichaSel = null
+      } = opts;
+      await cdpEval(`(async()=>{if(location.hash!==${JSON.stringify(route)}){location.hash=${JSON.stringify(route)};if(window.App&&window.App.route)try{await window.App.route()}catch(e){}}return 'ok'})()`);
+      await sleep(3500);
+      await cdpEval(`(async () => { const g = (window.GuideRegistry ? window.GuideRegistry.getAll() : []).map(x => x.id); if (window.App) window.App._config = Object.assign(window.App._config || {}, { guides: { enabled: false, seen: g, dismissed: g } }); document.querySelectorAll('.guide-overlay,.guide-popover,.guide-resume-chip').forEach(n => n.remove()); return true; })()`);
+      const n = await cdpEval(cacheExpr);
+      const nSafe = (typeof n === 'number') ? n : 0;
+      let ready = false;
+      for (let i = 0; i < 30; i++) { if (await cdpEval(`!!document.getElementById(${JSON.stringify(listId)}) || !!document.querySelector('#app-content .empty-state')`)) { ready = true; break; } await sleep(500); }
+      const cRaw = await cdpEval(`(()=>{ const r={ok:true,why:[]}; const welc=document.getElementById('asistente-configuracion-contenedor'); if(welc){r.ok=false;r.why.push('welcome-present');} if(document.querySelector('.guide-popover')||document.querySelector('.guide-overlay')){r.ok=false;r.why.push('guide-present');} const sb=document.querySelector('.erp-sidebar'); if(sb){const b=sb.getBoundingClientRect();const cs=getComputedStyle(sb);if((b.width>4&&b.height>4)&&cs.display!=='none'&&cs.visibility!=='hidden'){r.ok=false;r.why.push('sidebar-visible-en-movil');}} r.erpGroups=document.querySelectorAll('.erp-action-group').length; r.nueva=document.querySelectorAll('.erp-action-group button').length; r.btnCards=!!document.getElementById(${JSON.stringify(btnCardsId)}); r.btnTabla=!!document.getElementById(${JSON.stringify(btnTablaId)}); r.lista=!!document.getElementById(${JSON.stringify(listId)}); r.cards=document.querySelectorAll('#'+${JSON.stringify(listId)}+' '+${JSON.stringify(cardSel)}).length; r.emptyState=!!document.querySelector('#app-content .empty-state'); return JSON.stringify(r); })()`);
+      let c = parseObj(cRaw);
+      await cdpEval(`(async()=>{try{ ${setVistaModoExpr}('cards'); }catch(e){} return 'ok';})()`);
+      await sleep(1200);
+      const cardsRaw = await cdpEval(`(()=>{ const r={ok:true,why:[]}; const el=document.getElementById(${JSON.stringify(listId)}); r.visible=!!(el&&el.style.display!=='none'); r.cards=el?el.querySelectorAll(${JSON.stringify(cardSel)}).length:0; return JSON.stringify(r); })()`);
+      let cards = parseObj(cardsRaw);
+      await cdpEval(`(async()=>{try{ ${setVistaModoExpr}('tabla'); }catch(e){} return 'ok';})()`);
+      await sleep(1800);
+      const tRaw = await cdpEval(`(()=>{ const r={ok:true,why:[]}; const cont=document.getElementById(${JSON.stringify(tableId)}); r.visible=!!(cont&&cont.style.display!=='none'&&cont.children.length>0); r.filas=cont?cont.querySelectorAll('tr').length:0; ${verFichaSel ? `r.accion=document.querySelectorAll(${JSON.stringify(verFichaSel)}).length;` : ''} return JSON.stringify(r); })()`);
+      let t = parseObj(tRaw);
+      // La logica de vacio/no-vacio depende de nSafe (Node); NO se interpola en la pagina.
+      if (nSafe > 0 && !c.lista) c.why.push('no-lista');
+      if (nSafe === 0 && !c.emptyState) c.why.push('no-empty-state');
+      if (nSafe > 0 && !cards.visible) cards.why.push('cards-no-visible');
+      if (nSafe > 0 && cards.cards < 1) cards.why.push('cards-sin-filas');
+      const baseOk = !!(c && c.ok)
+        && (erpGroupAlways || nSafe === 0 || (c && c.erpGroups > 0))
+        && (c && c.nueva > 0)
+        && (c && c.btnCards) && (c && c.btnTabla)
+        && (nSafe === 0 || (c && c.lista))
+        && (nSafe === 0 ? (c && c.emptyState) : true)
+        && (nSafe === 0 || !!(cards && cards.visible))
+        && (nSafe === 0 || (cards && cards.cards > 0))
+        && (nSafe === 0 || !!(t && t.visible))
+        && (nSafe === 0 || (t && t.filas > 0))
+        && (!verFichaSel || (t && t.accion > 0));
+      const why = [].concat((c && c.why) || [], (cards && cards.why) || [], (t && t.why) || []);
+      return { ok: baseOk, why, mode: 'android-erp:' + route };
+    }
+
     for (const route of routes) {
       push('[NAV] ' + route);
       let res = null;
@@ -538,6 +602,8 @@ const MOBILE_CHECK = `(() => {
         res = await verifySilos();
       } else if (route.indexOf('instalaciones') !== -1) {
         res = await verifyInstalaciones();
+      } else if (matchErpView(route)) {
+        res = await verifyErpView(matchErpView(route));
       } else {
         // Firma del contenido ANTES de navegar, para descartar snapshots obsoletos
         // (el hash cambia pero #app-content aun muestra la vista previa).

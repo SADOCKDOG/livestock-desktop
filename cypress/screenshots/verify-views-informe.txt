@@ -12,11 +12,14 @@
 [CHECK] #/ajustes -> {"ok":true,"why":[],"mode":"desktop","sidebarW":240,"appLen":2824,"route":"#/ajustes"}
 [NAV] #/informes (espera: erp-action-group)
 [CHECK] #/informes -> {"ok":true,"why":[],"mode":"desktop","sidebarW":240,"appLen":2374,"has_erp-action-group":true,"route":"#/informes"}
-[RESUMEN] vistas validas: 6/6
+[NAV] #/comercializacion (espera: erp-action-group,data-ver-mas)
+[CHECK] #/comercializacion -> {"ok":true,"why":[],"mode":"desktop","sidebarW":240,"appLen":3332,"has_erp-action-group":true,"has_data-ver-mas":true,"route":"#/comercializacion"}
+[RESUMEN] vistas validas: 7/7
   - #/: OK
   - #/explotacion?tab=lacteo&sub=tanques: OK
   - #/agenda: OK
   - #/cuaderno: OK
   - #/ajustes: OK
   - #/informes: OK
+  - #/comercializacion: OK
 [RESUMEN] VERIFICACION COMPLETA
