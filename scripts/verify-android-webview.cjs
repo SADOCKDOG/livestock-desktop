@@ -552,6 +552,12 @@ const MOBILE_CHECK = `(() => {
         cacheExpr: 'window.BotiquinView && window.BotiquinView._cache ? window.BotiquinView._cache.length : 0',
         setVistaModoExpr: 'window.BotiquinView._setVistaModo', btnCardsId: 'btn-bot-vista-cards', btnTablaId: 'btn-bot-vista-tabla',
         erpGroupAlways: false, verFichaSel: "#botiquin-erp-table-container button[onclick*=\"/botiquin-producto?id=\"]"
+      },
+      'subexplotaciones': {
+        route: '#/subexplotaciones', listId: 'subexp-lista', tableId: 'subexp-erp-table-container',
+        cacheExpr: 'window.SubexplotacionesView && window.SubexplotacionesView._cache ? window.SubexplotacionesView._cache.length : 0',
+        setVistaModoExpr: 'window.SubexplotacionesView._setVistaModo', btnCardsId: 'btn-subexp-vista-cards', btnTablaId: 'btn-subexp-vista-tabla',
+        erpGroupAlways: false, verFichaSel: "#subexp-erp-table-container button[onclick*=\"/subexplotacion?index=\"]"
       }
     };
     function matchErpView(route) {
@@ -591,15 +597,15 @@ const MOBILE_CHECK = `(() => {
       if (nSafe > 0 && cards.cards < 1) cards.why.push('cards-sin-filas');
       const baseOk = !!(c && c.ok)
         && (erpGroupAlways || nSafe === 0 || (c && c.erpGroups > 0))
-        && (c && c.nueva > 0)
-        && (c && c.btnCards) && (c && c.btnTabla)
+        && (erpGroupAlways || nSafe === 0 || (c && c.nueva > 0))
+        && (nSafe === 0 || (c && c.btnCards)) && (nSafe === 0 || (c && c.btnTabla))
         && (nSafe === 0 || (c && c.lista))
         && (nSafe === 0 ? (c && c.emptyState) : true)
         && (nSafe === 0 || !!(cards && cards.visible))
         && (nSafe === 0 || (cards && cards.cards > 0))
         && (nSafe === 0 || !!(t && t.visible))
         && (nSafe === 0 || (t && t.filas > 0))
-        && (!verFichaSel || (t && t.accion > 0));
+        && (!verFichaSel || nSafe === 0 || (t && t.accion > 0));
       const why = [].concat((c && c.why) || [], (cards && cards.why) || [], (t && t.why) || []);
       return { ok: baseOk, why, mode: 'android-erp:' + route };
     }

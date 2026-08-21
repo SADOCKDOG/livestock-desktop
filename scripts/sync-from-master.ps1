@@ -55,7 +55,7 @@ $preservedList = @(
     'js\views\produccion-view.js',       # NO unificable: ProduccionView es huérfano (nunca se renderiza por ruta/nav; solo provee _abrirOpcionesRegistro a explotacion/gastos). Se mantiene preservado (desktop conserva su versión con FAB).
     'js\views\saneamientos-view.js',     # CTA cabecera "Nuevo Saneamiento", sin FAB
     # 'js\views\silos-view.js',         # UNIFICADA en el maestro (fase 3 lote 6): cromo ERP neutro + erp-action-group + erp-filtros + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil eliminado (CTA duplicado en erp-action-group)
-    'js\views\subexplotaciones-view.js', # CTA cabecera "Nueva Subexplotación", sin FAB
+    # 'js\views\subexplotaciones-view.js', # UNIFICADA en el maestro (fase 3 lote 12): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil eliminado (CTA duplicado en erp-action-group)
     # 'js\views\tanques-view.js',        # UNIFICADA en el maestro (fase 3 piloto): erp-action-group + erp-filtros + data-ver-mas
     'js\views\zonas-view.js',            # CTA cabecera + acción secundaria Importar PDF
     'js\views\sanidad-view.js',          # Acciones de registro agrupadas (fieldset erp-action-group)
