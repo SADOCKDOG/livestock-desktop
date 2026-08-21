@@ -624,6 +624,18 @@ const MOBILE_CHECK = `(() => {
         cacheExpr: 'window.GastosView && window.GastosView._cachedData && window.GastosView._cachedData.kpis && window.GastosView._cachedData.kpis.todos ? window.GastosView._cachedData.kpis.todos.records.length : 0',
         setVistaModoExpr: 'window.GastosView._setVistaModo', btnCardsId: 'btn-gastos-vista-cards', btnTablaId: 'btn-gastos-vista-tabla',
         erpGroupAlways: true, verFichaSel: "#gastos-erp-table-container button[onclick*=\"ProduccionView._abrirOpcionesGasto(\"]"
+      },
+      'contratos': {
+        route: '#/contratos', listId: 'contratos-content', tableId: 'contratos-erp-table-container', cardSel: '.grid > div',
+        cacheExpr: 'window.ContratosView && window.ContratosView._cachedData && window.ContratosView._cachedData.contratos ? window.ContratosView._cachedData.contratos.length : 0',
+        setVistaModoExpr: 'window.ContratosView._setVistaModo', btnCardsId: 'btn-cont-vista-cards', btnTablaId: 'btn-cont-vista-tabla',
+        erpGroupAlways: true, verFichaSel: "#contratos-erp-table-container button[onclick*=\"location.hash='#/contrato?id=\"]"
+      },
+      'sanidad': {
+        route: '#/sanidad', listId: 'sanidad-historial-lista', tableId: 'sanidad-erp-table-container',
+        cacheExpr: 'window.SanidadView && window.SanidadView._cacheTabla ? window.SanidadView._cacheTabla.length : 0',
+        setVistaModoExpr: 'window.SanidadView._setVistaModo', btnCardsId: 'btn-san-vista-cards', btnTablaId: 'btn-san-vista-tabla',
+        erpGroupAlways: true, verFichaSel: "#sanidad-erp-table-container button[onclick*=\"/sanidad/tratamiento?id=\"]"
       }
     };
     function matchErpView(route) {

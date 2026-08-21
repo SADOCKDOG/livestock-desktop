@@ -39,7 +39,7 @@ $preservedList = @(
     # 'js\views\proveedores-view.js',     # UNIFICADA en el maestro (fase 3 lote 8): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable + fix _setVistaModo render lista en cards; FAB móvil eliminado (CTA duplicado en erp-action-group)
     # 'js\views\transportistas-view.js', # UNIFICADA en el maestro (fase 3 lote 10): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil duplicado eliminado (erp-solo-movil)
     # 'js\views\gastos-view.js',         # UNIFICADA en el maestro (fase 3 lote 18): cromo ERP (erp-action-group + erp-filtros + erp-column-selector + toggle Tarjetas/Tabla + tabla ErpDataTable); FAB móvil conservado vía App._abrirFormularioGasto()
-    'js\views\contratos-view.js',      # Toggle Tarjetas/Tabla ERP
+    # 'js\views\contratos-view.js',      # UNIFICADA en el maestro (fase 3 lote 19): cromo ERP (erp-action-group + erp-filtros + toggle Tarjetas/Tabla + tabla ErpDataTable); FAB móvil duplicado eliminado (erp-solo-movil)
     'js\views\documentos-view.js',     # Toggle Tarjetas/Tabla ERP (registro documental)
     # 'js\views\fitosanitarios-view.js', # UNIFICADA en el maestro (fase 3 lote 16): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable + erp-filtros; FAB móvil duplicado eliminado (erp-solo-movil)
     # 'js\views\comercializacion-view.js', # UNIFICADA en el maestro (fase 3 lote 3): cromo ERP neutro + erp-action-group + erp-filtros + data-ver-mas (sin nav móvil que preservar)
@@ -58,7 +58,7 @@ $preservedList = @(
     # 'js\views\subexplotaciones-view.js', # UNIFICADA en el maestro (fase 3 lote 12): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil eliminado (CTA duplicado en erp-action-group)
     # 'js\views\tanques-view.js',        # UNIFICADA en el maestro (fase 3 piloto): erp-action-group + erp-filtros + data-ver-mas
     # 'js\views\zonas-view.js',            # UNIFICADA en el maestro (fase 3 lote 13): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable + erp-filtros; FAB móvil conservado (App.renderGuideFab)
-    'js\views\sanidad-view.js',          # Acciones de registro agrupadas (fieldset erp-action-group)
+    # 'js\views\sanidad-view.js',          # UNIFICADA en el maestro (fase 3 lote 20): cromo ERP (erp-action-group Acciones de Registro + erp-filtros + toggle Tarjetas/Tabla + tabla ErpDataTable); FAB móvil duplicado eliminado (erp-solo-movil)
     # 'js\views\patrimonio-view.js',       # UNIFICADA en el maestro (fase 3 lote 4): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + data-ver-mas + tabla ErpDataTable; Accesos directos móviles conservados
     # 'js\views\cuaderno-view.js',       # UNIFICADA en el maestro (fase 3 lote 1): fieldset erp-action-group (exportar PDF/CSV/imprimir)
     'js\views\albaranes-ventas-view.js', # Libro de Ventas: tabla ERP
