@@ -170,7 +170,13 @@ class ErpDataTable {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `${this.title.toLowerCase().replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.csv`);
+    // El CSV exporta lo que se ve (filteredData), no toda la tabla. Cuando hay
+    // busqueda activa eso significa menos filas de las que existen, asi que se
+    // marca en el nombre: sin el sufijo, un fichero incompleto es
+    // indistinguible de uno completo al abrirlo semanas despues.
+    const sufijo = this.searchTerm ? '_filtrado' : '';
+    const nombre = `${this.title.toLowerCase().replace(/\s+/g, '_')}${sufijo}_${new Date().toISOString().slice(0,10)}.csv`;
+    link.setAttribute('download', nombre);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
