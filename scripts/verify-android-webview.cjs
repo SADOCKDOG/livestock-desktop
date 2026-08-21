@@ -534,6 +534,12 @@ const MOBILE_CHECK = `(() => {
         cacheExpr: 'window.ProveedoresView && window.ProveedoresView._cachedData ? window.ProveedoresView._cachedData.length : 0',
         setVistaModoExpr: 'window.ProveedoresView._setVistaModo', btnCardsId: 'btn-prov-vista-cards', btnTablaId: 'btn-prov-vista-tabla',
         erpGroupAlways: true, verFichaSel: "#prov-erp-table-container button[onclick*=\"#/proveedor?id=\"]"
+      },
+      'animales': {
+        route: '#/animales', listId: 'animales-lista', tableId: 'animales-erp-table-container',
+        cacheExpr: 'window.AnimalesView && window.AnimalesView._cache && window.AnimalesView._cache.animales ? window.AnimalesView._cache.animales.length : 0',
+        setVistaModoExpr: 'window.AnimalesView._setVistaModo', btnCardsId: 'btn-vista-cards', btnTablaId: 'btn-vista-tabla',
+        erpGroupAlways: false, verFichaSel: "#animales-erp-table-container button[onclick*=\"/animal?id=\"]"
       }
     };
     function matchErpView(route) {

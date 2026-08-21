@@ -33,7 +33,7 @@ $preservedList = @(
     'js\guide-manager.js',           # Motor de guías: remap carrusel→sidebar (preserva targets ocultos)
     'js\module-colors.js',           # Mapa de colores ERP (sin neon)
     'js\purchase-manager.js',       # Emite 'premiumChanged' para el indicador Free/Premium del sidebar
-    'js\views\animales-view.js',     # Toggle Tarjetas/Tabla ERP
+    # 'js\views\animales-view.js',     # UNIFICADA en el maestro (fase 3 lote 9): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada (sin fab-container, usa CTA cabecera)
     # 'js\views\rebanos-view.js',     # UNIFICADA en el maestro (fase 3 lote 5): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada
     'js\views\compradores-view.js',  # Toggle Tarjetas/Tabla ERP (módulo compradores)
     # 'js\views\proveedores-view.js',     # UNIFICADA en el maestro (fase 3 lote 8): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable + fix _setVistaModo render lista en cards; FAB móvil eliminado (CTA duplicado en erp-action-group)
