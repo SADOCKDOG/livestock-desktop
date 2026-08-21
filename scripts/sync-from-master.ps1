@@ -48,7 +48,7 @@ $preservedList = @(
     # 'js\views\agenda-view.js',         # UNIFICADA en el maestro (fase 3 piloto): CTA cabecera + erp-action-group + erp-filtros; fab-container móvil CONSERVADO
     # 'js\views\botiquin-view.js',         # UNIFICADA en el maestro (fase 3 lote 11): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable + data-ver-mas; FAB móvil duplicado eliminado (erp-solo-movil)
     # 'js\views\dashboard-view.js',      # UNIFICADA en el maestro (fase 3 piloto): FAB "Nueva Actividad" + renderGuideFab; nav móvil intacta
-    'js\views\explotacion-view.js',      # Láctea/Trámites como subgrupos del sidebar (?sub=)
+    # 'js\views\explotacion-view.js',      # UNIFICADA en el maestro (fase 3): cromo ERP (erp-action-group en producción/trámites, erp-filtros+data-ver-mas en actividad, module-header-primary-action, carrusel de submódulos); el desktop se reconcilió con el maestro (era una copia obsoleta que había revierto la chrome)
     # 'js\views\explotacion-lactea-view.js', # UNIFICADA en el maestro (fase 3 lote 3): erp-action-group + erp-filtros + data-ver-mas en analíticas/movimientos; botones editar/borrar intactos; +Ordeño/+Tanque re-añadidos
     # 'js\views\informes-view.js',         # UNIFICADA en el maestro (fase 3 lote 2): _sectionActionsHTML como fieldset erp-action-group; nav cat/tab móvil conservada (sync la trae del maestro)
     # 'js\views\instalaciones-view.js', # UNIFICADA en el maestro (fase 3 lote 7): cromo ERP neutro + erp-action-group + erp-filtros + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil eliminado (CTA duplicado en erp-action-group)

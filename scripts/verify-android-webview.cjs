@@ -527,6 +527,42 @@ const MOBILE_CHECK = `(() => {
       return { ok: baseOk, why, mode: 'android-instalaciones' };
     }
 
+    async function verifyExplotacion() {
+      const base = `(() => {
+        const r = { ok: true, why: [], mode: 'android-explotacion' };
+        const welc = document.getElementById('asistente-configuracion-contenedor');
+        if (welc) { r.ok = false; r.why.push('welcome-present'); }
+        if (document.querySelector('.guide-popover') || document.querySelector('.guide-overlay')) { r.ok = false; r.why.push('guide-present'); }
+        const sb = document.querySelector('.erp-sidebar');
+        if (sb) { const b = sb.getBoundingClientRect(); const cs = getComputedStyle(sb); if ((b.width > 4 && b.height > 4) && cs.display !== 'none' && cs.visibility !== 'hidden') { r.ok = false; r.why.push('sidebar-visible-en-movil'); } }
+        return JSON.stringify(r);
+      })()`;
+      await cdpEval(`(async()=>{if(location.hash!=='#/explotacion'){location.hash='#/explotacion';if(window.App&&window.App.route)try{await window.App.route()}catch(e){}}return 'ok'})()`);
+      await sleep(3500);
+      await cdpEval(`(async () => { const g = (window.GuideRegistry ? window.GuideRegistry.getAll() : []).map(x => x.id); if (window.App) window.App._config = Object.assign(window.App._config || {}, { guides: { enabled: false, seen: g, dismissed: g } }); document.querySelectorAll('.guide-overlay,.guide-popover,.guide-resume-chip').forEach(n => n.remove()); return true; })()`);
+      const c = await evalObj(`(async()=>{
+        const r = JSON.parse(${base});
+        r.carrusel = document.querySelectorAll('.carrusel-pestanas .carrusel-marco').length;
+        r.dots = document.querySelectorAll('.carrusel-dots .carrusel-dot').length;
+        r.primaryAction = document.querySelectorAll('.module-header-primary-action button').length;
+        r.exproContent = !!document.getElementById('expro-tab-content');
+        r.activity = document.querySelectorAll('#expro-actividad-grid .card-registro, #expro-actividad-grid .card').length;
+        if (r.carrusel < 1) r.why.push('no-carrusel');
+        if (r.dots < 2) r.why.push('no-dots');
+        if (r.primaryAction < 1) r.why.push('no-primary-action');
+        if (!r.exproContent) r.why.push('no-expro-content');
+        if (r.activity < 1) r.why.push('no-activity');
+        return JSON.stringify(r);
+      })()`);
+      const baseOk = !!(c && c.ok) && (c && c.carrusel > 0) && (c && c.dots > 1) && (c && c.primaryAction > 0) && (c && c.exproContent) && (c && c.activity > 0);
+      const why = [].concat((c && c.why) || []);
+      // Submódulo LÁCTEA (checklist 19/20: editar/borrar analíticas y movimientos).
+      const lactea = await verifyLactea();
+      if (errors) push('  [EXPRO] errors -> ' + (errors.length ? errors.join(' | ') : '(ninguno)'));
+      push('  [EXPRO] base -> ' + JSON.stringify({ ok: baseOk, activity: c && c.activity, carrusel: c && c.carrusel, dots: c && c.dots, primary: c && c.primaryAction }));
+      return { ok: baseOk && lactea.ok, why: why.concat(lactea.why || []), mode: 'android-explotacion' };
+    }
+
     // Mapa de vistas ERP unificadas verificables con verifyErpView (FASE 3).
     const ERP_VIEWS = {
       'proveedores': {
@@ -632,6 +668,8 @@ const MOBILE_CHECK = `(() => {
         res = await verifySilos();
       } else if (route.indexOf('instalaciones') !== -1) {
         res = await verifyInstalaciones();
+      } else if (route.indexOf('explotacion') !== -1) {
+        res = await verifyExplotacion();
       } else if (matchErpView(route)) {
         res = await verifyErpView(matchErpView(route));
       } else {

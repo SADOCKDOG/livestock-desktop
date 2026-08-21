@@ -27,14 +27,16 @@ const ExplotacionView = {
     this.render();
   },
 
-  async _renderLacteoView(container, options) {
+  async _renderLacteoView(container) {
     if (!container) return;
     const d = this._cachedData;
-    // Sub-pestaña activa vía submenú del sidebar (?tab=lacteo&sub=KEY).
-    // Sin sub (ruta legacy) se muestra el Dashboard por defecto.
-    if (options && typeof options.get === 'function' && options.get('sub')) {
-      this._lacteoSubTab = options.get('sub');
-    }
+    const subTabs = [
+      { key: 'dashboard', label: 'Dashboard' },
+      { key: 'tanques', label: 'Tanques' },
+      { key: 'control', label: 'Control' },
+      { key: 'balance', label: 'Balance' },
+      { key: 'graficos', label: 'Gráficos' },
+    ];
 
     // Tarjeta de Resumen Lácteo (unifica KPIs sueltos)
     const resumenLacteoHtml = d ? `
@@ -61,6 +63,11 @@ const ExplotacionView = {
     container.innerHTML = `
       <div class="px-4 pt-12">
         ${resumenLacteoHtml}
+        <div class="tabs-scroll leche-sub-tabs scroll-shadow-container mb-14 erp-solo-movil">
+          ${subTabs.map(t => `
+            <button class="text-[0.6rem] font-900 uppercase px-12 py-6 rounded-sm" style="background:${this._lacteoSubTab === t.key ? 'var(--c-info)' : 'var(--c-222)'}; color:${this._lacteoSubTab === t.key ? '#000' : 'var(--c-aaa)'};" onclick="ExplotacionView._cambiarLacteoSubTab('${t.key}')">${t.label}</button>
+          `).join('')}
+        </div>
         <div id="expro-lacteo-subtab-content"></div>
       </div>`;
     const subContainer = document.getElementById('expro-lacteo-subtab-content');
@@ -218,9 +225,6 @@ const ExplotacionView = {
       : flagsHeader.carne ? "App._abrirAsistenteProduccion('carne', { origen_modulo: 'explotacion' })"
       : "App._abrirAsistenteProduccion('leche', { origen_modulo: 'explotacion' })";
     const primaryLabel = flagsHeader.leche && flagsHeader.carne ? 'Registrar Producción' : flagsHeader.carne ? 'Registrar Pesaje' : 'Registrar Ordeño';
-    // La acción principal se pinta dentro del contenido, bajo la tarjeta de
-    // cabecera y las alertas (ver _renderModoExplotacion), no en el chrome.
-    this._accionPrincipal = { onclick: primaryOnclick, label: primaryLabel };
 
     main.innerHTML = `
       <!-- Carrusel circular de secciones de Explotación y Soporte: marco centrado con la sección activa -->
@@ -236,6 +240,10 @@ const ExplotacionView = {
 
       <!-- Cabecera de Módulo: Acción principal (KPIs movidos a tarjetas de contenido) -->
       <div class="module-header px-4">
+        ${this._activeSubModule === 'explotacion' ? `
+        <div class="module-header-primary-action">
+          <button class="btn btn-create btn-lg w-full" onclick="${primaryOnclick}">${Icons.fabPlus()} ${primaryLabel}</button>
+        </div>` : ''}
       </div>
 
       <!-- Contenedor Dinámico para la pestaña activa -->
@@ -248,8 +256,7 @@ const ExplotacionView = {
         this._renderModoExplotacion(document.getElementById('expro-tab-content'), d);
         break;
       case 'lacteo':
-        this._lacteoSubTab = (options && typeof options.get === 'function' && options.get('sub')) || 'dashboard';
-        await this._renderLacteoView(document.getElementById('expro-tab-content'), options);
+        await this._renderLacteoView(document.getElementById('expro-tab-content'));
         break;
       case 'silos':
         if (window.SilosView) await SilosView.render();
@@ -258,13 +265,12 @@ const ExplotacionView = {
         if (window.FitosanitariosView) await FitosanitariosView.render();
         break;
       case 'gastos':
-        if (window.GastosView) await GastosView.render(options);
+        if (window.GastosView) await GastosView.render();
         break;
       case 'proveedores':
         if (window.ProveedoresView) await ProveedoresView.render();
         break;
       case 'tramites':
-        this._tramiteSubTab = (options && typeof options.get === 'function' && options.get('sub')) || 'guias';
         await this._renderTramitesView(document.getElementById('expro-tab-content'), fincaId);
         break;
       case 'traslado':
@@ -393,13 +399,6 @@ const ExplotacionView = {
       <div class="report-section px-4">
         ${resumenProduccionHtml}
         ${guia365BannerHtml}
-        ${this._accionPrincipal ? `
-        <fieldset class="erp-action-group">
-          <legend>Registro de Producción</legend>
-          <div class="erp-action-group-body">
-            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="${this._accionPrincipal.onclick}">${Icons.fabPlus()}<span class="widget-link-label">${this._accionPrincipal.label}</span></button>
-          </div>
-        </fieldset>` : ''}
         ${(d.silosCriticos && d.silosCriticos.length > 0) ? `
         <div class="card p-14 mb-14 border-222 card-resumen" style="background: rgba(255, 68, 68, 0.03); border-left: 4px solid var(--c-danger);">
           <div class="text-xs text-white font-black uppercase tracking-wider mb-6 flex items-center gap-6" style="color:var(--c-danger);">
@@ -422,12 +421,15 @@ const ExplotacionView = {
         <div class="inf-section-title mb-10 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
           <span style="color: var(--c-success); margin-right: 4px;">|</span> ${Icons.documento()} ACTIVIDAD RECIENTE
         </div>
-        <div class="erp-filtros" data-filtros-de="expro-actividad-grid">
-          <input type="search" id="expro-search-actividad" class="form-input search-input"
-                 placeholder="Buscar por crotal o zona..." value="${this._filtroActividad}"
+        <div class="mb-10 relative">
+          <input type="text" id="expro-search-actividad" class="wizard-input font-bold uppercase py-12 px-16 pr-40 text-sm"
+                 placeholder="BUSCAR POR CROTAL O ZONA..." value="${this._filtroActividad}"
                  oninput="ExplotacionView._filtrarActividad(this.value)">
+          <div style="position:absolute; right:15px; top:50%; transform:translateY(-50%); pointer-events:none; color:${metaRef.color};">
+            ${Icons.buscar()}
+          </div>
         </div>
-        <div class="grid gap-10" id="expro-actividad-grid" data-ver-mas="10">
+        <div class="grid gap-10" id="expro-actividad-grid">
           ${this._renderActividadItems()}
         </div>
       </div>`;
@@ -523,7 +525,10 @@ const ExplotacionView = {
           })).join('')}
         </div>
       </div>
-`;
+      <div class="fab-container erp-solo-movil" style="--fab-neon-color: var(--c-purple);" onclick="App._abrirFormularioGasto({ origenModulo: 'explotacion' })">
+        <span class="fab-label">Registrar Gasto</span>
+        <button class="fab-btn">${Icons.fabPlus()}</button>
+      </div>`;
   },
 
   async _abrirOpcionesRegistro(eventId, modo) {
@@ -701,22 +706,12 @@ const ExplotacionView = {
       case 'guias':
         contentHtml += `
           <div class="grid gap-12">
-            <fieldset class="erp-action-group">
-              <legend>Registro de Guías DIMOE</legend>
-              <div class="erp-action-group-body">
-                <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardGuiaMovimiento()">${Icons.documento()}<span class="widget-link-label">Emitir Nueva Guía DIMOE</span></button>
-              </div>
-            </fieldset>
+            <button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardGuiaMovimiento()">Emitir Nueva Guía DIMOE</button>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-info); margin-right: 4px;">|</span> HISTORIAL DE GUÍAS
             </div>
-            
-            <div class="erp-filtros" data-filtros-para="tramites-guias-lista">
-              <input type="search" class="form-input search-input" placeholder="Buscar guía por destino, fecha o número...">
-              <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
-            </div>
-            <div class="grid gap-10" id="tramites-guias-lista" data-ver-mas="10">
+            <div class="grid gap-10">
               ${guiasFinca.length > 0 ? guiasFinca.slice(0, 10).map(g => App._cardRegistro({
                 icon: Icons.documento(),
                 title: g.numero_documento || g.numero || `Guía #${g.id}`,
@@ -732,22 +727,16 @@ const ExplotacionView = {
       case 'censo':
         contentHtml += `
           <div class="grid gap-12">
-            <fieldset class="erp-action-group">
-              <legend>Registro del Censo Anual</legend>
-              <div class="erp-action-group-body">
-                <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardCenso()">${Icons.documento()}<span class="widget-link-label">Generar Declaración Censal</span></button>
-              </div>
-            </fieldset>
+            <button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardCenso()">Generar Declaración Censal</button>
+            <div class="grid grid-cols-2 gap-8">
+              <button class="btn btn-dark py-12" onclick="App.route('/cuaderno')">${Icons.cuaderno()} Libro Registro</button>
+              <button class="btn btn-dark py-12" onclick="InformesView.renderCategoria('gegan')">${Icons.informes()} Informe REGA</button>
+            </div>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-warning); margin-right: 4px;">|</span> HISTORIAL DE CENSOS
             </div>
-            
-            <div class="erp-filtros" data-filtros-para="tramites-censos-lista">
-              <input type="search" class="form-input search-input" placeholder="Buscar censo por año o estado...">
-              <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
-            </div>
-            <div class="grid gap-10" id="tramites-censos-lista" data-ver-mas="10">
+            <div class="grid gap-10">
               ${censosFinca.length > 0 ? censosFinca.map(c => App._cardRegistro({
                 icon: Icons.animales(),
                 title: `Censo Anual ${new Date(c.fecha).getFullYear()}`,
@@ -763,22 +752,12 @@ const ExplotacionView = {
       case 'crotales':
         contentHtml += `
           <div class="grid gap-12">
-            <fieldset class="erp-action-group">
-              <legend>Registro de Crotales</legend>
-              <div class="erp-action-group-body">
-                <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardCrotales()">${Icons.agregar()}<span class="widget-link-label">Pedir Nuevos Crotales</span></button>
-              </div>
-            </fieldset>
+            <button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardCrotales()">Pedir Nuevos Crotales</button>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-success); margin-right: 4px;">|</span> HISTORIAL DE PEDIDOS
             </div>
-            
-            <div class="erp-filtros" data-filtros-para="tramites-crotales-lista">
-              <input type="search" class="form-input search-input" placeholder="Buscar pedido por fecha o unidades...">
-              <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
-            </div>
-            <div class="grid gap-10" id="tramites-crotales-lista" data-ver-mas="10">
+            <div class="grid gap-10">
               ${pedidos.length > 0 ? pedidos.slice(0, 10).map(p => App._cardRegistro({
                 icon: Icons.paquete(),
                 title: `Pedido #${p.id.toString().slice(-6)}`,
@@ -793,22 +772,12 @@ const ExplotacionView = {
       case 'traslado':
         contentHtml += `
           <div class="grid gap-12">
-            <fieldset class="erp-action-group">
-              <legend>Registro de Traslados</legend>
-              <div class="erp-action-group-body">
-                <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="App._abrirWizardTraslado()">${Icons.documento()}<span class="widget-link-label">Registrar Movimiento Interno</span></button>
-              </div>
-            </fieldset>
+            <button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardTraslado()">Registrar Movimiento Interno</button>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-purple); margin-right: 4px;">|</span> HISTORIAL DE TRASLADOS
             </div>
-            
-            <div class="erp-filtros" data-filtros-para="tramites-traslados-lista">
-              <input type="search" class="form-input search-input" placeholder="Buscar traslado por zona, fecha o lote...">
-              <select class="form-select" data-etiqueta-todos="Todos los estados"></select>
-            </div>
-            <div class="grid gap-10" id="tramites-traslados-lista" data-ver-mas="10">
+            <div class="grid gap-10">
               ${trasladosFinca.length > 0 ? trasladosFinca.slice(0, 10).map(m => App._cardRegistro({
                 icon: Icons.trazabilidad(),
                 title: `Traslado de ${m.animalId?.length || 1} cabezas`,
@@ -823,6 +792,7 @@ const ExplotacionView = {
       case 'infolac':
         contentHtml += `
           <div class="grid gap-12">
+            <button class="btn btn-create btn-lg w-full" onclick="App.route('/comercializacion?tab=leche')">Ver Entregas para Infolac</button>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
               <span style="color: var(--c-info); margin-right: 4px;">|</span> TRAMITACIONES INFOLAC
@@ -882,6 +852,14 @@ const ExplotacionView = {
           <span style="color: var(--c-info); margin-right: 4px;">|</span> HUB DE GESTIÓN ADMINISTRATIVA
         </div>
 
+        <div class="flex gap-8 px-12 pt-4 mb-14 overflow-x-auto no-scrollbar">
+          ${subTabs.map(t => `
+            <button class="text-[0.6rem] font-900 uppercase px-12 py-6 rounded-sm whitespace-nowrap"
+                    style="background:${this._tramiteSubTab === t.key ? t.color : 'var(--c-222)'};
+                           color:${this._tramiteSubTab === t.key ? '#000' : 'var(--c-aaa)'};"
+                    onclick="ExplotacionView._cambiarTramiteSubTab('${t.key}')">${t.label}</button>
+          `).join('')}
+        </div>
 
         <div id="tramites-tab-content" class="animate-fade-in">
           ${contentHtml}
