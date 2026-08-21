@@ -612,6 +612,18 @@ const MOBILE_CHECK = `(() => {
         cacheExpr: 'window.FitosanitariosView && window.FitosanitariosView._cachedRegistros ? window.FitosanitariosView._cachedRegistros.length : 0',
         setVistaModoExpr: 'window.FitosanitariosView._setVistaModo', btnCardsId: 'btn-fito-vista-cards', btnTablaId: 'btn-fito-vista-tabla',
         erpGroupAlways: false, verFichaSel: "#fito-erp-table-container button[onclick*=\"FitosanitariosView._abrirFichaTratamiento(\"]"
+      },
+      'compradores': {
+        route: '#/comercializacion?tab=compradores', listId: 'compradores-content', tableId: 'compradores-erp-table-container',
+        cacheExpr: 'window.CompradoresView && window.CompradoresView._cachedData && window.CompradoresView._cachedData.compradores ? window.CompradoresView._cachedData.compradores.length : 0',
+        setVistaModoExpr: 'window.CompradoresView._setVistaModo', btnCardsId: 'btn-comp-vista-cards', btnTablaId: 'btn-comp-vista-tabla',
+        erpGroupAlways: true, verFichaSel: "#compradores-erp-table-container button[onclick*=\"#/comprador?id=\"]"
+      },
+      'gastos': {
+        route: '#/explotacion?tab=gastos', listId: 'gastos-cards-container', tableId: 'gastos-erp-table-container',
+        cacheExpr: 'window.GastosView && window.GastosView._cachedData && window.GastosView._cachedData.kpis && window.GastosView._cachedData.kpis.todos ? window.GastosView._cachedData.kpis.todos.records.length : 0',
+        setVistaModoExpr: 'window.GastosView._setVistaModo', btnCardsId: 'btn-gastos-vista-cards', btnTablaId: 'btn-gastos-vista-tabla',
+        erpGroupAlways: true, verFichaSel: "#gastos-erp-table-container button[onclick*=\"ProduccionView._abrirOpcionesGasto(\"]"
       }
     };
     function matchErpView(route) {

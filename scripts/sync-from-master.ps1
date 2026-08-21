@@ -35,10 +35,10 @@ $preservedList = @(
     'js\purchase-manager.js',       # Emite 'premiumChanged' para el indicador Free/Premium del sidebar
     # 'js\views\animales-view.js',     # UNIFICADA en el maestro (fase 3 lote 9): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada (sin fab-container, usa CTA cabecera)
     # 'js\views\rebanos-view.js',     # UNIFICADA en el maestro (fase 3 lote 5): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada
-    'js\views\compradores-view.js',  # Toggle Tarjetas/Tabla ERP (módulo compradores)
+    # 'js\views\compradores-view.js', # UNIFICADA en el maestro (fase 3 lote 17): cromo ERP (erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable solo módulo compradores); dualidad compradores/contratos intacta; FAB local de compradores eliminado (erp-solo-movil)
     # 'js\views\proveedores-view.js',     # UNIFICADA en el maestro (fase 3 lote 8): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable + fix _setVistaModo render lista en cards; FAB móvil eliminado (CTA duplicado en erp-action-group)
     # 'js\views\transportistas-view.js', # UNIFICADA en el maestro (fase 3 lote 10): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil duplicado eliminado (erp-solo-movil)
-    'js\views\gastos-view.js',         # Toggle Tarjetas/Tabla ERP (tabs por categoría)
+    # 'js\views\gastos-view.js',         # UNIFICADA en el maestro (fase 3 lote 18): cromo ERP (erp-action-group + erp-filtros + erp-column-selector + toggle Tarjetas/Tabla + tabla ErpDataTable); FAB móvil conservado vía App._abrirFormularioGasto()
     'js\views\contratos-view.js',      # Toggle Tarjetas/Tabla ERP
     'js\views\documentos-view.js',     # Toggle Tarjetas/Tabla ERP (registro documental)
     # 'js\views\fitosanitarios-view.js', # UNIFICADA en el maestro (fase 3 lote 16): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable + erp-filtros; FAB móvil duplicado eliminado (erp-solo-movil)
