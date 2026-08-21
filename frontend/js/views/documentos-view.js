@@ -683,10 +683,21 @@ const DocumentosView = {
       }
       if (tipo === 'dimoe') {
         const m = await window.db.get('movimientos_ganado', Number(id));
-        if (m) window.WizardGuiaMovimiento.generarDocumento(finca, m);
-        else throw new Error("Movimiento no encontrado");
-        return;
-      }
+        if (m) {
+          window.WizardGuiaMovimiento.generarDocumento(finca, m);
+          return;
+        }
+        // Si el DIMOE no tiene representación en movimientos_ganado,
+        // se busca como documento legal archivado.
+        const doc = await window.db.get('documentos_legales', Number(id));
+        if (doc) {
+          // Genera el PDF a partir de los datos del documento archivado.
+          // WizardCrotales.generarPDF está preparado para cualquier objeto con
+          // id y tipo; usamos el propio documento como seed.
+          window.WizardCrotales.generarPDF(finca, doc, doc.id);
+          return;
+        }
+        throw new Error("Movimiento o documento no encontrado");
       if (tipo === 'albaran_carne' || tipo === 'albaran_leche') {
         if (window.AlbaranesVentasView) {
           await AlbaranesVentasView._imprimirDoc(tipo === 'albaran_carne' ? 'carne' : 'leche', id);
