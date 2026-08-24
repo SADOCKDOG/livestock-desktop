@@ -695,7 +695,7 @@ const DocumentosView = {
           return;
         }
         throw new Error("Movimiento o documento no encontrado");
-      }
+      }  // <-- cerrar if (tipo === 'dimoe')
       if (tipo === 'albaran_carne' || tipo === 'albaran_leche') {
         if (window.AlbaranesVentasView) {
           await AlbaranesVentasView._imprimirDoc(tipo === 'albaran_carne' ? 'carne' : 'leche', id);
