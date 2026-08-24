@@ -1,0 +1,48 @@
+[ARRANQUE] OK
+[DEMO] sembrando datos demo...
+[DEMO] resultado: {"ok":true,"fincaActiva":1,"fincas":1}
+[ARRANQUE-2] OK
+[GUIAS] desactivadas: {"ok":true,"guias":22}
+[NAV] 01-inicio -> #/
+[CHECK] 01-inicio: {"ok":true,"why":[],"sidebarW":240,"appLen":5975,"route":"#/","contenido":true}
+[GUIAS] desactivadas: {"ok":true,"guias":22}
+[SHOT] 01-inicio.png hash=03919bb4f80b
+[NAV] 02-animales-censo -> #/ganaderia?tab=animales
+[CHECK] 02-animales-censo: {"ok":true,"why":[],"sidebarW":240,"appLen":7772,"route":"#/ganaderia?tab=animales","contenido":true}
+[GUIAS] desactivadas: {"ok":true,"guias":22}
+[SHOT] 02-animales-censo.png hash=8c2f5e087e98
+[NAV] 03-rebanos-lotes -> #/ganaderia?tab=rebanos
+[CHECK] 03-rebanos-lotes: {"ok":true,"why":[],"sidebarW":240,"appLen":4826,"route":"#/ganaderia?tab=rebanos","contenido":true}
+[GUIAS] desactivadas: {"ok":true,"guias":22}
+[SHOT] 03-rebanos-lotes.png hash=510190b480ca
+[NAV] 04-explotacion -> #/explotacion?tab=explotacion
+[CHECK] 04-explotacion: {"ok":true,"why":[],"sidebarW":240,"appLen":19840,"route":"#/explotacion?tab=explotacion","contenido":true}
+[GUIAS] desactivadas: {"ok":true,"guias":22}
+[SHOT] 04-explotacion.png hash=3c75c7bce4af
+[NAV] 05-comercial-leche -> #/comercializacion?tab=leche
+[CHECK] 05-comercial-leche: {"ok":true,"why":[],"sidebarW":240,"appLen":3332,"route":"#/comercializacion?tab=leche","contenido":true}
+[GUIAS] desactivadas: {"ok":true,"guias":22}
+[SHOT] 05-comercial-leche.png hash=0662b4b4ca6a
+[NAV] 06-informes -> #/informes
+[CHECK] 06-informes: {"ok":true,"why":[],"sidebarW":240,"appLen":2374,"route":"#/informes","contenido":true}
+[GUIAS] desactivadas: {"ok":true,"guias":22}
+[SHOT] 06-informes.png hash=5d216cf7d138
+[NAV] 07-documentos-dimoe -> #/documentos
+[CHECK] 07-documentos-dimoe: {"ok":true,"why":[],"sidebarW":240,"appLen":8464,"route":"#/documentos","contenido":true}
+[GUIAS] desactivadas: {"ok":true,"guias":22}
+[SHOT] 07-documentos-dimoe.png hash=1e91d3977652
+[NAV] 08-ajustes-sistema -> #/ajustes
+[CHECK] 08-ajustes-sistema: {"ok":true,"why":[],"sidebarW":240,"appLen":2824,"route":"#/ajustes","contenido":true}
+[GUIAS] desactivadas: {"ok":true,"guias":22}
+[SHOT] 08-ajustes-sistema.png hash=f6b1d206dec2
+[RESUMEN] capturas validas: 8/8
+  - 01-inicio.png: OK
+  - 02-animales-censo.png: OK
+  - 03-rebanos-lotes.png: OK
+  - 04-explotacion.png: OK
+  - 05-comercial-leche.png: OK
+  - 06-informes.png: OK
+  - 07-documentos-dimoe.png: OK
+  - 08-ajustes-sistema.png: OK
+[RESUMEN] CAPTURAS COMPLETAS
+[RESUMEN] carpeta: C:\Users\yo\repo\livestock-desktop\cypress\screenshots\store
