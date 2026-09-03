@@ -11,10 +11,18 @@ async fn obtener_store_id_key(
     ticket: String,
     publisher_user_id: String,
 ) -> Result<String, String> {
+    // `hwnd()` solo existe en Windows. Fuera de el no hay ventana que pasarle a
+    // la Store, y la implementacion de `store_winrt` ya devuelve el error.
+    #[cfg(windows)]
     let hwnd = ventana
         .hwnd()
         .map_err(|e| format!("No se pudo obtener la ventana: {e}"))?
         .0 as isize;
+    #[cfg(not(windows))]
+    let hwnd = {
+        let _ = &ventana;
+        0isize
+    };
     tauri::async_runtime::spawn_blocking(move || {
         store_winrt::imp::obtener_clave(hwnd, &ticket, &publisher_user_id)
     })
