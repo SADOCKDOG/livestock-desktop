@@ -3862,6 +3862,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .neon-orange { --neon-color: #E8555F; --neon-glow: rgba(232, 85, 95,0.69); --neon-inner: rgba(232, 85, 95,0.25); }
 .neon-warning { --neon-color: var(--c-warning); --neon-glow: rgba(255,214,0,0.69);  --neon-inner: rgba(255,214,0,0.25); }
 .neon-accent  { --neon-color: #4FADF5; --neon-glow: rgba(79, 173, 245,0.69); --neon-inner: rgba(79, 173, 245,0.25); }
+.neon-purple  { --neon-color: var(--c-purple, #A855F7); --neon-glow: rgba(168, 85, 247,0.69); --neon-inner: rgba(168, 85, 247,0.25); }
 .neon-theme   { --neon-color: var(--theme-color); }
 
 /* etiqueta de texto dentro de widget-link-btn--neon — tamaño, fuente y color únicos */

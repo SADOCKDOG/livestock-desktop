@@ -115,10 +115,6 @@ const SilosView = {
                     </h1>
                     <p class="text-xs font-bold uppercase tracking-tight text-gray-400 m-0">Telemetría de alimentación y almacenamiento</p>
                 </div>
-                <div class="flex gap-6">
-                    <button class="btn-erp-secondary btn-sm" id="btn-silos-vista-cards" onclick="SilosView._setVistaModo('cards')">Tarjetas</button>
-                    <button class="btn-erp-secondary btn-sm" id="btn-silos-vista-tabla" onclick="SilosView._setVistaModo('tabla')">Tabla ERP</button>
-                </div>
             </div>
 
             <!-- KPIs superiores (OLED dark design) -->
@@ -158,91 +154,52 @@ const SilosView = {
                     : this._cachedSilos.map(s => this._renderSiloCard(s)).join('')}
             </div>
             <div id="silos-erp-table-container" class="mt-12" style="display:none;"></div>
-
         </div>
         `;
 
         if (this._cachedSilos.length > 0) {
-            const modoGuardado = localStorage.getItem('silos_view_mode') || 'tabla';
+            const modoGuardado = VistaRegistros.get();
             this._setVistaModo(modoGuardado, false);
         }
     },
 
-    /** Alterna entre las fichas con telemetría circular y la tabla densa ERP. */
     _setVistaModo(modo, guardar = true) {
         this._vistaModo = modo;
-        if (guardar) {
-            try { localStorage.setItem('silos_view_mode', modo); } catch (_) {}
-        }
-
-        const btnCards = document.getElementById('btn-silos-vista-cards');
-        const btnTabla = document.getElementById('btn-silos-vista-tabla');
-        const contenedorCards = document.getElementById('silos-lista');
-        const contenedorTabla = document.getElementById('silos-erp-table-container');
-
-        if (btnCards && btnTabla) {
-            btnCards.style.background = modo === 'cards' ? 'var(--brand, #1F5FA8)' : 'transparent';
-            btnTabla.style.background = modo === 'tabla' ? 'var(--brand, #1F5FA8)' : 'transparent';
-        }
-
-        if (modo === 'tabla') {
-            if (contenedorCards) contenedorCards.style.display = 'none';
-            if (contenedorTabla) {
-                contenedorTabla.style.display = 'block';
+        const lista = document.getElementById('silos-lista');
+        const tablaC = document.getElementById('silos-erp-table-container');
+        if (lista) lista.style.display = modo === 'cards' ? '' : 'none';
+        if (tablaC) {
+            if (modo === 'tabla') {
+                tablaC.style.display = '';
                 this._renderErpTable();
+            } else {
+                tablaC.style.display = 'none';
             }
-        } else {
-            if (contenedorTabla) contenedorTabla.style.display = 'none';
-            if (contenedorCards) contenedorCards.style.display = 'flex';
         }
     },
 
     _renderErpTable() {
-        if (!window.ErpDataTable || !this._cachedSilos) return;
-
-        const tableData = this._cachedSilos.map(s => {
-            const cap = Number(s.capacidad) || 0;
-            const act = Number(s.cantidadActual) || 0;
-            const pct = cap > 0 ? Math.round((act / cap) * 100) : 0;
-            return {
-                id: s.id,
-                nombre: s.nombre || '—',
-                capacidad: cap.toLocaleString('es-ES') + ' kg',
-                actual: act.toLocaleString('es-ES') + ' kg',
-                ocupacion: pct + '%',
-                autonomia: s.diasAutonomia != null ? s.diasAutonomia + ' días' : '—',
-                ultimaCarga: s.fechaUltimaCarga ? new Date(s.fechaUltimaCarga).toLocaleDateString('es-ES') : '—',
-                _pct: pct
-            };
-        });
-
+        const container = document.getElementById('silos-erp-table-container');
+        if (!container || !window.ErpDataTable) return;
+        const cols = [
+            { key: 'nombre', label: 'Nombre', cellClass: 'erp-cell-id', render: (val, row) => `<span class="font-bold text-white">${row.nombre}</span>` },
+            { key: 'capacidad', label: 'Capacidad', align: 'right', render: (val, row) => `${(Number(row.capacidad) || 0).toLocaleString()} kg` },
+            { key: 'actual', label: 'Actual', align: 'right', render: (val, row) => `${(Number(row.cantidadActual) || 0).toLocaleString()} kg` },
+            { key: 'ocupacion', label: 'Ocupación', align: 'right', render: (val, row) => {
+                const pct = row.capacidad > 0 ? Math.round((row.cantidadActual / row.capacidad) * 100) : 0;
+                const cls = pct < 15 ? 'erp-cell-alerta' : (pct < 35 ? 'erp-cell-aviso' : 'erp-cell-ok');
+                return `<span class="${cls}">${pct}%</span>`;
+            }},
+            { key: 'autonomia', label: 'Autonomía', align: 'right', render: (val, row) => row.diasAutonomia == null ? '<span class="erp-cell-muted">Sin datos</span>' : `${row.diasAutonomia} días` },
+            { key: 'ultimaCarga', label: 'Última Carga', render: (val, row) => row.fechaUltimaCarga || 'S/D' },
+            { key: 'id', label: '', align: 'center', sortable: false, render: (val, row) => `<button class="btn-erp-secondary btn-sm" onclick="SilosView._abrirFormularioSilo(${row.id})">Editar</button>` }
+        ];
         new window.ErpDataTable({
             containerId: 'silos-erp-table-container',
             title: 'Silos',
             pageSize: 15,
-            columns: [
-                { key: 'nombre', label: 'Silo', sortable: true, cellClass: 'erp-cell-id' },
-                { key: 'capacidad', label: 'Capacidad', sortable: true, align: 'right' },
-                { key: 'actual', label: 'Almacenado', sortable: true, align: 'right' },
-                {
-                    key: 'ocupacion',
-                    label: 'Ocupación',
-                    sortable: true,
-                    align: 'right',
-                    // mismo código de color que el aro de telemetría de la ficha
-                    cellClass: (v, row) => (row._pct < 15 ? 'erp-cell-alerta' : row._pct < 35 ? 'erp-cell-aviso' : 'erp-cell-ok')
-                },
-                { key: 'autonomia', label: 'Autonomía', sortable: true, align: 'right' },
-                { key: 'ultimaCarga', label: 'Última carga', sortable: true },
-                {
-                    key: 'id',
-                    label: 'Ficha',
-                    sortable: false,
-                    align: 'center',
-                    render: (id) => `<button class="btn-erp-secondary btn-sm" onclick="SilosView._abrirFormularioSilo(${id})">Editar</button>`
-                }
-            ],
-            data: tableData
+            columns: cols,
+            data: this._cachedSilos
         }).render();
     },
 

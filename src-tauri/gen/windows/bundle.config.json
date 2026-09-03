@@ -1,0 +1,22 @@
+{
+  "publisher": "CN=6DF46B94-A3DE-4E7D-97CE-9E29B31B5629",
+  "publisherDisplayName": "Sdog Farm Software Factory",
+  "capabilities": {
+    "general": [
+      "internetClient"
+    ]
+  },
+  "extensions": {
+    "shareTarget": false,
+    "fileAssociations": [],
+    "protocolHandlers": []
+  },
+  "signing": {
+    "pfx": null,
+    "pfxPassword": null
+  },
+  "resourceIndex": {
+    "enabled": false,
+    "keepConfig": false
+  }
+}

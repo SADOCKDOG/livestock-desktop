@@ -414,6 +414,13 @@
     <script src="js/guides/inicio-dashboard.js?v=7.43"></script>
     <script src="js/guide-manager.js?v=7.43"></script>
 
+    <!-- Modulo de soporte: debe cargar antes de app.js, App.init() llama a AvisosSoporteService.init() -->
+    <script src="js/services/support-api.js"></script>
+    <script src="js/services/soporte-store.js"></script>
+    <script src="js/services/avisos-soporte.js"></script>
+    <script src="js/views/soporte-view.js"></script>
+    <script src="js/views/mis-incidencias-view.js"></script>
+
     <!-- 6º Arrancar el Controlador de la Aplicación (Orquestador Central) -->
     <script src="js/app.js?v=7.43"></script>
 
