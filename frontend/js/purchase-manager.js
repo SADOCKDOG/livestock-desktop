@@ -10,7 +10,17 @@
   var MS_STORE_BILLING = 'https://store.microsoft.com/billing';
 
   if (window.FREE_MODE === false) {
-    window.PurchaseManager = { isPurchased: function () { return true; }, isReady: function () { return true; }, purchase: function () {}, restorePurchases: function () {} };
+    window.PurchaseManager = {
+      isPurchased: function () { return true; },
+      isReady: function () { return true; },
+      purchase: function () {},
+      restorePurchases: function () {},
+      // El soporte se cobra aparte del desbloqueo Premium: sigue haciendo falta
+      // aunque la app este desbloqueada.
+      revalidarSoporte: function () {
+        return window.SoporteStore ? window.SoporteStore.revalidar() : Promise.resolve(false);
+      },
+    };
     return;
   }
 
@@ -55,6 +65,11 @@
         return;
       }
       offer.order();
+    },
+
+    /** Renueva la licencia de soporte. La llama support-api.js sola. */
+    revalidarSoporte: function () {
+      return window.SoporteStore ? window.SoporteStore.revalidar() : Promise.resolve(false);
     },
 
     restorePurchases: function () {

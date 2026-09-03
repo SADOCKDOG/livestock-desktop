@@ -75,6 +75,7 @@ $preservedList = @(
     'js\guide-manager.js',           # Motor de guías: remap carrusel→sidebar (preserva targets ocultos)
     'js\module-colors.js',           # Mapa de colores ERP (sin neon)
     'js\purchase-manager.js',       # Emite 'premiumChanged' para el indicador Free/Premium del sidebar
+    'js\services\soporte-store.js', # Módulo nuevo: Store ID key y revalidacion de soporte Windows
     # 'js\views\animales-view.js',     # UNIFICADA en el maestro (fase 3 lote 9): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada (sin fab-container, usa CTA cabecera)
     # 'js\views\rebanos-view.js',     # UNIFICADA en el maestro (fase 3 lote 5): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada
     # 'js\views\compradores-view.js', # UNIFICADA en el maestro (fase 3 lote 17): cromo ERP (erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable solo módulo compradores); dualidad compradores/contratos intacta; FAB local de compradores eliminado (erp-solo-movil)
