@@ -43,3 +43,8 @@ src-tauri/gen/windows/*
 !src-tauri/gen/windows/bundle.config.json
 !src-tauri/gen/windows/AppxManifest.xml.template
 !src-tauri/gen/windows/Assets/
+
+# Certificados de firma local: nunca al repo
+*.pfx
+*.cer
+*.p12
