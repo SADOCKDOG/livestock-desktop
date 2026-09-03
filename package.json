@@ -16,13 +16,16 @@
     "build:demo": "npm run prebuild:demo && tauri build",
     "build:free": "npm run build:pago",
     "build:premium": "npm run build:demo",
+    "build:msix": "npm run sync && npm run prebuild:pago && tauri-windows-bundle build",
     "deploy": "wrangler deploy",
-    "preview": "wrangler dev"
+    "preview": "wrangler dev",
+    "tauri:windows:build": "tauri-windows-bundle build"
   },
   "devDependencies": {
     "@tauri-apps/api": "latest",
     "@tauri-apps/cli": "latest",
     "cypress": "13.17.0",
-    "wrangler": "^4.127.1"
+    "wrangler": "^4.127.1",
+    "@choochmeque/tauri-windows-bundle": "^0.1.29"
   }
 }

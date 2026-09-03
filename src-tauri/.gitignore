@@ -1,2 +1,12 @@
 /target/
-/gen/
+
+# El empaquetador MSIX genera src-tauri/gen/windows. Su configuracion, la
+# plantilla del manifiesto y los iconos llevan la identidad de Partner Center:
+# esos si van en git. Las negaciones no funcionan si el directorio padre esta
+# excluido, de ahi el patron con /* en cada nivel.
+/gen/*
+!/gen/windows/
+/gen/windows/*
+!/gen/windows/bundle.config.json
+!/gen/windows/AppxManifest.xml.template
+!/gen/windows/Assets/

@@ -32,4 +32,14 @@ cypress_cache/
 .playwright-mcp/
 deploy-temp/
 worker-deploy/
-src-tauri/gen/
+
+# El empaquetador MSIX genera src-tauri/gen/windows. Su configuracion, la
+# plantilla del manifiesto y los iconos llevan la identidad de Partner Center:
+# esos si van en git. Las negaciones no funcionan si el directorio padre esta
+# excluido, de ahi el patron con /* en cada nivel.
+src-tauri/gen/*
+!src-tauri/gen/windows/
+src-tauri/gen/windows/*
+!src-tauri/gen/windows/bundle.config.json
+!src-tauri/gen/windows/AppxManifest.xml.template
+!src-tauri/gen/windows/Assets/
