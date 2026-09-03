@@ -137,9 +137,16 @@
     },
 
     // ── Microsoft Store (PWA empaquetada en MSIX) ─────────────────────────
-    // No se usa Windows.Services.Store: una PWA empaquetada no tiene acceso a
-    // WinRT. El mecanismo es la Digital Goods API + Payment Request API, que
-    // solo existe si la PWA se instalo DESDE la Store en Windows.
+    // Este bloque es solo para la PWA empaquetada, que no tiene acceso a WinRT:
+    // ahi el mecanismo es la Digital Goods API + Payment Request API, y existe
+    // unicamente si la PWA se instalo DESDE la Store en Windows.
+    //
+    // En la app de escritorio (Tauri) la restriccion se invierte: si hay WinRT,
+    // y en cambio getDigitalGoodsService rechaza con «unsupported context»
+    // porque un WebView2 embebido no es una app instalada desde la Store. Ahi la
+    // compra va por SoporteStore.comprar() -> comando nativo comprar_complemento.
+    // Ese build sale con FREE_MODE = false, asi que este bloque ni se define: el
+    // modulo retorna antes, en la rama de soporte de arriba.
     _dgs: null,
 
     /** ¿Estamos dentro de la PWA instalada desde Microsoft Store? */

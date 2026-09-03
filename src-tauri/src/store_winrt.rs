@@ -1,17 +1,69 @@
 //! Puente hacia WinRT para la Microsoft Store.
 //!
-//! Unica superficie nativa del proyecto. El pago lo hace la Digital Goods API
-//! dentro del WebView2 y la verificacion la hace el Worker; aqui solo se acuna
-//! la Store ID key, que es lo unico que el WebView2 no puede conseguir solo.
+//! Unica superficie nativa del proyecto. Hace las dos cosas que el WebView2 no
+//! puede hacer solo: abrir el dialogo de compra (`comprar_complemento`) y acunar
+//! la Store ID key con la que el Worker verifica la licencia (`obtener_clave`).
+//!
+//! La Digital Goods API no sirve aqui, aunque la spec original la diera por
+//! valida: Chromium solo la habilita en aplicaciones instaladas DESDE la Store,
+//! y un WebView2 embebido en un host Win32 no lo es — rechaza con «unsupported
+//! context». En la PWA empaquetada como MSIX pasaba justo lo contrario.
 //!
 //! Requiere identidad de paquete: sin MSIX, StoreContext no funciona.
 
 #[cfg(windows)]
 pub mod imp {
     use windows::core::{Interface, HSTRING};
-    use windows::Services::Store::StoreContext;
+    use windows::Services::Store::{StoreContext, StorePurchaseStatus};
     use windows::Win32::Foundation::HWND;
     use windows::Win32::UI::Shell::IInitializeWithWindow;
+
+    /// Abre el dialogo de compra de la Store para un complemento.
+    ///
+    /// `store_id` es el Store ID del add-on en Partner Center (p. ej.
+    /// 9P4577W3B0D2), no el Product ID: `RequestPurchaseAsync` solo entiende
+    /// el primero.
+    pub fn comprar_complemento(hwnd: isize, store_id: &str) -> Result<String, String> {
+        let contexto = StoreContext::GetDefault()
+            .map_err(|e| format!("No se pudo abrir la Microsoft Store: {e}"))?;
+
+        // Igual que al acunar la clave: sin ventana asociada WinRT lanza en
+        // aplicaciones de escritorio, y aqui ademas hay dialogo que mostrar.
+        let init: IInitializeWithWindow = contexto
+            .cast()
+            .map_err(|e| format!("La Store no acepta la ventana: {e}"))?;
+        unsafe {
+            init.Initialize(HWND(hwnd as *mut _))
+                .map_err(|e| format!("No se pudo asociar la ventana a la Store: {e}"))?;
+        }
+
+        let resultado = contexto
+            .RequestPurchaseAsync(&HSTRING::from(store_id))
+            .map_err(|e| format!("No se pudo abrir la compra: {e}"))?
+            .get()
+            .map_err(|e| format!("La compra no se completo: {e}"))?;
+
+        let estado = resultado
+            .Status()
+            .map_err(|e| format!("La Store no devolvio el estado de la compra: {e}"))?;
+
+        // AlreadyPurchased cuenta como exito: el usuario tiene derecho aunque no
+        // acabe de pagar. Quien decide si hay licencia es el servidor, no esto.
+        match estado {
+            StorePurchaseStatus::Succeeded => Ok("comprado".to_string()),
+            StorePurchaseStatus::AlreadyPurchased => Ok("ya_comprado".to_string()),
+            // Cancelar no es un fallo: se distingue por el valor, no por un
+            // Err, para que el frontend no lo pinte como error.
+            StorePurchaseStatus::NotPurchased => Ok("cancelado".to_string()),
+            StorePurchaseStatus::NetworkError => {
+                Err("No hay conexion con la Microsoft Store.".to_string())
+            }
+            StorePurchaseStatus::ServerError => {
+                Err("La Microsoft Store devolvio un error. Vuelve a intentarlo.".to_string())
+            }
+            otro => Err(format!("La Store devolvio un estado inesperado: {otro:?}")),
+        }
+    }
 
     /// Acuna una Store ID key valida 30 dias para el usuario que ha iniciado
     /// sesion en la Store en esta maquina.
@@ -64,6 +116,10 @@ pub mod imp {
         _ticket: &str,
         _publisher_user_id: &str,
     ) -> Result<String, String> {
+        Err("La compra en Microsoft Store solo esta disponible en Windows.".to_string())
+    }
+
+    pub fn comprar_complemento(_hwnd: isize, _store_id: &str) -> Result<String, String> {
         Err("La compra en Microsoft Store solo esta disponible en Windows.".to_string())
     }
 }

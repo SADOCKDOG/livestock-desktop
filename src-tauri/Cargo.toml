@@ -1,6 +1,6 @@
 [package]
 name = "livestock-manager-premium"
-version = "4.11.0"
+version = "4.11.1"
 description = "Livestock Manager PREMIUM - app de escritorio nativa (Tauri)"
 authors = ["SADOCKDOG"]
 edition = "2021"

@@ -10,14 +10,17 @@
  *   2. Tauri lo cambia por una Store ID key   (comando obtener_store_id_key)
  *   3. El Worker canjea la clave por sesion   (POST /auth/verify-purchase)
  *
- * Ojo: el purchaseToken que devuelve la Digital Goods API es el id del
- * complemento, igual para todo el mundo. No prueba nada y no se usa como tal.
+ * La compra la abre WinRT (comando comprar_complemento). La Digital Goods API
+ * no sirve aqui: solo funciona en apps instaladas desde la Store, y el WebView2
+ * de Tauri no lo es — rechaza con «unsupported context».
  */
 (function () {
   'use strict';
 
-  var PRODUCTO = 'support_unlock';
-  var BILLING = 'https://store.microsoft.com/billing';
+  // Store ID del complemento en Partner Center. RequestPurchaseAsync solo
+  // entiende este identificador; el Product ID ('support_unlock') es el que
+  // devuelve la API de colecciones en inAppOfferToken, y lo usa el Worker.
+  var STORE_ID = '9P4577W3B0D2';
   // Mismo idioma que support-api.js: con `in` un SUPPORT_API_BASE vacio apunta
   // al mismo sitio en los dos ficheros, cosa que `||` no respetaria.
   var BASE = ('SUPPORT_API_BASE' in window
@@ -25,48 +28,38 @@
     : 'https://livestock-manager-support-api-production.livestock-desktop.workers.dev');
 
   var SoporteStore = {
-    _dgs: null,
 
-    /** Hay Store y hay puente nativo: solo cierto en la app instalada. */
+    /** Hay puente nativo: solo cierto en la app de escritorio instalada. */
     disponible: function () {
-      return !!(window.__TAURI__ && typeof window.getDigitalGoodsService === 'function');
-    },
-
-    _servicio: function () {
-      var self = this;
-      if (self._dgs) return Promise.resolve(self._dgs);
-      if (typeof window.getDigitalGoodsService !== 'function') {
-        return Promise.reject(new Error(
-          'La compra solo está disponible en la app instalada desde la Microsoft Store.'));
-      }
-      return window.getDigitalGoodsService(BILLING).then(function (dgs) {
-        self._dgs = dgs;
-        return dgs;
-      });
+      return !!(window.__TAURI__ && window.__TAURI__.core);
     },
 
     /** Compra el complemento. Devuelve true si el servidor concedio licencia. */
     async comprar() {
-      var dgs = await this._servicio();
-      var detalles = await dgs.getDetails([PRODUCTO]);
-      if (!detalles || !detalles.length) {
-        throw new Error('El soporte no está disponible en la Store ahora mismo.');
+      if (!this.disponible()) {
+        throw new Error(
+          'La compra solo está disponible en la app instalada desde la Microsoft Store.');
       }
-      var item = detalles[0];
 
-      var peticion = new PaymentRequest(
-        [{ supportedMethods: BILLING, data: { sku: item.itemId } }],
-        {
-          total: {
-            label: item.title || 'Soporte técnico',
-            amount: { currency: item.price.currency, value: item.price.value },
-          },
-        },
-      );
-      var respuesta = await peticion.show();
-      await respuesta.complete('success');
+      // La compra la hace WinRT, no la Digital Goods API: el WebView2 de Tauri
+      // no es una app instalada desde la Store y esa API rechaza ahi con
+      // «unsupported context». RequestPurchaseAsync quiere el Store ID del
+      // complemento, no su Product ID.
+      var estado = await window.__TAURI__.core.invoke('comprar_complemento', {
+        storeId: STORE_ID,
+      });
 
       // El pago no basta: hasta que el servidor no lo confirme no hay licencia.
+      // «ya_comprado» tambien pasa por aqui: el derecho existe aunque no se
+      // acabe de pagar, y quien lo acredita es el servidor.
+      if (estado === 'cancelado') {
+        // Mismo contrato que la Payment Request API, que es lo que espera
+        // purchase-manager: cerrar el dialogo no es un fallo que anunciar.
+        var abortado = new Error('Compra cancelada.');
+        abortado.name = 'AbortError';
+        throw abortado;
+      }
+      if (estado !== 'comprado' && estado !== 'ya_comprado') return false;
       return await this.revalidar();
     },
 
