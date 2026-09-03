@@ -11,7 +11,7 @@ pub mod imp {
     use windows::core::{Interface, HSTRING};
     use windows::Services::Store::StoreContext;
     use windows::Win32::Foundation::HWND;
-    use windows::Win32::System::WinRT::IInitializeWithWindow;
+    use windows::Win32::UI::Shell::IInitializeWithWindow;
 
     /// Acuna una Store ID key valida 30 dias para el usuario que ha iniciado
     /// sesion en la Store en esta maquina.
