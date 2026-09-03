@@ -105,7 +105,15 @@
 
       if (caducada && !opciones._reintento && window.PurchaseManager &&
           window.PurchaseManager.revalidarSoporte) {
-        var renovada = await window.PurchaseManager.revalidarSoporte();
+        // El try es imprescindible: revalidar() lanza si no hay red o si el
+        // servidor no contesta, y ese error taparia el LICENCIA_CADUCADA que
+        // la vista necesita para mandar al usuario a la pantalla de licencia.
+        var renovada = false;
+        try {
+          renovada = await window.PurchaseManager.revalidarSoporte();
+        } catch (e) {
+          console.warn('[SupportAPI] no se pudo revalidar la licencia:', e);
+        }
         if (renovada) {
           opciones._reintento = true;
           return this._peticion(ruta, opciones);

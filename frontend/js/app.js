@@ -124,6 +124,15 @@ const App = {
         catch (e) { console.warn('[App] Error init avisos de soporte:', e); }
       }
 
+      // Revalida la licencia de soporte contra la Microsoft Store. La clave que
+      // acuna WinRT caduca a los 30 dias, asi que sin esto la sesion se muere
+      // sola y el usuario tendria que pulsar «Ya la tengo» a ciegas. Fuera del
+      // MSIX, disponible() devuelve false y no hace nada.
+      if (window.SoporteStore) {
+        window.SoporteStore.revalidar().catch(e =>
+          console.warn('[App] no se pudo revalidar el soporte:', e));
+      }
+
       this._setupOfflineIndicator();
 
       if (window.EventBus) {

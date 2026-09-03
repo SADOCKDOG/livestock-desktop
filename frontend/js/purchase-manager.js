@@ -9,6 +9,47 @@
   var MS_STORE_PRODUCT_ID = 'premium_unlock';
   var MS_STORE_BILLING = 'https://store.microsoft.com/billing';
 
+  // --- Licencia de soporte ---------------------------------------------------
+  // Se cobra aparte del desbloqueo Premium y se compra en la Store, no con el
+  // plugin de Play: toda la mecanica vive en SoporteStore. Aqui solo se
+  // traducen sus errores a algo que el usuario entienda, porque quien llama
+  // (soporte-view) espera una promesa que nunca rechaza.
+
+  function sinPuenteDeSoporte() {
+    App.toastError('La compra de soporte solo está disponible en la app instalada desde la Microsoft Store.');
+    return Promise.resolve(false);
+  }
+
+  function comprarSoporteEnStore() {
+    if (!window.SoporteStore) return sinPuenteDeSoporte();
+    return window.SoporteStore.comprar().then(function (ok) {
+      if (ok) App.toast('Soporte activado. Ya puedes abrir incidencias.', 'success');
+      else App.toastError('La compra no se pudo confirmar. Vuelve a intentarlo en unos minutos.');
+      return ok;
+    }).catch(function (e) {
+      // AbortError = el usuario cerro el dialogo de pago. No es un fallo.
+      if (e && e.name === 'AbortError') return false;
+      console.warn('[PurchaseManager] comprarSoporte fallo:', e);
+      App.toastError((e && e.message) || 'No se pudo iniciar la compra.');
+      return false;
+    });
+  }
+
+  function restaurarSoporteEnStore() {
+    if (!window.SoporteStore) return sinPuenteDeSoporte();
+    // En la Store no hay «restaurar»: se vuelve a preguntar que posee el
+    // usuario, y eso es justo lo que hace revalidar().
+    return window.SoporteStore.revalidar().then(function (ok) {
+      if (ok) App.toast('Licencia de soporte restaurada.', 'success');
+      else App.toast('No se encontró ninguna licencia de soporte en esta cuenta.', 'info');
+      return ok;
+    }).catch(function (e) {
+      console.warn('[PurchaseManager] restaurarSoporte fallo:', e);
+      App.toastError((e && e.message) || 'No se pudo restaurar la licencia.');
+      return false;
+    });
+  }
+
   if (window.FREE_MODE === false) {
     window.PurchaseManager = {
       isPurchased: function () { return true; },
@@ -17,6 +58,8 @@
       restorePurchases: function () {},
       // El soporte se cobra aparte del desbloqueo Premium: sigue haciendo falta
       // aunque la app este desbloqueada.
+      comprarSoporte: comprarSoporteEnStore,
+      restaurarSoporte: restaurarSoporteEnStore,
       revalidarSoporte: function () {
         return window.SoporteStore ? window.SoporteStore.revalidar() : Promise.resolve(false);
       },
@@ -66,6 +109,9 @@
       }
       offer.order();
     },
+
+    comprarSoporte: comprarSoporteEnStore,
+    restaurarSoporte: restaurarSoporteEnStore,
 
     /** Renueva la licencia de soporte. La llama support-api.js sola. */
     revalidarSoporte: function () {
