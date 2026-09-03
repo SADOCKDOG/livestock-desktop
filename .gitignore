@@ -1,0 +1,35 @@
+node_modules/
+.DS_Store
+*.log
+src-tauri/target/
+
+# Material local / personal (no se sube al repo)
+private/
+.ai/
+.vscode/
+
+# Instaladores descargados localmente (no se suben al repo)
+vs_buildtools.exe
+vs_components.txt
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+
+# --- Artefactos de validacion y trabajo local (no forman parte del producto) ---
+validation-*.png
+validacion-*.png
+validation-*.md
+Captura de pantalla *.png
+ns_output.txt
+tasklist.txt
+nul
+sync-out.log
+cypress_cache/
+.playwright-mcp/
+deploy-temp/
+worker-deploy/
+src-tauri/gen/

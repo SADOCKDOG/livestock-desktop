@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Validación guías + Gastos (uso interno, no se sirve en producción)</title>
+</head>
+<body>
+<!-- Volcar el informe después de cargar la app real. -->
+<script>
+  // Cargamos el HTML real de la app (mismo directorio -> rutas relativas js/... válidas)
+  (async function () {
+    try {
+      const r = await fetch('./index.html');
+      const html = await r.text();
+      document.open();
+      document.write(html); // re-parsea y ejecuta TODOS los <script> de la app
+      document.close();
+    } catch (err) {
+      const pre = document.createElement('pre');
+      pre.id = 'report';
+      pre.textContent = '[fetch fail] ' + err.message;
+      document.body.appendChild(pre);
+    }
+  })();
+
+  // Dos segundos después del load de la app, volcar los indicadores críticos al DOM
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      let out = '';
+      try {
+        const g = window.GuideRegistry && window.GuideRegistry.getAll();
+        const ids = g ? g.map(x => x.id).sort() : [];
+        out += '[registry] ' + (g ? 'OK' : 'FAIL') + ' -> guias=' + ids.length + '\n' + ids.join('\n') + '\n';
+        out += '[GastosView] ' + (typeof window.GastosView !== 'undefined' ? 'OK' : 'FAIL') + ' -> ' + typeof window.GastosView + '\n';
+        out += '[GastosView.render] ' + (typeof (window.GastosView && window.GastosView.render) === 'function' ? 'OK' : 'FAIL') + ' -> ' + typeof (window.GastosView && window.GastosView.render) + '\n';
+        out += '[App] ' + (typeof window.App !== 'undefined' ? 'OK' : 'FAIL') + '\n';
+        out += '[END]';
+      } catch (err) {
+        out += '[catch] ' + err.message;
+      }
+      let pre = document.getElementById('report');
+      if (!pre) { pre = document.createElement('pre'); pre.id = 'report'; document.body.appendChild(pre); }
+      pre.textContent = out;
+    }, 3000);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+﻿{
+  "name": "livestock-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Livestock Manager PREMIUM - app de escritorio nativa (Tauri) para gestion ganadera.",
+  "scripts": {
+    "serve": "npx --yes http-server frontend -p 8080 -c-1",
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "build:free": "pwsh -Command \"Copy-Item frontend/js/mode-config.free.js frontend/js/mode-config.js -Force\" && tauri build",
+    "build:premium": "pwsh -Command \"Copy-Item frontend/js/mode-config.premium.js frontend/js/mode-config.js -Force\" && tauri build",
+    "sync": "pwsh scripts/sync-from-master.ps1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "latest",
+    "@tauri-apps/api": "latest"
+  }
+}

@@ -1,0 +1,11 @@
+[ADB] dispositivo=emulator-5554
+[ADB] pid=16834
+[CDP] target=https://localhost/
+[ARRANQUE] OK
+[DEMO] {"ok":true,"fincaActiva":1,"guias":21}
+[ARRANQUE-2] OK
+[NAV] #/botiquin
+[CHECK] #/botiquin -> {"ok":true,"why":[],"mode":"android-erp:#/botiquin"}
+[RESUMEN] vistas validas: 1/1
+  - #/botiquin: OK
+[RESUMEN] VERIFICACION COMPLETA

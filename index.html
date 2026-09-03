@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <script>
+      // Sandbox Guard Ultra-Robustecido para entornos iframe restringidos (Open Design Desktop)
+      // Evita de forma síncrona caídas críticas al consultar serviceWorker e indexedDB
+      try {
+        var _testSW = navigator.serviceWorker;
+      } catch (e) {
+        console.warn("[Sandbox Guard] navigator.serviceWorker bloqueado en sandbox. Redefiniendo de forma segura...");
+        try {
+          Object.defineProperty(navigator, 'serviceWorker', {
+            get: function() { return undefined; },
+            configurable: true
+          });
+        } catch (err) {
+          try {
+            Object.defineProperty(Navigator.prototype, 'serviceWorker', {
+              get: function() { return undefined; },
+              configurable: true,
+              enumerable: true
+            });
+          } catch (err2) {
+            console.error("[Sandbox Guard] No se pudo redefinir serviceWorker en el prototipo:", err2);
+          }
+        }
+      }
+
+      try {
+        var _testIDB = window.indexedDB;
+      } catch (e) {
+        console.warn("[Sandbox Guard] window.indexedDB bloqueado en sandbox. Redefiniendo para evitar caídas síncronas...");
+        try {
+          Object.defineProperty(window, 'indexedDB', {
+            get: function() { return undefined; },
+            configurable: true
+          });
+        } catch (err) {
+          console.error("[Sandbox Guard] No se pudo redefinir indexedDB de forma segura:", err);
+        }
+      }
+    </script>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"
+    />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https:; worker-src 'self' blob:;" />
+    <!-- Livestock Manager uses Warm Orange (#d97706) -->
+    <meta name="theme-color" content="#000000" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <title>Livestock Manager</title>
+    <link rel="stylesheet" href="css/design-tokens.css?v=7.37" />
+    <link rel="stylesheet" href="css/styles.css?v=7.37" />
+    <link rel="stylesheet" href="css/layout.css?v=7.37" />
+    <link rel="stylesheet" href="css/erp-sidebar.css?v=7.37" />
+    <link rel="stylesheet" href="css/erp-data-table.css?v=7.37" />
+    <link rel="stylesheet" href="css/erp-overrides.css?v=7.37" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/Logo aplicación.png" type="image/png" />
+    <link rel="apple-touch-icon" href="icons/Logo aplicación.png" />
+
+    <!-- Identidad tipográfica: Inter (cuerpo) · Archivo Expanded (títulos) · IBM Plex Mono (datos) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;900&family=IBM+Plex+Mono:wght@400;600;700&family=Inter:wght@400;600;700;800;900&display=swap"
+    />
+
+    <!-- Librerías Críticas Locales para Android -->
+    <script src="js/app-version.js?v=7.37"></script>
+    <script src="js/module-colors.js?v=7.37"></script>
+    <script src="js/idb-local.js?v=7.37"></script>
+
+    <!-- Librerías Externas vía CDN -->
+    <!-- xlsx.js, html2pdf.js y chart.js (~1.3MB combinados) se cargan bajo demanda desde
+         App._ensureXLSX() / App._ensureHtml2Pdf() / App._ensureChartJs() en app.js,
+         solo al exportar o al abrir una vista con gráficos. -->
+    <!-- capacitor.js: no existe en escritorio (Tauri) ni en navegador. Todos los usos de
+         window.Capacitor estan guardados con optional chaining, asi que cargarlo solo
+         producia un 404 en cada arranque. -->
+  </head>
+  <body>
+    <header id="main-header" role="banner">
+      <!-- Migas de pan (izquierda, derivadas de la ruta) -->
+      <nav id="header-breadcrumbs" class="header-breadcrumbs" aria-label="Ruta de navegación"></nav>
+
+      <!-- Left: Logo (Centrado en su columna) -->
+      <div class="header-logo-container" onclick="App.route('/')">
+          <img src="icons/Logo aplicación.png" alt="Livestock Manager" id="app-logo" />
+      </div>
+
+        <!-- Center: Interactive Route Pill (centrado exacto en el header) -->
+         <div id="header-context">
+            <span id="header-route-icon" data-icon="home"></span>
+        </div>
+
+        <!-- Buscador global (crotal / CNI / nombre) -->
+        <div id="header-search" class="header-search">
+            <span id="header-search-icon" class="header-search-icon"></span>
+            <input id="header-search-input" class="header-search-input" type="search"
+                   placeholder="Buscar por crotal, CNI o nombre…" autocomplete="off"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault();App._buscarGlobal();}" />
+        </div>
+
+        <!-- Campana de alertas con contador -->
+        <button id="header-alerts-bell" class="header-alerts-bell" type="button"
+                onclick="location.hash='#/alertas'" aria-label="Ver alertas" title="Alertas">
+            <span id="header-alerts-icon" class="alerts-bell-icon"></span>
+            <span id="header-alerts-count" class="alerts-count" style="display:none">0</span>
+        </button>
+
+        <!-- Right: Viñeta de Finca (REGA con haz de luz) -->
+        <div class="flex items-center gap-10 justify-end" style="justify-self: end; display: flex; align-items: flex-end; padding-bottom: 8px;">
+            <div id="finca-badge" class="rega-badge-container flex-col" onclick="App.route('/fincas')" style="margin-left: 4px; display: flex; align-items: flex-end; gap: 2px;">
+                <span id="nombre-finca-header">Cargando...</span>
+                <div id="finca-mode-container" style="display:none; font-size: 0.55rem; font-weight: 900; text-transform: uppercase; color: var(--c-aaa); gap: 4px;">
+                    Tipo Explo: <span id="finca-mode-chip-header"></span>
+                </div>
+            </div>
+        </div>
+      <!-- Dropdown del Header -->
+      <div id="header-dropdown-menu" class="header-dropdown-overlay" onclick="App._toggleHeaderDropdown()">
+        <div class="header-dropdown-content" role="dialog" aria-modal="true" aria-label="Accesos rápidos" onclick="event.stopPropagation()">
+            <div class="header-dropdown-grid" id="header-dropdown-grid">
+                <!-- Se puebla dinámicamente en app.js -->
+            </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="app-content" role="main" aria-live="polite">
+      <div class="loader">Iniciando aplicación...</div>
+      <div id="startup-rescue">
+        <p>El inicio está tardando más de lo esperado...</p>
+        <button
+          class="btn btn-primary"
+          onclick="location.reload()"
+        >
+          Forzar Reinicio
+        </button>
+      </div>
+    </main>
+
+    <div id="error-diag"></div>
+
+    <script>
+      // Global error diagnostic for Android
+      window.onerror = function(msg, url, line, col, err) {
+        const diag = document.getElementById('error-diag');
+        if (diag) {
+          diag.style.display = 'block';
+          diag.innerHTML = 'Se ha producido un error: ' + msg + '<br>en ' + url + ':' + line + ':' + col + '\n\n<small style="opacity:0.5">Detalles técnicos disponibles en consola</small>';
+          diag.onclick = () => diag.style.display = 'none';
+        }
+        console.error('[Error]', msg, '\nArchivo:', url, '\nLínea:', line, '\nCol:', col, '\nStack:', err?.stack);
+        return true;
+      };
+      window.addEventListener('unhandledrejection', function(e) {
+        const diag = document.getElementById('error-diag');
+        if (diag) {
+          diag.style.display = 'block';
+          diag.innerHTML = 'Se ha producido un error. Pulsa para continuar.\n\n<small style="opacity:0.5">Detalles técnicos disponibles en consola</small>';
+          diag.onclick = () => diag.style.display = 'none';
+        }
+        console.error('[Promise]', e.reason?.message || e.reason, '\nStack:', e.reason?.stack);
+      });
+      // El chrome (header y nav inferior) lleva onclick="App.*" inline y es pulsable
+      // desde el primer pintado, pero App no existe hasta que terminan de cargar los
+      // ~89 scripts. Tocar cualquier control en ese hueco lanza "App is not defined",
+      // y el window.onerror de arriba lo presenta como un error grave.
+      document.documentElement.classList.add("app-cargando");
+      const _esperaApp = setInterval(() => {
+        if (window.App) {
+          document.documentElement.classList.remove("app-cargando");
+          clearInterval(_esperaApp);
+        }
+      }, 120);
+
+      // Rescue timer. Se comprueba `window.App` en vez del texto del contenedor: el
+      // texto solo dice que aún no se ha pintado la vista, no que el arranque haya
+      // fallado. Y 20s en vez de 8, que se agotaban en arranques en frío.
+      setTimeout(() => {
+        if (!window.App) {
+          document.getElementById("startup-rescue").style.display = "block";
+        }
+      }, 20000);
+    </script>
+
+    <!-- ============================
+    SIDEBAR ERP MODULAR (desktop ≥ 1024px)
+    Colapsable: 72px icon-only ↔ 240px icon+texto (localStorage "sidebar-collapsed").
+    ============================ -->
+    <aside class="erp-sidebar" id="erpSidebar" aria-label="Menú principal">
+      <button class="sidebar-toggle" id="sidebarToggle" type="button" onclick="App._toggleSidebar()" aria-label="Plegar/Desplegar menú" aria-expanded="true" title="Plegar menú (Alt+S)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+       </svg>
+     </button>
+
+      <!-- Navegación de módulos (acordeón) — generada por App._renderSidebarNav() -->
+      <nav class="erp-sidebar-nav" id="erpSidebarNav" aria-label="Navegación de módulos"></nav>
+
+      <!-- Pie de estado: versión, plan Free/Premium, fecha y finca activa -->
+      <div class="sidebar-status" id="sidebarStatus" aria-label="Estado de la aplicación"></div>
+   </aside>
+
+    <!-- ============================
+    BOTTOM NAV (reservado: tablet/mobile <1024px)
+    ============================ -->
+    <div class="bottom-nav-wrap" id="bottomNavWrap" style="display: none;">
+    <nav class="bottom-nav" id="bottomNav" aria-label="Navegación principal">
+      <a href="#/" class="nav-item" id="nav-home" data-icon="home">
+        <span class="label">Inicio</span>
+      </a>
+      <a href="#/animales" class="nav-item" id="nav-animales" data-icon="animales">
+        <span class="label">Animales</span>
+      </a>
+      <a href="#/rebanos" class="nav-item" id="nav-rebanos" data-icon="rebanos">
+        <span class="label">Rebaños</span>
+      </a>
+      <a href="#/ganaderia" class="nav-item" id="nav-produccion" data-icon="registros">
+        <span class="label">GeGan</span>
+      </a>
+      <a href="#/explotacion" class="nav-item" id="nav-explotacion" data-icon="informes">
+        <span class="label">ExPro</span>
+      </a>
+      <a href="#/comercializacion" class="nav-item" id="nav-comercializacion" data-icon="comercial">
+        <span class="label">CoMer</span>
+      </a>
+      </nav>
+    </div>
+
+    <div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <script>
+    // ============================================
+    // Sombra de scroll universal (reutilizable)
+    // ============================================
+    // Uso: window.enableScrollShadows(containerElement)
+    window.enableScrollShadows = function(el) {
+      if (!el) return;
+      function updateShadows() {
+        var max = el.scrollWidth - el.clientWidth;
+        var atStart = el.scrollLeft <= 4;
+        var atEnd = el.scrollLeft >= max - 4;
+        if (atStart) el.removeAttribute('data-ss-start');
+        else el.setAttribute('data-ss-start', '');
+        if (atEnd) el.removeAttribute('data-ss-end');
+        else el.setAttribute('data-ss-end', '');
+      }
+      el.addEventListener('scroll', updateShadows);
+      window.addEventListener('resize', updateShadows);
+      updateShadows();
+    };
+    </script>
+
+    <!-- Modo de publicación (FREE / PREMIUM) — se genera automáticamente en build:free / build:premium -->
+    <script src="js/mode-config.js?v=7.37"></script>
+    <script>if (typeof FREE_MODE === 'undefined') { window.FREE_MODE = false; }</script>
+
+    <!-- Scripts locales de Livestock Manager Premium (Orden de Dependencia Crítico) -->
+    <script src="js/db.js?v=7.37"></script>
+    <script src="js/error-handler.js?v=7.37"></script>
+    <script src="js/icons.js?v=7.37"></script>
+    <script src="js/icons-desktop.js?v=7.37"></script>
+    <script src="js/crypto.js?v=7.37"></script>
+    <script src="js/catalogo-sanitario.js?v=7.37"></script>
+
+    <!-- Lector de códigos de barras QR (Web): carga diferida bajo demanda
+         (~366KB) desde App._ensureHtml5Qrcode() en app.js, no en cada arranque.
+         Sigue disponible offline: precacheado por el Service Worker. -->
+
+    <!-- Servicios del Sistema (Capa de Infraestructura) -->
+    <script src="js/services/event-bus.js?v=7.37"></script>
+    <script src="js/services/cache-service.js?v=7.37"></script>
+    <script src="js/services/balance-service.js?v=7.37"></script>
+    <script src="js/services/comunidades-service.js?v=7.37"></script>
+    <script src="js/services/pdf-catastro.js?v=7.37"></script>
+    <script src="js/services/pdf-service.js?v=7.37"></script>
+    <script src="js/services/export-service.js?v=7.37"></script>
+
+    <!-- Vistas Modulares -->
+    <script src="js/views/dashboard-view.js?v=7.37"></script>
+    <script src="js/views/produccion-view.js?v=7.37"></script>
+    <script src="js/views/explotacion-lactea-view.js?v=7.37"></script>
+    <script src="js/views/tanques-view.js?v=7.37"></script>
+    <script src="js/views/ajustes-view.js?v=7.37"></script>
+    <script src="js/views/agenda-view.js?v=7.37"></script>
+    <script src="js/views/importador-rfid-view.js?v=7.37"></script>
+
+    <!-- Helpers de UI -->
+    <script src="js/views/helpers/modo-contexto.js?v=7.37"></script>
+    <script src="js/views/helpers/calidad-leche.js?v=7.37"></script>
+    <script src="js/ui-utils.js?v=7.37"></script>
+    <script src="js/erp-data-table.js?v=7.37"></script>
+
+    <!-- 1º Inyectar el Motor de Reglas y Trazabilidad Oficial (Validaciones y Albaranes) -->
+    <script src="js/trazabilidad.js?v=7.37"></script>
+
+    <!-- 2º Inyectar el Motor de Inteligencia Analítica (Cálculo de Fórmulas y Márgenes) -->
+    <script src="js/analitica.js?v=7.37"></script>
+
+    <!-- 3º Inyectar el Gestor Jerárquico de Modelos de Datos -->
+    <script src="js/fincas.js?v=7.37"></script>
+    <script src="js/adsgs.js?v=7.37"></script>
+    <script src="js/rebanos.js?v=7.37"></script>
+    <script src="js/animales.js?v=7.37"></script>
+    <script src="js/pesajes.js?v=7.37"></script>
+    <script src="js/pesajes-ui.js?v=7.37"></script>
+    <script src="js/produccion-ui.js?v=7.37"></script>
+
+    <!-- 4º Inyectar los Controladores Operativos Diario (Vida y Alimentación) -->
+    <script src="js/produccion.js?v=7.37"></script>
+    <script src="js/gastos.js?v=7.37"></script>
+    <script src="js/botiquin.js?v=7.37"></script>
+    <script src="js/margen-animal.js?v=7.37"></script>
+    <script src="js/sanitarios.js?v=7.37"></script>
+    <script src="js/reproduccion.js?v=7.37"></script>
+
+    <!-- 5º Inyectar los Módulos de Onboarding, Backups y Formularios de UI -->
+    <script src="js/export_reco.js?v=7.37"></script>
+    <script src="js/importador.js?v=7.37"></script>
+    <script src="js/importador-rfid.js?v=7.37"></script>
+    <script src="js/asistente-configuracion.js?v=7.37"></script>
+    <script src="js/modal-manager.js?v=7.37"></script>
+    <script src="js/services/document-viewer.js?v=7.37"></script>
+    <script src="js/wizard-manager.js?v=7.37"></script>
+    <script src="js/snapshot-service.js?v=7.37"></script>
+
+    <!-- Wizards extraídos (deben cargar antes de app.js) -->
+    <script src="js/views/wizards/wizard-traslado.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-tratamiento.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-vacunacion.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-finca.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-crotales.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-guia-movimiento.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-censo.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-albaran-leche.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-ordeno.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-tanque.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-analitica-leche.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-movimiento-balance.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-tarea.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-gasto.js?v=7.37"></script>
+    <script src="js/views/wizards/wizard-venta-masiva.js?v=7.37"></script>
+
+    <!-- Helpers modales -->
+    <script src="js/views/helpers/ayuda.js?v=7.37"></script>
+
+    <!-- Gestor de compras IAP (Google Play Billing) -->
+    <script src="js/purchase-manager.js?v=7.37"></script>
+
+    <!-- Gestor de modo Free/Premium -->
+    <script src="js/premium-manager.js?v=7.37"></script>
+
+    <!-- 5bº Módulos de Compradores, Proveedores, Contratos y Transportistas -->
+    <script src="js/compradores.js?v=7.37"></script>
+    <script src="js/proveedores.js?v=7.37"></script>
+    <script src="js/contratos.js?v=7.37"></script>
+    <script src="js/transportistas.js?v=7.37"></script>
+    <script src="js/movimientos.js?v=7.37"></script>
+    <script src="js/saneamientos.js?v=7.37"></script>
+    <script src="js/vacunaciones.js?v=7.37"></script>
+    <script src="js/pedidos-crotales.js?v=7.37"></script>
+    <script src="js/notificaciones-rega.js?v=7.37"></script>
+    <script src="js/liquidacion.js?v=7.37"></script>
+
+    <!-- 5cº Servicios de Agenda y Notificaciones (Cargar al final de modelos) -->
+    <script src="js/services/alertas-service.js?v=7.37"></script>
+    <script src="js/services/agenda-service.js?v=7.37"></script>
+    <script src="js/services/notificaciones-service.js?v=7.37"></script>
+    <script src="js/services/tanques-leche.js?v=7.37"></script>
+    <script src="js/services/balance-lacteo.js?v=7.37"></script>
+    <script src="js/services/analiticas-leche.js?v=7.37"></script>
+    <script src="js/services/motor-lacteo.js?v=7.37"></script>
+    <script src="js/services/graficos-lacteo.js?v=7.37"></script>
+
+    <!-- 5dº Motor de guías interactivas (registro antes que motor; ambos antes que app.js,
+         que llama a GuideManager.maybeStart desde route()) -->
+    <script src="js/guide-registry.js?v=7.37"></script>
+    <script src="js/guides/onboarding-primeros-pasos.js?v=7.37"></script>
+    <script src="js/guide-manager.js?v=7.37"></script>
+
+    <!-- 6º Arrancar el Controlador de la Aplicación (Orquestador Central) -->
+    <script src="js/app.js?v=7.37"></script>
+
+    <!-- Herramientas de QA/E2E (solo en desarrollo): se cargan bajo demanda,
+         no en cada arranque en producción. Activar una vez con
+         localStorage.setItem('lm_qa_tools','1') y recargar. -->
+    <script>
+      if (window.localStorage && localStorage.getItem('lm_qa_tools') === '1') {
+        ['js/e2e-test-suite.js?v=7.37', 'js/qa-test-runner.js?v=7.37', 'js/qa-diagnostico.js?v=7.37', 'js/qa-siggan.js?v=7.37', 'js/qa-premium.js?v=7.37', 'js/qa-especie-crotal.js?v=7.37', 'js/qa-plan-siggan.js?v=7.37', 'js/qa-margen-animal.js?v=7.37', 'js/qa-importador-rfid.js?v=7.37', 'tests/test-lacteo-v24.js?v=7.37']
+          .forEach((src) => {
+            const s = document.createElement('script');
+            s.src = src;
+            document.body.appendChild(s);
+          });
+      }
+    </script>
+
+    <script>
+      window.isNative = !!window.Capacitor;
+      // DESKTOP: la app no usa Service Worker (los assets van empaquetados en el
+      // binario nativo). El SW heredado de la PWA (sw.js, estrategia cache-first)
+      // servía CSS/JS obsoleto incluso tras Ctrl+F5 en la previsualización de
+      // desarrollo. Si queda un SW registrado de visitas anteriores, se
+      // desregistra y se purgan sus cachés, recargando una vez para servir fresco.
+      try {
+        if (navigator.serviceWorker && typeof navigator.serviceWorker.getRegistrations === 'function') {
+          window.addEventListener("load", () => {
+            navigator.serviceWorker.getRegistrations()
+              .then((regs) => {
+                if (!regs.length) return;
+                return Promise.all(regs.map((r) => r.unregister()))
+                  .then(() => (window.caches && caches.keys) ? caches.keys() : [])
+                  .then((keys) => Promise.all((keys || []).map((k) => caches.delete(k))))
+                  .then(() => {
+                    if (!sessionStorage.getItem('sw-purged')) {
+                      sessionStorage.setItem('sw-purged', '1');
+                      location.reload();
+                    }
+                  });
+              })
+              .catch((err) => console.warn("SW purge:", err));
+          });
+        }
+      } catch (e) {
+        console.warn("Service Worker no disponible o bloqueado por el sandbox del entorno:", e.message);
+      }
+    </script>
+
+</body>
+</html>
