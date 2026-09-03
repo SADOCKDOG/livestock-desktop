@@ -82,6 +82,8 @@ const App = {
     "/informes": "renderInformes",
     "/alertas": "renderAlertas",
     "/ajustes": "renderAjustes",
+    "/soporte": "renderSoporte",
+    "/mis-incidencias": "renderMisIncidencias",
     "/sistema": "renderConfigSistema",
     "/compradores": "renderCompradores",
     "/comprador": "renderComprador",
@@ -113,6 +115,13 @@ const App = {
       if (window.CacheService) window.CacheService.init();
       if (window.NotificacionesService) {
         window.NotificacionesService.init().catch(e => console.warn('[App] Error init notificaciones:', e));
+      }
+
+      // Avisa de las respuestas del soporte. No bloquea el arranque: si no hay
+      // red o no hay licencia, se calla y lo reintenta al volver al primer plano.
+      if (window.AvisosSoporteService) {
+        try { window.AvisosSoporteService.init(); }
+        catch (e) { console.warn('[App] Error init avisos de soporte:', e); }
       }
 
       this._setupOfflineIndicator();
@@ -352,6 +361,8 @@ const App = {
     '/informes': 'Informes',
     '/alertas': 'Alertas',
     '/ajustes': 'Ajustes',
+    '/soporte': 'Soporte',
+    '/mis-incidencias': 'Mis incidencias',
     '/compradores': 'Compradores',
     '/comprador': 'Ficha Comprador',
     '/proveedores': 'Proveedores',
@@ -3752,6 +3763,16 @@ const App = {
     } else {
       document.getElementById("app-content").innerHTML = '<div class="loader">Error: Vista Ajustes no disponible</div>';
     }
+  },
+
+  async renderSoporte(params) {
+    if (window.SoporteView) { await SoporteView.render(params); }
+    else document.getElementById("app-content").innerHTML = '<div class="loader">Cargando soporte...</div>';
+  },
+
+  async renderMisIncidencias(params) {
+    if (window.MisIncidenciasView) { await MisIncidenciasView.render(params); }
+    else document.getElementById("app-content").innerHTML = '<div class="loader">Cargando incidencias...</div>';
   },
 
   async renderConfigSistema(params) {

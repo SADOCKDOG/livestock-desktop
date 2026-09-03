@@ -206,6 +206,14 @@ const AlbaranesVentasView = {
       <div class="text-xs text-white uppercase font-black tracking-wider mb-10 flex items-center gap-4">
         <span style="color: ${moduleColor};">|</span> ${Icons.documento()} HISTORIAL DE ALBARANES Y VENTAS
       </div>
+      <fieldset class="erp-action-group">
+        <legend>Acciones de Registro</legend>
+        <div class="erp-action-group-body">
+          <button class="btn-fab-primary" onclick="AlbaranesVentasView._abrirMenuNuevo()">
+            ${Icons.agregar()}<span class="widget-link-label" style="margin-left:6px;">Nuevo Albarán / Venta</span>
+          </button>
+        </div>
+      </fieldset>
       <div class="erp-filtros" data-filtros-de="albaranes-lista">
         <input type="search" id="albaran-search" placeholder="Buscar por comprador, número de albarán, concepto..."
                oninput="AlbaranesVentasView._setFiltro('texto', this.value)"
@@ -218,38 +226,18 @@ const AlbaranesVentasView = {
         <button class="btn-erp-secondary btn-sm albaranes-tab" data-tab="leche" onclick="AlbaranesVentasView._cambiarTab('leche')" style="background:${this._currentTab === 'leche' ? 'var(--brand, #1F5FA8)' : 'transparent'};">Leche</button>
         <button class="btn-erp-secondary btn-sm albaranes-tab" data-tab="carne" onclick="AlbaranesVentasView._cambiarTab('carne')" style="background:${this._currentTab === 'carne' ? 'var(--brand, #1F5FA8)' : 'transparent'};">Carne</button>
       </div>
-      <div class="flex justify-end gap-6 mb-8">
-        <button class="btn-erp-secondary btn-sm" id="btn-alb-vista-cards" onclick="AlbaranesVentasView._setVistaModo('cards')">Tarjetas</button>
-        <button class="btn-erp-secondary btn-sm" id="btn-alb-vista-tabla" onclick="AlbaranesVentasView._setVistaModo('tabla')">Tabla ERP</button>
-      </div>
       <div id="albaranes-lista"><div class="loader">Cargando albaranes y ventas...</div></div>
       <div id="alb-erp-table-container" class="mt-12" style="display:none;"></div>;
-
-      <!-- FAB -->
-      <div class="fixed bottom-20 right-20 z-50">
-        <button class="btn-fab-primary" onclick="AlbaranesVentasView._abrirMenuNuevo()">
-          ${Icons.agregar()}
-        </button>
-      </div>
     `;
   },
 
   /** Alterna el historial de albaranes entre tarjetas y tabla densa ERP. */
   _setVistaModo(modo, guardar = true) {
     this._vistaModo = modo;
-    if (guardar) {
-      try { localStorage.setItem('albaranes_view_mode', modo); } catch (_) {}
-    }
 
-    const btnCards = document.getElementById('btn-alb-vista-cards');
-    const btnTabla = document.getElementById('btn-alb-vista-tabla');
     const contenedorCards = document.getElementById('albaranes-lista');
     const contenedorTabla = document.getElementById('alb-erp-table-container');
 
-    if (btnCards && btnTabla) {
-      btnCards.style.background = modo === 'cards' ? 'var(--brand, #1F5FA8)' : 'transparent';
-      btnTabla.style.background = modo === 'tabla' ? 'var(--brand, #1F5FA8)' : 'transparent';
-    }
 
     if (modo === 'tabla') {
       if (contenedorCards) contenedorCards.style.display = 'none';
@@ -324,7 +312,7 @@ const AlbaranesVentasView = {
 
     this._cacheTabla = filtrados;
     // El modo lo manda la preferencia guardada; por defecto, tabla.
-    const modoGuardado = localStorage.getItem('albaranes_view_mode') || 'tabla';
+    const modoGuardado = VistaRegistros.get();
     setTimeout(() => this._setVistaModo(modoGuardado, false), 0);
 
     if (!filtrados.length) {

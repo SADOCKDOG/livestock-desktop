@@ -236,7 +236,7 @@ const GastosView = {
     });
 
     // Restaurar modo de vista tras pintar la sección (por defecto "tabla" en escritorio ≥ 1024px)
-    const modo = this._vistaModo || localStorage.getItem('gastos_view_mode') || 'tabla';
+    const modo = this._vistaModo || VistaRegistros.get();
     this._setVistaModo(modo, false);
   },
 
@@ -286,10 +286,6 @@ const GastosView = {
         ` : ''}
         <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-12 pb-5" style="padding-left: 14px; display:flex; align-items:center; justify-content:space-between; gap:4px;">
           <span style="display:flex; align-items:center; gap:4px;">${Icons.documento()} ${listName}</span>
-          <div class="flex gap-4">
-            <button class="btn-erp-secondary btn-sm" id="btn-gastos-vista-cards" onclick="GastosView._setVistaModo('cards')">Tarjetas</button>
-            <button class="btn-erp-secondary btn-sm" id="btn-gastos-vista-tabla" onclick="GastosView._setVistaModo('tabla')">Tabla ERP</button>
-          </div>
         </div>
         <div class="erp-filtros" data-filtros-para="gastos-cards-container">
           <input type="search" id="gastos-filtro-busqueda" class="form-input search-input" placeholder="Buscar gasto por concepto, proveedor o importe...">
@@ -327,19 +323,10 @@ const GastosView = {
 
   _setVistaModo(modo, guardar = true) {
     this._vistaModo = modo;
-    if (guardar) {
-      try { localStorage.setItem('gastos_view_mode', modo); } catch (_) {}
-    }
 
-    const btnCards = document.getElementById('btn-gastos-vista-cards');
-    const btnTabla = document.getElementById('btn-gastos-vista-tabla');
     const contenedorCards = document.getElementById('gastos-cards-container');
     const contenedorTabla = document.getElementById('gastos-erp-table-container');
 
-    if (btnCards && btnTabla) {
-      btnCards.style.background = modo === 'cards' ? 'var(--brand, #1F5FA8)' : 'transparent';
-      btnTabla.style.background = modo === 'tabla' ? 'var(--brand, #1F5FA8)' : 'transparent';
-    }
 
     if (modo === 'tabla') {
       if (contenedorCards) contenedorCards.style.display = 'none';

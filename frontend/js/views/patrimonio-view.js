@@ -70,12 +70,15 @@ const PatrimonioView = {
           </div>
         </fieldset>
 
+        <!-- Accesos directos táctiles -->
+        <div class="grid grid-cols-3 gap-8 mb-16">
+          <a href="#/animales" class="widget-link-btn widget-link-btn--neon neon-info"><span class="widget-link-label">${Icons.animales()} Animales</span></a>
+          <a href="#/rebanos" class="widget-link-btn widget-link-btn--neon neon-info"><span class="widget-link-label">${Icons.rebanos()} Rebaños</span></a>
+          <a href="#/zonas" class="widget-link-btn widget-link-btn--neon neon-info"><span class="widget-link-label">${Icons.zonas()} Zonas</span></a>
+        </div>
+
         <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-6 pb-5" style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
           <span>${Icons.documento()} Lotes Activos (${rebanos.length})</span>
-          <span class="flex gap-4">
-            <button class="btn-erp-secondary btn-sm" id="btn-patr-vista-cards" onclick="PatrimonioView._setVistaModo('cards')">Tarjetas</button>
-            <button class="btn-erp-secondary btn-sm" id="btn-patr-vista-tabla" onclick="PatrimonioView._setVistaModo('tabla')">Tabla ERP</button>
-          </span>
         </div>
         <div class="grid gap-10" id="patr-lotes-lista" data-ver-mas="10">
           ${rebanos.length > 0
@@ -119,7 +122,7 @@ const PatrimonioView = {
     }));
 
     if (this._cacheLotes.length > 0) {
-      const modoGuardado = localStorage.getItem('patrimonio_view_mode') || 'tabla';
+      const modoGuardado = VistaRegistros.get();
       this._setVistaModo(modoGuardado, false);
     }
   },
@@ -127,19 +130,10 @@ const PatrimonioView = {
   /** Alterna el listado de lotes entre tarjetas y tabla densa ERP. */
   _setVistaModo(modo, guardar = true) {
     this._vistaModo = modo;
-    if (guardar) {
-      try { localStorage.setItem('patrimonio_view_mode', modo); } catch (_) {}
-    }
 
-    const btnCards = document.getElementById('btn-patr-vista-cards');
-    const btnTabla = document.getElementById('btn-patr-vista-tabla');
     const contenedorCards = document.getElementById('patr-lotes-lista');
     const contenedorTabla = document.getElementById('patr-erp-table-container');
 
-    if (btnCards && btnTabla) {
-      btnCards.style.background = modo === 'cards' ? 'var(--brand, #1F5FA8)' : 'transparent';
-      btnTabla.style.background = modo === 'tabla' ? 'var(--brand, #1F5FA8)' : 'transparent';
-    }
 
     if (modo === 'tabla') {
       if (contenedorCards) contenedorCards.style.display = 'none';
@@ -161,7 +155,6 @@ const PatrimonioView = {
       title: 'Lotes activos',
       pageSize: 15,
       columns: [
-        // el nombre del lote iba en dorado en la ficha
         { key: 'nombre', label: 'Lote / Rebaño', sortable: true, cellClass: 'erp-cell-id' },
         { key: 'especie', label: 'Especie', sortable: true },
         { key: 'tipo', label: 'Tipo', sortable: true },

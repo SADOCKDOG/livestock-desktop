@@ -196,7 +196,7 @@ const DocumentosView = {
       this._setupFilters();
 
       // Restaurar modo de vista (por defecto "tabla" en escritorio ≥ 1024px)
-      const modoGuardado = localStorage.getItem('documentos_view_mode') || 'tabla';
+      const modoGuardado = VistaRegistros.get();
       this._setVistaModo(modoGuardado, false);
     } catch (e) {
       console.error('[Documentos] Error:', e);
@@ -262,29 +262,23 @@ const DocumentosView = {
         </div>
       </div>
 
-      <div class="card p-12 mb-14 border-222 card-dark-gradient card-resumen pb-24" style="background: rgba(168,85,247,0.015); width:100%;">
-        <div class="section-header-theme" style="--theme-color: var(--c-info); font-weight:900;"><span style="color: var(--c-info); margin-right:4px;">|</span> ACCESOS Y ACCIONES</div>
-        <div class="grid grid-cols-2 gap-10 max-w-320 mx-auto mt-10">
-          <button class="widget-link-btn widget-link-btn--neon neon-warning" onclick="DocumentosView._abrirAsistenteConsulta()">
-            ${Icons.buscar()}
-            <span class="widget-link-label">Consultar / Imprimir</span>
-          </button>
-          <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="DocumentosView._exportDocs()">
-            ${Icons.exportar()}
-            <span class="widget-link-label">Exportar Todo</span>
-          </button>
-        </div>
-        <div class="mt-4"><span class="text-xs text-aaa leading-relaxed">${Icons.documento()} Consulta y reimpresión de documentos oficiales por tipo y explotación</span></div>
-      </div>
-
       <div class="card p-16" style="border: 1px solid #27272a; background: #1E1E1E; width:100%;">
         <div class="text-xs text-white font-black uppercase tracking-wider mb-12 flex items-center gap-6" style="justify-content: space-between;">
           <span class="flex items-center gap-6"><span style="color: var(--c-info); margin-right: 4px;">|</span> ${Icons.documento()} REGISTRO DOCUMENTAL</span>
-          <div class="flex gap-4">
-            <button class="btn-erp-secondary btn-sm" id="btn-docs-vista-cards" onclick="DocumentosView._setVistaModo('cards')">Tarjetas</button>
-            <button class="btn-erp-secondary btn-sm" id="btn-docs-vista-tabla" onclick="DocumentosView._setVistaModo('tabla')">Tabla ERP</button>
-          </div>
         </div>
+        <fieldset class="erp-action-group">
+          <legend>Acciones de Registro</legend>
+          <div class="erp-action-group-body">
+            <button class="widget-link-btn widget-link-btn--neon neon-warning" onclick="DocumentosView._abrirAsistenteConsulta()">
+              ${Icons.buscar()}
+              <span class="widget-link-label">Consultar / Imprimir</span>
+            </button>
+            <button class="widget-link-btn widget-link-btn--neon neon-success" onclick="DocumentosView._exportDocs()">
+              ${Icons.exportar()}
+              <span class="widget-link-label">Exportar Todo</span>
+            </button>
+          </div>
+        </fieldset>
         <div class="erp-filtros" data-filtros-para="docs-lista">
           <input type="search" class="form-input search-input" placeholder="Buscar documento por tipo, número o fecha...">
           <select class="form-select" data-etiqueta-todos="Todos los tipos"></select>
@@ -506,20 +500,11 @@ const DocumentosView = {
 
   _setVistaModo(modo, guardar = true) {
     this._vistaModo = modo;
-    if (guardar) {
-      try { localStorage.setItem('documentos_view_mode', modo); } catch (_) {}
-    }
 
-    const btnCards = document.getElementById('btn-docs-vista-cards');
-    const btnTabla = document.getElementById('btn-docs-vista-tabla');
     const contenedorCards = document.getElementById('docs-lista');
     const contenedorTabla = document.getElementById('docs-erp-table-container');
     const notaMas = document.getElementById('docs-mas-nota');
 
-    if (btnCards && btnTabla) {
-      btnCards.style.background = modo === 'cards' ? 'var(--brand, #1F5FA8)' : 'transparent';
-      btnTabla.style.background = modo === 'tabla' ? 'var(--brand, #1F5FA8)' : 'transparent';
-    }
 
     if (modo === 'tabla') {
       if (contenedorCards) contenedorCards.style.display = 'none';
@@ -683,19 +668,10 @@ const DocumentosView = {
       }
       if (tipo === 'dimoe') {
         const m = await window.db.get('movimientos_ganado', Number(id));
-        if (m) {
-          window.WizardGuiaMovimiento.generarDocumento(finca, m);
-          return;
-        }
-        // Si el DIMOE no tiene representacion en movimientos_ganado, es un
-        // documento archivado: se emitio en SIGGAN y aqui solo se guarda copia.
-        const archivado = await window.db.get('documentos_legales', Number(id));
-        if (archivado) {
-          this._imprimirDimoeArchivado(finca, archivado);
-          return;
-        }
-        throw new Error("Movimiento o documento no encontrado");
-      }  // <-- cerrar if (tipo === 'dimoe')
+        if (m) window.WizardGuiaMovimiento.generarDocumento(finca, m);
+        else throw new Error("Movimiento no encontrado");
+        return;
+      }
       if (tipo === 'albaran_carne' || tipo === 'albaran_leche') {
         if (window.AlbaranesVentasView) {
           await AlbaranesVentasView._imprimirDoc(tipo === 'albaran_carne' ? 'carne' : 'leche', id);
@@ -756,66 +732,6 @@ const DocumentosView = {
     } catch (e) {
       App.toastError("Error al imprimir: " + e.message);
     }
-  },
-
-  /**
-   * PDF de un DIMOE archivado: el que se emitio en SIGGAN y del que aqui solo
-   * se guarda copia. NO reproduce la guia oficial: ese documento lleva
-   * crotales, desinfeccion y veterinario autorizante, y este registro no los
-   * tiene. Imitar el formato oficial con esos campos en blanco seria peor que
-   * no generarlo — alguien podria presentarlo creyendolo valido. Se presenta
-   * como lo que es: la ficha de un documento archivado.
-   */
-  async _imprimirDimoeArchivado(finca, doc) {
-    const dato = (v) => v || '—';
-    const html = `
-      <div style="padding:40px; font-family:serif; color:#000;">
-        <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:20px; margin-bottom:10px;">
-          <h1 style="margin:0; font-size:1.4rem; text-transform:uppercase;">DIMOE archivado</h1>
-          <p style="margin:5px 0 0 0;">${finca.nombre} · ${finca.codigo_REGA || ''}</p>
-        </div>
-        <p style="text-align:center; font-size:0.8rem; color:#555; margin:0 0 30px 0;">
-          Copia de un documento emitido en la plataforma SIGGAN.
-          Este PDF no sustituye al original.
-        </p>
-
-        <div style="margin-bottom:20px;">
-          <p><strong>Nº de documento:</strong> ${dato(doc.numero)}</p>
-          <p><strong>Fecha de emisión:</strong> ${this._fmtFecha(doc.fecha_emision)}</p>
-          <p><strong>Motivo:</strong> ${(doc.motivo || '—').toUpperCase()}</p>
-        </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-bottom:25px;">
-          <div>
-            <h3 style="border-bottom:1px solid #eee; padding-bottom:5px; font-size:1rem;">ORIGEN</h3>
-            <p>${dato(doc.origen_nombre)}<br>REGA: ${dato(doc.origen_rega)}</p>
-          </div>
-          <div>
-            <h3 style="border-bottom:1px solid #eee; padding-bottom:5px; font-size:1rem;">DESTINO</h3>
-            <p>${dato(doc.destino_nombre)}<br>Código: ${dato(doc.destino)}</p>
-          </div>
-        </div>
-
-        <div>
-          <h3 style="border-bottom:1px solid #eee; padding-bottom:5px; font-size:1rem;">TRANSPORTE</h3>
-          <p>
-            ${dato(doc.transportista_nombre)}<br>
-            NIF: ${dato(doc.transportista_nif)} · Matrícula: ${dato(doc.transportista_matricula)}
-          </p>
-        </div>
-
-        <p style="margin-top:40px; font-size:0.75rem; color:#666; border-top:1px solid #ddd; padding-top:10px;">
-          Los datos sanitarios (identificación individual, desinfección y veterinario
-          autorizante) constan en el documento original emitido en SIGGAN.
-        </p>
-      </div>`;
-
-    DocumentViewer.show({
-      id: 'doc-viewer-dimoe-archivado',
-      title: 'DIMOE ' + (doc.numero || ''),
-      html,
-      filename: `DIMOE_${doc.numero || doc.id}`
-    });
   },
 
   async _imprimirContratoPDF(finca, contrato) {
