@@ -58,8 +58,28 @@ duplica como `<meta http-equiv>` en el HTML: Tauri sirve la suya con un nonce
 propio para el script IPC que inyecta, y un meta paralelo se aplicaría aparte y
 bloquearía ese script.
 
-`script-src` va sin `'unsafe-inline'`, así que en `frontend/index.html` no puede
-haber ni bloques `<script>` en línea ni atributos `on*=`:
+Lo que aporta hoy: `default-src 'self'` (nada se carga de fuera), `connect-src`
+limitado a la propia app, al IPC y al Worker de soporte —ninguna otra red—,
+`object-src 'none'`, `base-uri 'self'`, `form-action 'none'`, y **sin**
+`'unsafe-eval'`. Los tres usos de `new Function` del árbol (html5-qrcode y las
+dos copias de pdf.js) son detección de capacidades envuelta en `try/catch` con
+alternativa, así que no lo necesitan.
+
+### Por qué `script-src` lleva todavía `'unsafe-inline'`
+
+Porque quitarlo rompe la aplicación entera. Una `script-src` sin
+`'unsafe-inline'` bloquea **todo manejador en atributo**, y las vistas emiten
+unos 410 atributos `on*=` (y algún `javascript:`) dentro del HTML que construyen
+con `innerHTML`, repartidos por unos 50 ficheros. Comprobado sirviendo el
+frontend con la política estricta: los clics quedan muertos y la consola llena
+de «Executing inline event handler violates...».
+
+Además, 43 de esos ficheros son vistas que llegan del maestro con
+`npm run sync`: arreglarlos aquí no serviría de nada porque el siguiente sync
+los pisa. Endurecer `script-src` exige migrarlos a delegación **en
+LIVESTOCK-MANAGER** primero.
+
+`index.html` sí quedó limpio de código en línea, que era el requisito previo:
 
 - Los scripts de arranque viven en `frontend/js/boot/` y se cargan con
   `<script src>` en el orden exacto que tenían.
@@ -71,17 +91,22 @@ haber ni bloques `<script>` en línea ni atributos `on*=`:
 - `js\boot` figura en `$preservedList` de `sync-from-master.ps1`. No existe en el
   maestro, y sin esa entrada `Prune-Tree` lo borraría en cada `npm run sync`.
 
-No hace falta `'unsafe-eval'`: los tres usos de `new Function` del árbol
-(html5-qrcode y las dos copias de pdf.js) son detección de capacidades envuelta
-en `try/catch` con alternativa.
+Asignar `el.onclick = fn` **desde JavaScript** sí está permitido aunque se quite
+`'unsafe-inline'` — la CSP solo bloquea la forma de atributo en el HTML. Lo
+mismo con `style.display` frente a `style="..."`.
 
-Asignar `el.onclick = fn` **desde JavaScript** sí está permitido — la CSP solo
-bloquea la forma de atributo en el HTML. Lo mismo con `style.display` frente a
-`style="..."`.
+### Validar un cambio de política
 
-Para validar un cambio de política sin compilar la app, se sirve `frontend/` con
-un servidor que mande la política exacta como cabecera `Content-Security-Policy`
-y se mira la consola: cualquier violación aparece ahí.
+Se sirve `frontend/` con un servidor que mande la política exacta como cabecera
+`Content-Security-Policy` y se recorre la app. Ojo: **arrancar sin violaciones no
+prueba nada**. Los atributos `on*=` solo violan la política cuando se pulsan, así
+que hay que pulsar de verdad, y en varias vistas. La forma fiable de contarlas:
+
+```js
+window.__viol = [];
+document.addEventListener('securitypolicyviolation',
+  e => window.__viol.push(e.violatedDirective + ' :: ' + e.blockedURI));
+```
 
 ## Compilar
 
