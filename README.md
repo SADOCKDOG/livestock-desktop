@@ -107,7 +107,7 @@ MSYS_NO_PATHCONV=1 signtool sign /fd SHA256 /sha1 <huella> paquete.msixbundle
 ```
 
 `signtool.exe` y `makeappx.exe` están en el SDK de Windows, bajo
-`C:\Program Files (x86)\Windows Kitsin\<version>d\`.
+`C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\`.
 
 Los campos `signing.pfx` y `signing.pfxPassword` de `bundle.config.json` están a
 `null` a propósito y deben seguir así: el fichero está versionado, y por eso
