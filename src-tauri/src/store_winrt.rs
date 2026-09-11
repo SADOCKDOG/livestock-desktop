@@ -14,9 +14,61 @@
 #[cfg(windows)]
 pub mod imp {
     use windows::core::{Interface, HSTRING};
+    use windows::Foundation::Collections::IIterable;
     use windows::Services::Store::{StoreContext, StorePurchaseStatus};
     use windows::Win32::Foundation::HWND;
     use windows::Win32::UI::Shell::IInitializeWithWindow;
+
+    /// Comprueba que la Store conoce el complemento antes de abrir el dialogo.
+    ///
+    /// Un complemento sin publicar hace que `RequestPurchaseAsync` devuelva
+    /// `NotPurchased`, que es exactamente el mismo valor que cuando el usuario
+    /// cierra el dialogo. Sin esta consulta previa las dos situaciones son
+    /// indistinguibles y la compra falla en silencio.
+    ///
+    /// Solo corta cuando la consulta responde y el producto no aparece. Si la
+    /// consulta misma falla se sigue adelante: esto es un diagnostico, y no
+    /// debe convertirse en un motivo nuevo por el que no se pueda comprar.
+    fn comprobar_disponible(contexto: &StoreContext, store_id: &str) -> Result<(), String> {
+        // Los tres tipos de complemento que admite la Store. Las suscripciones
+        // van como "Durable"; los otros dos estan por si el add-on cambia de
+        // tipo, para que el control no empiece a mentir por eso.
+        let tipos: IIterable<HSTRING> = match vec![
+            HSTRING::from("Durable"),
+            HSTRING::from("Consumable"),
+            HSTRING::from("UnmanagedConsumable"),
+        ]
+        .try_into()
+        {
+            Ok(v) => v,
+            Err(_) => return Ok(()),
+        };
+        let ids: IIterable<HSTRING> = match vec![HSTRING::from(store_id)].try_into() {
+            Ok(v) => v,
+            Err(_) => return Ok(()),
+        };
+
+        let consulta = match contexto
+            .GetStoreProductsAsync(&tipos, &ids)
+            .and_then(|operacion| operacion.get())
+        {
+            Ok(c) => c,
+            Err(_) => return Ok(()),
+        };
+
+        match consulta
+            .Products()
+            .and_then(|p| p.HasKey(&HSTRING::from(store_id)))
+        {
+            Ok(true) => Ok(()),
+            Ok(false) => Err(format!(
+                "La Microsoft Store no encuentra el complemento {store_id}. Lo normal \
+                 es que todavia no este publicado, o que no este disponible para esta \
+                 cuenta o en esta region."
+            )),
+            Err(_) => Ok(()),
+        }
+    }
 
     /// Abre el dialogo de compra de la Store para un complemento.
     ///
@@ -36,6 +88,8 @@ pub mod imp {
             init.Initialize(HWND(hwnd as *mut _))
                 .map_err(|e| format!("No se pudo asociar la ventana a la Store: {e}"))?;
         }
+
+        comprobar_disponible(&contexto, store_id)?;
 
         let resultado = contexto
             .RequestPurchaseAsync(&HSTRING::from(store_id))
