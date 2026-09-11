@@ -15,6 +15,7 @@ sincroniza desde `LIVESTOCK-MANAGER` (solo lectura) con `npm run sync`.
 livestock-desktop/
 ├── frontend/                     # Copia sincronizada desde LIVESTOCK-MANAGER (NO editar a mano)
 │   └── js/
+│       ├── boot/                 # Scripts de arranque sacados de index.html por la CSP
 │       ├── mode-config.js        # Generado por los prebuild; no tocar
 │       ├── mode-config-con-pago.js  # window.FREE_MODE = true
 │       ├── mode-config-sin-pago.js  # window.FREE_MODE = false
@@ -49,6 +50,38 @@ El ticket de Entra ID lo acuña el backend (`POST /auth/ms/ticket` en
 `livestock-manager-support-api`); la Store ID key resultante viaja a
 `POST /auth/verify-purchase` con `plataforma: "windows"`. La app **nunca**
 decide por su cuenta si la licencia es válida.
+
+## Content Security Policy
+
+La política vive en `src-tauri/tauri.conf.json` (`app.security.csp`) y **no** se
+duplica como `<meta http-equiv>` en el HTML: Tauri sirve la suya con un nonce
+propio para el script IPC que inyecta, y un meta paralelo se aplicaría aparte y
+bloquearía ese script.
+
+`script-src` va sin `'unsafe-inline'`, así que en `frontend/index.html` no puede
+haber ni bloques `<script>` en línea ni atributos `on*=`:
+
+- Los scripts de arranque viven en `frontend/js/boot/` y se cargan con
+  `<script src>` en el orden exacto que tenían.
+- Los manejadores del chrome (logo, campana, viñeta de finca, sidebar,
+  desplegable del header, buscador) están en `frontend/js/boot/chrome-handlers.js`
+  como delegación en `document`. La delegación conserva lo que hacía el atributo:
+  no exige que el elemento exista ni que `App` esté cargada cuando se registra,
+  porque el destino se busca en el propio clic.
+- `js\boot` figura en `$preservedList` de `sync-from-master.ps1`. No existe en el
+  maestro, y sin esa entrada `Prune-Tree` lo borraría en cada `npm run sync`.
+
+No hace falta `'unsafe-eval'`: los tres usos de `new Function` del árbol
+(html5-qrcode y las dos copias de pdf.js) son detección de capacidades envuelta
+en `try/catch` con alternativa.
+
+Asignar `el.onclick = fn` **desde JavaScript** sí está permitido — la CSP solo
+bloquea la forma de atributo en el HTML. Lo mismo con `style.display` frente a
+`style="..."`.
+
+Para validar un cambio de política sin compilar la app, se sirve `frontend/` con
+un servidor que mande la política exacta como cabecera `Content-Security-Policy`
+y se mira la consola: cualquier violación aparece ahí.
 
 ## Compilar
 
