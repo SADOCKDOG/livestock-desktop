@@ -1,51 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <script>
-      // Sandbox Guard Ultra-Robustecido para entornos iframe restringidos (Open Design Desktop)
-      // Evita de forma síncrona caídas críticas al consultar serviceWorker e indexedDB
-      try {
-        var _testSW = navigator.serviceWorker;
-      } catch (e) {
-        console.warn("[Sandbox Guard] navigator.serviceWorker bloqueado en sandbox. Redefiniendo de forma segura...");
-        try {
-          Object.defineProperty(navigator, 'serviceWorker', {
-            get: function() { return undefined; },
-            configurable: true
-          });
-        } catch (err) {
-          try {
-            Object.defineProperty(Navigator.prototype, 'serviceWorker', {
-              get: function() { return undefined; },
-              configurable: true,
-              enumerable: true
-            });
-          } catch (err2) {
-            console.error("[Sandbox Guard] No se pudo redefinir serviceWorker en el prototipo:", err2);
-          }
-        }
-      }
-
-      try {
-        var _testIDB = window.indexedDB;
-      } catch (e) {
-        console.warn("[Sandbox Guard] window.indexedDB bloqueado en sandbox. Redefiniendo para evitar caídas síncronas...");
-        try {
-          Object.defineProperty(window, 'indexedDB', {
-            get: function() { return undefined; },
-            configurable: true
-          });
-        } catch (err) {
-          console.error("[Sandbox Guard] No se pudo redefinir indexedDB de forma segura:", err);
-        }
-      }
-    </script>
     <meta charset="UTF-8" />
+    <script src="js/boot/sandbox-guard.js"></script>
+    <script src="js/boot/chrome-handlers.js"></script>
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover"
     />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https:; worker-src 'self' blob:;" />
     <!-- Livestock Manager uses Warm Orange (#d97706) -->
     <meta name="theme-color" content="#000000" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -91,7 +53,7 @@
       <nav id="header-breadcrumbs" class="header-breadcrumbs" aria-label="Ruta de navegación"></nav>
 
       <!-- Left: Logo (Centrado en su columna) -->
-      <div class="header-logo-container" onclick="App.route('/')">
+      <div class="header-logo-container">
           <img src="icons/Logo aplicación.png" alt="Livestock Manager" id="app-logo" />
       </div>
 
@@ -104,20 +66,19 @@
         <div id="header-search" class="header-search">
             <span id="header-search-icon" class="header-search-icon"></span>
             <input id="header-search-input" class="header-search-input" type="search"
-                   placeholder="Buscar por crotal, CNI o nombre…" autocomplete="off"
-                   onkeydown="if(event.key==='Enter'){event.preventDefault();App._buscarGlobal();}" />
+                   placeholder="Buscar por crotal, CNI o nombre…" autocomplete="off" />
         </div>
 
         <!-- Campana de alertas con contador -->
         <button id="header-alerts-bell" class="header-alerts-bell" type="button"
-                onclick="location.hash='#/alertas'" aria-label="Ver alertas" title="Alertas">
+                aria-label="Ver alertas" title="Alertas">
             <span id="header-alerts-icon" class="alerts-bell-icon"></span>
             <span id="header-alerts-count" class="alerts-count" style="display:none">0</span>
         </button>
 
         <!-- Right: Viñeta de Finca (REGA con haz de luz) -->
         <div class="flex items-center gap-10 justify-end" style="justify-self: end; display: flex; align-items: flex-end; padding-bottom: 8px;">
-            <div id="finca-badge" class="rega-badge-container flex-col" onclick="App.route('/fincas')" style="margin-left: 4px; display: flex; align-items: flex-end; gap: 2px;">
+            <div id="finca-badge" class="rega-badge-container flex-col" style="margin-left: 4px; display: flex; align-items: flex-end; gap: 2px;">
                 <span id="nombre-finca-header">Cargando...</span>
                 <div id="finca-mode-container" style="display:none; font-size: 0.55rem; font-weight: 900; text-transform: uppercase; color: var(--c-aaa); gap: 4px;">
                     Tipo Explo: <span id="finca-mode-chip-header"></span>
@@ -125,8 +86,8 @@
             </div>
         </div>
       <!-- Dropdown del Header -->
-      <div id="header-dropdown-menu" class="header-dropdown-overlay" onclick="App._toggleHeaderDropdown()">
-        <div class="header-dropdown-content" role="dialog" aria-modal="true" aria-label="Accesos rápidos" onclick="event.stopPropagation()">
+      <div id="header-dropdown-menu" class="header-dropdown-overlay">
+        <div class="header-dropdown-content" role="dialog" aria-modal="true" aria-label="Accesos rápidos">
             <div class="header-dropdown-grid" id="header-dropdown-grid">
                 <!-- Se puebla dinámicamente en app.js -->
             </div>
@@ -140,7 +101,6 @@
         <p>El inicio está tardando más de lo esperado...</p>
         <button
           class="btn btn-primary"
-          onclick="location.reload()"
         >
           Forzar Reinicio
         </button>
@@ -149,55 +109,14 @@
 
     <div id="error-diag"></div>
 
-    <script>
-      // Global error diagnostic for Android
-      window.onerror = function(msg, url, line, col, err) {
-        const diag = document.getElementById('error-diag');
-        if (diag) {
-          diag.style.display = 'block';
-          diag.innerHTML = 'Se ha producido un error: ' + msg + '<br>en ' + url + ':' + line + ':' + col + '\n\n<small style="opacity:0.5">Detalles técnicos disponibles en consola</small>';
-          diag.onclick = () => diag.style.display = 'none';
-        }
-        console.error('[Error]', msg, '\nArchivo:', url, '\nLínea:', line, '\nCol:', col, '\nStack:', err?.stack);
-        return true;
-      };
-      window.addEventListener('unhandledrejection', function(e) {
-        const diag = document.getElementById('error-diag');
-        if (diag) {
-          diag.style.display = 'block';
-          diag.innerHTML = 'Se ha producido un error. Pulsa para continuar.\n\n<small style="opacity:0.5">Detalles técnicos disponibles en consola</small>';
-          diag.onclick = () => diag.style.display = 'none';
-        }
-        console.error('[Promise]', e.reason?.message || e.reason, '\nStack:', e.reason?.stack);
-      });
-      // El chrome (header y nav inferior) lleva onclick="App.*" inline y es pulsable
-      // desde el primer pintado, pero App no existe hasta que terminan de cargar los
-      // ~89 scripts. Tocar cualquier control en ese hueco lanza "App is not defined",
-      // y el window.onerror de arriba lo presenta como un error grave.
-      document.documentElement.classList.add("app-cargando");
-      const _esperaApp = setInterval(() => {
-        if (window.App) {
-          document.documentElement.classList.remove("app-cargando");
-          clearInterval(_esperaApp);
-        }
-      }, 120);
-
-      // Rescue timer. Se comprueba `window.App` en vez del texto del contenedor: el
-      // texto solo dice que aún no se ha pintado la vista, no que el arranque haya
-      // fallado. Y 20s en vez de 8, que se agotaban en arranques en frío.
-      setTimeout(() => {
-        if (!window.App) {
-          document.getElementById("startup-rescue").style.display = "block";
-        }
-      }, 20000);
-    </script>
+    <script src="js/boot/error-diag.js"></script>
 
     <!-- ============================
     SIDEBAR ERP MODULAR (desktop ≥ 1024px)
     Colapsable: 72px icon-only ↔ 240px icon+texto (localStorage "sidebar-collapsed").
     ============================ -->
     <aside class="erp-sidebar" id="erpSidebar" aria-label="Menú principal">
-      <button class="sidebar-toggle" id="sidebarToggle" type="button" onclick="App._toggleSidebar()" aria-label="Plegar/Desplegar menú" aria-expanded="true" title="Plegar menú (Alt+S)">
+      <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Plegar/Desplegar menú" aria-expanded="true" title="Plegar menú (Alt+S)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="3" y1="6" x2="21" y2="6"/>
           <line x1="3" y1="12" x2="21" y2="12"/>
@@ -240,31 +159,11 @@
 
     <div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
 
-    <script>
-    // ============================================
-    // Sombra de scroll universal (reutilizable)
-    // ============================================
-    // Uso: window.enableScrollShadows(containerElement)
-    window.enableScrollShadows = function(el) {
-      if (!el) return;
-      function updateShadows() {
-        var max = el.scrollWidth - el.clientWidth;
-        var atStart = el.scrollLeft <= 4;
-        var atEnd = el.scrollLeft >= max - 4;
-        if (atStart) el.removeAttribute('data-ss-start');
-        else el.setAttribute('data-ss-start', '');
-        if (atEnd) el.removeAttribute('data-ss-end');
-        else el.setAttribute('data-ss-end', '');
-      }
-      el.addEventListener('scroll', updateShadows);
-      window.addEventListener('resize', updateShadows);
-      updateShadows();
-    };
-    </script>
+    <script src="js/boot/scroll-shadows.js"></script>
 
     <!-- Modo de publicación (FREE / PREMIUM) — se genera automáticamente en build:free / build:premium -->
     <script src="js/mode-config.js?v=7.43"></script>
-    <script>if (typeof FREE_MODE === 'undefined') { window.FREE_MODE = false; }</script>
+    <script src="js/boot/free-mode-fallback.js"></script>
 
     <!-- Scripts locales de Livestock Manager Premium (Orden de Dependencia Crítico) -->
     <script src="js/db.js?v=7.43"></script>
@@ -427,47 +326,9 @@
     <!-- Herramientas de QA/E2E (solo en desarrollo): se cargan bajo demanda,
          no en cada arranque en producción. Activar una vez con
          localStorage.setItem('lm_qa_tools','1') y recargar. -->
-    <script>
-      if (window.localStorage && localStorage.getItem('lm_qa_tools') === '1') {
-        ['js/e2e-test-suite.js?v=7.43', 'js/qa-test-runner.js?v=7.43', 'js/qa-diagnostico.js?v=7.43', 'js/qa-siggan.js?v=7.43', 'js/qa-premium.js?v=7.43', 'js/qa-especie-crotal.js?v=7.43', 'js/qa-plan-siggan.js?v=7.43', 'js/qa-margen-animal.js?v=7.43', 'js/qa-importador-rfid.js?v=7.43', 'tests/test-lacteo-v24.js?v=7.43']
-          .forEach((src) => {
-            const s = document.createElement('script');
-            s.src = src;
-            document.body.appendChild(s);
-          });
-      }
-    </script>
+    <script src="js/boot/qa-tools.js"></script>
 
-    <script>
-      window.isNative = !!window.Capacitor;
-      // DESKTOP: la app no usa Service Worker (los assets van empaquetados en el
-      // binario nativo). El SW heredado de la PWA (sw.js, estrategia cache-first)
-      // servía CSS/JS obsoleto incluso tras Ctrl+F5 en la previsualización de
-      // desarrollo. Si queda un SW registrado de visitas anteriores, se
-      // desregistra y se purgan sus cachés, recargando una vez para servir fresco.
-      try {
-        if (navigator.serviceWorker && typeof navigator.serviceWorker.getRegistrations === 'function') {
-          window.addEventListener("load", () => {
-            navigator.serviceWorker.getRegistrations()
-              .then((regs) => {
-                if (!regs.length) return;
-                return Promise.all(regs.map((r) => r.unregister()))
-                  .then(() => (window.caches && caches.keys) ? caches.keys() : [])
-                  .then((keys) => Promise.all((keys || []).map((k) => caches.delete(k))))
-                  .then(() => {
-                    if (!sessionStorage.getItem('sw-purged')) {
-                      sessionStorage.setItem('sw-purged', '1');
-                      location.reload();
-                    }
-                  });
-              })
-              .catch((err) => console.warn("SW purge:", err));
-          });
-        }
-      } catch (e) {
-        console.warn("Service Worker no disponible o bloqueado por el sandbox del entorno:", e.message);
-      }
-    </script>
+    <script src="js/boot/sw-purge.js"></script>
 
 </body>
 </html>
