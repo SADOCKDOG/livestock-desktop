@@ -69,6 +69,7 @@ if ($ramasPermitidas -notcontains $ramaMaestro) {
 $preservedList = @(
     'index.html',                    # Sidebar ERP, links css/js ERP, chrome desktop
     'js\boot',                      # Scripts de arranque extraidos de index.html por la CSP (no existen en el maestro: sin esto, Prune-Tree los borraria)
+    'js\app-version.js',            # Version del paquete MSIX, distinta de la de Android del maestro
     'js\mode-config.js',             # Generado por build:pago / build:demo
     'js\erp-data-table.js',          # Componente ErpDataTable (solo desktop)
     'js\icons-desktop.js',           # Iconos extra desktop: chevronArriba, sortNeutral
