@@ -48,3 +48,9 @@ src-tauri/gen/windows/*
 *.pfx
 *.cer
 *.p12
+
+# Espacios de trabajo de agentes y estado local de Claude Code: son copias
+# duplicadas del proyecto entero (20 MB), no forman parte del producto.
+.claude/
+# Configuracion del IDE JetBrains: es de cada maquina, no del repositorio.
+.idea/
