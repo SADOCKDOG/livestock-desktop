@@ -2,6 +2,6 @@
 // porque el maestro trae aqui la version de Android, que es otra numeracion.
 // Al subir la version hay que tocar Cargo.toml, tauri.conf.json y este fichero.
 window.APP_INFO = Object.freeze({
-  version: '4.11.6',
-  versionCode: 532
+  version: '4.11.7',
+  versionCode: 533
 });
