@@ -45,6 +45,22 @@ const SoporteView = {
   // --- Pantallas ------------------------------------------------------------
 
   _pantallaLicencia() {
+    let debugInfo = '';
+    const lastAttempt = window.SoporteStore?.getLastAttempt?.();
+    if (lastAttempt && lastAttempt.clave && lastAttempt.instalacion) {
+      const claveDisplay = lastAttempt.clave; // already first 10 chars
+      const instalacionDisplay = lastAttempt.instalacion.substring(0, 8); // first 8 chars
+      debugInfo = `
+        <div class="mt-15 p-10 bg-gray-50 rounded">
+          <h3 class="text-lg font-semibold mb-5">Información de depuración</h3>
+          <p class="mb-2"><span class="font-medium">ID de instalación:</span> ${instalacionDisplay}...</p>
+          <p class="mb-2"><span class="font-medium">Última clave de tienda intentada:</span> ${claveDisplay}...</p>
+          <p class="text-sm text-gray-500">
+            Asegúrate de haber iniciado sesión en la Microsoft Store con la cuenta que compró el soporte y de tener una suscripción activa.
+          </p>
+        </div>
+      `;
+    }
     return `
       <div class="card p-20 mt-10">
         <h2 class="section-title">Soporte técnico</h2>
@@ -64,6 +80,7 @@ const SoporteView = {
             Ya la tengo
           </button>
         </div>
+        ${debugInfo}
       </div>`;
   },
 

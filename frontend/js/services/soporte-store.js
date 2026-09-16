@@ -91,10 +91,40 @@
         publisherUserId: instalacion || '',
       });
 
-      await window.SupportAPI.iniciarSesion(clave, 'windows');
+      // Store last attempt for debugging
+      this._lastClave = clave;
+      this._lastInstalacion = instalacion;
+
+      // Debug logging
+      console.debug('[SoporteStore] revalidar: clave=', clave, 'instalacion=', instalacion);
+
+      try {
+        await window.SupportAPI.iniciarSesion(clave, 'windows');
+      } catch (e) {
+        console.error('[SoporteStore] iniciarSesion falló:', e);
+        // Also log the clave and instalacion for debugging (but be careful not to leak sensitive info)
+        console.error('[SoporteStore] clave (first 10 chars):', clave ? clave.substring(0, 10) : null);
+        console.error('[SoporteStore] instalacion:', instalacion);
+        throw e;
+      }
       return window.SupportAPI.licenciaActiva();
     },
+
+    /**
+     * Devuelve información del último intento de validación para depuración.
+     * @returns {Object} Objeto con clave (primeros 10 caracteres) e instalacion.
+     */
+    getLastAttempt: function () {
+      return {
+        clave: this._lastClave ? this._lastClave.substring(0, 10) : null,
+        instalacion: this._lastInstalacion
+      };
+    }
   };
+
+  // Initialize last attempt properties
+  SoporteStore._lastClave = null;
+  SoporteStore._lastInstalacion = null;
 
   window.SoporteStore = SoporteStore;
 })();
