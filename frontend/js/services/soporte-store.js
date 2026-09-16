@@ -9,6 +9,7 @@
  *   1. El Worker emite un ticket de Entra ID  (POST /auth/ms/ticket)
  *   2. Tauri lo cambia por una Store ID key   (comando obtener_store_id_key)
  *   3. El Worker canjea la clave por sesion   (POST /auth/verify-purchase)
+ * NUEVO: Paso 0.5 - Registrar instalación con el Worker para habilitar validación
  *
  * La compra la abre WinRT (comando comprar_complemento). La Digital Goods API
  * no sirve aqui: solo funciona en apps instaladas desde la Store, y el WebView2
@@ -20,7 +21,7 @@
   // Store ID del complemento en Partner Center. RequestPurchaseAsync solo
   // entiende este identificador; el Product ID ('support_unlock') es el que
   // devuelve la API de colecciones en inAppOfferToken, y lo usa el Worker.
-  var STORE_ID = '9P4577W3B0D2';
+  var STORE_ID = '9P104KJR294Z';
   // Mismo idioma que support-api.js: con `in` un SUPPORT_API_BASE vacio apunta
   // al mismo sitio en los dos ficheros, cosa que `||` no respetaria.
   var BASE = ('SUPPORT_API_BASE' in window
@@ -64,6 +65,37 @@
     },
 
     /**
+     * Registra el ID de instalación con el Worker de Cloudflare para habilitar
+     * la validación posterior de licencias. Este paso es necesario porque el
+     * Worker rechaza por seguridad cualquier intento de validación desde IDs
+     * de instalación no previamente registrados.
+     */
+    async _registrarInstalacion(instalacion) {
+      if (!instalacion) {
+        return;
+      }
+
+      try {
+        var respuesta = await fetch(BASE + '/auth/register-installation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ instalacion })
+        });
+
+        if (!respuesta.ok) {
+          console.warn('[SoporteStore] No se pudo registrar instalación:', respuesta.status, await respuesta.text());
+          // No lanzamos error porque quizás ya esté registrado o sea un problema temporal
+          // La validación podría seguir funcionando si el ID ya estaba registrado
+        } else {
+          console.debug('[SoporteStore] Instalación registrada correctamente:', instalacion);
+        }
+      } catch (error) {
+        console.error('[SoporteStore] Error registrando instalación:', error);
+        // Similarmente, no lanzamos error para permitir que continúe el flujo
+      }
+    },
+
+    /**
      * Acuna una clave nueva y la canjea por sesion. Se llama tras comprar, en
      * cada arranque y cuando support-api.js detecta la licencia caducada.
      */
@@ -76,6 +108,9 @@
         // sobrevive a una recompra. Se avisa y se continua.
         console.warn('[SoporteStore] sin id de instalación: el historial no se podrá reencontrar');
       }
+
+      // NUEVO: Registrar instalación con el Worker antes de validar licencia
+      await this._registrarInstalacion(instalacion);
 
       var respuesta = await fetch(BASE + '/auth/ms/ticket', { method: 'POST' });
       if (!respuesta.ok) {
