@@ -65,41 +65,10 @@
     },
 
     /**
-     * Registra el ID de instalación con el Worker de Cloudflare para habilitar
-     * la validación posterior de licencias. Este paso es necesario porque el
-     * Worker rechaza por seguridad cualquier intento de validación desde IDs
-     * de instalación no previamente registrados.
-     */
-    async _registrarInstalacion(instalacion) {
-      if (!instalacion) {
-        return;
-      }
-
-      try {
-        var respuesta = await fetch(BASE + '/auth/register-installation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ instalacion })
-        });
-
-        if (!respuesta.ok) {
-          console.warn('[SoporteStore] No se pudo registrar instalación:', respuesta.status, await respuesta.text());
-          // No lanzamos error porque quizás ya esté registrado o sea un problema temporal
-          // La validación podría seguir funcionando si el ID ya estaba registrado
-        } else {
-          console.debug('[SoporteStore] Instalación registrada correctamente:', instalacion);
-        }
-      } catch (error) {
-        console.error('[SoporteStore] Error registrando instalación:', error);
-        // Similarmente, no lanzamos error para permitir que continúe el flujo
-      }
-    },
-
-    /**
      * Acuna una clave nueva y la canjea por sesion. Se llama tras comprar, en
      * cada arranque y cuando support-api.js detecta la licencia caducada.
      */
-    async revalidar() {
+    async revalidar(correo, actualizarEmail) {
       if (!this.disponible()) return false;
 
       var instalacion = await window.SupportAPI._idDeInstalacion();
@@ -108,9 +77,6 @@
         // sobrevive a una recompra. Se avisa y se continua.
         console.warn('[SoporteStore] sin id de instalación: el historial no se podrá reencontrar');
       }
-
-      // NUEVO: Registrar instalación con el Worker antes de validar licencia
-      await this._registrarInstalacion(instalacion);
 
       var respuesta = await fetch(BASE + '/auth/ms/ticket', { method: 'POST' });
       if (!respuesta.ok) {
@@ -134,7 +100,12 @@
       console.debug('[SoporteStore] revalidar: clave=', clave, 'instalacion=', instalacion);
 
       try {
-        await window.SupportAPI.iniciarSesion(clave, 'windows');
+        await window.SupportAPI.iniciarSesion(
+          clave,
+          'windows',
+          correo || '',
+          actualizarEmail === true,
+        );
       } catch (e) {
         console.error('[SoporteStore] iniciarSesion falló:', e);
         // Also log the clave and instalacion for debugging (but be careful not to leak sensitive info)

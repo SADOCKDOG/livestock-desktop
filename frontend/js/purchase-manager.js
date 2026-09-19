@@ -3,11 +3,31 @@
 
   var STORAGE_KEY = 'livestock_premium_purchased';
   var PRODUCT_ID = 'premium_unlock';
+  var SUPPORT_PRODUCT_ID = 'support_unlock';
   // InAppOfferToken del complemento en Partner Center. Es independiente del id
   // de Google Play: si al crear el add-on se usa otro token, hay que cambiarlo
   // aqui, porque la Digital Goods API no permite listar los ids disponibles.
   var MS_STORE_PRODUCT_ID = 'premium_unlock';
   var MS_STORE_BILLING = 'https://store.microsoft.com/billing';
+
+  // Transaction.products contiene objetos {id, offerId}, no ids de producto.
+  function txTieneProducto(tx, productId) {
+    var lista = (tx && tx.products) || [];
+    for (var i = 0; i < lista.length; i++) {
+      var p = lista[i];
+      if (p === productId) return true;
+      if (p && p.id === productId) return true;
+    }
+    return false;
+  }
+
+  function reciboTieneProducto(recibo, productId) {
+    var txs = (recibo && recibo.transactions) || [];
+    for (var t = 0; t < txs.length; t++) {
+      if (txTieneProducto(txs[t], productId)) return true;
+    }
+    return false;
+  }
 
   // --- Licencia de soporte ---------------------------------------------------
   // Se cobra aparte del desbloqueo Premium y se compra en la Store, no con el
@@ -63,6 +83,10 @@
       revalidarSoporte: function () {
         return window.SoporteStore ? window.SoporteStore.revalidar() : Promise.resolve(false);
       },
+      registrarCorreoSoporte: function (correo) {
+        if (!window.SoporteStore) return Promise.reject(new Error('Soporte no disponible.'));
+        return window.SoporteStore.revalidar(correo, true);
+      },
     };
     return;
   }
@@ -110,12 +134,100 @@
       offer.order();
     },
 
-    comprarSoporte: comprarSoporteEnStore,
-    restaurarSoporte: restaurarSoporteEnStore,
+    // --- Licencia de soporte Android ----------------------------------------
+    // En esta rama existe CdvPurchase. La rama FREE_MODE=false retorna antes y
+    // conserva el flujo de Microsoft Store definido arriba.
+    comprarSoporte: function () {
+      var self = this;
+      if (!self._store) {
+        App.toastError('El sistema de pago no está disponible ahora mismo.');
+        return Promise.resolve(false);
+      }
+      try {
+        var producto = self._store.get(SUPPORT_PRODUCT_ID);
+        if (!producto) {
+          App.toastError('La licencia de soporte no está disponible todavía.');
+          return Promise.resolve(false);
+        }
+        var oferta = producto.getOffer();
+        if (!oferta) {
+          App.toastError('El plan de soporte no está disponible todavía.');
+          return Promise.resolve(false);
+        }
+        return self._store.order(oferta).then(function (err) {
+          if (err) {
+            console.warn('[PurchaseManager] order devolvio error:', err.code, err.message);
+            return false;
+          }
+          return self._sincronizarSoporte();
+        });
+      } catch (e) {
+        console.warn('[PurchaseManager] comprarSoporte fallo:', e);
+        App.toastError('No se pudo iniciar la compra.');
+        return Promise.resolve(false);
+      }
+    },
 
-    /** Renueva la licencia de soporte. La llama support-api.js sola. */
+    restaurarSoporte: function () {
+      return this._sincronizarSoporte();
+    },
+
     revalidarSoporte: function () {
-      return window.SoporteStore ? window.SoporteStore.revalidar() : Promise.resolve(false);
+      if (!window.SupportAPI) return Promise.resolve(false);
+      var token = this._tokenDeSoporte();
+      if (!token) return Promise.resolve(false);
+      return window.SupportAPI.iniciarSesion(token, 'android')
+        .then(function () { return true; })
+        .catch(function () { return false; });
+    },
+
+    registrarCorreoSoporte: function (correo) {
+      if (!window.SupportAPI) return Promise.reject(new Error('Soporte no disponible.'));
+      var token = this._tokenDeSoporte();
+      if (!token) return Promise.reject(new Error('No hay licencia de soporte activa.'));
+      return window.SupportAPI.iniciarSesion(token, 'android', correo || '', true);
+    },
+
+    _sincronizarSoporte: function () {
+      var self = this;
+      if (!window.SupportAPI) return Promise.resolve(false);
+
+      var token = self._tokenDeSoporte();
+      if (!token) {
+        App.toast('No se encontró ninguna licencia de soporte en esta cuenta.', 'info');
+        return Promise.resolve(false);
+      }
+
+      return window.SupportAPI.iniciarSesion(token, 'android')
+        .then(function () {
+          App.toast('Soporte activado.', 'success');
+          return true;
+        })
+        .catch(function (e) {
+          App.toastError((e && e.message) || 'No se pudo activar el soporte.');
+          return false;
+        });
+    },
+
+    _tokenDeSoporte: function () {
+      try {
+        var recibos = (this._store && this._store.localReceipts) || [];
+        for (var i = 0; i < recibos.length; i++) {
+          var txs = recibos[i].transactions || [];
+          for (var t = 0; t < txs.length; t++) {
+            var tx = txs[t];
+            if (!txTieneProducto(tx, SUPPORT_PRODUCT_ID)) continue;
+            var token = tx.purchaseToken ||
+                        (tx.nativePurchase && tx.nativePurchase.purchaseToken) ||
+                        tx.transactionId || null;
+            if (token) return token;
+          }
+        }
+        console.warn('[PurchaseManager] sin token de soporte en', recibos.length, 'recibos');
+      } catch (e) {
+        console.warn('[PurchaseManager] no se pudo leer el recibo de soporte:', e);
+      }
+      return null;
     },
 
     restorePurchases: function () {
@@ -254,6 +366,11 @@
         id: PRODUCT_ID,
         type: CdvPurchase.ProductType.NON_CONSUMABLE,
         platform: CdvPurchase.Platform.GOOGLE_PLAY
+      }, {
+        // El soporte es una suscripcion independiente del desbloqueo Premium.
+        id: SUPPORT_PRODUCT_ID,
+        type: CdvPurchase.ProductType.PAID_SUBSCRIPTION,
+        platform: CdvPurchase.Platform.GOOGLE_PLAY
       }]);
 
       store.when()
@@ -266,6 +383,15 @@
         })
         .verified(function (receipt) {
           console.log('[PurchaseManager] verified:', receipt);
+          if (reciboTieneProducto(receipt, SUPPORT_PRODUCT_ID)) {
+            receipt.finish();
+            self._sincronizarSoporte();
+            return;
+          }
+          if (!reciboTieneProducto(receipt, PRODUCT_ID)) {
+            receipt.finish();
+            return;
+          }
           self._markPurchased();
           receipt.finish();
           if (window.PremiumManager && window.PremiumManager.cleanDemoData) {
@@ -285,7 +411,7 @@
           var receipts = (self._store && self._store.localReceipts) || [];
           console.log('[PurchaseManager] receiptsReady, recibos locales:', receipts.length);
           for (var i = 0; i < receipts.length; i++) {
-            if (receiptHasProduct(receipts[i], PRODUCT_ID)) {
+            if (reciboTieneProducto(receipts[i], PRODUCT_ID)) {
               self._markPurchased();
               break;
             }
@@ -293,12 +419,25 @@
         });
 
       store.error(function (err) {
-        console.error('[PurchaseManager] error:', err && err.code, err && err.message);
-        // Autocuración: si Google responde "ya comprado", marcar Premium localmente
+        var code = err && err.code;
         var msg = (err && err.message) || '';
-        if ((err && err.code === 6777003) || /already owned|ya has comprado/i.test(msg)) {
-          self._markPurchased();
-          App.toast('Compra Premium restaurada.', 'success');
+        var producto = (err && err.productId) || '';
+        console.error('[PurchaseManager] error:', code, producto, msg);
+
+        if (code === CdvPurchase.ErrorCode.PAYMENT_CANCELLED) return;
+
+        if (/already[ _]owned|ya (lo )?has comprado|ya tienes una suscripci/i.test(msg)) {
+          if (producto === SUPPORT_PRODUCT_ID) {
+            self._sincronizarSoporte();
+          } else {
+            self._markPurchased();
+            App.toast('Compra Premium restaurada.', 'success');
+          }
+          return;
+        }
+
+        if (producto === SUPPORT_PRODUCT_ID || code === CdvPurchase.ErrorCode.PURCHASE) {
+          App.toastError('No se pudo completar la compra. Intentalo de nuevo.');
         }
       });
 
@@ -315,14 +454,6 @@
           self._checkLocal();
         });
 
-      function receiptHasProduct(receipt, productId) {
-        if (!receipt || !receipt.transactions) return false;
-        for (var t = 0; t < receipt.transactions.length; t++) {
-          var tx = receipt.transactions[t];
-          if (tx.products && tx.products.indexOf(productId) !== -1) return true;
-        }
-        return false;
-      }
     },
 
     _markPurchased: function () {
