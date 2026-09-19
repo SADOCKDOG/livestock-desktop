@@ -21,7 +21,7 @@
   // Store ID del complemento en Partner Center. RequestPurchaseAsync solo
   // entiende este identificador; el Product ID ('support_unlock') es el que
   // devuelve la API de colecciones en inAppOfferToken, y lo usa el Worker.
-  var STORE_ID = '9P104KJR294Z';
+  var STORE_ID = '9P4577W3B0D2';
   // Mismo idioma que support-api.js: con `in` un SUPPORT_API_BASE vacio apunta
   // al mismo sitio en los dos ficheros, cosa que `||` no respetaria.
   var BASE = ('SUPPORT_API_BASE' in window

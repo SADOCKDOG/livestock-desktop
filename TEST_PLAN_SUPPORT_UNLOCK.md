@@ -1,4 +1,4 @@
-# Test Plan: Verificación de Soporte Unlock en 4.11.9
+# Test Plan: Verificación de Soporte Unlock en 4.11.10
 
 ## Objetivo
 Verificar que la compra del complemento `support_unlock` y el flujo de incidencias
@@ -9,18 +9,25 @@ complemento configurado como gratuito para pruebas.
 
 | Dato | Valor |
 |---|---|
-| Versión de la app | **4.11.9** |
-| Ficheros que la declaran | `frontend/js/app-version.js`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml` |
-| Paquete | `Livestock Manager PREMIUM_4.11.9.0.msixbundle` |
+| Versión de la app | **4.11.10** |
+| Ficheros que la declaran | `frontend/js/app-version.js`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock` |
+| Paquete | `Livestock Manager PREMIUM_4.11.10.0.msixbundle` |
 | Identidad | `SdogFarmSoftwareFactory.LIVESTOCKMANAGER` |
-| Store ID del complemento | `9P104KJR294Z` |
+| Store ID del complemento | `9P4577W3B0D2` |
 
-### Aviso sobre artefactos antiguos
+### Por qué 4.11.10 y no 4.11.9
 
-En `src-tauri/target/msix/` puede quedar un `Livestock Manager PREMIUM_4.11.7.0.msixbundle`.
-**No usarlo.** Se construyó desde el commit `0609de9`, anterior al arreglo del idioma
-(`4c4b127`), así que su `AppxManifest.xml` declara `<Resource Language="en-us" />`.
-Tampoco es el paquete que está en el vuelo. Si aparece, borrarlo antes de empezar:
+El primer intento de subida del 4.11.9 lo rechazó Partner Center: el envío ya contenía
+un paquete con el nombre completo
+`SdogFarmSoftwareFactory.LIVESTOCKMANAGER 4.11.9.0 X64`, y el paquete nuevo, que sí
+lleva los arreglos de licencias, salía con el mismo nombre y contenido distinto. El
+nombre completo incluye la versión, así que hubo que incrementarla.
+
+Lección para la próxima vez: **cada paquete nuevo necesita una versión que no se haya
+usado antes**, aunque el cambio sea pequeño.
+
+`npm run build:msix` limpia `src-tauri/target/msix` antes de construir, así que no
+deberían quedar paquetes de versiones anteriores. Si aparece alguno, borrarlo:
 
 ```bash
 rm -rf src-tauri/target/msix
@@ -29,7 +36,7 @@ rm -rf src-tauri/target/msix
 ## Requisitos previos
 
 1. `support_unlock` publicado en la Store (envío gratuito de pruebas ya certificado).
-2. Paquete 4.11.9 generado e instalado desde el vuelo piloto
+2. Paquete 4.11.10 generado e instalado desde el vuelo piloto
    (`SdogFarmSoftwareFactory.LIVESTOCKMANAGER`), no desde producción.
 3. Sesión iniciada en la Microsoft Store con la cuenta que va a "comprar".
 4. Sin licencia de soporte activa en esa cuenta.
@@ -46,8 +53,8 @@ correcto para la Store) y deja el `.msixbundle` en `src-tauri/target/msix/`.
 ## Paso a paso
 
 ### 1. Preparación
-- [ ] Instalar el paquete 4.11.9 desde el vuelo piloto.
-- [ ] Verificar que el pie de la app muestra **V4.11.9**.
+- [ ] Instalar el paquete 4.11.10 desde el vuelo piloto.
+- [ ] Verificar que el pie de la app muestra **V4.11.10**.
 - [ ] Confirmar que no hay licencia de soporte activa.
 
 ### 2. Activación del soporte
@@ -110,12 +117,13 @@ comprobar en consola que en cada arranque se revalida sin errores.
 
 ## Señales de que la prueba no es válida
 
-- El pie no dice V4.11.9 → el paquete instalado no es el que toca.
+- El pie no dice V4.11.10 → el paquete instalado no es el que toca.
 - Al pulsar "Activar soporte" sale **"El sistema de pago no está disponible ahora mismo."**
   → se está ejecutando la rama de Android dentro de la app de escritorio.
 - Al pulsar "Activar soporte" sale **"La compra de soporte solo está disponible en la
   app instalada desde la Microsoft Store."** → `window.SoporteStore` no está cargado.
-- El paquete declara `en-us` en su manifiesto → es el artefacto antiguo del 4.11.7.
+- El paquete declara `en-us` en su manifiesto → es un artefacto construido antes del
+  arreglo de idioma (`4c4b127`), no el del vuelo.
 
 ## Notas
 
