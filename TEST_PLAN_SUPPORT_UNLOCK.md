@@ -1,4 +1,4 @@
-# Test Plan: Verificación de Soporte Unlock en 4.11.10
+# Test Plan: Verificación de Soporte Unlock en 4.11.11
 
 ## Objetivo
 Verificar que la compra del complemento `support_unlock` y el flujo de incidencias
@@ -9,13 +9,13 @@ complemento configurado como gratuito para pruebas.
 
 | Dato | Valor |
 |---|---|
-| Versión de la app | **4.11.10** |
+| Versión de la app | **4.11.11** |
 | Ficheros que la declaran | `frontend/js/app-version.js`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock` |
-| Paquete | `Livestock Manager PREMIUM_4.11.10.0.msixbundle` |
+| Paquete | `Livestock Manager PREMIUM_4.11.11.0.msixbundle` |
 | Identidad | `SdogFarmSoftwareFactory.LIVESTOCKMANAGER` |
 | Store ID del complemento | `9P4577W3B0D2` |
 
-### Por qué 4.11.10 y no 4.11.9
+### Por qué 4.11.11 y no 4.11.9
 
 El primer intento de subida del 4.11.9 lo rechazó Partner Center: el envío ya contenía
 un paquete con el nombre completo
@@ -36,7 +36,7 @@ rm -rf src-tauri/target/msix
 ## Requisitos previos
 
 1. `support_unlock` publicado en la Store (envío gratuito de pruebas ya certificado).
-2. Paquete 4.11.10 generado e instalado desde el vuelo piloto
+2. Paquete 4.11.11 generado e instalado desde el vuelo piloto
    (`SdogFarmSoftwareFactory.LIVESTOCKMANAGER`), no desde producción.
 3. Sesión iniciada en la Microsoft Store con la cuenta que va a "comprar".
 4. Sin licencia de soporte activa en esa cuenta.
@@ -53,8 +53,8 @@ correcto para la Store) y deja el `.msixbundle` en `src-tauri/target/msix/`.
 ## Paso a paso
 
 ### 1. Preparación
-- [ ] Instalar el paquete 4.11.10 desde el vuelo piloto.
-- [ ] Verificar que el pie de la app muestra **V4.11.10**.
+- [ ] Instalar el paquete 4.11.11 desde el vuelo piloto.
+- [ ] Verificar que el pie de la app muestra **V4.11.11**.
 - [ ] Confirmar que no hay licencia de soporte activa.
 
 ### 2. Activación del soporte
@@ -117,7 +117,7 @@ comprobar en consola que en cada arranque se revalida sin errores.
 
 ## Señales de que la prueba no es válida
 
-- El pie no dice V4.11.10 → el paquete instalado no es el que toca.
+- El pie no dice V4.11.11 → el paquete instalado no es el que toca.
 - Al pulsar "Activar soporte" sale **"El sistema de pago no está disponible ahora mismo."**
   → se está ejecutando la rama de Android dentro de la app de escritorio.
 - Al pulsar "Activar soporte" sale **"La compra de soporte solo está disponible en la
