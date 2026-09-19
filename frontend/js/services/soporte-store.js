@@ -9,7 +9,6 @@
  *   1. El Worker emite un ticket de Entra ID  (POST /auth/ms/ticket)
  *   2. Tauri lo cambia por una Store ID key   (comando obtener_store_id_key)
  *   3. El Worker canjea la clave por sesion   (POST /auth/verify-purchase)
- * NUEVO: Paso 0.5 - Registrar instalación con el Worker para habilitar validación
  *
  * La compra la abre WinRT (comando comprar_complemento). La Digital Goods API
  * no sirve aqui: solo funciona en apps instaladas desde la Store, y el WebView2
@@ -87,50 +86,23 @@
       }
       var datos = await respuesta.json();
 
+      // La clave no se registra en ningun log ni se guarda en el objeto: contra
+      // el Worker vale como la sesion de este comprador, asi que quien la lea
+      // puede actuar en su nombre. Aqui solo se usa y se descarta.
       var clave = await window.__TAURI__.core.invoke('obtener_store_id_key', {
         ticket: datos.ticket,
         publisherUserId: instalacion || '',
       });
 
-      // Store last attempt for debugging
-      this._lastClave = clave;
-      this._lastInstalacion = instalacion;
-
-      // Debug logging
-      console.debug('[SoporteStore] revalidar: clave=', clave, 'instalacion=', instalacion);
-
-      try {
-        await window.SupportAPI.iniciarSesion(
-          clave,
-          'windows',
-          correo || '',
-          actualizarEmail === true,
-        );
-      } catch (e) {
-        console.error('[SoporteStore] iniciarSesion falló:', e);
-        // Also log the clave and instalacion for debugging (but be careful not to leak sensitive info)
-        console.error('[SoporteStore] clave (first 10 chars):', clave ? clave.substring(0, 10) : null);
-        console.error('[SoporteStore] instalacion:', instalacion);
-        throw e;
-      }
+      await window.SupportAPI.iniciarSesion(
+        clave,
+        'windows',
+        correo || '',
+        actualizarEmail === true,
+      );
       return window.SupportAPI.licenciaActiva();
-    },
-
-    /**
-     * Devuelve información del último intento de validación para depuración.
-     * @returns {Object} Objeto con clave (primeros 10 caracteres) e instalacion.
-     */
-    getLastAttempt: function () {
-      return {
-        clave: this._lastClave ? this._lastClave.substring(0, 10) : null,
-        instalacion: this._lastInstalacion
-      };
     }
   };
-
-  // Initialize last attempt properties
-  SoporteStore._lastClave = null;
-  SoporteStore._lastInstalacion = null;
 
   window.SoporteStore = SoporteStore;
 })();
