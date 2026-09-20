@@ -18,7 +18,7 @@
     "build:demo": "npm run prebuild:demo && tauri build",
     "build:free": "npm run build:pago",
     "build:premium": "npm run build:demo",
-    "build:msix": "npm run sync && npm run prebuild:premium && powershell -NoProfile -Command \"Remove-Item src-tauri/target/msix -Recurse -Force -ErrorAction SilentlyContinue\" && tauri-windows-bundle build",
+    "build:msix": "npm run sync && npm run prebuild:premium && powershell -NoProfile -Command \"if (Test-Path src-tauri/target/msix) { Remove-Item src-tauri/target/msix -Recurse -Force }\" && tauri-windows-bundle build",
     "deploy": "wrangler deploy",
     "preview": "wrangler dev",
     "tauri:windows:build": "tauri-windows-bundle build",
