@@ -986,6 +986,9 @@ const App = {
       <div class="ss-row"><span class="ss-label">Plan</span><span class="ss-value ${planClass}">${plan}</span></div>
       <div class="ss-row"><span class="ss-label">Fecha</span><span class="ss-value">${fecha}</span></div>
       <div class="ss-row"><span class="ss-label">Finca</span><span class="ss-value">${fincaNombre}</span></div>`;
+    // El bloque «Soporte» del pie lo genera SoportePanel (licencia + contador).
+    // Al repintarse innerHTML se pierde, así que se vuelve a montar aquí.
+    if (window.SoportePanel) window.SoportePanel.montarPie();
   },
 
   _expandSidebarGroup(group) {
