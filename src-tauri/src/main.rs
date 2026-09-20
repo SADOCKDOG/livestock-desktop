@@ -10,6 +10,7 @@ async fn obtener_store_id_key(
     ventana: tauri::Window,
     ticket: String,
     publisher_user_id: String,
+    para_compras: bool,
 ) -> Result<String, String> {
     // `hwnd()` solo existe en Windows. Fuera de el no hay ventana que pasarle a
     // la Store, y la implementacion de `store_winrt` ya devuelve el error.
@@ -24,7 +25,7 @@ async fn obtener_store_id_key(
         0isize
     };
     tauri::async_runtime::spawn_blocking(move || {
-        store_winrt::imp::obtener_clave(hwnd, &ticket, &publisher_user_id)
+        store_winrt::imp::obtener_clave(hwnd, &ticket, &publisher_user_id, para_compras)
     })
     .await
     .map_err(|e| format!("Fallo interno al pedir la clave: {e}"))?

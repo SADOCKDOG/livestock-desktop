@@ -121,10 +121,15 @@ pub mod imp {
 
     /// Acuna una Store ID key valida 30 dias para el usuario que ha iniciado
     /// sesion en la Store en esta maquina.
+    ///
+    /// La clave la firma Microsoft para un servicio concreto y no vale para el
+    /// otro: el de compras valida el emisor y rechaza las de colecciones
+    /// (IDX10205). Por eso el servicio se elige aqui, con el ticket que toca.
     pub fn obtener_clave(
         hwnd: isize,
         ticket: &str,
         publisher_user_id: &str,
+        para_compras: bool,
     ) -> Result<String, String> {
         let contexto = StoreContext::GetDefault()
             .map_err(|e| format!("No se pudo abrir la Microsoft Store: {e}"))?;
@@ -139,12 +144,18 @@ pub mod imp {
                 .map_err(|e| format!("No se pudo asociar la ventana a la Store: {e}"))?;
         }
 
-        let operacion = contexto
-            .GetCustomerCollectionsIdAsync(
+        let operacion = if para_compras {
+            contexto.GetCustomerPurchaseIdAsync(
                 &HSTRING::from(ticket),
                 &HSTRING::from(publisher_user_id),
             )
-            .map_err(|e| format!("No se pudo pedir la clave a la Store: {e}"))?;
+        } else {
+            contexto.GetCustomerCollectionsIdAsync(
+                &HSTRING::from(ticket),
+                &HSTRING::from(publisher_user_id),
+            )
+        }
+        .map_err(|e| format!("No se pudo pedir la clave a la Store: {e}"))?;
         let clave = operacion
             .get()
             .map_err(|e| format!("La Store no devolvio la clave: {e}"))?
@@ -169,6 +180,7 @@ pub mod imp {
         _hwnd: isize,
         _ticket: &str,
         _publisher_user_id: &str,
+        _para_compras: bool,
     ) -> Result<String, String> {
         Err("La compra en Microsoft Store solo esta disponible en Windows.".to_string())
     }

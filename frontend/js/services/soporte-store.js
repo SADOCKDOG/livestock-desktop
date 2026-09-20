@@ -77,7 +77,10 @@
         console.warn('[SoporteStore] sin id de instalación: el historial no se podrá reencontrar');
       }
 
-      var respuesta = await fetch(BASE + '/auth/ms/ticket', { method: 'POST' });
+      // El complemento es una suscripcion y Microsoft la publica en el servicio
+      // de compras. Ese servicio solo acepta claves acunadas para el, asi que el
+      // ticket va con su audiencia y WinRT usa su metodo gemelo.
+      var respuesta = await fetch(BASE + '/auth/ms/ticket-compras', { method: 'POST' });
       if (!respuesta.ok) {
         if (respuesta.status === 501) {
           throw new Error('La compra en Microsoft Store todavía no está activada.');
@@ -92,6 +95,7 @@
       var clave = await window.__TAURI__.core.invoke('obtener_store_id_key', {
         ticket: datos.ticket,
         publisherUserId: instalacion || '',
+        paraCompras: true,
       });
 
       await window.SupportAPI.iniciarSesion(
