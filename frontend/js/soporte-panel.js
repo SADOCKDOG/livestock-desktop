@@ -395,7 +395,7 @@
     },
 
     _pantallaBorrador: function () {
-      var b = this._borrador || {};
+      var b = _borrador || {};
       var pasos = (b.pasos_reproduccion || []).map(function (p, i) {
         return (
           '<div class="form-group">' +
