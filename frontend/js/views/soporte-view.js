@@ -57,12 +57,14 @@ const SoporteView = {
           La aplicación seguirá siendo gratuita: solo el soporte requiere licencia.
         </p>
         <div class="erp-action-group mt-20">
-          <button class="btn btn-primary" onclick="SoporteView._comprarLicencia()">
-            Activar soporte
-          </button>
-          <button class="btn" onclick="SoporteView._restaurarLicencia()">
-            Ya la tengo
-          </button>
+          <div class="erp-action-group-body">
+            <button class="btn btn-primary btn--inline" onclick="SoporteView._comprarLicencia()">
+              Activar soporte
+            </button>
+            <button class="btn btn-secondary btn--inline" onclick="SoporteView._restaurarLicencia()">
+              Ya la tengo
+            </button>
+          </div>
         </div>
       </div>`;
   },
@@ -81,11 +83,13 @@ const SoporteView = {
             placeholder="Por ejemplo: al guardar un pesaje de un lote, la app se queda cargando y el peso no aparece luego en la ficha del animal."></textarea>
         </div>
         <div class="erp-action-group mt-10">
-          <button class="btn btn-primary" id="soporte-btn-continuar"
-            onclick="SoporteView._pedirBorrador()">Continuar</button>
-          <button class="btn" onclick="location.hash='#/mis-incidencias'">
-            Mis incidencias
-          </button>
+          <div class="erp-action-group-body">
+            <button class="btn btn-primary btn--inline" id="soporte-btn-continuar"
+              onclick="SoporteView._pedirBorrador()">Continuar</button>
+            <button class="btn btn-secondary btn--inline" onclick="location.hash='#/mis-incidencias'">
+              Mis incidencias
+            </button>
+          </div>
         </div>
       </div>`;
   },
@@ -128,9 +132,11 @@ const SoporteView = {
         </p>
 
         <div class="erp-action-group mt-20">
-          <button class="btn btn-primary" id="soporte-btn-enviar"
-            onclick="SoporteView._confirmar()">Enviar incidencia</button>
-          <button class="btn" onclick="SoporteView._volverAlFormulario()">Volver</button>
+          <div class="erp-action-group-body">
+            <button class="btn btn-primary btn--inline" id="soporte-btn-enviar"
+              onclick="SoporteView._confirmar()">Enviar incidencia</button>
+            <button class="btn btn-secondary btn--inline" onclick="SoporteView._volverAlFormulario()">Volver</button>
+          </div>
         </div>
       </div>`;
   },
@@ -143,12 +149,14 @@ const SoporteView = {
           Ya está registrada. Puedes seguir su estado en «Mis incidencias».
         </p>
         <div class="erp-action-group mt-20">
-          <button class="btn btn-primary" onclick="location.hash='#/mis-incidencias'">
-            Ver mis incidencias
-          </button>
-          <button class="btn" onclick="SoporteView._volverAlFormulario()">
-            Contar otra
-          </button>
+          <div class="erp-action-group-body">
+            <button class="btn btn-primary btn--inline" onclick="location.hash='#/mis-incidencias'">
+              Ver mis incidencias
+            </button>
+            <button class="btn btn-secondary btn--inline" onclick="SoporteView._volverAlFormulario()">
+              Contar otra
+            </button>
+          </div>
         </div>
       </div>`;
   },

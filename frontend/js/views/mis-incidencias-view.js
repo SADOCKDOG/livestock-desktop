@@ -26,7 +26,7 @@ const MisIncidenciasView = {
           <fieldset class="erp-action-group erp-action-group--centro mt-20">
             <legend>Soporte</legend>
             <div class="erp-action-group-body">
-              <button class="btn btn-primary" onclick="location.hash='#/soporte'">Ir a Soporte</button>
+              <button class="btn btn-primary btn--inline" onclick="location.hash='#/soporte'">Ir a Soporte</button>
             </div>
           </fieldset>
         </div>`;
@@ -42,10 +42,10 @@ const MisIncidenciasView = {
         <fieldset class="erp-action-group erp-action-group--centro mt-20">
           <legend>Acciones</legend>
           <div class="erp-action-group-body">
-            <button class="btn btn-primary" onclick="location.hash='#/soporte'">
+            <button class="btn btn-primary btn--inline" onclick="location.hash='#/soporte'">
               Contar una incidencia
             </button>
-            <button class="btn btn-secondary" onclick="MisIncidenciasView.recargar()">
+            <button class="btn btn-secondary btn--inline" onclick="MisIncidenciasView.recargar()">
               Actualizar
             </button>
           </div>
@@ -367,7 +367,7 @@ const MisIncidenciasView = {
       ? `
         <div class="mt-15">
           <div class="text-sm mb-5">¿Se ha resuelto tu problema?</div>
-          <button class="btn btn-primary" data-confirmar="${id}"
+          <button class="btn btn-primary btn--inline" data-confirmar="${id}"
                   onclick="MisIncidenciasView.confirmarResolucion('${id}')">Sí, ya funciona</button>
           <div class="text-gray text-sm mt-10">
             Si sigue fallando, cuéntanoslo aquí abajo y la volveremos a mirar.
@@ -386,7 +386,7 @@ const MisIncidenciasView = {
                       : 'Escribe aquí si quieres añadir algo…'
                   }"></textarea>
         <div class="text-gray text-sm mt-5" id="aviso-${id}"></div>
-        <button class="btn btn-secondary mt-5"
+        <button class="btn btn-secondary btn--inline mt-5"
                 onclick="MisIncidenciasView.enviarMensaje('${id}')">${
                   pendienteDeConfirmar ? 'No, sigue fallando' : 'Enviar'
                 }</button>
@@ -479,9 +479,14 @@ const MisIncidenciasView = {
   },
 
   _claseEstado(estado) {
+    // Los cinco estados con color propio. Antes `enviada` y `analizada`
+    // devolvian cadena vacia: la incidencia recien enviada y la que ya esta en
+    // manos del equipo se veian igual que cualquier otra.
     if (estado === 'resuelta') return 'badge-success';
-    if (estado === 'curso') return 'badge-info';
+    if (estado === 'curso') return 'badge-purple';
     if (estado === 'revision') return 'badge-warning';
+    if (estado === 'analizada') return 'badge-info';
+    if (estado === 'enviada') return 'badge-gray';
     return '';
   },
 

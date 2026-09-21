@@ -1613,6 +1613,13 @@ label {
 .badge-green { background: rgba(197, 250, 80,0.1); color: var(--c-success); }
 .badge-red   { background: rgba(232, 85, 95,0.1); color: var(--c-danger); }
 .badge-blue  { background: rgba(79, 173, 245,0.1); color: #4FADF5; }
+/* Variantes sueltas para los badges de estado. Abajo solo estan las compuestas
+   (.status-badge.badge-info y hermanas, :4260-4265) y las vistas del soporte
+   emiten `class="badge badge-info"` sin el status-badge, asi que revision y
+   curso se pintaban sin color. */
+.badge-info    { background: color-mix(in srgb, var(--c-info) 12%, transparent);    color: var(--c-info); }
+.badge-warning { background: color-mix(in srgb, var(--c-warning) 12%, transparent); color: var(--c-warning); }
+.badge-purple  { background: color-mix(in srgb, var(--c-purple) 12%, transparent);  color: var(--c-purple); }
 .badge-solid-danger  { background: var(--c-danger); color: var(--text-p); }
 .badge-solid-orange  { background: #E8555F; color: var(--text-p); }
 .badge-solid-purple  { background: var(--c-purple); color: var(--text-p); }
