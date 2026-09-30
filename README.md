@@ -1,4 +1,4 @@
-﻿# Livestock Desktop
+# Livestock Desktop
 
 App de escritorio nativa (**Tauri v2**) para Livestock Manager, distribuida como
 paquete **MSIX** en Microsoft Store. El frontend no se escribe aquí: se
@@ -216,19 +216,3 @@ global obsoleta. Se resolvió borrando las cachés (`%LOCALAPPDATA%/Cypress`,
 `%APPDATA%/Cypress`), `node_modules` y `package-lock.json`, fijando
 `cypress@13.17.0` como dependencia de desarrollo y migrando la configuración a
 `defineConfig` con `supportFile: false`.
-
----
-
-## 💚 Support the project
-
-If this project helps you save time, reduce errors, or improve operations, consider sponsoring it.
-
-[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-ff69b4?style=for-the-badge&logo=github)](https://github.com/sponsors/SADOCKDOG)
-
-Your support helps me:
-- keep the project running
-- improve features and stability
-- expand documentation and support
-- develop new tools and integrations
-
-Thank you for supporting the project.
