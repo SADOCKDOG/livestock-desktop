@@ -28,7 +28,7 @@
     "@tauri-apps/api": "latest",
     "@tauri-apps/cli": "latest",
     "cypress": "16.1.0",
-    "wrangler": "^4.132.0",
+    "wrangler": "^4.146.0",
     "@choochmeque/tauri-windows-bundle": "^0.1.29"
   }
 }
