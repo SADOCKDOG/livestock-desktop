@@ -27,8 +27,8 @@
   "devDependencies": {
     "@tauri-apps/api": "latest",
     "@tauri-apps/cli": "latest",
-    "cypress": "13.17.0",
-    "wrangler": "^4.127.1",
+    "cypress": "16.1.0",
+    "wrangler": "^4.132.0",
     "@choochmeque/tauri-windows-bundle": "^0.1.29"
   }
 }
