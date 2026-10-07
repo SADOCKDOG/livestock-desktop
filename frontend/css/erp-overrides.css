@@ -780,3 +780,12 @@ main#app-content.manual-open {
   #bottomNavWrap { display: flex !important; }
 }
 
+
+/* Elementos que solo tienen sentido cuando no hay sidebar (movil/PWA).
+   La fila interna de sub-pestanas duplica los accesos del sidebar en Desktop,
+   asi que se oculta a partir de 1024px. La clase la usan Lacteo, Tramites,
+   Gastos, Agenda e Informes; estaba en el JS sin regla que la definiera, asi
+   que hasta ahora no ocultaba nada. */
+@media (min-width: 1024px) {
+  .erp-solo-movil { display: none !important; }
+}

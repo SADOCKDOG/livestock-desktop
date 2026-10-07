@@ -641,7 +641,7 @@ const App = {
       const isActive = i === 0 && c.route === (path || '/').split('?')[0];
       if (c.route && i === 0) {
         const isActive = i === 0 && c.route === (path || '/').split('?')[0];
-        return sep + `<a class="bc-crumb bc-link${isActive ? ' bc-active' : ''}" href="javascript:void(0)" onclick="location.hash='${c.route}'${isActive ? ' aria-current="page"' : ''}">${c.label}</a>`;
+        return sep + `<a class="bc-crumb bc-link${isActive ? ' bc-active' : ''}" href="javascript:void(0)"${isActive ? ' aria-current="page"' : ''} onclick="location.hash='${c.route}'">${c.label}</a>`;
       }
       return sep + `<span class="bc-crumb${isActive ? ' bc-active' : ''}">${c.label}</span>`;
     }).join('');
@@ -2775,7 +2775,7 @@ const App = {
     if (!App._viewGroupLoadPromises[groupName]) {
       App._viewGroupLoadPromises[groupName] = Promise.all(files.map(src => new Promise((resolve, reject) => {
         const s = document.createElement('script');
-        s.src = src + '?v=6.74.0';
+        s.src = src + '?v=7.43';  // mismo token que index.html, si no el WebView2 sirve la copia cacheada
         s.async = false;
         s.onload = resolve;
         s.onerror = reject;
@@ -3545,6 +3545,13 @@ const App = {
       const tab = params?.get ? params.get('tab') : null;
       if (tab) {
         ExplotacionView._activeSubModule = tab;
+      }
+      // El sidebar abre cada tramite como vista independiente con
+      // /explotacion?tab=tramites&sub=<clave>. Sin leer este parametro todas las
+      // entradas caian en la primera sub-pestana (Guias). Se valida contra las
+      // claves reales en ExplotacionView._aplicarTramiteSubDesdeRuta.
+      if (tab === 'tramites' && params?.get) {
+        ExplotacionView._aplicarTramiteSubDesdeRuta(params.get('sub'));
       }
       await ExplotacionView.render(params);
     }
