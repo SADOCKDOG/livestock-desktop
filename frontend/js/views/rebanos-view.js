@@ -426,7 +426,7 @@ const RebanosView = {
             <div><label class="form-label uppercase font-900 text-[0.65rem] text-gray">Ubicación (Zona)</label>
             <select id="r-edit-zona" class="premium-input border-gold font-800">
               <option value="">SIN ASIGNAR</option>
-              ${zonas.map((z) => `<option value="${z.nombre}" ${rebano.zonaActual === z.nombre ? "selected" : ""}>${z.nombre.toUpperCase()}</option>`).join("")}
+              ${zonas.map((z) => `<option value="${z.id}" ${Number(rebano.zonaId) === Number(z.id) || (rebano.zonaActual === z.nombre && !(Number.isInteger(Number(rebano.zonaId)) && Number(rebano.zonaId) > 0)) ? "selected" : ""}>${z.nombre.toUpperCase()}</option>`).join("")}
             </select></div>
           </div>
           <div><label class="form-label uppercase font-900 text-[0.65rem] text-gray">TIPO DE EXPLOTACIÓN REGA (RD 787/2023)</label>
@@ -637,10 +637,15 @@ const RebanosView = {
   async _guardarRebano(id) {
     try {
       const r = await Rebanos.get(id);
+      const finca = await Fincas.getActive();
+      const zonas = finca ? (finca.zonas || []).filter((zona) => !zona?.anulada) : [];
       r.nombre = document.getElementById("r-edit-nombre").value.trim();
       r.especie = document.getElementById("r-edit-especie").value;
       r.tipo = document.getElementById("r-edit-tipo").value;
-      r.zonaId = document.getElementById("r-edit-zona").value;
+      const zonaId = Number(document.getElementById("r-edit-zona").value) || null;
+      const zonaSeleccionada = zonas.find((zona) => Number(zona.id) === zonaId);
+      r.zonaId = zonaId;
+      r.zonaActual = zonaSeleccionada?.nombre || '';
       r.capacidad_total = Number(document.getElementById("r-edit-capacidad").value) || 0;
       r.codigo_lote = document.getElementById("r-edit-lote").value.trim();
       r.fecha_constitucion = document.getElementById("r-edit-fecha").value;
