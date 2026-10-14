@@ -8,6 +8,9 @@ sincroniza desde `LIVESTOCK-MANAGER` (solo lectura) con `npm run sync`.
 - Identificador del paquete: `SdogFarmSoftwareFactory.LIVESTOCKMANAGER`
 - Versión actual: la de `src-tauri/tauri.conf.json` (fuente única; `package.json`
   no se usa para versionar el producto)
+- Coste: gratuita y sin límites de fincas ni animales (`FREE_MODE = false`). El nombre «PREMIUM» de la ficha designa la edición completa, no un pago.
+- Soporte técnico con IA: complemento opcional con suscripción mensual renovable; la aplicación funciona completa sin comprarlo.
+- Distribución: la versión 4.11.15 se distribuye con el paquete «Activación Licencia de Soporte» de Partner Center. La versión pública de la Store (4.10.526) sigue siendo la PWA.
 
 ## Estructura
 
@@ -34,6 +37,8 @@ livestock-desktop/
 ```
 
 ## Cómo se compra el soporte
+
+El soporte es un complemento opcional de suscripción mensual renovable. Lo que sigue describe solo ese flujo de compra.
 
 El WebView2 de Tauri **no** es una app instalada desde la Store, así que la
 Digital Goods API rechaza la compra con «unsupported context». La única vía
