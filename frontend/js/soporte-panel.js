@@ -6,7 +6,8 @@
  *     Sin licencia), el acceso al panel y el contador de respuestas nuevas.
  *   · PANEL: cajón acoplado a la derecha, con el flujo completo
  *     (licencia → formulario → borrador → enviado) y el listado + detalle de
- *     incidencias. Se minimiza a una barra flotante y recuerda su estado.
+ *     incidencias. Se puede maximizar a toda la ventana, minimizar a una
+ *     barra flotante y recuerda el tamaño con el que se dejó.
  *
  * Reutiliza SupportAPI (tickets + sesión) y PurchaseManager (compra) igual
  * que las vistas por ruta (#/soporte, #/mis-incidencias), que se mantienen
@@ -16,7 +17,7 @@
 (function () {
   'use strict';
 
-  var CLAVE_PANEL = 'lm_soporte_panel'; // 'open' | 'min'
+  var CLAVE_PANEL = 'lm_soporte_panel'; // 'open' | 'max' | 'min'
 
   // Estilos auto-inyectados: no dependen de una hoja externa para poder vivir
   // en el maestro y llegar al escritorio por el sync sin tocar index.html.
@@ -28,7 +29,7 @@
     '.sp-pie:hover{border-color:var(--border,rgba(255,255,255,.12))}',
     '.sp-pie-ico{flex:0 0 auto;display:flex;color:var(--c-info,#4FA)}',
     '.sp-pie-cuerpo{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}',
-    '.sp-pie-rotulo{font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;opacity:.65}',
+    '.sp-pie-rotulo{font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text-s,#B1B1B1);opacity:1}',
     '.sp-pie-estado{font-size:.7rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
     '.sp-pie-estado.ok{color:var(--c-success)}',
     '.sp-pie-estado.no{color:var(--c-danger)}',
@@ -38,10 +39,29 @@
     'background:var(--c-danger);color:var(--surface-card)}',
     '.sp-contador.on{display:inline-flex}',
     // Cajón acoplado
+    // Ficha de licencia
+    '.sp-ficha{border:1px solid var(--border-subtle,rgba(255,255,255,.08));',
+    'border-radius:var(--r-sm,8px);padding:12px;margin-top:10px;',
+    'background:var(--surface-light,rgba(255,255,255,.04))}',
+    '.sp-ficha-fila{display:flex;justify-content:space-between;align-items:baseline;',
+    'gap:10px;padding:6px 0;border-bottom:1px solid var(--border-subtle,rgba(255,255,255,.06))}',
+    '.sp-ficha-fila:last-child{border-bottom:0}',
+    '.sp-ficha-clave{flex:0 0 auto;font-size:.72rem;opacity:.65}',
+    '.sp-ficha-valor{flex:1 1 auto;min-width:0;text-align:right;font-size:.78rem;font-weight:600;',
+    'word-break:break-word}',
+    '.sp-ficha-valor.ok{color:var(--c-success)}',
+    '.sp-ficha-valor.no{color:var(--c-danger)}',
+    '.sp-ficha-valor.aviso{color:var(--c-warning,#E8A33D)}',
     '.sp-panel{position:fixed;top:0;right:0;bottom:0;width:min(400px,96vw);',
     'z-index:9995;display:flex;flex-direction:column;background:var(--surface,#1E1E1E);',
     'color:var(--text-p,#fff);box-shadow:-10px 0 30px rgba(0,0,0,.35);',
     'border-left:1px solid var(--border,#27272A)}',
+    // Maximizado: ocupa toda la ventana. El ancho acoplado pasa a `auto` para
+    // que left+right definan el ancho, y se anula la sombra lateral porque ya
+    // no hay borde de ventana. El `width:100vw` fuerza el ancho del viewport
+    // (1265px utiles con la barra de scroll) en vez del disponible, que
+    // dejaba una franja de 15px por la que se veia la pagina de debajo.
+    '.sp-panel.max{left:0;width:100vw;box-shadow:none;border-left:0}',
     '.sp-cab{display:flex;align-items:center;justify-content:space-between;gap:8px;',
     'padding:12px 14px;border-bottom:1px solid var(--border,#27272A);flex:0 0 auto}',
     '.sp-cab-titulo{font-weight:800;display:flex;align-items:center;gap:8px}',
@@ -81,6 +101,9 @@
   var _vista = 'nueva'; // 'nueva' | 'listado'
   var _abierto = false;
   var _minimizado = false;
+  // Arranca con el tamaño guardado: sin esto, tras reiniciar la app el panel
+  // volvía acoplado aunque se hubiera dejado maximizado.
+  var _maximizado = leerEstadoPanel() === 'max';
   var _cargando = false;
   var _enviando = false;
 
@@ -134,6 +157,17 @@
       '<polyline points="9 18 15 12 9 6"/></svg>';
   }
 
+  // Iconos de maximizar/restaurar. `maximizado` decide si se dibujan las
+  // flechas hacia dentro (restaurar) o hacia fuera (maximizar).
+  function iconoPantalla(maximizado) {
+    var trazo = maximizado
+      ? '<polyline points="4 9 4 4 9 4"/><polyline points="15 4 20 4 20 9"/>' +
+        '<polyline points="20 15 20 20 15 20"/><polyline points="9 20 4 20 4 15"/>'
+      : '<polyline points="9 4 4 4 4 9"/><polyline points="20 15 20 20 15 20"/>';
+    return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      trazo + '</svg>';
+  }
+
   function inyectarEstilos() {
     if (document.getElementById('sp-estilos')) return;
     var style = document.createElement('style');
@@ -157,7 +191,10 @@
   }
 
   function guardarEstadoPanel() {
-    try { localStorage.setItem(CLAVE_PANEL, _minimizado ? 'min' : 'open'); } catch (e) {}
+    // 'max' solo describe el tamaño; abrir y cerrar no lo tocan, para que al
+    // reabrir la ventana recupere el tamaño con el que se dejó.
+    var estado = _minimizado ? 'min' : (_maximizado ? 'max' : 'open');
+    try { localStorage.setItem(CLAVE_PANEL, estado); } catch (e) {}
   }
 
   function leerEstadoPanel() {
@@ -241,6 +278,7 @@
       _abierto = true;
       $id('sp-panel').classList.remove('oculto');
       $id('sp-min').classList.remove('on');
+      this._aplicarTamano();
       this._renderCuerpo();
     },
 
@@ -257,6 +295,29 @@
       if ($id('sp-panel')) $id('sp-panel').classList.add('oculto');
       if ($id('sp-min')) $id('sp-min').classList.add('on');
       pintarContadores();
+    },
+
+    /** Maximizar/restaurar la ventana. Es independiente de minimizar. */
+    alternarMax: function () {
+      _maximizado = !_maximizado;
+      guardarEstadoPanel();
+      this._aplicarTamano();
+    },
+
+    /**
+     * Sincroniza el tamaño real del cajón con el estado. El botón cambia de
+     * icono y de texto según el tamaño, para que el gesto siguiente sea
+     * evidente sin pasar el ratón.
+     */
+    _aplicarTamano: function () {
+      var panel = $id('sp-panel');
+      var btn = $id('sp-btn-max');
+      if (!panel || !btn) return;
+      panel.classList.toggle('max', _maximizado);
+      btn.innerHTML = iconoPantalla(_maximizado);
+      btn.title = _maximizado ? 'Restaurar' : 'Maximizar';
+      btn.setAttribute('aria-label', btn.title);
+      btn.setAttribute('aria-pressed', _maximizado ? 'true' : 'false');
     },
 
     alternarVista: function (vista) {
@@ -288,6 +349,7 @@
         '<div class="sp-cab">' +
         '<div class="sp-cab-titulo">' + ICO_SOPORTE + ' Soporte</div>' +
         '<div class="sp-cab-acciones">' +
+        '<button id="sp-btn-max" type="button" title="Maximizar" aria-label="Maximizar" aria-pressed="false">' + iconoPantalla(false) + '</button>' +
         '<button id="sp-btn-min" type="button" title="Minimizar" aria-label="Minimizar">–</button>' +
         '<button id="sp-btn-cerrar" type="button" title="Cerrar" aria-label="Cerrar">×</button>' +
         '</div></div>' +
@@ -295,6 +357,7 @@
         '<button class="sp-tab" id="sp-tab-nueva" data-vista="nueva" type="button">Nueva incidencia</button>' +
         '<button class="sp-tab" id="sp-tab-listado" data-vista="listado" type="button">' +
         'Mis incidencias ' + contadorTab + '</button>' +
+        '<button class="sp-tab" id="sp-tab-licencia" data-vista="licencia" type="button">Licencia</button>' +
         '</div>' +
         '<div class="sp-cuerpo" id="sp-cuerpo"></div>';
       document.body.appendChild(panel);
@@ -311,16 +374,26 @@
       document.body.appendChild(min);
 
       min.addEventListener('click', function () { SoportePanel.abrir(); });
+      $id('sp-btn-max').addEventListener('click', function () { SoportePanel.alternarMax(); });
       $id('sp-btn-min').addEventListener('click', function () { SoportePanel.minimizar(); });
       $id('sp-btn-cerrar').addEventListener('click', function () { SoportePanel.cerrar(); });
       $id('sp-tab-nueva').addEventListener('click', function () { SoportePanel.alternarVista('nueva'); });
       $id('sp-tab-listado').addEventListener('click', function () { SoportePanel.alternarVista('listado'); });
+      $id('sp-tab-licencia').addEventListener('click', function () { SoportePanel.alternarVista('licencia'); });
     },
 
     _renderCuerpo: function () {
       var cuerpo = $id('sp-cuerpo');
       if (!cuerpo) return;
       this._marcarTabActiva();
+
+      // La ficha de licencia se consulta siempre, tenga o no sesión: sin ella
+      // es justamente donde el usuario necesita ver por qué no tiene soporte.
+      if (_vista === 'licencia') {
+        cuerpo.innerHTML = this._pantallaGestionLicencia();
+        this._cargarLicencia();
+        return;
+      }
 
       if (_vista === 'listado') {
         cuerpo.innerHTML = this._pantallaListado();
@@ -347,8 +420,10 @@
     _marcarTabActiva: function () {
       var nueva = $id('sp-tab-nueva');
       var listado = $id('sp-tab-listado');
+      var licencia = $id('sp-tab-licencia');
       if (nueva) nueva.classList.toggle('on', _vista === 'nueva');
-      if (listado) listado.classList.toggle('on', _vista !== 'nueva');
+      if (listado) listado.classList.toggle('on', _vista === 'listado');
+      if (licencia) licencia.classList.toggle('on', _vista === 'licencia');
     },
 
     _filaEstado: function () {
@@ -375,6 +450,151 @@
         '<button class="btn btn-primary btn--inline" type="button" onclick="SoportePanel.comprar()">Activar soporte</button> ' +
         '<button class="btn btn-secondary btn--inline" type="button" onclick="SoportePanel.restaurar()">Ya la tengo</button>' +
         '</div>');
+    },
+
+    /**
+     * Ficha de la licencia: estado, tipo, vigencia y correo asociado.
+     *
+     * El tipo no viene del servidor: se deduce de la caducidad, igual que
+     * hace SupportAPI.textoLicencia. Una licencia sin `expira` es compra
+     * única; con `expira` es suscripción, y `renovacion_automatica` distingue
+     * si se renueva sola o si el usuario la canceló y sigue funcionando.
+     */
+    _pantallaGestionLicencia: function () {
+      var lic = window.SupportAPI ? window.SupportAPI.licenciaGuardada() : null;
+      var info = window.SupportAPI
+        ? window.SupportAPI.textoLicencia(lic)
+        : { activa: false, titulo: 'Sin licencia' };
+      var correo = window.SupportAPI ? window.SupportAPI.correoGuardado() : '';
+
+      var filas = [];
+      filas.push(['Estado', info.titulo, info.activa ? 'ok' : 'no']);
+      if (info.detalle) filas.push(['Vigencia', info.detalle, info.aviso ? 'aviso' : '']);
+      filas.push([
+        'Tipo',
+        lic && !lic.expira ? 'Compra única' : lic ? 'Suscripción mensual' : '—',
+        '',
+      ]);
+      filas.push(['Correo', correo || 'Sin asociar', '']);
+
+      var ficha = filas.map(function (f) {
+        return (
+          '<div class="sp-ficha-fila">' +
+          '<span class="sp-ficha-clave">' + escapar(f[0]) + '</span>' +
+          '<span class="sp-ficha-valor ' + f[2] + '">' + escapar(f[1]) + '</span>' +
+          '</div>');
+      }).join('');
+
+      return (
+        '<h3 class="sp-titulo">Tu licencia de soporte</h3>' +
+        '<p class="text-gray mt-10 sp-texto">El soporte es un servicio aparte. ' +
+        'La aplicación sigue siendo gratuita.</p>' +
+        '<div class="sp-ficha">' + ficha + '</div>' +
+        '<div class="sp-acciones mt-15">' +
+        (info.activa
+          ? '<button class="btn btn-secondary btn--inline" type="button" ' +
+            'onclick="SoportePanel.revalidarLicencia()">Comprobar ahora</button> ' +
+            '<button class="btn btn-secondary btn--inline" type="button" ' +
+            'onclick="SoportePanel.cambiarCorreo()">Cambiar correo</button>'
+          : '<button class="btn btn-primary btn--inline" type="button" ' +
+            'onclick="SoportePanel.comprar()">Activar soporte</button> ' +
+            '<button class="btn btn-secondary btn--inline" type="button" ' +
+            'onclick="SoportePanel.restaurar()">Ya la tengo</button>') +
+        '</div>' +
+        (info.aviso
+          ? '<p class="text-sm mt-10" style="color:var(--c-warning,#E8A33D)">' +
+            escapar(info.detalle) + '</p>'
+          : ''));
+    },
+
+    /**
+     * Consulta al servidor el estado real de la licencia y repinta.
+     *
+     * Refresca el contador del pie también: si la licencia se cae, el pie
+     * tiene que pasar a «Sin licencia» sin esperar a reiniciar la app.
+     */
+    _cargarLicencia: function () {
+      var cuerpo = $id('sp-cuerpo');
+      if (!cuerpo || !tieneSesion() || !window.SupportAPI) return;
+      SupportAPI.estadoLicencia()
+        .then(function () {
+          // Solo se repinta la ficha, sin volver a pedir los datos: llamar a
+          // _renderCuerpo() aqui reentraba en esta misma carga y el panel se
+          // quedaba llamando a /auth/me sin parar.
+          SoportePanel._repintarLicencia();
+          SoportePanel.actualizar();
+        })
+        .catch(function (e) {
+          // Un 401 ya cierra la sesion por su cuenta. Para el resto no se
+          // sustituye la ficha entera: se conserva lo que ya se sabia y se
+          // añade el aviso con su reintento, porque al borrar el cuerpo el
+          // usuario se quedaba sin ningun boton desde el que salir.
+          if (!cuerpo || _vista !== 'licencia') return;
+          var aviso = document.getElementById('sp-lic-aviso');
+          if (aviso) aviso.remove();
+          var nota = document.createElement('p');
+          nota.id = 'sp-lic-aviso';
+          nota.className = 'text-sm mt-10';
+          nota.style.color = 'var(--c-warning,#E8A33D)';
+          nota.textContent =
+            ((e && e.message) || 'No se pudo comprobar la licencia.') +
+            ' Se muestra la última información conocida.';
+          var cola = cuerpo.querySelector('.sp-ficha');
+          if (cola && cola.nextSibling) cola.parentNode.insertBefore(nota, cola.nextSibling);
+          else cuerpo.appendChild(nota);
+        });
+    },
+
+    /**
+     * Repinta la ficha de licencia sin volver a pedir datos al servidor.
+     *
+     * Existe para que las acciones que ya tra consigo la respuesta fresca
+     * (revalidar, cambiar correo) no recreen en _cargarLicencia().
+     */
+    _repintarLicencia: function () {
+      if (_vista !== 'licencia' || !_abierto) return;
+      var cuerpo = $id('sp-cuerpo');
+      if (cuerpo) cuerpo.innerHTML = this._pantallaGestionLicencia();
+    },
+
+    /** Revalida la licencia contra la Store y avisa del resultado. */
+    revalidarLicencia: function () {
+      if (!window.PurchaseManager || !PurchaseManager.revalidarSoporte) return;
+      App.toast('Comprobando la licencia…', 'info');
+      PurchaseManager.revalidarSoporte()
+        .then(function (ok) {
+          if (ok) App.toast('Licencia confirmada.', 'success');
+          else App.toastError('No se ha podido confirmar la licencia.');
+          SoportePanel.actualizar();
+          SoportePanel._repintarLicencia();
+        })
+        .catch(function (e) {
+          App.toastError((e && e.message) || 'No se pudo comprobar la licencia.');
+        });
+    },
+
+    /** Pide el correo de contacto y lo registra contra la licencia. */
+    cambiarCorreo: function () {
+      var actual = window.SupportAPI ? SupportAPI.correoGuardado() : '';
+      var escrito = window.prompt(
+        'Correo para el soporte (se usará para avisarte de las respuestas):',
+        actual || '',
+      );
+      if (escrito === null) return;
+      var correo = String(escrito).trim();
+      if (!correo) {
+        App.toastError('El correo no puede quedar vacío.');
+        return;
+      }
+      if (!window.PurchaseManager || !PurchaseManager.registrarCorreoSoporte) return;
+      PurchaseManager.registrarCorreoSoporte(correo)
+        .then(function () {
+          App.toast('Correo actualizado.', 'success');
+          SoportePanel._repintarLicencia();
+        })
+        .catch(function (e) {
+          App.toastError((e && e.message) || 'No se pudo actualizar el correo.');
+        });
     },
 
     _pantallaFormulario: function () {
@@ -727,6 +947,9 @@
 
     _trasCompra: function () {
       var estado = leerEstadoPanel();
+      // Si la última vez se usó maximizada, se recupera ese tamaño en vez de
+      // perderlo al reabrir tras la compra.
+      if (estado === 'max') _maximizado = true;
       if (estado !== 'open') this.abrir();
       this._setVista('nueva');
     },
