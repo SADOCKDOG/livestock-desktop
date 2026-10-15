@@ -29,7 +29,7 @@
     '.sp-pie:hover{border-color:var(--border,rgba(255,255,255,.12))}',
     '.sp-pie-ico{flex:0 0 auto;display:flex;color:var(--c-info,#4FA)}',
     '.sp-pie-cuerpo{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}',
-    '.sp-pie-rotulo{font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;opacity:.65}',
+    '.sp-pie-rotulo{font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;color:var(--text-s,#B1B1B1);opacity:1}',
     '.sp-pie-estado{font-size:.7rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
     '.sp-pie-estado.ok{color:var(--c-success)}',
     '.sp-pie-estado.no{color:var(--c-danger)}',
@@ -501,7 +501,7 @@
             '<button class="btn btn-secondary btn--inline" type="button" ' +
             'onclick="SoportePanel.restaurar()">Ya la tengo</button>') +
         '</div>' +
-        (info.avisa
+        (info.aviso
           ? '<p class="text-sm mt-10" style="color:var(--c-warning,#E8A33D)">' +
             escapar(info.detalle) + '</p>'
           : ''));
