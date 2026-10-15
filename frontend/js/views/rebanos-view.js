@@ -195,17 +195,6 @@ const RebanosView = {
   _renderSeccion(content, opts) {
     const { icon, title, subtitle, color, colorDark, kpis, registrarLabel, listName, records, emptyMsg, registrarHandler } = opts;
 
-    const recordsHtml = records.length > 0
-      ? records.map(r => App._cardRegistro({
-          title: `${Icons.rebanos()} ${r.title}`,
-          subtitle: `<span class="flex items-center gap-4">${Icons.calendar()} ${r.date} ${r.zona ? ' | ' + Icons.zonas() + ' ' + r.zona : ''} ${r.tipo ? ' | ' + Icons.paquete() + ' ' + r.tipo.toUpperCase() : ''}</span>`,
-          rightSide: `<div class="font-950" style="font-size:1.1rem; color:${color};">${r.value}</div>`,
-          footerRight: `<span style="display:block; font-size:0.7rem; font-weight:700; color:var(--c-warning); margin-top:4px; white-space:nowrap;">Ficha -></span>`,
-          color: color,
-          onClick: r.onclick
-        })).join('')
-      : `<div class="p-14 text-center bg-dark rounded-sm border border-222"><span class="text-555 text-xs uppercase font-900 tracking-widest">${Icons.buscar()} ${emptyMsg}</span></div>`;
-
     content.innerHTML = `
       <div class="card" style="border: 1px solid #27272a; background: #1E1E1E;">
         <div class="flex items-center gap-12 mb-12">
@@ -235,10 +224,46 @@ const RebanosView = {
         <div class="text-xs text-gray uppercase font-extrabold tracking-wider border-bottom-222 mb-6 pb-5">
           ${Icons.documento()} ${listName}
         </div>
-        <div class="grid gap-10">
-          ${recordsHtml}
-        </div>
+        ${
+          records.length > 0
+            ? '<div id="rebanos-vs-container" class="anim-in"></div>'
+            : `<div class="p-14 text-center bg-dark rounded-sm border border-222"><span class="text-555 text-xs uppercase font-900 tracking-widest">${Icons.buscar()} ${emptyMsg}</span></div>`
+        }
       </div>`;
+
+    // Inicializar scroller virtual sobre la sub-lista de registros
+    if (records.length > 0) {
+      this._initVirtualScroller(records, color);
+    }
+  },
+
+  _initVirtualScroller(records, color) {
+    const contenedor = document.getElementById('rebanos-vs-container');
+    if (!contenedor || !window.UI?.VirtualScroller) return;
+
+    if (this._rebanosVirtualScroller) {
+      this._rebanosVirtualScroller.destroy();
+      this._rebanosVirtualScroller = null;
+    }
+
+    this._rebanosVirtualScroller = new window.UI.VirtualScroller(contenedor, 100, {
+      buffer: 5,
+      height: 'calc(100vh - 260px)',
+      renderItem: (r) => {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = App._cardRegistro({
+          title: `${Icons.rebanos()} ${r.title}`,
+          subtitle: `<span class="flex items-center gap-4">${Icons.calendar()} ${r.date} ${r.zona ? ' | ' + Icons.zonas() + ' ' + r.zona : ''} ${r.tipo ? ' | ' + Icons.paquete() + ' ' + r.tipo.toUpperCase() : ''}</span>`,
+          rightSide: `<div class="font-950" style="font-size:1.1rem; color:${color || 'var(--c-purple)'};">${r.value}</div>`,
+          footerRight: `<span style="display:block; font-size:0.7rem; font-weight:700; color:var(--c-warning); margin-top:4px; white-space:nowrap;">Ficha -></span>`,
+          color: color || 'var(--c-purple)',
+          onClick: r.onclick
+        });
+        return wrapper.firstElementChild;
+      }
+    });
+
+    this._rebanosVirtualScroller.setItems(records);
   },
 
   _fmt(n) {

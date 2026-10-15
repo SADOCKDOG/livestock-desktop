@@ -4512,3 +4512,8 @@ body.glow-tarjetas-off .status-badge {
 /* Asegurar que el chip quede debajo de toasts (6000) y btn-pesaje-close (5001) */
 #toast-container { z-index: 6000; }
 .btn-pesaje-close { z-index: 5001; }
+
+/* Spinner animation for indeterminate progress */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
