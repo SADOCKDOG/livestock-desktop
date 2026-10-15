@@ -19,6 +19,9 @@ vs_components.txt
 .env*
 !.env.example
 
+# Credencial de soporte en local: nunca al repo
+.dev-token
+
 # --- Artefactos de validacion y trabajo local (no forman parte del producto) ---
 validation-*.png
 validacion-*.png

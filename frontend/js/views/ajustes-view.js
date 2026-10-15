@@ -230,10 +230,10 @@ const AjustesView = {
           <button class="widget-link-btn widget-link-btn--neon neon-warning" onclick="AjustesView._abrirManual()">
             ${Icons.libro()} <span class="widget-link-label">Manual de Usuario</span>
           </button>
-          <button class="widget-link-btn widget-link-btn--neon neon-purple" onclick="location.hash='#/soporte'">
+          <button class="widget-link-btn widget-link-btn--neon neon-purple" onclick="window.SoportePanel ? window.SoportePanel.abrir() : (location.hash='#/soporte')">
             ${Icons.ayuda()} <span class="widget-link-label">Soporte técnico</span>
           </button>
-          <button class="widget-link-btn widget-link-btn--neon neon-info" onclick="location.hash='#/mis-incidencias'">
+          <button class="widget-link-btn widget-link-btn--neon neon-info" onclick="window.SoportePanel ? (window.SoportePanel.abrir(), window.SoportePanel.verMisIncidencias()) : (location.hash='#/mis-incidencias')">
             ${Icons.alerta()} <span class="widget-link-label">Mis incidencias</span>
           </button>
         </div>

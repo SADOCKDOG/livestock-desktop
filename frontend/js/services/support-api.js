@@ -373,7 +373,20 @@
 
     var fecha = SupportAPI.fechaLarga(lic.expira);
     var quedan = Math.ceil((Date.parse(lic.expira) - Date.now()) / 86400000);
-    var aviso = quedan >= 0 && quedan <= 7;
+
+    // Una licencia vencida llega aqui con `activa: true` porque el servidor no
+    // revalida en cada respuesta: sin esta comprobacion el usuario veia
+    // «Licencia activa» con una fecha ya pasada, mientras licenciaActiva() si
+    // la daba por caducada y le negaba el envio.
+    if (quedan < 0) {
+      return {
+        activa: false,
+        titulo: 'Licencia caducada',
+        detalle: 'Venció el ' + fecha + '. Reactívala para seguir abriendo incidencias.',
+      };
+    }
+
+    var aviso = quedan <= 7;
 
     if (lic.renovacion_automatica === true) {
       return { activa: true, titulo: 'Licencia activa', detalle: 'Se renueva el ' + fecha + '.' };
