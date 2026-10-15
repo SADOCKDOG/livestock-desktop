@@ -199,16 +199,25 @@
     },
 
     /**
-     * Estado de la licencia segun el servidor (no segun el cliente).
+     * Estado de la licencia y correo segun el servidor, no segun el cliente.
      *
-     * Refresca de paso la copia guardada en la sesion: si el usuario cancelo
-     * la suscripcion desde Google Play, la app no se entera de otra forma.
+     * Refresca la copia guardada en la sesion: la revalidacion de la compra
+     * puede reemplazarla por una respuesta que no incluye el correo, mientras
+     * `/auth/me` devuelve ambos datos desde el registro del usuario en KV.
      */
     async estadoLicencia() {
       var datos = await this._peticion('/auth/me');
-      if (datos && datos.licencia && this._sesion) {
-        this._sesion.licencia = datos.licencia;
-        this._guardarSesion(this._sesion);
+      if (datos && this._sesion) {
+        var actualizada = false;
+        if (datos.licencia) {
+          this._sesion.licencia = datos.licencia;
+          actualizada = true;
+        }
+        if (Object.prototype.hasOwnProperty.call(datos, 'email')) {
+          this._sesion.email = datos.email || '';
+          actualizada = true;
+        }
+        if (actualizada) this._guardarSesion(this._sesion);
       }
       return datos;
     },
