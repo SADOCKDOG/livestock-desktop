@@ -35,6 +35,10 @@ $dst = Join-Path $repoRoot 'frontend'
 # script sincroniza desde ahi sin avisar y el error no se nota hasta que algo se
 # rompe mucho despues. Se aborta salvo que la rama sea una de las previstas.
 $ramasPermitidas = @('master', 'desktop-mvp')
+# Rama canonica: es la rama por defecto del maestro en GitHub y donde vive el
+# trabajo. desktop-mvp se sigue aceptando por compatibilidad, pero es una
+# historia distinta y va por detras, asi que NO se sugiere en los avisos.
+$ramaCanonica = 'master'
 $ramaMaestro = (& git -C $src rev-parse --abbrev-ref HEAD 2>$null)
 
 if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($ramaMaestro)) {
@@ -52,7 +56,7 @@ if ($ramasPermitidas -notcontains $ramaMaestro -and -not $PermitirCualquierRama)
     Write-Host ""
     Write-Host "  Sincronizar desde otra rama traeria trabajo a medias sin avisar."
     Write-Host "  Deja el maestro en la rama correcta y repite:"
-    Write-Host "      git -C `"$src`" checkout desktop-mvp" -ForegroundColor Cyan
+    Write-Host "      git -C `"$src`" checkout $ramaCanonica" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "  Si de verdad quieres sincronizar desde '$ramaMaestro', usa -PermitirCualquierRama."
     Write-Host ""
@@ -63,6 +67,29 @@ if ($ramasPermitidas -notcontains $ramaMaestro) {
     Write-Host "  AVISO: sincronizando desde '$ramaMaestro' por -PermitirCualquierRama." -ForegroundColor Yellow
 } else {
     Write-Host "  Maestro en la rama '$ramaMaestro'." -ForegroundColor DarkGray
+}
+
+# --- Guarda de retroceso ----------------------------------------------------
+# Estar en una rama permitida NO basta: si el checkout del maestro se quedo
+# atras (rama de trabajo parada, o desktop-mvp sincronizada hace semanas), el
+# sync copia contenido viejo sobre frontend/ y BORRA trabajo que solo existe en
+# la version nueva. Comprobar esto salvo con -PermitirCualquierRama.
+if (-not $PermitirCualquierRama -and $ramaMaestro -eq $ramaCanonica) {
+    $detras = (& git -C $src rev-list --count "HEAD..origin/$ramaCanonica" 2>$null)
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "No se pudo comprobar si el maestro esta al dia con origin/$ramaCanonica."
+    } elseif ([int]$detras -gt 0) {
+        Write-Host ""
+        Write-Host "  SYNC ABORTADO" -ForegroundColor Red
+        Write-Host ("  El maestro esta {0} commits por detras de origin/{1}." -f $detras, $ramaCanonica) -ForegroundColor Yellow
+        Write-Host "  Sincronizar ahora copiaria trabajo viejo sobre frontend/." -ForegroundColor Yellow
+        Write-Host "  Actualiza el maestro y repite:"
+        Write-Host "      git -C `"$src`" pull --ff-only" -ForegroundColor Cyan
+        Write-Host ""
+        exit 1
+    } else {
+        Write-Host "  Maestro al dia con origin/$ramaCanonica." -ForegroundColor DarkGray
+    }
 }
 
 # --- Archivos propios del desktop (rutas relativas a frontend/) --------------
