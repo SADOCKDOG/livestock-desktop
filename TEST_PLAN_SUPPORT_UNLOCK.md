@@ -1,4 +1,4 @@
-# Test Plan: Verificación de Soporte Unlock en 4.11.11
+# Test Plan: Verificación de Soporte Unlock en 4.11.18
 
 ## Objetivo
 Verificar que la compra del complemento `support_unlock` y el flujo de incidencias
@@ -9,22 +9,21 @@ complemento configurado como gratuito para pruebas.
 
 | Dato | Valor |
 |---|---|
-| Versión de la app | **4.11.11** |
+| Versión de la app | **4.11.18** |
 | Ficheros que la declaran | `frontend/js/app-version.js`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock` |
-| Paquete | `Livestock Manager PREMIUM_4.11.11.0.msixbundle` |
+| Paquete | `Livestock Manager PREMIUM_4.11.18.0.msixbundle` |
 | Identidad | `SdogFarmSoftwareFactory.LIVESTOCKMANAGER` |
 | Store ID del complemento | `9P4577W3B0D2` |
 
-### Por qué 4.11.11 y no 4.11.9
+### Por qué cada paquete lleva una versión nueva
 
-El primer intento de subida del 4.11.9 lo rechazó Partner Center: el envío ya contenía
-un paquete con el nombre completo
-`SdogFarmSoftwareFactory.LIVESTOCKMANAGER 4.11.9.0 X64`, y el paquete nuevo, que sí
-lleva los arreglos de licencias, salía con el mismo nombre y contenido distinto. El
-nombre completo incluye la versión, así que hubo que incrementarla.
-
-Lección para la próxima vez: **cada paquete nuevo necesita una versión que no se haya
-usado antes**, aunque el cambio sea pequeño.
+Partner Center rechaza un paquete cuyo nombre completo
+(`SdogFarmSoftwareFactory.LIVESTOCKMANAGER <versión> X64`) ya exista en el envío con
+otro contenido. Le pasó al 4.11.9. El nombre completo incluye la versión, así que
+**cada paquete nuevo necesita una versión que no se haya usado antes**, aunque el
+cambio sea pequeño. Por eso el 4.11.17 del 2 de octubre, que es anterior a la ficha de
+licencia y al botón maximizar, se sustituye por el 4.11.18 en lugar de reconstruirse
+con el mismo número.
 
 `npm run build:msix` limpia `src-tauri/target/msix` antes de construir, así que no
 deberían quedar paquetes de versiones anteriores. Si aparece alguno, borrarlo:
@@ -36,7 +35,7 @@ rm -rf src-tauri/target/msix
 ## Requisitos previos
 
 1. `support_unlock` publicado en la Store (envío gratuito de pruebas ya certificado).
-2. Paquete 4.11.11 generado e instalado desde el vuelo piloto
+2. Paquete 4.11.18 generado e instalado desde el vuelo piloto
    (`SdogFarmSoftwareFactory.LIVESTOCKMANAGER`), no desde producción.
 3. Sesión iniciada en la Microsoft Store con la cuenta que va a "comprar".
 4. Sin licencia de soporte activa en esa cuenta.
@@ -53,8 +52,8 @@ correcto para la Store) y deja el `.msixbundle` en `src-tauri/target/msix/`.
 ## Paso a paso
 
 ### 1. Preparación
-- [ ] Instalar el paquete 4.11.11 desde el vuelo piloto.
-- [ ] Verificar que el pie de la app muestra **V4.11.11**.
+- [ ] Instalar el paquete 4.11.18 desde el vuelo piloto.
+- [ ] Verificar que el pie de la app muestra **V4.11.18**.
 - [ ] Confirmar que no hay licencia de soporte activa.
 
 ### 2. Activación del soporte
@@ -71,7 +70,16 @@ correcto para la Store) y deja el `.msixbundle` en `src-tauri/target/msix/`.
 - [ ] El aviso de "soporte no activado" desaparece.
 - [ ] Se puede entrar en **Soporte técnico** y en **Mis incidencias**.
 - [ ] En **Ajustes**, la tarjeta de licencia muestra estado activo con fecha
-      (o "Compra única, sin caducidad" si el Worker no devuelve expiración).
+      de renovación (la suscripción es mensual).
+- [ ] En el panel flotante de soporte, la pestaña **Licencia** muestra Estado,
+      Vigencia, Tipo y Correo, y **Comprobar ahora** responde sin error.
+
+### 3 bis. Ventana flotante de tickets
+- [ ] Pulsar **Maximizar**: el panel ocupa toda la ventana, sin franja a la derecha,
+      y el botón pasa a **Restaurar**.
+- [ ] Cerrar la app por completo y reabrirla: el panel vuelve maximizado.
+- [ ] Pulsar **Restaurar**: vuelve acoplado a la derecha (unos 400 px).
+- [ ] Minimizar y volver a abrir: conserva el tamaño anterior.
 
 ### 4. Alta del correo de contacto
 - [ ] En **Ajustes**, pulsar el botón de editar el **correo para soporte**.
@@ -105,6 +113,9 @@ comprobar en consola que en cada arranque se revalida sin errores.
       `ReferenceError: BASE is not defined`.
 - [ ] Confirmar que **no** hay peticiones a `/auth/register-installation`
       (ese endpoint no existe en el Worker; antes devolvía un 404 en cada arranque).
+- [ ] Confirmar que la revalidación pide primero `POST /auth/ms/ticket-compras`
+      (responde 200), luego acuña la clave con WinRT y termina en
+      `POST /auth/verify-purchase` (200).
 
 ## Criterios de aceptación
 
@@ -112,12 +123,13 @@ comprobar en consola que en cada arranque se revalida sin errores.
 - "Soporte no activado" desaparece y ambas vistas quedan accesibles.
 - El correo de contacto se guarda desde Ajustes.
 - La licencia sobrevive a cerrar y reabrir la app.
+- La pestaña Licencia refleja el estado real y el panel conserva su tamaño entre arranques.
 - Se puede crear una incidencia y verla en el historial.
 - La consola no muestra `ReferenceError` ni 404 de `register-installation`.
 
 ## Señales de que la prueba no es válida
 
-- El pie no dice V4.11.11 → el paquete instalado no es el que toca.
+- El pie no dice V4.11.18 → el paquete instalado no es el que toca.
 - Al pulsar "Activar soporte" sale **"El sistema de pago no está disponible ahora mismo."**
   → se está ejecutando la rama de Android dentro de la app de escritorio.
 - Al pulsar "Activar soporte" sale **"La compra de soporte solo está disponible en la
