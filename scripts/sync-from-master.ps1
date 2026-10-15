@@ -73,23 +73,46 @@ if ($ramasPermitidas -notcontains $ramaMaestro) {
 # Estar en una rama permitida NO basta: si el checkout del maestro se quedo
 # atras (rama de trabajo parada, o desktop-mvp sincronizada hace semanas), el
 # sync copia contenido viejo sobre frontend/ y BORRA trabajo que solo existe en
-# la version nueva. Comprobar esto salvo con -PermitirCualquierRama.
-if (-not $PermitirCualquierRama -and $ramaMaestro -eq $ramaCanonica) {
-    $detras = (& git -C $src rev-list --count "HEAD..origin/$ramaCanonica" 2>$null)
-    if ($LASTEXITCODE -ne 0) {
-        Write-Warning "No se pudo comprobar si el maestro esta al dia con origin/$ramaCanonica."
-    } elseif ([int]$detras -gt 0) {
+# la version nueva.
+#
+# Se comprueba SIEMPRE contra la rama canonica, tambien con
+# -PermitirCualquierRama: esa bandera existe justo para forzar el sync, que es
+# el caso en el que mas facil es cargarse frontend/ sin querer. Comparar contra
+# el remoto de la rama actual no vale: una rama de trabajo puede estar al dia
+# con su propio remoto y aun asi ir varios commits por detras de master
+# (lm-port: 0 por detras de su rama, 5 por detras de origin/master). Sin bandera
+# se aborta; con la bandera se avisa y se pide confirmacion explicita.
+$refRemota = "origin/$ramaCanonica"
+$detras = (& git -C $src rev-list --count "HEAD..$refRemota" 2>$null)
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Warning "No se pudo comprobar si el maestro esta al dia con $refRemota."
+} elseif ([int]$detras -gt 0) {
+    Write-Host ""
+    Write-Host "  ATENCION: el maestro esta $detras commits por detras de $refRemota" -ForegroundColor Yellow
+    Write-Host "  Sincronizar copiaria trabajo viejo sobre frontend/ y borraria" -ForegroundColor Yellow
+    Write-Host "  lo que solo existe en la version nueva." -ForegroundColor Yellow
+    Write-Host "  Actualiza el maestro y repite:"
+    Write-Host "      git -C `"$src`" pull --ff-only" -ForegroundColor Cyan
+
+    if ($PermitirCualquierRama) {
+        Write-Host ""
+        Write-Host "  Continua por -PermitirCualquierRama, pero se pierde ese trabajo." -ForegroundColor Red
+        $respuesta = Read-Host "  Escribe 'continuar' para seguir adelante"
+        if ($respuesta.Trim().ToLowerInvariant() -ne 'continuar') {
+            Write-Host "  Sync cancelado." -ForegroundColor DarkGray
+            exit 1
+        }
+        Write-Host "  Continuando bajo tu responsabilidad." -ForegroundColor DarkGray
+    } else {
         Write-Host ""
         Write-Host "  SYNC ABORTADO" -ForegroundColor Red
-        Write-Host ("  El maestro esta {0} commits por detras de origin/{1}." -f $detras, $ramaCanonica) -ForegroundColor Yellow
-        Write-Host "  Sincronizar ahora copiaria trabajo viejo sobre frontend/." -ForegroundColor Yellow
-        Write-Host "  Actualiza el maestro y repite:"
-        Write-Host "      git -C `"$src`" pull --ff-only" -ForegroundColor Cyan
         Write-Host ""
         exit 1
-    } else {
-        Write-Host "  Maestro al dia con origin/$ramaCanonica." -ForegroundColor DarkGray
     }
+    Write-Host ""
+} else {
+    Write-Host "  Maestro al dia con $refRemota." -ForegroundColor DarkGray
 }
 
 # --- Archivos propios del desktop (rutas relativas a frontend/) --------------
