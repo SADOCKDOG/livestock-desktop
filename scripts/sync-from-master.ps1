@@ -78,6 +78,15 @@ $preservedList = @(
     'js\module-colors.js',           # Mapa de colores ERP (sin neon)
     'js\purchase-manager.js',       # Emite 'premiumChanged' para el indicador Free/Premium del sidebar
     'js\services\soporte-store.js', # Módulo nuevo: Store ID key y revalidacion de soporte Windows
+    # --- Portados al maestro en PR #173, pero desktop sigue teniendo MAS trabajo
+    #     en ellos (la licencia/correo se porto; la identidad de zona y los ajustes
+    #     ERP de escritorio no). Sin preservarlos, el sync reescribia frontend/ con
+    #     la copia del maestro y se perdia lo validado solo en escritorio. ---
+    'js\soporte-panel.js',           # Pestaña Licencia + maximizar/restaurar ventana (229 lıneas solo en desktop)
+    'js\services\support-api.js',    # textoLicencia() caducada + estadoLicencia() sincroniza correo aparte
+    'js\views\explotacion-view.js',  # TRAMITE_SUB_TABS como fuente única + erp-solo-movil
+    'js\views\importar-zonas-view.js', # _actualizarBotonGuardar no cuenta las parcelas omitidas
+    'js\views\rebanos-view.js',      # zonaId numérico coherente con zonaActual (solo desktop) + huecos de acciones
     # 'js\views\animales-view.js',     # UNIFICADA en el maestro (fase 3 lote 9): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada (sin fab-container, usa CTA cabecera)
     # 'js\views\rebanos-view.js',     # UNIFICADA en el maestro (fase 3 lote 5): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada
     # 'js\views\compradores-view.js', # UNIFICADA en el maestro (fase 3 lote 17): cromo ERP (erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable solo módulo compradores); dualidad compradores/contratos intacta; FAB local de compradores eliminado (erp-solo-movil)
