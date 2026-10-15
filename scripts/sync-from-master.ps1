@@ -138,7 +138,6 @@ $preservedList = @(
     'js\views\importar-zonas-view.js', # _actualizarBotonGuardar no cuenta las parcelas omitidas
     'js\views\rebanos-view.js',      # zonaId numérico coherente con zonaActual (solo desktop) + huecos de acciones
     # 'js\views\animales-view.js',     # UNIFICADA en el maestro (fase 3 lote 9): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada (sin fab-container, usa CTA cabecera)
-    # 'js\views\rebanos-view.js',     # UNIFICADA en el maestro (fase 3 lote 5): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada
     # 'js\views\compradores-view.js', # UNIFICADA en el maestro (fase 3 lote 17): cromo ERP (erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable solo módulo compradores); dualidad compradores/contratos intacta; FAB local de compradores eliminado (erp-solo-movil)
     # 'js\views\proveedores-view.js',     # UNIFICADA en el maestro (fase 3 lote 8): cromo ERP neutro + erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable + fix _setVistaModo render lista en cards; FAB móvil eliminado (CTA duplicado en erp-action-group)
     # 'js\views\transportistas-view.js', # UNIFICADA en el maestro (fase 3 lote 10): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil duplicado eliminado (erp-solo-movil)
@@ -152,7 +151,6 @@ $preservedList = @(
     # 'js\views\agenda-view.js',         # UNIFICADA en el maestro (fase 3 piloto): CTA cabecera + erp-action-group + erp-filtros; fab-container móvil CONSERVADO
     # 'js\views\botiquin-view.js',         # UNIFICADA en el maestro (fase 3 lote 11): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable + data-ver-mas; FAB móvil duplicado eliminado (erp-solo-movil)
     # 'js\views\dashboard-view.js',      # UNIFICADA en el maestro (fase 3 piloto): FAB "Nueva Actividad" + renderGuideFab; nav móvil intacta
-    # 'js\views\explotacion-view.js',      # UNIFICADA en el maestro (fase 3): cromo ERP (erp-action-group en producción/trámites, erp-filtros+data-ver-mas en actividad, module-header-primary-action, carrusel de submódulos); el desktop se reconcilió con el maestro (era una copia obsoleta que había revierto la chrome)
     # 'js\views\explotacion-lactea-view.js', # UNIFICADA en el maestro (fase 3 lote 3): erp-action-group + erp-filtros + data-ver-mas en analíticas/movimientos; botones editar/borrar intactos; +Ordeño/+Tanque re-añadidos
     # 'js\views\informes-view.js',         # UNIFICADA en el maestro (fase 3 lote 2): _sectionActionsHTML como fieldset erp-action-group; nav cat/tab móvil conservada (sync la trae del maestro)
     # 'js\views\instalaciones-view.js', # UNIFICADA en el maestro (fase 3 lote 7): cromo ERP neutro + erp-action-group + erp-filtros + toggle Tarjetas/Tabla + tabla ErpDataTable; FAB móvil eliminado (CTA duplicado en erp-action-group)
