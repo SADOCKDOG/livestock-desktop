@@ -57,3 +57,7 @@ src-tauri/gen/windows/*
 .claude/
 # Configuracion del IDE JetBrains: es de cada maquina, no del repositorio.
 .idea/
+
+/visual-*.png
+/soporte-panel.txt
+/soporte-view.txt
