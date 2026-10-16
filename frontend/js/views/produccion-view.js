@@ -229,6 +229,7 @@ const ProduccionView = {
           <button class="prod-tab leche-sub-tab" data-subtab="tanques" onclick="ProduccionView._cambiarLecheSubTab('tanques')">${Icons.silos()} Tanques</button>
           <button class="prod-tab leche-sub-tab" data-subtab="control" onclick="ProduccionView._cambiarLecheSubTab('control')">${Icons.analitica()} Control</button>
           <button class="prod-tab leche-sub-tab" data-subtab="balance" onclick="ProduccionView._cambiarLecheSubTab('balance')">${Icons.documento()} Balance</button>
+          <button class="prod-tab leche-sub-tab" data-subtab="graficos" onclick="ProduccionView._cambiarLecheSubTab('graficos')">${Icons.grafico()} Gráficos</button>
         </div>
       </div>
       <div id="leche-sub-content"></div>
@@ -247,6 +248,7 @@ const ProduccionView = {
       case 'tanques': this._renderLecheTanques(subContent, d); break;
       case 'control': this._renderLecheControl(subContent, d); break;
       case 'balance': this._renderLecheBalance(subContent, d); break;
+      case 'graficos': this._renderLecheGraficos(subContent, d); break;
       default: this._renderLecheDashboard(subContent, d);
     }
   },
@@ -843,6 +845,14 @@ const ProduccionView = {
       };
 
     } catch (e) { App.toastError(e.message); }
+  },
+
+  async _renderLecheGraficos(content, d) {
+    if (window.ExplotacionLacteaView && typeof ExplotacionLacteaView.renderGraficos === 'function') {
+      await ExplotacionLacteaView.renderGraficos(content);
+    } else {
+      content.innerHTML = '<div class="p-14 text-center text-gray">Gráficos lácteos no disponibles</div>';
+    }
   },
 
   _fmt(n) {

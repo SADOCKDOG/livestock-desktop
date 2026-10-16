@@ -290,7 +290,7 @@ const ExplotacionView = {
         if (window.FitosanitariosView) await FitosanitariosView.render();
         break;
       case 'gastos':
-        if (window.GastosView) await GastosView.render();
+        if (window.GastosView) await GastosView.render(options);
         break;
       case 'proveedores':
         if (window.ProveedoresView) await ProveedoresView.render();
@@ -748,7 +748,7 @@ const ExplotacionView = {
             <button class="btn btn-create btn-lg w-full" onclick="App._abrirWizardCenso()">Generar Declaración Censal</button>
             <div class="grid grid-cols-2 gap-8">
               <button class="btn btn-dark py-12" onclick="App.route('/cuaderno')">${Icons.cuaderno()} Libro Registro</button>
-              <button class="btn btn-dark py-12" onclick="InformesView.renderCategoria('gegan')">${Icons.informes()} Informe REGA</button>
+              <button class="btn btn-dark py-12" onclick="App.route('/informes?cat=gegan')">${Icons.informes()} Informe REGA</button>
             </div>
 
             <div class="inf-section-title mt-8 mb-6 flex items-center gap-8 uppercase font-900 tracking-wider text-[0.7rem] text-gray">
@@ -857,7 +857,7 @@ const ExplotacionView = {
               color: 'var(--c-warning)',
               desc: 'Resumen anual de producción y movimientos',
               data: 'Balances de entrada, salida y existencias',
-              action: "InformesView.renderCategoria('produccion')",
+              action: "App.route('/informes?cat=expro&tab=produccion')",
               actionLabel: 'Balances Anuales'
             })}
           </div>`;

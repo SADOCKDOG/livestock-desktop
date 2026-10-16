@@ -2752,7 +2752,7 @@ const App = {
   // Ruta (ya normalizada por redirectMap) -> grupo que debe estar cargado antes de despachar.
   _routeGroups: {
     '/ganaderia': 'gegan', '/rebanos': 'gegan', '/animales': 'gegan', '/rebano': 'gegan', '/animal': 'gegan', '/zonas': 'gegan', '/zona': 'gegan', '/importar-zonas': 'gegan', '/instalaciones': 'gegan', '/instalacion': 'gegan', '/saneamientos': 'gegan', '/saneamiento': 'gegan', '/subexplotaciones': 'gegan', '/subexplotacion': 'gegan', '/botiquin': 'gegan', '/botiquin-producto': 'gegan', '/animal-bitacora': 'gegan', '/margen-animal': 'gegan',
-    '/explotacion': 'expro', '/silos': 'expro', '/fitosanitario': 'expro', '/gastos': 'expro', '/proveedores': 'expro', '/proveedor': 'expro',
+    '/explotacion': ['expro', 'informes'], '/silos': 'expro', '/fitosanitario': 'expro', '/gastos': 'expro', '/proveedores': 'expro', '/proveedor': 'expro',
     '/comercializacion': 'comer', '/compradores': 'comer', '/contratos': 'comer', '/transportistas': 'comer', '/comprador': 'comer', '/contrato': 'comer',
     '/informes': 'informes', '/alertas': 'informes',
     '/cuaderno': 'cuaderno',
@@ -2794,12 +2794,13 @@ const App = {
 
   /** Punto único de entrada desde route(): asegura el grupo de la ruta actual antes de despachar. */
   async _ensureRouteScripts(path) {
-    const group = App._routeGroups[path];
-    if (!group) return true;
-    // Se DEVUELVE el resultado: antes se ignoraba, route() seguia como si el grupo
-    // hubiera cargado, el metodo de la vista no existia y el loader "Cargando..."
-    // se quedaba en pantalla para siempre, sin error ni aviso.
-    return await App._ensureViewGroup(group);
+    const groups = App._routeGroups[path];
+    if (!groups) return true;
+    const groupList = Array.isArray(groups) ? groups : [groups];
+    for (const g of groupList) {
+      await App._ensureViewGroup(g);
+    }
+    return true;
   },
 
   async _escanearCrotal(inputId) {
