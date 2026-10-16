@@ -24,6 +24,12 @@
   // a verse como nuevo, que es el lado seguro del fallo.
   var CLAVE_LEIDAS = 'livestock_incidencias_leidas';
 
+  // Ultimo estado que el usuario ha visto de cada incidencia, para poder avisar
+  // cuando cambia («ahora se esta mirando tu incidencia») sin una llamada mas:
+  // el listado que ya se descarga trae el estado actual. Misma decision que
+  // CLAVE_LEIDAS: vive en el dispositivo y es una comodidad visual.
+  var CLAVE_ESTADOS = 'livestock_incidencias_estados_vistos';
+
   var SupportAPI = {
     _sesion: (function () {
       try {
@@ -322,6 +328,54 @@
       var vista = this._leidas()[incidencia.ticket_id];
       if (!vista) return true;
       return Date.parse(incidencia.ultima_respuesta_at) > Date.parse(vista);
+    },
+
+    // --- Estados vistos ------------------------------------------------------
+    //
+    // A diferencia de las respuestas, aqui importa saber CUAL era el estado
+    // anterior, porque el aviso dice «tu incidencia paso de A a B». Guardar solo
+    // una marca de tiempo no alcanza.
+
+    _estadosVistos: function () {
+      try {
+        return JSON.parse(localStorage.getItem(CLAVE_ESTADOS) || '{}') || {};
+      } catch (e) {
+        return {};
+      }
+    },
+
+    /** Registra el estado que el usuario acaba de ver. */
+    marcarEstadoVisto: function (ticketId, estado) {
+      if (!ticketId || !estado) return;
+      try {
+        var mapa = this._estadosVistos();
+        mapa[ticketId] = estado;
+        localStorage.setItem(CLAVE_ESTADOS, JSON.stringify(mapa));
+      } catch (e) {}
+    },
+
+    /**
+     * true si el estado cambio desde la ultima vez que el usuario lo vio.
+     * Una incidencia que nunca se ha visto NO se considera cambiada: si no,
+     * saltarian todos los avisos la primera vez que se abre la app.
+     */
+    tieneEstadoNuevo: function (incidencia) {
+      if (!incidencia || !incidencia.estado) return false;
+      var visto = this._estadosVistos()[incidencia.ticket_id];
+      if (!visto) return false;
+      return visto !== incidencia.estado;
+    },
+
+    /** Estado registrado como visto para esa incidencia, o null si nunca se vio. */
+    estadoVisto: function (ticketId) {
+      return this._estadosVistos()[ticketId] || null;
+    },
+
+    /** Estados que merece la pena avisar al usuario cuando cambian. */
+    ESTADOS_NOTIFICABLES: {
+      revision: 'El equipo se está mirando tu incidencia',
+      curso: 'Tu incidencia se está trabajando',
+      resuelta: 'Tu incidencia se ha resuelto',
     },
 
     /** Contexto tecnico que acompana al reporte. */

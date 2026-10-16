@@ -211,12 +211,37 @@
     }
     window.SupportAPI.listarIncidencias()
       .then(function (lista) {
-        _noLeidas = (lista || []).filter(function (i) {
-          return window.SupportAPI.tieneRespuestaNueva(i);
+        lista = lista || [];
+        avisarCambiosDeEstado(lista);
+        _noLeidas = lista.filter(function (i) {
+          return window.SupportAPI.tieneRespuestaNueva(i) ||
+            window.SupportAPI.tieneEstadoNuevo(i);
         }).length;
         pintarContadores();
       })
       .catch(function () { /* sin red: se deja el contador como estaba */ });
+  }
+
+  /**
+   * Compara los estados actuales con los que el usuario ya vio y avisa de los
+   * que cambiaron. Se apoya en el listado que ya se ha descargado, asi que no
+   * cuesta ninguna llamada extra.
+   *
+   * La primera vez que se ve una incidencia no se avisa de nada: se registra
+   * como estado visto y a partir de ahi si se comparan. Sin eso, todos los
+   * avisos saltarían en el primer arranque y el usuario dejaría de leerlos.
+   */
+  function avisarCambiosDeEstado(lista) {
+    var avisables = window.SupportAPI.ESTADOS_NOTIFICABLES;
+    lista.forEach(function (i) {
+      var texto = avisables[i.estado];
+      if (!texto) return;
+      if (window.SupportAPI.tieneEstadoNuevo(i)) {
+        if (window.App && window.App.toast) window.App.toast(texto, 'info');
+      } else if (!window.SupportAPI.estadoVisto(i.ticket_id)) {
+        window.SupportAPI.marcarEstadoVisto(i.ticket_id, i.estado);
+      }
+    });
   }
 
   function pintarContadores() {
@@ -705,6 +730,11 @@
         : cuantas
           ? '<span class="text-gray text-sm">' + cuantas + (cuantas === 1 ? ' respuesta' : ' respuestas') + '</span>'
           : '';
+      // El cambio de estado se marca junto al estado, que es donde el usuario
+      // lo mira: es el dato que ha cambiado.
+      if (window.SupportAPI.tieneEstadoNuevo(i)) {
+        marca += '<span class="badge badge-info">Estado actualizado</span>';
+      }
       return (
         '<div class="card-registro mb-10" data-sp-ticket="' + id + '">' +
         '<div class="flex items-center justify-between gap-10" style="cursor:pointer" ' +
@@ -731,6 +761,9 @@
           if (respuestas.length) {
             window.SupportAPI.marcarLeida(ticketId, respuestas[respuestas.length - 1].fecha);
           }
+          // Abrir la incidencia es ver su estado: a partir de aqui «Estado
+          // actualizado» dejaria de avisar hasta que cambie otra vez.
+          if (d && d.estado) window.SupportAPI.marcarEstadoVisto(ticketId, d.estado);
         })
         .catch(function (e) {
           if ($id('sp-detalle-' + ticketId)) {
