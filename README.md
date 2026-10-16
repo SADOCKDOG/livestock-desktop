@@ -10,7 +10,27 @@ sincroniza desde `LIVESTOCK-MANAGER` (solo lectura) con `npm run sync`.
   no se usa para versionar el producto)
 - Coste: gratuita y sin límites de fincas ni animales (`FREE_MODE = false`). El nombre «PREMIUM» de la ficha designa la edición completa, no un pago.
 - Soporte técnico con IA: complemento opcional con suscripción mensual renovable; la aplicación funciona completa sin comprarlo.
-- Distribución: la versión 4.11.15 se distribuye con el paquete «Activación Licencia de Soporte» de Partner Center. La versión pública de la Store (4.10.526) sigue siendo la PWA.
+
+### Los tres paquetes de la Store (leído en Partner Center, 16 oct 2026)
+
+En Microsoft Store hay **tres** paquetes activos, y no son tres versiones de lo
+mismo. Confundirlos es el error más fácil de cometer con este proyecto:
+
+| Paquete | Versión | Arquitectura | Qué es |
+|---|---|---|---|
+| `Livestock Manager PREMIUM_4.11.19.0.msixbundle` | 4.11.19.0 | x64 | **Esta app de escritorio** (Tauri). Va en el paquete de complemento «Activación Licencia de Soporte», en el canal de **vuelo**. |
+| `LIVESTOCK MANAGER PREMIUM.msixbundle` | 4.10.526.0 | neutral | **La PWA**, servida desde GitHub Pages y empaquetada por PWABuilder. Es lo que ve el público en el listado. |
+| `LIVESTOCK MANAGER PREMIUM.classic.appxbundle` | 4.10.525.0 | x86 | La misma PWA en la variante antigua de escritorio, para el listado público. |
+
+Consecuencias prácticas:
+
+- **Este repo solo produce el primero.** Los dos de 4.10.x salen de
+  `livestock-pwa-msix` con PWABuilder, no de aquí.
+- La compra de la licencia (`support_unlock`) vive en el paquete de complemento
+  del 4.11.x. Por eso el Tauri se distribuye en **vuelo** y el público
+  instala la PWA: son dos canales, no dos pasos del mismo listing.
+- Antes de subir un `.msixbundle` nuevo, comprobar que su versión es **mayor**
+  que 4.11.19.0; si no, Partner Center lo rechaza.
 
 ## Estructura
 
