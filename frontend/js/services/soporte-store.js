@@ -6,7 +6,10 @@
  * esto vende 'support_unlock' (soporte con incidencias).
  *
  * Tres saltos para verificar:
- *   1. El Worker emite un ticket de Entra ID  (POST /auth/ms/ticket)
+ *   1. El Worker emite un ticket de Entra ID  (POST /auth/ms/ticket-compras)
+ *      Ojo: la de COMPRAS, no /auth/ms/ticket. El soporte es una suscripcion y
+ *      se compra contra la audiencia de compras; con la de colecciones el token
+ *      no vale y WinRT falla con IDX10205.
  *   2. Tauri lo cambia por una Store ID key   (comando obtener_store_id_key)
  *   3. El Worker canjea la clave por sesion   (POST /auth/verify-purchase)
  *
