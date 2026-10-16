@@ -61,3 +61,10 @@ src-tauri/gen/windows/*
 /visual-*.png
 /soporte-panel.txt
 /soporte-view.txt
+
+# Arranque local del panel de soporte contra el Worker de `wrangler dev`:
+# lleva dentro el JWT de la sesion sembrada en el KV local. Es de esta maquina
+# y no del producto; si se subiera, ese token pasaria a ser del repositorio.
+# Para usarlo, index.html lo carga antes que support-api.js; se quita con
+# `git checkout -- frontend/index.html`.
+frontend/js/boot/dev-soporte-local.js
