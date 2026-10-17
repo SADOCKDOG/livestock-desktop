@@ -20,9 +20,7 @@ const ImportarZonasView = {
     return `
       <div class="wizard-full-screen">
         <div class="wizard-header-fixed border-top-5-gold">
-          <div class="flex items-center justify-between px-4 py-4">
-            <h1 class="wizard-header-title uppercase font-950 tracking-widest text-lg"><span style="color: var(--p-gold); margin-right: 6px;">|</span> ${Icons.importar()} IMPORTAR ZONAS DESDE PDF</h1>
-          </div>
+          <h1 class="wizard-header-title uppercase font-950 tracking-widest text-lg"><span style="color: var(--p-gold); margin-right: 6px;">|</span> ${Icons.importar()} IMPORTAR ZONAS DESDE PDF</h1>
         </div>
         <div class="wizard-content-scrollable p-20">
           <div class="card-registro" style="--registro-color: var(--c-success);">
