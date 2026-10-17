@@ -20,7 +20,9 @@ const ImportarZonasView = {
     return `
       <div class="wizard-full-screen">
         <div class="wizard-header-fixed border-top-5-gold">
-          <h1 class="wizard-header-title uppercase font-950 tracking-widest text-lg"><span style="color: var(--p-gold); margin-right: 6px;">|</span> ${Icons.importar()} IMPORTAR ZONAS DESDE PDF</h1>
+          <div class="flex items-center justify-between px-4 py-4">
+            <h1 class="wizard-header-title uppercase font-950 tracking-widest text-lg"><span style="color: var(--p-gold); margin-right: 6px;">|</span> ${Icons.importar()} IMPORTAR ZONAS DESDE PDF</h1>
+          </div>
         </div>
         <div class="wizard-content-scrollable p-20">
           <div class="card-registro" style="--registro-color: var(--c-success);">
@@ -32,6 +34,11 @@ const ImportarZonasView = {
                   Selecciona uno o varios PDFs oficiales de <strong>"Consulta descriptiva y gráfica de datos catastrales"</strong> (sede.catastro.gob.es).
                   El flujo habitual: SIGPAC → Catastro → Imprimir datos → Guardar como PDF.
                 </p>
+                <div class="text-center" style="margin-top:1rem;">
+                  <button class="btn btn-secondary" style="border-left:3px solid #c9851f;" onclick="window.open('manual/manual-zonas.html', '_blank')">
+                    <span class="flex flex-col items-center gap-1">${Icons.libro()} Manual Exportación PDF SIGPAC</span>
+                  </button>
+                </div>
               </div>
 
               <div class="wizard-input-group">

@@ -528,7 +528,6 @@ const ExportService = {
       App.toast(`${filename} guardado`, 'success');
       return;
     } catch (e) {
-      // Usuario canceló o API no disponible — cae al fallback de blob
       if (e.name !== 'AbortError') console.warn('[ExportService] showSaveFilePicker falló:', e?.message || e);
     }
 

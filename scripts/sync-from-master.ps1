@@ -128,14 +128,14 @@ $preservedList = @(
     'js\module-colors.js',           # Mapa de colores ERP (sin neon)
     'js\purchase-manager.js',       # Emite 'premiumChanged' para el indicador Free/Premium del sidebar
     'js\services\soporte-store.js', # Módulo nuevo: Store ID key y revalidacion de soporte Windows
-    # --- Portados al maestro en PR #173, pero desktop sigue teniendo MAS trabajo
-    #     en ellos (la licencia/correo se porto; la identidad de zona y los ajustes
-    #     ERP de escritorio no). Sin preservarlos, el sync reescribia frontend/ con
-    #     la copia del maestro y se perdia lo validado solo en escritorio. ---
-    'js\soporte-panel.js',           # Pestaña Licencia + maximizar/restaurar ventana (229 lıneas solo en desktop)
-    'js\services\support-api.js',    # textoLicencia() caducada + estadoLicencia() sincroniza correo aparte
-    'js\views\explotacion-view.js',  # TRAMITE_SUB_TABS como fuente única + erp-solo-movil
-    'js\views\importar-zonas-view.js', # _actualizarBotonGuardar no cuenta las parcelas omitidas
+    # --- Portados al maestro en PR #173 (licencia/correo) y completados en
+    #     LIVESTOCK-MANAGER#179 (avisos de cambio de estado, GastosView.render(options),
+    #     deep-link de informes, showSaveFilePicker). Verificado 17 oct 2026: las copias
+    #     de desktop y del maestro son idénticas → el sync las trae desde el maestro. ---
+    # 'js\soporte-panel.js',           # UNIFICADO en el maestro (PR #179): avisarCambiosDeEstado + badge «Estado actualizado»
+    # 'js\services\support-api.js',    # UNIFICADO en el maestro (PR #179): estados vistos por ticket (marcarEstadoVisto/tieneEstadoNuevo)
+    # 'js\views\explotacion-view.js',  # UNIFICADO en el maestro (PR #179): GastosView.render(options) + enlaces #/informes?cat=…
+    # 'js\views\importar-zonas-view.js', # UNIFICADO en el maestro (PR #178): botón «Manual Exportación PDF SIGPAC» en lugar de la guía rápida; la razón del preserve (_actualizarBotonGuardar sin omitidas) ya estaba en ambos
     'js\views\rebanos-view.js',      # zonaId numérico coherente con zonaActual (solo desktop) + huecos de acciones
     # 'js\views\animales-view.js',     # UNIFICADA en el maestro (fase 3 lote 9): cromo ERP neutro + erp-action-group (CTA cabecera movida) + toggle Tarjetas/Tabla + tabla ErpDataTable; nav móvil preservada (sin fab-container, usa CTA cabecera)
     # 'js\views\compradores-view.js', # UNIFICADA en el maestro (fase 3 lote 17): cromo ERP (erp-action-group + toggle Tarjetas/Tabla + tabla ErpDataTable solo módulo compradores); dualidad compradores/contratos intacta; FAB local de compradores eliminado (erp-solo-movil)
