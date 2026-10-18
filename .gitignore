@@ -68,3 +68,6 @@ src-tauri/gen/windows/*
 # Para usarlo, index.html lo carga antes que support-api.js; se quita con
 # `git checkout -- frontend/index.html`.
 frontend/js/boot/dev-soporte-local.js
+
+# Clave privada de firma local del MSIX (autofirmado, no subir nunca)
+temp.pvk
