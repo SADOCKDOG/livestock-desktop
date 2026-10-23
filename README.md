@@ -18,7 +18,7 @@ mismo. Confundirlos es el error más fácil de cometer con este proyecto:
 
 | Paquete | Versión | Arquitectura | Qué es |
 |---|---|---|---|
-| `Livestock Manager PREMIUM_4.11.21.0.msixbundle` | 4.11.21.0 | x64 | **Esta app de escritorio** (Tauri). Va en el paquete de complemento «Activación Licencia de Soporte», en el canal de **vuelo** (subido el 18 oct 2026, en certificación). |
+| `Livestock Manager PREMIUM_4.11.21.0.msixbundle` | 4.11.21.0 | x64 | **Esta app de escritorio** (Tauri). Va en el paquete de complemento «Activación Licencia de Soporte», en el canal de **vuelo** (subido el 18 oct 2026, certificación pasada y **publicada** el 23 oct 2026). El vuelo 4.11.22.0 (fixes del maestro PR #183) está generado y pendiente de subir. |
 | `LIVESTOCK MANAGER PREMIUM.msixbundle` | 4.10.526.0 | neutral | **La PWA**, servida desde GitHub Pages y empaquetada por PWABuilder. Es lo que ve el público en el listado. |
 | `LIVESTOCK MANAGER PREMIUM.classic.appxbundle` | 4.10.525.0 | x86 | La misma PWA en la variante antigua de escritorio, para el listado público. |
 
@@ -30,7 +30,7 @@ Consecuencias prácticas:
   del 4.11.x. Por eso el Tauri se distribuye en **vuelo** y el público
   instala la PWA: son dos canales, no dos pasos del mismo listing.
 - Antes de subir un `.msixbundle` nuevo, comprobar que su versión es **mayor**
-  que 4.11.21.0; si no, Partner Center lo rechaza.
+  que 4.11.21.0; si no, Partner Center lo rechaza. El vuelo 4.11.22.0 ya la supera.
 
 ## Estructura
 
