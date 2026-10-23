@@ -121,7 +121,7 @@ $preservedList = @(
     'js\boot',                      # Scripts de arranque extraidos de index.html por la CSP (no existen en el maestro: sin esto, Prune-Tree los borraria)
     'js\app-version.js',            # Version del paquete MSIX, distinta de la de Android del maestro
     'js\mode-config.js',             # Generado por build:pago / build:demo
-    'js\erp-data-table.js',          # Componente ErpDataTable (solo desktop)
+    # 'js\erp-data-table.js',          # UNIFICADO en el maestro: delega el CSV en ExportService.descargar (selector de carpeta + toast) y hereda estado entre repintados; la copia preservada de desktop hacia descarga blob silenciosa
     'js\icons-desktop.js',           # Iconos extra desktop: chevronArriba, sortNeutral
     'js\app.js',                     # Handlers sidebar ERP (_setupSidebar, etc.)
     'js\guide-manager.js',           # Motor de guías: remap carrusel→sidebar (preserva targets ocultos)
@@ -190,7 +190,7 @@ $preservedList = @(
     'js\guides\onboarding-primeros-pasos.js',
     'css\design-tokens.css',         # Paleta ERP profesional
     'css\erp-sidebar.css',           # Sidebar colapsable (solo desktop)
-    'css\erp-data-table.css',        # Tablas densas ERP (solo desktop)
+    # 'css\erp-data-table.css',        # UNIFICADO en el maestro (superconjunto: estado activo del conmutador Tarjetas/Tabla y bloque móvil)
     'css\erp-overrides.css'          # Neutraliza neon legado de styles.css (solo desktop)
 )
 $preserved = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)

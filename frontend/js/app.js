@@ -2775,7 +2775,7 @@ const App = {
     if (!App._viewGroupLoadPromises[groupName]) {
       App._viewGroupLoadPromises[groupName] = Promise.all(files.map(src => new Promise((resolve, reject) => {
         const s = document.createElement('script');
-        s.src = src + '?v=7.43';  // mismo token que index.html, si no el WebView2 sirve la copia cacheada
+        s.src = src + '?v=7.44';  // mismo token que index.html, si no el WebView2 sirve la copia cacheada
         s.async = false;
         s.onload = resolve;
         s.onerror = reject;
