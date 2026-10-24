@@ -303,9 +303,27 @@ const DocumentosView = {
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Documentos');
       const wbOut = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([wbOut], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const fileName = `Documentos_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+      // File System Access API (escritorio) — selector de carpeta local
+      try {
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [{ description: 'Excel', accept: { 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'] } }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          App.toast('Documentos exportados', 'success');
+          return;
+        }
+      } catch (e) { if (e.name === 'AbortError') return; console.warn('[showSaveFilePicker]', e?.message || e); }
+
+      // Fallback: descarga directa
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = `Documentos_${new Date().toISOString().split('T')[0]}.xlsx`; a.click();
+      a.href = url; a.download = fileName; a.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
       App.toast('Documentos exportados', 'success');
     } catch (e) { App.toastError('Error al exportar: ' + e.message); }

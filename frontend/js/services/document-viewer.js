@@ -179,7 +179,23 @@ const DocumentViewer = {
       App.toast('Documento compartido', 'success');
       return;
     }
-    if (navigator.share) {
+    // File System Access API (escritorio) — selector de carpeta local
+    try {
+      if (window.showSaveFilePicker) {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [{ description: 'Archivo', accept: { 'application/pdf': ['.pdf'] } }]
+        });
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        App.toast('Documento guardado', 'success');
+        return;
+      }
+    } catch (e) { if (e.name === 'AbortError') return; console.warn('[showSaveFilePicker]', e?.message || e); }
+
+    // navigator.share (Web/PWA móvil) — OMITIR en escritorio/Tauri
+    if (navigator.share && !esEscritorio()) {
       const file = new File([blob], fileName, { type: 'application/pdf' });
       await navigator.share({ title: shareTitle, text: shareText, files: [file] });
       App.toast('Documento compartido', 'success');
@@ -191,5 +207,10 @@ const DocumentViewer = {
     App.toast('Documento descargado', 'success');
   }
 };
+
+/** Detecta entorno de escritorio (Tauri) para evitar navigator.share */
+function esEscritorio() {
+  return !!(window.__TAURI__ || window.__TAURI_IPC__);
+}
 
 window.DocumentViewer = DocumentViewer;

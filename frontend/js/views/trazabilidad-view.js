@@ -442,6 +442,22 @@ const TrazabilidadView = {
         const exito = await InformesView._ejecutarShare(fileObj);
         if (!exito) InformesView._mostrarBotonFlotante(fileObj);
       } else {
+        // File System Access API (escritorio) — selector de carpeta local
+        try {
+          if (window.showSaveFilePicker) {
+            const handle = await window.showSaveFilePicker({
+              suggestedName: fileName,
+              types: [{ description: 'Archivo', accept: { 'application/pdf': ['.pdf'] } }]
+            });
+            const writable = await handle.createWritable();
+            await writable.write(pdfBlob);
+            await writable.close();
+            App.toast('PDF guardado', 'success');
+            return;
+          }
+        } catch (e) { if (e.name === 'AbortError') return; console.warn('[showSaveFilePicker]', e?.message || e); }
+
+        // Fallback: descarga directa
         const url = URL.createObjectURL(pdfBlob);
         const a = document.createElement('a');
         a.href = url; a.download = fileName; a.style.display = 'none';

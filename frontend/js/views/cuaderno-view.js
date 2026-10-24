@@ -551,9 +551,27 @@ const CuadernoDigitalView = {
       console.warn(`[Capacitor Share ${titulo}] falló:`, e?.message || e);
     }
 
-    // 2️⃣ navigator.share con File (requiere gesto)
+    // 2️⃣ File System Access API (escritorio) — selector de carpeta local
     try {
-      if (navigator.share) {
+      if (window.showSaveFilePicker) {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [{ description: 'Archivo', accept: { [mimeType]: [fileName.split('.').pop()] } }]
+        });
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        App.toast(`${titulo} guardado`, 'success');
+        return true;
+      }
+    } catch (e) {
+      if (e.name === 'AbortError') return true; // usuario canceló el guardado
+      console.warn(`[showSaveFilePicker ${titulo}] falló:`, e?.message || e);
+    }
+
+    // 3️⃣ navigator.share (Web/PWA móvil) — OMITIR en escritorio/Tauri
+    try {
+      if (navigator.share && !esEscritorio()) {
         const file = new File([blob], fileName, { type: mimeType });
         await navigator.share({
           title: shareTitle,
@@ -564,14 +582,11 @@ const CuadernoDigitalView = {
         return true;
       }
     } catch (e) {
-      if (e.name !== 'AbortError') {
-        console.warn(`[navigator.share ${titulo}] falló:`, e?.message || e);
-      } else {
-        return true;
-      }
+      if (e.name === 'AbortError') return true;
+      console.warn(`[navigator.share ${titulo}] falló:`, e?.message || e);
     }
 
-    // 3️⃣ Fallback: descarga directa con blob URL
+    // 4️⃣ Fallback: descarga directa con blob URL
     App.toast(`Descargando ${titulo}...`);
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -938,6 +953,26 @@ const CuadernoDigitalView = {
       const fileName = `Libro_Registro_SIGGAN_${nombreFinca}_${fechaHoy}.csv`;
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+      // File System Access API (escritorio) — selector de carpeta local
+      try {
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [{ description: 'CSV', accept: { 'text/csv': ['.csv'] } }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          if (window.App && App.toast) App.toast('CSV SIGGAN guardado', 'success');
+          return;
+        }
+      } catch (e) {
+        if (e.name === 'AbortError') return; // usuario canceló el guardado
+        console.warn('[showSaveFilePicker CSV]', e?.message || e);
+      }
+
+      // Fallback: descarga directa
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -954,5 +989,10 @@ const CuadernoDigitalView = {
     }
   },
 };
+
+/** Detecta entorno de escritorio (Tauri) para evitar navigator.share */
+function esEscritorio() {
+  return !!(window.__TAURI__ || window.__TAURI_IPC__);
+}
 
 window.CuadernoDigitalView = CuadernoDigitalView;
