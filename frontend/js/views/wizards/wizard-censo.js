@@ -371,7 +371,17 @@ window.WizardCenso = {
               files: [result.uri],
               dialogTitle: 'Compartir Declaración con…'
             });
-          } else if (navigator.share) {
+          } else if (window.showSaveFilePicker) {
+            try {
+              const handle = await window.showSaveFilePicker({
+                suggestedName: filename,
+                types: [{ description: 'Archivo', accept: { 'application/pdf': ['.pdf'] } }]
+              });
+              const writable = await handle.createWritable();
+              await writable.write(pdfBlob);
+              await writable.close();
+            } catch (e) { if (e.name !== 'AbortError') console.warn('[showSaveFilePicker]', e?.message || e); }
+          } else if (navigator.share && !esEscritorio()) {
             const file = new File([pdfBlob], filename, { type: 'application/pdf' });
             await navigator.share({ title: shareTitle, text: shareText, files: [file] });
           } else {
@@ -392,3 +402,8 @@ window.WizardCenso = {
     };
   }
 };
+
+/** Detecta entorno de escritorio (Tauri) para evitar navigator.share */
+function esEscritorio() {
+  return !!(window.__TAURI__ || window.__TAURI_IPC__);
+}
