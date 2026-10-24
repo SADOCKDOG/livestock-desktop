@@ -556,7 +556,7 @@ const CuadernoDigitalView = {
       if (window.showSaveFilePicker) {
         const handle = await window.showSaveFilePicker({
           suggestedName: fileName,
-          types: [{ description: 'Archivo', accept: { [mimeType]: [fileName.split('.').pop()] } }]
+          types: [{ description: 'Archivo', accept: { [mimeType]: ['.' + fileName.split('.').pop()] } }]
         });
         const writable = await handle.createWritable();
         await writable.write(blob);

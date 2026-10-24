@@ -1009,7 +1009,7 @@ Object.assign(window.InformesView, {
           suggestedName: fileName,
           types: [{
             description: 'Archivo',
-            accept: { [mimeType]: [fileName.split('.').pop()] }
+            accept: { [mimeType]: ['.' + fileName.split('.').pop()] }
           }]
         });
         const writable = await handle.createWritable();
