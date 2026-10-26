@@ -31,5 +31,8 @@
     "cypress": "16.1.0",
     "wrangler": "^4.151.0",
     "@choochmeque/tauri-windows-bundle": "^0.1.29"
+  },
+  "overrides": {
+    "follow-redirects": "1.16.1"
   }
 }
