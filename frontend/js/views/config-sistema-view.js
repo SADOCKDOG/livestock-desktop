@@ -262,10 +262,24 @@ const ConfigSistemaView = {
         </div>
       ` : '';
 
-      const hasIntegrityDiscrepancy = logs.some(l => l.integrity_corrupted);
+      const hasIntegrityDiscrepancy = logs.some(l => l.integrity_status === 'CORRUPTED');
       const integrityBanner = hasIntegrityDiscrepancy ? `
         <div class="p-8 mb-12 rounded bg-amber-950/40 border border-amber-500/40 text-[0.65rem] text-amber-200">
           Aviso de integridad: Se detectaron registros locales con discrepancia de hash FNV-1a. Esto indica posibles alteraciones o corrupciones en los datos almacenados.
+        </div>
+      ` : '';
+
+      const hasUnsupportedVersion = logs.some(l => l.integrity_status === 'UNSUPPORTED_VERSION');
+      const unsupportedBanner = hasUnsupportedVersion ? `
+        <div class="p-8 mb-12 rounded bg-red-950/40 border border-red-500/40 text-[0.65rem] text-red-200">
+          Aviso de versión: Se detectaron registros locales con versión de hash no soportada por el cliente actual.
+        </div>
+      ` : '';
+
+      const hasLegacyV1 = logs.some(l => l.integrity_status === 'VERIFIED_V1_LEGACY');
+      const legacyBanner = hasLegacyV1 ? `
+        <div class="p-8 mb-12 rounded bg-blue-950/40 border border-blue-500/40 text-[0.65rem] text-blue-200">
+          Nota histórica: Se incluyen registros validados mediante algoritmo v1 legado (8 campos canónicos). Dicha versión histórica no cubre descripción ni campos modificados.
         </div>
       ` : '';
 
@@ -293,9 +307,24 @@ const ConfigSistemaView = {
             : (isAlta ? 'var(--c-success)' : (isMovimiento ? 'var(--c-purple)' : 'var(--c-info)')));
 
         const actorTag = l.actor_id ? `<span class="text-[0.55rem] text-gray-500 font-bold ml-6">| Actor: ${_esc(l.actor_id)}</span>` : '';
-        const integrityTag = l.integrity_corrupted
-          ? `<span class="text-[0.55rem] font-bold ml-6 px-4 py-1 rounded" style="background: rgba(245, 158, 11, 0.2); color: var(--c-warning); border: 1px solid var(--c-warning);">DISCREPANCIA INTEGRIDAD</span>`
-          : '';
+
+        let integrityTag = '';
+        let legacyNotice = '';
+        if (l.tipo === 'auditoria') {
+          if (l.integrity_status === 'VERIFIED_V2') {
+            integrityTag = `<span class="text-[0.55rem] font-bold ml-6 px-4 py-1 rounded" style="background: rgba(34, 197, 94, 0.15); color: var(--c-success); border: 1px solid var(--c-success);">INTEGRIDAD V2 OK</span>`;
+          } else if (l.integrity_status === 'VERIFIED_V1_LEGACY') {
+            integrityTag = `<span class="text-[0.55rem] font-bold ml-6 px-4 py-1 rounded" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid #3b82f6;">INTEGRIDAD V1 LEGADO</span>`;
+            legacyNotice = `<div class="text-[0.55rem] text-blue-300/80 italic mt-2">Nota: Registro histórico verificado con hash v1 legado (8 campos). Esta versión no cubre descripción ni campos modificados.</div>`;
+          } else if (l.integrity_status === 'CORRUPTED') {
+            integrityTag = `<span class="text-[0.55rem] font-bold ml-6 px-4 py-1 rounded" style="background: rgba(245, 158, 11, 0.2); color: var(--c-warning); border: 1px solid var(--c-warning);">DISCREPANCIA INTEGRIDAD</span>`;
+          } else if (l.integrity_status === 'UNSUPPORTED_VERSION') {
+            integrityTag = `<span class="text-[0.55rem] font-bold ml-6 px-4 py-1 rounded" style="background: rgba(239, 68, 68, 0.2); color: var(--c-danger); border: 1px solid var(--c-danger);">VERSIÓN HASH NO SOPORTADA</span>`;
+          } else if (l.integrity_status === 'MISSING_HASH') {
+            integrityTag = `<span class="text-[0.55rem] font-bold ml-6 px-4 py-1 rounded" style="background: rgba(239, 68, 68, 0.2); color: var(--c-danger); border: 1px solid var(--c-danger);">HASH AUSENTE</span>`;
+          }
+        }
+
         const fieldsTag = Array.isArray(l.fields_modified) && l.fields_modified.length > 0
           ? `<div class="text-[0.6rem] text-gray-400 mt-2">Campos alterados: ${_esc(l.fields_modified.join(', '))}</div>`
           : '';
@@ -330,6 +359,7 @@ const ConfigSistemaView = {
             <div class="text-white text-xs mt-4 font-700">${desc}</div>
             ${fieldsTag}
             ${detalleMotivo}
+            ${legacyNotice}
           </div>
         `;
       }).join('') : '<div class="text-center p-20 text-gray-600 font-900 text-xs uppercase">Sin registros de auditoría recientes</div>';
@@ -340,6 +370,8 @@ const ConfigSistemaView = {
           <p class="text-xs text-gray mb-15 leading-relaxed">Historial de cambios críticos, eliminaciones y rectificaciones realizadas en la explotación actual (mostrando los últimos 50 eventos registrados).</p>
           ${healthBanner}
           ${integrityBanner}
+          ${unsupportedBanner}
+          ${legacyBanner}
           <div class="mh-400 overflow-y-auto pr-4">
             ${logsHtml}
           </div>
