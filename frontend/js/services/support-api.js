@@ -57,6 +57,51 @@
       return !lic.expira || Date.parse(lic.expira) > Date.now();
     },
 
+    /**
+     * Determina si una suscripcion/licencia se encuentra expirada.
+     *
+     * Reglas:
+     * - Siempre retorna booleano, nunca lanza excepciones.
+     * - Si la entrada es nula, undefined o no es un objeto valido -> false.
+     * - Solo se evalua si licencia.estado === 'activo'.
+     * - Si no existe fecha de expiracion (ausente, null, undefined o vacio)
+     *   se considera licencia vitalicia -> false.
+     * - Si la fecha de expiracion es anterior o igual a la fecha/hora actual
+     *   -> true (expirada).
+     * - Si la fecha de expiracion es posterior a la fecha/hora actual -> false.
+     */
+    validarSuscripcionExpirada: function (licencia) {
+      try {
+        if (licencia === null || licencia === undefined) {
+          return false;
+        }
+        if (typeof licencia !== 'object') {
+          return false;
+        }
+        if (Array.isArray(licencia)) {
+          return false;
+        }
+        if (licencia.estado !== 'activo') {
+          return false;
+        }
+        var expira = licencia.expira;
+        if (expira === undefined || expira === null || expira === '') {
+          return false;
+        }
+        var ts = Date.parse(expira);
+        if (isNaN(ts)) {
+          return false;
+        }
+        var ahora = Date.now();
+        if (ts <= ahora) {
+          return true;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    },
+
     _guardarSesion: function (sesion) {
       this._sesion = sesion;
       try {
