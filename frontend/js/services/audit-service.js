@@ -68,13 +68,30 @@
 
     /**
      * Calcula un hash de integridad determinista FNV-1a (32 bits, 8 caracteres hexadecimales) sobre campos invariantes.
+     * Campos cubiertos por el hash:
+     * - fincaId
+     * - creadoEn
+     * - actor_id
+     * - action
+     * - tipo_entidad
+     * - entidad_id
+     * - motivo_tarea
+     * - resultado
+     * - descripcion
+     * - fields_modified (ordenados canónicamente)
+     *
      * NOTA DE LIMITACIÓN DE SEGURIDAD:
      * Este hash implementa el algoritmo no criptográfico FNV-1a (Fowler-Noll-Vo) como una comprobación
      * de integridad a nivel de aplicación (permite detectar corrupciones o modificaciones locales accidentales
-     * en el almacenamiento del cliente). NO es una función hash criptográfica SHA-256 ni constituye una
-     * garantía inmutable WORM de hardware o firma digital PKI de servidor.
+     * en el almacenamiento del cliente). NO es una función hash criptográfica SHA-256, NO constituye una
+     * garantía inmutable WORM de hardware ni firma digital PKI de servidor, y NO previene alteraciones deliberadas
+     * de un usuario con acceso directo a las herramientas de desarrollo o al almacenamiento IndexedDB.
      */
     computeIntegrityHash(record) {
+      if (!record || typeof record !== 'object') return '';
+      const fieldsModStr = Array.isArray(record.fields_modified)
+        ? record.fields_modified.slice().sort().join(',')
+        : '';
       const canonicalStr = [
         record.fincaId ?? 'null',
         record.creadoEn ?? '',
@@ -83,7 +100,9 @@
         record.tipo_entidad ?? '',
         record.entidad_id ?? '',
         record.motivo_tarea ?? '',
-        record.resultado ?? ''
+        record.resultado ?? '',
+        record.descripcion ?? '',
+        fieldsModStr
       ].join('|');
 
       let hash = 0x811c9dc5;
@@ -92,6 +111,25 @@
         hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
       }
       return ('00000000' + (hash >>> 0).toString(16)).slice(-8);
+    },
+
+    /**
+     * Verifica la integridad de un registro comparando su hash_integridad con el valor recalculado.
+     * Comprobación tolerante: no lanza excepciones ante entradas nulas o malformadas.
+     * @param {Object} record
+     * @returns {boolean} true si el hash es válido y coincide con los campos, false si está alterado, corrupto o ausente.
+     */
+    verifyRecordIntegrity(record) {
+      if (!record || typeof record !== 'object') return false;
+      if (!record.hash_integridad || typeof record.hash_integridad !== 'string') {
+        return false;
+      }
+      try {
+        const recalculated = this.computeIntegrityHash(record);
+        return record.hash_integridad === recalculated;
+      } catch (e) {
+        return false;
+      }
     },
 
     /**
@@ -311,6 +349,18 @@
 
         // Ordenar cronológicamente descendente
         logs.sort((a, b) => new Date(b.creadoEn || b.fecha || 0) - new Date(a.creadoEn || a.fecha || 0));
+
+        // Verificar integridad de cada registro consultado contra su hash FNV-1a almacenado
+        for (const log of logs) {
+          if (log.tipo === 'auditoria') {
+            const isIntact = this.verifyRecordIntegrity(log);
+            log.integrity_verified = isIntact;
+            log.integrity_corrupted = !isIntact;
+          } else {
+            log.integrity_verified = null;
+            log.integrity_corrupted = false;
+          }
+        }
 
         // Presentación limitada a los últimos N
         return logs.slice(0, limit);
