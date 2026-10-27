@@ -1,0 +1,20 @@
+{
+  "project_name": "livestock-desktop",
+  "archetype": "desktop_tauri",
+  "base_branch": "master",
+  "test_command": ["npm", "run", "test:support-api"],
+  "build_command": ["npm", "run", "build"],
+  "uiux_mode": "strict",
+  "design_tokens_path": "frontend/css/erp-sidebar.css",
+  "protected_paths": [
+    "android/**",
+    "ios/**",
+    "capacitor.config.*",
+    ".github/workflows/**"
+  ],
+  "metadata": {
+    "role": "downstream_consumer_windows_desktop_tauri",
+    "target_platform": "Windows Desktop (Tauri 2 + MSIX)",
+    "upstream_source": "LIVESTOCK-MANAGER"
+  }
+}
