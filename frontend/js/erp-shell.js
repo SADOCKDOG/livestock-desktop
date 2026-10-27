@@ -36,6 +36,7 @@
           { key: 'patrimonio', label: 'Patrimonio', icon: () => Icons.edificio(), color: '#FF4444', route: '/ganaderia?tab=patrimonio' },
           { key: 'zonas', label: 'Zonas', icon: () => Icons.zonas(), color: '#CCFF00', route: '/ganaderia?tab=zonas' },
           { key: 'sanidad', label: 'Sanidad', icon: () => Icons.sanidad(), color: '#FF4444', route: '/ganaderia?tab=sanidad' },
+          { key: 'trazabilidad-porcina', label: 'Trazabilidad Porcina', icon: () => Icons.trazabilidad(), color: '#F97316', route: '/trazabilidad?modulo=porcino' },
         ],
       },
       {
@@ -66,6 +67,7 @@
             { key: 'tram-censo', label: 'Censo Anual', icon: () => Icons.animales(), color: '#F59E0B', route: '/explotacion?tab=tramites&sub=censo' },
             { key: 'tram-crotales', label: 'Crotales', icon: () => Icons.paquete(), color: '#3FB950', route: '/explotacion?tab=tramites&sub=crotales' },
             { key: 'tram-traslado', label: 'Traslados', icon: () => Icons.trazabilidad(), color: '#A855F7', route: '/explotacion?tab=tramites&sub=traslado' },
+            { key: 'tram-porcino', label: 'Trazabilidad Porcina (RD 787)', icon: () => Icons.trazabilidad(), color: '#F59E0B', route: '/trazabilidad?modulo=porcino' },
             { key: 'tram-infolac', label: 'Infolac', icon: () => Icons.leche(), color: '#3B82F6', route: '/explotacion?tab=tramites&sub=infolac' },
             { key: 'tram-archivo', label: 'Archivo', icon: () => Icons.cuaderno(), color: '#FB923C', route: '/explotacion?tab=tramites&sub=archivo' },
           ] },

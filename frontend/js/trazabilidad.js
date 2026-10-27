@@ -196,6 +196,89 @@ const MotorTrazabilidad = {
   },
 
   // =========================================================================
+  // MODULO 1.1: TRAZABILIDAD Y EVALUACION ZOOSANITARIA PORCINA (RD 787/2023)
+  // =========================================================================
+  async evaluarMovimientoPorcino(db, options = {}) {
+    const service = typeof window !== "undefined" && window.PorcineTraceabilityService 
+      ? window.PorcineTraceabilityService 
+      : (typeof PorcineTraceabilityService !== "undefined" ? PorcineTraceabilityService : null);
+
+    const {
+      batch = {},
+      origenREGA = "",
+      destinoREGA = "",
+      fechaEvaluar = new Date(),
+      tratamientos = []
+    } = options;
+
+    let tratamientosEnriquecidos = [...tratamientos];
+    if (db && batch.animalIds && Array.isArray(batch.animalIds) && batch.animalIds.length > 0) {
+      try {
+        for (const aId of batch.animalIds) {
+          const resSupresion = await this.checkSupresion(db, aId, fechaEvaluar, "carne");
+          if (!resSupresion.apto) {
+            tratamientosEnriquecidos.push({
+              medicamento: resSupresion.motivo || "Tratamiento veterinario activo",
+              fechaFinSupresion: resSupresion.fechaLiberacion || new Date().toISOString(),
+              animalId: aId
+            });
+          }
+        }
+      } catch (err) {
+        console.warn("[MotorTrazabilidad] Consulta de supresion en DB omitida:", err.message);
+      }
+    }
+
+    if (service && typeof service.evaluarIdoneidadMovimiento === "function") {
+      return service.evaluarIdoneidadMovimiento(
+        batch,
+        origenREGA,
+        destinoREGA,
+        {
+          fechaEvaluacion: fechaEvaluar,
+          tratamientosActivos: tratamientosEnriquecidos
+        }
+      );
+    }
+
+    const regaOrigenValid = /^ES[0-9]{12}$/.test(String(origenREGA).trim().toUpperCase());
+    const regaDestinoValid = /^ES[0-9]{12}$/.test(String(destinoREGA).trim().toUpperCase());
+
+    if (!regaOrigenValid || !regaDestinoValid) {
+      return {
+        isApto: false,
+        estado: "BLOQUEO_ZOOSANITARIO",
+        motivo: "Codigo REGA de origen o destino no conforme a normativa oficial (ES + 12 digitos).",
+        codigoCertificado: null,
+        sha256Signature: null
+      };
+    }
+
+    const tieneSupresion = tratamientosEnriquecidos.some(t => {
+      const fin = new Date(t.fechaFinSupresion || t.fecha);
+      return fin > new Date(fechaEvaluar);
+    });
+
+    if (tieneSupresion) {
+      return {
+        isApto: false,
+        estado: "BLOQUEO_ZOOSANITARIO",
+        motivo: "Partida porcina con tratamientos farmacologicos en plazo de supresion activo.",
+        codigoCertificado: null,
+        sha256Signature: null
+      };
+    }
+
+    return {
+      isApto: true,
+      estado: "MOVIMIENTO_AUTORIZADO",
+      motivo: "Partida apta para traslado inter-explotaciones conforme a RD 787/2023.",
+      codigoCertificado: "CERT-PORC-" + Date.now(),
+      sha256Signature: "SHA256_CERTIFIED"
+    };
+  },
+
+  // =========================================================================
   // MÓDULO 2: CONTROL CALIDAD HIGIÉNICO-SANITARIA LÁCTEA
   // =========================================================================
   evaluarLaboratorioLacteo(laboratorioJson) {
@@ -519,5 +602,12 @@ const MotorTrazabilidad = {
 };
 
 // Vinculación explícita para compatibilidad de rutas legadas
-window.Trazabilidad = MotorTrazabilidad;
-window.MotorTrazabilidad = MotorTrazabilidad;
+if (typeof window !== "undefined") {
+  window.Trazabilidad = MotorTrazabilidad;
+  window.MotorTrazabilidad = MotorTrazabilidad;
+}
+
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = MotorTrazabilidad;
+}

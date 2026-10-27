@@ -3570,6 +3570,10 @@ const App = {
   },
 
   async renderTrazabilidad(params) {
+    if (params?.get && params.get('modulo') === 'porcino' && window.TrazabilidadPorcinaView) {
+      TrazabilidadPorcinaView.render('app-content');
+      return;
+    }
     if (window.TrazabilidadView) {
       const id = params?.get ? params.get('id') : null;
       if (id) {
@@ -3581,8 +3585,11 @@ const App = {
     document.getElementById("app-content").innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">${Icons.trazabilidad()}</div>
-        <p class="empty-state-text">Selecciona un animal para consultar su trazabilidad 360°.</p>
-        <button class="btn btn-primary mt-15" onclick="App.route('/animales')">${Icons.animales()} Ir a Animales</button>
+        <p class="empty-state-text">Selecciona un animal para consultar su trazabilidad 360° o evalúa una partida porcina bajo RD 787/2023.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:15px;">
+          <button class="btn btn-primary" onclick="App.route('/animales')">${Icons.animales()} Ir a Animales</button>
+          <button class="btn btn-secondary" onclick="if(window.TrazabilidadPorcinaView) TrazabilidadPorcinaView.render('app-content');">${Icons.trazabilidad()} Validación Trazabilidad Porcina (RD 787/2023)</button>
+        </div>
       </div>`;
   },
 
