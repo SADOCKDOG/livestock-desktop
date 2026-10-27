@@ -224,40 +224,127 @@ const ConfigSistemaView = {
   // ===================== SECCIÓN 3: AUDITORÍA =====================
 
   async _renderAuditoria(container) {
-    const fincaId = await Fincas.getActiveId();
-    const eventos = await window.db.getAllFromIndex('registro_eventos', 'fincaId', fincaId).catch(() => []);
+    if (!container) return;
 
-    // Filtrar eventos de auditoría (rectificaciones, anulaciones, borrados)
-    const logs = eventos.filter(e =>
-      e.tipo === 'auditoria' || e.rectificado || e.anulado || e.motivo_tarea?.includes('anulacion')
-    ).sort((a, b) => new Date(b.creadoEn || b.fecha) - new Date(a.creadoEn || a.fecha));
-
-    let logsHtml = logs.length > 0 ? logs.slice(0, 50).map(l => {
-      const isAnulado = l.anulado || l.motivo_tarea?.includes('anulacion');
-      const isRectificado = l.rectificado;
-      const color = isAnulado ? 'var(--c-danger)' : (isRectificado ? 'var(--c-warning)' : 'var(--c-info)');
-
-      return `
-        <div class="p-10 mb-8 rounded bg-black border border-222 border-left-3px" style="border-left-color:${color};">
-          <div class="flex justify-between items-start">
-            <span class="text-[0.65rem] font-950 uppercase" style="color:${color};">${l.motivo_tarea?.replace(/_/g, ' ') || 'Evento de Sistema'}</span>
-            <span class="text-[0.55rem] text-gray-600 font-900">${new Date(l.creadoEn || l.fecha).toLocaleString()}</span>
-          </div>
-          <div class="text-white text-xs mt-4 font-700">${l.descripcion || l.observaciones || 'Registro modificado'}</div>
-          ${l.rectificadoMotivo || l.anuladoMotivo ? `<div class="text-[0.6rem] text-aaa italic mt-2">Motivo: ${l.rectificadoMotivo || l.anuladoMotivo}</div>` : ''}
-        </div>
-      `;
-    }).join('') : '<div class="text-center p-20 text-gray-600 font-900 text-xs uppercase">Sin registros de auditoría recientes</div>';
-
+    // Mostrar estado de carga inicial
     container.innerHTML = `
-      <div class="card p-14" style="background: rgba(255,255,255,0.02); border: 1px solid #27272a;">
-        <div class="section-header-theme mb-15 font-900 uppercase tracking-wider text-[0.7rem] text-gray"><span style="color: var(--c-info); margin-right: 4px;">|</span> ${Icons.documento()} REGISTRO DE ACTIVIDAD</div>
-        <p class="text-xs text-gray mb-15 leading-relaxed">Historial de cambios críticos, eliminaciones y rectificaciones realizadas en la explotación actual.</p>
-        <div class="mh-400 overflow-y-auto pr-4">
-          ${logsHtml}
-        </div>
+      <div class="card p-14 text-center" style="background: rgba(255,255,255,0.02); border: 1px solid #27272a;">
+        <div class="text-xs text-gray uppercase font-800 py-20">Cargando registros de auditoría...</div>
       </div>
     `;
+
+    try {
+      // Asegurar disponibilidad del servicio de auditoría
+      if (!window.AuditService && window.App && typeof App._loadScript === 'function') {
+        await App._loadScript('js/services/audit-service.js').catch(() => {});
+      }
+
+      const fincaId = window.Fincas && typeof Fincas.getActiveId === 'function'
+        ? await Fincas.getActiveId().catch(() => null)
+        : null;
+
+      let logs = [];
+      let health = { isHealthy: true, failureCount: 0 };
+
+      if (window.AuditService && typeof AuditService.list === 'function') {
+        logs = await AuditService.list({ fincaId, limit: 50 });
+        health = typeof AuditService.getHealth === 'function' ? AuditService.getHealth() : health;
+      } else if (window.db && typeof window.db.getAllFromIndex === 'function') {
+        const eventos = await window.db.getAllFromIndex('registro_eventos', 'fincaId', fincaId).catch(() => []);
+        logs = eventos.filter(e =>
+          e.tipo === 'auditoria' || e.rectificado || e.anulado || e.motivo_tarea?.includes('anulacion')
+        ).sort((a, b) => new Date(b.creadoEn || b.fecha) - new Date(a.creadoEn || a.fecha)).slice(0, 50);
+      }
+
+      const healthBanner = !health.isHealthy ? `
+        <div class="p-8 mb-12 rounded bg-red-950/40 border border-red-500/40 text-[0.65rem] text-red-200">
+          Aviso de integridad: Se detectaron ${health.failureCount} fallos al persistir auditorías en esta sesión local.
+        </div>
+      ` : '';
+
+      const _esc = (typeof AuditService !== 'undefined' && typeof AuditService.escapeHtml === 'function')
+        ? (s) => AuditService.escapeHtml(s)
+        : (s) => {
+            if (s == null) return '';
+            return String(s)
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#39;');
+          };
+
+      let logsHtml = logs.length > 0 ? logs.map(l => {
+        const isAnulado = l.anulado || l.motivo_tarea?.includes('anulacion') || l.motivo_tarea?.includes('baja') || l.action === 'DELETE_LOGICAL';
+        const isRectificado = l.rectificado || l.resultado === 'WARNING' || l.motivo_tarea?.includes('rectificacion');
+        const isAlta = l.tipo === 'alta' || l.motivo_tarea?.includes('alta') || l.action === 'CREATE';
+        const isMovimiento = l.tipo === 'movimiento' || l.motivo_tarea === 'entrada' || l.motivo_tarea === 'salida' || l.motivo_tarea === 'cambio_rebano';
+        const color = isAnulado
+          ? 'var(--c-danger)'
+          : (isRectificado
+            ? 'var(--c-warning)'
+            : (isAlta ? 'var(--c-success)' : (isMovimiento ? 'var(--c-purple)' : 'var(--c-info)')));
+
+        const actorTag = l.actor_id ? `<span class="text-[0.55rem] text-gray-500 font-bold ml-6">| Actor: ${_esc(l.actor_id)}</span>` : '';
+        const fieldsTag = Array.isArray(l.fields_modified) && l.fields_modified.length > 0
+          ? `<div class="text-[0.6rem] text-gray-400 mt-2">Campos alterados: ${_esc(l.fields_modified.join(', '))}</div>`
+          : '';
+
+        const motivoRaw = (l.motivo_tarea === 'control' && l.valor_neto != null)
+          ? 'pesaje control'
+          : (l.motivo_tarea || 'Evento de Sistema');
+        const motivo = _esc(motivoRaw.replace(/_/g, ' '));
+        const fechaStr = _esc(new Date(l.creadoEn || l.fecha).toLocaleString());
+
+        let descRaw = l.descripcion;
+        if (!descRaw && l.valor_neto != null) {
+          descRaw = `Pesaje registrado: ${l.valor_neto} ${l.unidad || 'kg'} (animal #${l.entidad_id})`;
+        }
+        if (!descRaw) {
+          descRaw = l.observaciones || l.notas || 'Registro modificado';
+        }
+        const desc = _esc(descRaw);
+
+        const detalleMotivo = (l.rectificadoMotivo || l.anuladoMotivo)
+          ? `<div class="text-[0.6rem] text-aaa italic mt-2">Motivo: ${_esc(l.rectificadoMotivo || l.anuladoMotivo)}</div>`
+          : '';
+
+        return `
+          <div class="p-10 mb-8 rounded bg-black border border-222 border-left-3px" style="border-left-color:${color};">
+            <div class="flex justify-between items-start">
+              <span class="text-[0.65rem] font-950 uppercase" style="color:${color};">
+                ${motivo} ${actorTag}
+              </span>
+              <span class="text-[0.55rem] text-gray-600 font-900">${fechaStr}</span>
+            </div>
+            <div class="text-white text-xs mt-4 font-700">${desc}</div>
+            ${fieldsTag}
+            ${detalleMotivo}
+          </div>
+        `;
+      }).join('') : '<div class="text-center p-20 text-gray-600 font-900 text-xs uppercase">Sin registros de auditoría recientes</div>';
+
+      container.innerHTML = `
+        <div class="card p-14" style="background: rgba(255,255,255,0.02); border: 1px solid #27272a;">
+          <div class="section-header-theme mb-15 font-900 uppercase tracking-wider text-[0.7rem] text-gray"><span style="color: var(--c-info); margin-right: 4px;">|</span> ${Icons.documento()} REGISTRO DE ACTIVIDAD</div>
+          <p class="text-xs text-gray mb-15 leading-relaxed">Historial de cambios críticos, eliminaciones y rectificaciones realizadas en la explotación actual (mostrando los últimos 50 eventos registrados).</p>
+          ${healthBanner}
+          <div class="mh-400 overflow-y-auto pr-4">
+            ${logsHtml}
+          </div>
+        </div>
+      `;
+    } catch (err) {
+      // Estado de error diferenciado y recuperable
+      container.innerHTML = `
+        <div class="card p-20 text-center" style="background: rgba(255,255,255,0.02); border: 1px solid #ef4444;">
+          <div class="text-xs text-red-400 font-bold mb-10">No se pudieron recuperar los registros de auditoría local.</div>
+          <button class="widget-link-btn widget-link-btn--neon neon-info mx-auto" onclick="ConfigSistemaView._renderAuditoria(document.getElementById('sistema-content'))">
+            Reintentar lectura
+          </button>
+        </div>
+      `;
+    }
   },
 
   // ===================== UTILIDADES =====================
@@ -284,6 +371,18 @@ const ConfigSistemaView = {
   _cambiarVistaRegistros(modo) {
     if (!window.VistaRegistros) return;
     VistaRegistros.set(modo);
+    if (window.AuditService && typeof AuditService.record === 'function') {
+      AuditService.record({
+        fincaId: 'global',
+        actor_type: 'user',
+        action: 'CONFIG_CHANGE',
+        tipo_entidad: 'config',
+        entidad_id: 'vistaRegistros',
+        motivo_tarea: 'cambio_preferencias',
+        descripcion: `Presentación de listados cambiada a ${modo}`,
+        fields_modified: ['vistaRegistros']
+      }).catch(() => {});
+    }
     if (window.App && typeof App.toast === 'function') {
       App.toast(modo === 'tabla' ? 'Listados en vista de tabla' : 'Listados en vista de tarjetas', 'success');
     }
@@ -292,6 +391,21 @@ const ConfigSistemaView = {
   async _action(fn, ...args) {
     if (typeof AjustesView['_' + fn] === 'function') {
       await AjustesView['_' + fn](...args);
+      if (window.AuditService && typeof AuditService.record === 'function') {
+        const fincaId = window.Fincas && typeof Fincas.getActiveId === 'function'
+          ? await Fincas.getActiveId().catch(() => null)
+          : null;
+        AuditService.record({
+          fincaId: fincaId || 'global',
+          actor_type: 'user',
+          action: 'CONFIG_CHANGE',
+          tipo_entidad: 'config',
+          entidad_id: fn,
+          motivo_tarea: 'cambio_configuracion',
+          descripcion: `Preferencia de sistema modificada: ${fn}`,
+          fields_modified: [fn]
+        }).catch(() => {});
+      }
       this.render();
     }
   }

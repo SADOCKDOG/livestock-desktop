@@ -241,6 +241,18 @@
         datos.email = email || '';
       }
       this._guardarSesion(datos);
+      if (typeof window !== 'undefined' && window.AuditService && typeof window.AuditService.record === 'function') {
+        window.AuditService.record({
+          fincaId: 'global',
+          actor_type: 'user',
+          actor_id: (datos && datos.email) || email || 'soporte_usuario',
+          action: 'LOGIN',
+          tipo_entidad: 'sesion',
+          entidad_id: 'soporte',
+          motivo_tarea: 'login_soporte',
+          descripcion: 'Sesion de soporte iniciada correctamente'
+        }).catch(function () {});
+      }
       return datos;
     },
 
