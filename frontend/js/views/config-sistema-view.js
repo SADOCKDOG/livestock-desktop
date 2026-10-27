@@ -275,7 +275,7 @@ const ConfigSistemaView = {
           };
 
       let logsHtml = logs.length > 0 ? logs.map(l => {
-        const isAnulado = l.anulado || l.motivo_tarea?.includes('anulacion') || l.motivo_tarea?.includes('baja') || l.action === 'DELETE_LOGICAL';
+        const isAnulado = l.anulado || l.motivo_tarea?.includes('anulacion') || l.motivo_tarea?.includes('baja') || l.action === 'DELETE_LOGICAL' || l.resultado === 'FAILED';
         const isRectificado = l.rectificado || l.resultado === 'WARNING' || l.motivo_tarea?.includes('rectificacion');
         const isAlta = l.tipo === 'alta' || l.motivo_tarea?.includes('alta') || l.action === 'CREATE';
         const isMovimiento = l.tipo === 'movimiento' || l.motivo_tarea === 'entrada' || l.motivo_tarea === 'salida' || l.motivo_tarea === 'cambio_rebano';

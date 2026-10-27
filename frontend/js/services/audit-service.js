@@ -17,6 +17,7 @@
     'sesion',
     'sistema',
     'backup',
+    'copia_seguridad',
     'tratamiento',
     'venta',
     'gasto',
@@ -27,6 +28,7 @@
     'saneamiento',
     'vacunacion',
     'movimiento',
+    'censo',
     'general'
   ]);
 
@@ -38,7 +40,8 @@
     'LOGIN',
     'LOGOUT',
     'EXPORT',
-    'IMPORT'
+    'IMPORT',
+    'RESTORE'
   ]);
 
   // Patrón para detectar y redactar posibles secretos (tokens, hashes >32 hex, jwt, passwords)
@@ -64,11 +67,12 @@
     },
 
     /**
-     * Calcula un hash de integridad determinista sobre campos invariantes.
+     * Calcula un hash de integridad determinista FNV-1a (32 bits, 8 caracteres hexadecimales) sobre campos invariantes.
      * NOTA DE LIMITACIÓN DE SEGURIDAD:
-     * Este hash es una comprobación de integridad a nivel de aplicación (permite detectar
-     * corrupciones o modificaciones locales accidentales en el almacenamiento del cliente).
-     * NO constituye una garantía criptográfica WORM de hardware ni una firma digital PKI de servidor.
+     * Este hash implementa el algoritmo no criptográfico FNV-1a (Fowler-Noll-Vo) como una comprobación
+     * de integridad a nivel de aplicación (permite detectar corrupciones o modificaciones locales accidentales
+     * en el almacenamiento del cliente). NO es una función hash criptográfica SHA-256 ni constituye una
+     * garantía inmutable WORM de hardware o firma digital PKI de servidor.
      */
     computeIntegrityHash(record) {
       const canonicalStr = [

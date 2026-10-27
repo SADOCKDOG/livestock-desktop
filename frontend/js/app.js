@@ -3910,6 +3910,7 @@ const App = {
               tipo_entidad: 'copia_seguridad',
               entidad_id: fileName,
               motivo_tarea: 'export_backup',
+              resultado: 'SUCCESS',
               descripcion: `Copia de seguridad exportada correctamente (${totalRegistros} registros)`
             }).catch(e => console.warn('[Backup] Error registrando auditoría:', e));
           }
@@ -3939,6 +3940,7 @@ const App = {
           tipo_entidad: 'copia_seguridad',
           entidad_id: `livestock_backup_${new Date().toISOString().split("T")[0]}.json`,
           motivo_tarea: 'export_backup',
+          resultado: 'SUCCESS',
           descripcion: `Copia de seguridad exportada correctamente (${totalRegistros} registros)`
         }).catch(e => console.warn('[Backup] Error registrando auditoría:', e));
       }
@@ -3952,6 +3954,7 @@ const App = {
           tipo_entidad: 'copia_seguridad',
           entidad_id: 'export_failed',
           motivo_tarea: 'export_backup',
+          resultado: 'FAILED',
           descripcion: `Fallo en exportación de copia de seguridad: ${error.message}`
         }).catch(function () {});
       }
@@ -3984,6 +3987,7 @@ const App = {
             tipo_entidad: 'copia_seguridad',
             entidad_id: file.name,
             motivo_tarea: 'import_backup',
+            resultado: 'SUCCESS',
             descripcion: `Copia de seguridad restaurada correctamente: ${file.name}`
           }).catch(e => console.warn('[Backup] Error registrando auditoría:', e));
         }
@@ -4003,6 +4007,7 @@ const App = {
             tipo_entidad: 'copia_seguridad',
             entidad_id: file ? file.name : 'import_failed',
             motivo_tarea: 'import_backup',
+            resultado: 'FAILED',
             descripcion: `Fallo en restauración de copia de seguridad: ${error.message}`
           }).catch(function () {});
         }
