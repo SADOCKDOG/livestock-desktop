@@ -2467,6 +2467,15 @@ const App = {
             </div>
           </div>
 
+          <!-- Mis incidencias -->
+          <div class="card p-12 hover:border-gray transition-all" style="background:#141414; border:1px solid var(--c-danger); cursor:pointer;" onclick="App._cerrarSubmenuRegistros(); App.location.hash = '#/mis-incidencias';">
+            <div class="flex items-center justify-center rounded-sm mb-10" style="width:36px; height:36px; background:#1A1A1A; color:var(--c-danger); border:1px solid var(--c-danger);">
+              ${Icons.ayuda()}
+            </div>
+            <h4 class="text-xs font-black text-white uppercase tracking-wider mb-2">MIS INCIDENCIAS</h4>
+            <p class="text-[0.55rem] text-gray uppercase tracking-tight m-0">Ver y gestionar incidencias de soporte</p>
+          </div>
+
         </div>
       </div>
     </div>

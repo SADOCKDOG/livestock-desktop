@@ -101,6 +101,11 @@ const AvisosSoporteService = {
             // Sin `schedule`: se muestra ya. Programarla a futuro solo
             // retrasaria un aviso que el usuario puede atender ahora mismo.
             extra: { ruta: '#/mis-incidencias' },
+            // Botón de acción visible en la notificación. Sin `actions` no hay
+            // botón y el usuario tiene que buscar la incidencia a mano.
+            actions: [
+              { id: 'OPEN_INCIDENCIAS', title: 'Ver incidencias' },
+            ],
           },
         ],
       });
