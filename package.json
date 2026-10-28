@@ -11,6 +11,7 @@
     "sync": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/sync-from-master.ps1",
     "test:e2e": "cypress run --spec cypress/integration/gastos-column-selector.spec.js",
     "test:support-api": "node --test scripts/support-api.test.cjs",
+    "test:audit-hash": "node --test scripts/audit-hash-compat.test.cjs",
     "prebuild:pago": "powershell -NoProfile -Command \"Copy-Item frontend/js/mode-config-con-pago.js frontend/js/mode-config.js -Force\"",
     "prebuild:demo": "powershell -NoProfile -Command \"Copy-Item frontend/js/mode-config-sin-pago.js frontend/js/mode-config.js -Force\"",
     "prebuild:free": "npm run prebuild:pago",

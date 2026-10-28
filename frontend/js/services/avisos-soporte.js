@@ -101,6 +101,7 @@ const AvisosSoporteService = {
             // Sin `schedule`: se muestra ya. Programarla a futuro solo
             // retrasaria un aviso que el usuario puede atender ahora mismo.
             extra: { ruta: '#/mis-incidencias' },
+            actionTypeId: 'OPEN_INCIDENCIAS',
           },
         ],
       });

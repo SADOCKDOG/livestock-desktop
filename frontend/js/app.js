@@ -124,6 +124,11 @@ const App = {
         catch (e) { console.warn('[App] Error init avisos de soporte:', e); }
       }
 
+      if (window.AuditService && typeof AuditService.initEventBusListeners === 'function') {
+        try { window.AuditService.initEventBusListeners(); }
+        catch (e) { console.warn('[App] Error init audit service:', e); }
+      }
+
       // Revalida la licencia de soporte contra la Microsoft Store. La clave que
       // acuna WinRT caduca a los 30 dias, asi que sin esto la sesion se muere
       // sola y el usuario tendria que pulsar «Ya la tengo» a ciegas. Fuera del
@@ -3896,6 +3901,19 @@ const App = {
           });
 
           App.toast(`Backup compartido (${totalRegistros} registros)`, 'success');
+          if (window.AuditService && typeof AuditService.record === 'function') {
+            await AuditService.record({
+              fincaId: 'global',
+              actor_type: 'user',
+              actor_id: 'usuario',
+              action: 'EXPORT',
+              tipo_entidad: 'copia_seguridad',
+              entidad_id: fileName,
+              motivo_tarea: 'export_backup',
+              resultado: 'SUCCESS',
+              descripcion: `Copia de seguridad exportada correctamente (${totalRegistros} registros)`
+            }).catch(e => console.warn('[Backup] Error registrando auditoría:', e));
+          }
           return;
         }
       } catch (capErr) {
@@ -3913,7 +3931,33 @@ const App = {
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 10000);
       App.toast(`Backup descargado (${totalRegistros} registros)`, 'success');
+      if (window.AuditService && typeof AuditService.record === 'function') {
+        await AuditService.record({
+          fincaId: 'global',
+          actor_type: 'user',
+          actor_id: 'usuario',
+          action: 'EXPORT',
+          tipo_entidad: 'copia_seguridad',
+          entidad_id: `livestock_backup_${new Date().toISOString().split("T")[0]}.json`,
+          motivo_tarea: 'export_backup',
+          resultado: 'SUCCESS',
+          descripcion: `Copia de seguridad exportada correctamente (${totalRegistros} registros)`
+        }).catch(e => console.warn('[Backup] Error registrando auditoría:', e));
+      }
     } catch (error) {
+      if (window.AuditService && typeof AuditService.record === 'function') {
+        AuditService.record({
+          fincaId: 'global',
+          actor_type: 'user',
+          actor_id: 'usuario',
+          action: 'EXPORT',
+          tipo_entidad: 'copia_seguridad',
+          entidad_id: 'export_failed',
+          motivo_tarea: 'export_backup',
+          resultado: 'FAILED',
+          descripcion: `Fallo en exportación de copia de seguridad: ${error.message}`
+        }).catch(function () {});
+      }
       App.toastError("Error al exportar: " + error.message);
     }
   },
@@ -3934,6 +3978,19 @@ const App = {
           e.target.result
         );
         App.toast(`Backup restaurado (${res.fincas.length} finca${res.fincas.length > 1 ? 's' : ''})`, 'success');
+        if (window.AuditService && typeof AuditService.record === 'function') {
+          await AuditService.record({
+            fincaId: 'global',
+            actor_type: 'user',
+            actor_id: 'usuario',
+            action: 'RESTORE',
+            tipo_entidad: 'copia_seguridad',
+            entidad_id: file.name,
+            motivo_tarea: 'import_backup',
+            resultado: 'SUCCESS',
+            descripcion: `Copia de seguridad restaurada correctamente: ${file.name}`
+          }).catch(e => console.warn('[Backup] Error registrando auditoría:', e));
+        }
         if (res.multiplesFincas) {
           await Confirm.alert("Restauración Completada", "Base de datos restaurada. Detectadas múltiples fincas.");
         } else {
@@ -3941,6 +3998,19 @@ const App = {
         }
         window.location.reload();
       } catch (error) {
+        if (window.AuditService && typeof AuditService.record === 'function') {
+          AuditService.record({
+            fincaId: 'global',
+            actor_type: 'user',
+            actor_id: 'usuario',
+            action: 'RESTORE',
+            tipo_entidad: 'copia_seguridad',
+            entidad_id: file ? file.name : 'import_failed',
+            motivo_tarea: 'import_backup',
+            resultado: 'FAILED',
+            descripcion: `Fallo en restauración de copia de seguridad: ${error.message}`
+          }).catch(function () {});
+        }
         App.toastError(error.message);
       }
     };

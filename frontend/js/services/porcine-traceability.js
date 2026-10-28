@@ -243,6 +243,35 @@
         status: "CERTIFIED_VALID",
       };
     },
+
+    /**
+     * Calcula el Indice de Conversion Alimenticia (FCR) para porcino.
+     * @param {number} feedKg - Consumo total de pienso en kilogramos.
+     * @param {number} gainKg - Ganancia de peso en kilogramos.
+     * @returns {number}
+     */
+    calculateFCR(feedKg, gainKg) {
+      const feedNum = Number(feedKg);
+      const gainNum = Number(gainKg);
+
+      if (typeof feedKg !== "number" || typeof gainKg !== "number") {
+        throw new Error("Los valores feedKg y gainKg deben ser numéricos.");
+      }
+
+      if (!Number.isFinite(feedNum) || !Number.isFinite(gainNum)) {
+        throw new Error("Los valores feedKg y gainKg deben ser numéricos finitos.");
+      }
+
+      if (gainNum === 0) {
+        throw new Error("El valor gainKg debe ser distinto de cero para el cálculo de FCR.");
+      }
+
+      if (gainNum < 0) {
+        throw new Error("El valor gainKg debe ser mayor que cero para el cálculo de FCR.");
+      }
+
+      return feedNum / gainNum;
+    },
   };
 
   return PorcineTraceabilityService;
