@@ -22,6 +22,10 @@ const animalesSource = fs.readFileSync(
   path.join(__dirname, '..', 'frontend', 'js', 'animales.js'),
   'utf8',
 );
+const animalesViewSource = fs.readFileSync(
+  path.join(__dirname, '..', 'frontend', 'js', 'views', 'animales-view.js'),
+  'utf8',
+);
 
 const V1_HISTORICOS = Object.freeze([
   {
@@ -390,7 +394,15 @@ test('Animales.delete(): persiste anulacion_registro (DELETE_LOGICAL) y rectific
   assert.equal(evAnulacion.hash_version, 2);
   assert.ok(evAnulacion.descripcion.includes('ES010203040506'), 'La descripción debe incluir el crotal del animal');
   assert.ok(evAnulacion.descripcion.includes('error_identificacion_crotal'), 'La descripción debe incluir el motivo de anulación');
-  assert.deepEqual(evAnulacion.fields_modified, ['estado', 'motivo_baja', 'fecha_baja', 'anulado']);
+  assert.deepEqual(evAnulacion.fields_modified, [
+    'estado',
+    'motivo_baja',
+    'fecha_baja',
+    'anulado',
+    'anuladoEn',
+    'anuladoMotivo',
+    'actualizadoEn',
+  ]);
   assert.equal(evAnulacion.hash_integridad, svc.computeIntegrityHash(evAnulacion));
   assert.deepEqual({ ...svc.verifyRecordIntegrity(evAnulacion) }, { valid: true, status: 'VERIFIED_V2', version: 2 });
 
@@ -506,4 +518,234 @@ test('Animales.delete(): no borra ni reescribe registros históricos previos sin
     assert.equal(n.hash_version, 2);
     assert.equal(n.integrity_status, 'VERIFIED_V2');
   }
+});
+
+test('Animales.delete(): fields_modified declara fielmente solo los campos que cambiaron en la transición real y sella integridad v2', async () => {
+  const { svc, Animales, stores } = crearEntornoAnimales({ activeFincaId: 7 });
+
+  // Animal que ya tenía estado 'baja', motivo_baja 'muerte' y fecha_baja '2026-05-01' antes de la anulación
+  stores.animales.set(88, {
+    id: 88,
+    fincaId: 7,
+    numero_identificacion: 'ES088888888888',
+    especie: 'Bovino',
+    estado: 'baja',
+    motivo_baja: 'muerte',
+    fecha_baja: '2026-05-01',
+    actualizadoEn: '2026-05-01T12:00:00.000Z',
+  });
+
+  const res = await Animales.delete(88, 'rectificacion_censo');
+  assert.equal(res.anulado, true);
+  assert.equal(res.audit.anulacion.success, true);
+  assert.equal(res.audit.historico, null);
+
+  const animalFinal = stores.animales.get(88);
+  assert.equal(animalFinal.estado, 'baja');
+  assert.equal(animalFinal.motivo_baja, 'muerte', 'motivo_baja previo se conserva sin cambios');
+  assert.equal(animalFinal.fecha_baja, '2026-05-01', 'fecha_baja previa se conserva sin cambios');
+  assert.equal(animalFinal.anulado, true);
+  assert.equal(animalFinal.anuladoMotivo, 'rectificacion_censo');
+  assert.ok(animalFinal.anuladoEn);
+  assert.notEqual(animalFinal.actualizadoEn, '2026-05-01T12:00:00.000Z');
+
+  const evAnulacion = stores.registro_eventos.find((e) => e.motivo_tarea === 'anulacion_registro');
+  assert.ok(evAnulacion);
+  // No debe afirmar que estado, motivo_baja o fecha_baja cambiaron porque conservaron su valor
+  assert.deepEqual(evAnulacion.fields_modified, [
+    'anulado',
+    'anuladoEn',
+    'anuladoMotivo',
+    'actualizadoEn',
+  ]);
+  assert.equal(evAnulacion.hash_version, 2);
+  assert.equal(evAnulacion.hash_integridad, svc.computeIntegrityHash(evAnulacion));
+  assert.deepEqual({ ...svc.verifyRecordIntegrity(evAnulacion) }, { valid: true, status: 'VERIFIED_V2', version: 2 });
+
+  // Si se altera fields_modified, la verificación v2 detecta CORRUPTED
+  const manipulado = { ...clonar(evAnulacion), fields_modified: ['estado', 'anulado'] };
+  assert.equal(svc.verifyRecordIntegrity(manipulado).status, 'CORRUPTED');
+});
+
+test('AnimalesView._eliminarAnimal(): gestiona éxito, histórico nulo, fallo parcial y fallo total manteniendo aviso visible al volver al listado', async () => {
+  const toasts = [];
+  const mainContainer = { innerHTML: '' };
+  const locationObj = { hash: '#/animal?id=1' };
+  let deleteResultActual = null;
+  const llamadasDelete = [];
+
+  const Confirm = {
+    prompt: async () => '  rectificacion_censo  ',
+    confirm: async () => true,
+  };
+  const App = {
+    toast: (msg, type, duracionMs) => {
+      toasts.push({ kind: 'toast', msg, type: type || '', duracionMs });
+    },
+    toastError: (msg) => {
+      toasts.push({ kind: 'toastError', msg, type: 'error' });
+    },
+    clearExitGuard() {},
+  };
+  const AnimalesMock = {
+    delete: async (id, motivo) => {
+      llamadasDelete.push({ id, motivo });
+      return deleteResultActual;
+    },
+    list: async () => [],
+  };
+  const RebanosMock = {
+    list: async () => [{ id: 1, nombre: 'Lote Principal', tipo: 'leche' }],
+  };
+  const Icons = {
+    animales: () => '<svg></svg>',
+    agregar: () => '+',
+    documento: () => 'doc',
+    chevronAbajo: () => 'v',
+    buscar: () => '?',
+  };
+  const documentMock = {
+    getElementById: (id) => (id === 'ganaderia-tab-content' || id === 'app-content' ? mainContainer : null),
+  };
+
+  const window = {
+    Confirm,
+    App,
+    Animales: AnimalesMock,
+    Rebanos: RebanosMock,
+    Icons,
+    document: documentMock,
+    location: locationObj,
+    db: { getAll: async () => [] },
+    ModoContextoHelper: {
+      getFlags: () => ({ leche: true, carne: true }),
+      _matchTipoByMode: () => true,
+      getModeMetaEffective: () => ({}),
+      bannerOcultosPorModo: () => '',
+    },
+  };
+  const ctx = {
+    window,
+    Confirm,
+    App,
+    Animales: AnimalesMock,
+    Rebanos: RebanosMock,
+    Icons,
+    document: documentMock,
+    location: locationObj,
+    console: { warn() {}, log() {}, error() {} },
+    String,
+    Number,
+    Boolean,
+    Array,
+    Object,
+    Set,
+    Promise,
+  };
+  ctx.globalThis = window;
+  window.window = window;
+
+  vm.createContext(ctx);
+  vm.runInContext(animalesViewSource, ctx);
+  const AnimalesView = window.AnimalesView;
+
+  // Caso 1: Éxito completo (anulacion: true, historico: true)
+  toasts.length = 0;
+  locationObj.hash = '#/animal?id=10';
+  deleteResultActual = {
+    id: 10,
+    anulado: true,
+    audit: {
+      anulacion: { success: true, id: 101 },
+      historico: { success: true, id: 102 },
+    },
+  };
+  await AnimalesView._eliminarAnimal(10);
+  await AnimalesView.render();
+  assert.equal(llamadasDelete.at(-1).motivo, 'rectificacion_censo');
+  assert.equal(locationObj.hash, '#/animales');
+  assert.equal(toasts.length, 1);
+  assert.equal(toasts[0].msg, 'Animal anulado');
+  assert.equal(toasts[0].type, 'success');
+  assert.equal(mainContainer.innerHTML.includes('animales-audit-warning-banner'), false);
+
+  // Caso 2: Éxito sin histórico que documentar (historico: null no es fallo)
+  toasts.length = 0;
+  locationObj.hash = '#/animal?id=11';
+  deleteResultActual = {
+    id: 11,
+    anulado: true,
+    audit: {
+      anulacion: { success: true, id: 103 },
+      historico: null,
+    },
+  };
+  await AnimalesView._eliminarAnimal(11);
+  await AnimalesView.render();
+  assert.equal(locationObj.hash, '#/animales');
+  assert.equal(toasts.length, 1);
+  assert.equal(toasts[0].msg, 'Animal anulado');
+  assert.equal(toasts[0].type, 'success');
+  assert.equal(mainContainer.innerHTML.includes('animales-audit-warning-banner'), false);
+
+  // Caso 3: Fallo parcial — anulacion falla, historico nulo o exitoso
+  toasts.length = 0;
+  locationObj.hash = '#/animal?id=12';
+  deleteResultActual = {
+    id: 12,
+    anulado: true,
+    audit: {
+      anulacion: { success: false, reason: 'AUDIT_WRITE_FAILED' },
+      historico: { success: true, id: 104 },
+    },
+  };
+  await AnimalesView._eliminarAnimal(12);
+  await AnimalesView.render();
+  assert.equal(locationObj.hash, '#/animales', 'No bloquea la vuelta al listado');
+  assert.equal(toasts.length, 1);
+  assert.equal(toasts[0].type, 'warning');
+  assert.ok(toasts[0].msg.includes('auditoría de anulación no pudo persistirse'));
+  assert.ok(mainContainer.innerHTML.includes('animales-audit-warning-banner'), 'El aviso sigue visible al renderizar el listado');
+  assert.ok(mainContainer.innerHTML.includes('auditoría de anulación no pudo persistirse'));
+
+  // Caso 4: Fallo parcial — anulacion exitosa, historico existe y falla
+  toasts.length = 0;
+  locationObj.hash = '#/animal?id=13';
+  deleteResultActual = {
+    id: 13,
+    anulado: true,
+    audit: {
+      anulacion: { success: true, id: 105 },
+      historico: { success: false, reason: 'AUDIT_WRITE_FAILED' },
+    },
+  };
+  await AnimalesView._eliminarAnimal(13);
+  await AnimalesView.render();
+  assert.equal(locationObj.hash, '#/animales');
+  assert.equal(toasts.length, 1);
+  assert.equal(toasts[0].type, 'warning');
+  assert.ok(toasts[0].msg.includes('conservación histórica no pudo persistirse'));
+  assert.ok(mainContainer.innerHTML.includes('animales-audit-warning-banner'));
+  assert.ok(mainContainer.innerHTML.includes('conservación histórica no pudo persistirse'));
+
+  // Caso 5: Fallo total — fallan tanto anulacion como historico
+  toasts.length = 0;
+  locationObj.hash = '#/animal?id=14';
+  deleteResultActual = {
+    id: 14,
+    anulado: true,
+    audit: {
+      anulacion: { success: false, reason: 'AUDIT_WRITE_FAILED' },
+      historico: { success: false, reason: 'AUDIT_WRITE_FAILED' },
+    },
+  };
+  await AnimalesView._eliminarAnimal(14);
+  await AnimalesView.render();
+  assert.equal(locationObj.hash, '#/animales');
+  assert.equal(toasts.length, 1);
+  assert.equal(toasts[0].type, 'warning');
+  assert.ok(toasts[0].msg.includes('auditoría de anulación'));
+  assert.ok(toasts[0].msg.includes('conservación histórica'));
+  assert.ok(mainContainer.innerHTML.includes('animales-audit-warning-banner'));
+  assert.ok(mainContainer.innerHTML.includes('ni la de conservación histórica'));
 });

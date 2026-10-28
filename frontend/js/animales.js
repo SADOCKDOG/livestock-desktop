@@ -339,7 +339,8 @@ const Animales = {
           );
         }
 
-        const fechaBaja = animal.fecha_baja || new Date().toISOString().split("T")[0];
+        const marcaTemporal = new Date().toISOString();
+        const fechaBaja = animal.fecha_baja || marcaTemporal.split("T")[0];
         const motivoAnulacion = (motivo || "").trim() || "anulacion_registro";
         const animalAnulado = {
           ...animal,
@@ -347,10 +348,22 @@ const Animales = {
           motivo_baja: animal.motivo_baja || motivoAnulacion,
           fecha_baja: fechaBaja,
           anulado: true,
-          anuladoEn: new Date().toISOString(),
+          anuladoEn: marcaTemporal,
           anuladoMotivo: motivoAnulacion,
-          actualizadoEn: new Date().toISOString(),
+          actualizadoEn: marcaTemporal,
         };
+        const camposCandidatos = [
+          "estado",
+          "motivo_baja",
+          "fecha_baja",
+          "anulado",
+          "anuladoEn",
+          "anuladoMotivo",
+          "actualizadoEn",
+        ];
+        const fieldsModified = camposCandidatos.filter(
+          (campo) => animal[campo] !== animalAnulado[campo]
+        );
         await window.db.put("animales", animalAnulado);
 
         const activeFincaId =
@@ -369,7 +382,7 @@ const Animales = {
           motivo_tarea: "anulacion_registro",
           resultado: "SUCCESS",
           descripcion: `Anulación de ficha animal ${identificadorAnimal} (motivo: ${motivoAnulacion})`,
-          fields_modified: ["estado", "motivo_baja", "fecha_baja", "anulado"],
+          fields_modified: fieldsModified,
         });
 
         let auditHistorico = null;
