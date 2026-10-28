@@ -748,4 +748,73 @@ test('AnimalesView._eliminarAnimal(): gestiona éxito, histórico nulo, fallo pa
   assert.ok(toasts[0].msg.includes('conservación histórica'));
   assert.ok(mainContainer.innerHTML.includes('animales-audit-warning-banner'));
   assert.ok(mainContainer.innerHTML.includes('ni la de conservación histórica'));
+
+  // Caso 6: Animal inexistente / resultado undefined o sin anulado === true (anulación no confirmada)
+  const { Animales: AnimalesReal } = crearEntornoAnimales({ activeFincaId: 7 });
+  const resInexistente = await AnimalesReal.delete(9999, 'rectificacion_censo');
+  assert.equal(resInexistente, undefined, 'Animales.delete devuelve undefined si el animal no existe');
+
+  for (const resNoConfirmado of [resInexistente, null, {}, { id: 15 }, { id: 15, anulado: false }]) {
+    toasts.length = 0;
+    locationObj.hash = '#/animal?id=15';
+    deleteResultActual = resNoConfirmado;
+    await AnimalesView._eliminarAnimal(15);
+    await AnimalesView.render();
+    assert.equal(locationObj.hash, '#/animal?id=15', 'Debe permanecer en la ficha para permitir volver a consultarla');
+    assert.equal(toasts.length, 1);
+    assert.equal(toasts[0].msg.includes('Baja lógica aplicada'), false, 'No debe afirmar que la baja lógica se aplicó');
+    assert.ok(toasts[0].msg.includes('No se ha podido confirmar la anulación'), 'Debe informar que no se pudo confirmar la anulación');
+    assert.equal(mainContainer.innerHTML.includes('animales-audit-warning-banner'), false);
+  }
+
+  // Caso 7: Baja lógica confirmada (anulado === true) pero resultado sin objeto audit
+  toasts.length = 0;
+  locationObj.hash = '#/animal?id=16';
+  deleteResultActual = { id: 16, anulado: true };
+  await AnimalesView._eliminarAnimal(16);
+  await AnimalesView.render();
+  assert.equal(locationObj.hash, '#/animales');
+  assert.equal(toasts.length, 1);
+  assert.equal(toasts[0].type, 'warning');
+  assert.ok(toasts[0].msg.includes('Baja lógica aplicada'));
+  assert.ok(toasts[0].msg.includes('auditoría de anulación no pudo persistirse'));
+  assert.ok(mainContainer.innerHTML.includes('animales-audit-warning-banner'));
+
+  // Caso 8: Evento de anulación con success ausente (debe tratarse como fallo de auditoría)
+  toasts.length = 0;
+  locationObj.hash = '#/animal?id=17';
+  deleteResultActual = {
+    id: 17,
+    anulado: true,
+    audit: {
+      anulacion: { id: 106 },
+      historico: { success: true, id: 107 },
+    },
+  };
+  await AnimalesView._eliminarAnimal(17);
+  await AnimalesView.render();
+  assert.equal(locationObj.hash, '#/animales');
+  assert.equal(toasts.length, 1);
+  assert.equal(toasts[0].type, 'warning');
+  assert.ok(toasts[0].msg.includes('auditoría de anulación no pudo persistirse'));
+  assert.ok(mainContainer.innerHTML.includes('animales-audit-warning-banner'));
+
+  // Caso 9: Evento de conservación histórica con success ausente (debe tratarse como fallo de auditoría)
+  toasts.length = 0;
+  locationObj.hash = '#/animal?id=18';
+  deleteResultActual = {
+    id: 18,
+    anulado: true,
+    audit: {
+      anulacion: { success: true, id: 108 },
+      historico: { id: 109 },
+    },
+  };
+  await AnimalesView._eliminarAnimal(18);
+  await AnimalesView.render();
+  assert.equal(locationObj.hash, '#/animales');
+  assert.equal(toasts.length, 1);
+  assert.equal(toasts[0].type, 'warning');
+  assert.ok(toasts[0].msg.includes('conservación histórica no pudo persistirse'));
+  assert.ok(mainContainer.innerHTML.includes('animales-audit-warning-banner'));
 });

@@ -1058,14 +1058,30 @@ const AnimalesView = {
     if (!await Confirm.confirm("Anular Animal", "¿Anular ficha del animal? Se conservará histórico para auditoría.", true)) return;
     try {
       const result = await Animales.delete(id, motivo.trim());
-      const audit = result && result.audit ? result.audit : null;
-      const falloAnulacion = !audit || !audit.anulacion || audit.anulacion.success === false;
-      const falloHistorico = Boolean(
+      if (!result || typeof result !== "object" || result.anulado !== true) {
+        this._lastAuditWarning = null;
+        App.toastError("No se ha podido confirmar la anulación del animal. Vuelve a consultar la ficha.");
+        return;
+      }
+
+      const audit = result.audit && typeof result.audit === "object" ? result.audit : null;
+      const anulacionOk = Boolean(
+        audit &&
+        audit.anulacion &&
+        typeof audit.anulacion === "object" &&
+        audit.anulacion.success === true
+      );
+      const historicoRequerido = Boolean(
         audit &&
         audit.historico !== null &&
-        audit.historico !== undefined &&
-        audit.historico.success === false
+        audit.historico !== undefined
       );
+      const historicoOk = !historicoRequerido || Boolean(
+        typeof audit.historico === "object" &&
+        audit.historico.success === true
+      );
+      const falloAnulacion = !anulacionOk;
+      const falloHistorico = !historicoOk;
 
       if (falloAnulacion && falloHistorico) {
         const aviso = "Baja lógica aplicada, pero no se pudo persistir la auditoría de anulación ni la de conservación histórica.";

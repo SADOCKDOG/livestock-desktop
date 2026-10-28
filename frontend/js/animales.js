@@ -276,7 +276,7 @@ const Animales = {
 
     try {
       const res = await auditSvc.record(opts);
-      if (!res || !res.success) {
+      if (!res || res.success !== true) {
         const reason = (res && res.reason) || "AUDIT_WRITE_FAILED";
         if (
           reason === "INVALID_OPTIONS" &&
