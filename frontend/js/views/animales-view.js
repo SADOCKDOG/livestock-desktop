@@ -6,6 +6,29 @@
 
 const AnimalesView = {
   _filtroActivo: { especie: '', sexo: '', estado: '' },
+  _lastAuditWarning: null,
+
+  _renderAuditWarningBanner() {
+    if (!this._lastAuditWarning) return '';
+    const safeMsg = String(this._lastAuditWarning)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+    return `
+      <div id="animales-audit-warning-banner" role="alert" class="p-10 mb-14 rounded bg-amber-950/40 border border-amber-500/40 text-xs text-amber-200 flex items-center justify-between gap-8">
+        <span><strong>Aviso de auditoría:</strong> ${safeMsg}</span>
+        <button type="button" class="text-[0.65rem] text-amber-300 underline font-bold" onclick="AnimalesView._dismissAuditWarning()">Cerrar</button>
+      </div>
+    `;
+  },
+
+  _dismissAuditWarning() {
+    this._lastAuditWarning = null;
+    const el = typeof document !== 'undefined' ? document.getElementById('animales-audit-warning-banner') : null;
+    if (el) el.remove();
+  },
 
   async render() {
     // Color de pantalla: lo fija GanaderiaView (color fijo de GeGan), esta vista siempre va embebida en su carrusel.
@@ -13,7 +36,7 @@ const AnimalesView = {
     const animales = await Animales.list();
     const rebanos = await Rebanos.list();
     if (rebanos.length === 0)
-      return (main.innerHTML = `<div class="card text-center p-40" style="border:1px solid var(--text-s); background:rgba(255,255,255,0.01);"><p class="empty-state-text">Crea un rebaño primero.</p></div>`);
+      return (main.innerHTML = `${this._renderAuditWarningBanner()}<div class="card text-center p-40" style="border:1px solid var(--text-s); background:rgba(255,255,255,0.01);"><p class="empty-state-text">Crea un rebaño primero.</p></div>`);
 
     const rebanoMap = {};
     rebanos.forEach(r => { rebanoMap[r.id] = r; });
@@ -22,7 +45,7 @@ const AnimalesView = {
     const activos = animales.filter(a => a.estado === 'activo').length;
     const especies = [...new Set(animales.map(a => a.especie).filter(Boolean))];
 
-    let html = '';
+    let html = this._renderAuditWarningBanner();
 
     if (animales.length === 0) {
       html += `<div class="card text-center p-40" style="border:1px solid var(--c-orange); background:rgba(255,255,255,0.01); margin-top:20px;">
@@ -1034,8 +1057,48 @@ const AnimalesView = {
     }
     if (!await Confirm.confirm("Anular Animal", "¿Anular ficha del animal? Se conservará histórico para auditoría.", true)) return;
     try {
-      await Animales.delete(id, motivo.trim());
-      App.toast("Animal anulado", "success");
+      const result = await Animales.delete(id, motivo.trim());
+      if (!result || typeof result !== "object" || result.anulado !== true) {
+        this._lastAuditWarning = null;
+        App.toastError("No se ha podido confirmar la anulación del animal. Vuelve a consultar la ficha.");
+        return;
+      }
+
+      const audit = result.audit && typeof result.audit === "object" ? result.audit : null;
+      const anulacionOk = Boolean(
+        audit &&
+        audit.anulacion &&
+        typeof audit.anulacion === "object" &&
+        audit.anulacion.success === true
+      );
+      const historicoRequerido = Boolean(
+        audit &&
+        audit.historico !== null &&
+        audit.historico !== undefined
+      );
+      const historicoOk = !historicoRequerido || Boolean(
+        typeof audit.historico === "object" &&
+        audit.historico.success === true
+      );
+      const falloAnulacion = !anulacionOk;
+      const falloHistorico = !historicoOk;
+
+      if (falloAnulacion && falloHistorico) {
+        const aviso = "Baja lógica aplicada, pero no se pudo persistir la auditoría de anulación ni la de conservación histórica.";
+        this._lastAuditWarning = aviso;
+        App.toast(aviso, "warning", 6000);
+      } else if (falloAnulacion) {
+        const aviso = "Baja lógica aplicada, pero la auditoría de anulación no pudo persistirse.";
+        this._lastAuditWarning = aviso;
+        App.toast(aviso, "warning", 6000);
+      } else if (falloHistorico) {
+        const aviso = "Baja lógica aplicada, pero la auditoría de conservación histórica no pudo persistirse.";
+        this._lastAuditWarning = aviso;
+        App.toast(aviso, "warning", 6000);
+      } else {
+        this._lastAuditWarning = null;
+        App.toast("Animal anulado", "success");
+      }
       location.hash = "#/animales";
     } catch (e) {
       App.toastError(e.message);

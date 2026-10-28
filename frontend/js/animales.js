@@ -251,6 +251,60 @@ const Animales = {
     }
   },
 
+  /**
+   * Registra un evento de auditoría a través de AuditService.record() aplicando
+   * el esquema canónico v2 (hash_version: 2 y hash_integridad FNV-1a).
+   * Comprueba expresamente el resultado de la escritura y gestiona los fallos
+   * de persistencia sin interrumpir la transacción principal.
+   *
+   * @param {Object} opts Opciones canónicas para AuditService.record()
+   * @returns {Promise<{success: boolean, id?: number, reason?: string, deduplicated?: boolean}>}
+   */
+  async _registrarAuditoria(opts) {
+    const auditSvc =
+      (typeof window !== "undefined" && window.AuditService) ||
+      (typeof AuditService !== "undefined" ? AuditService : null);
+
+    if (!auditSvc || typeof auditSvc.record !== "function") {
+      if (typeof console !== "undefined" && console.warn) {
+        console.warn(
+          `[Animales] AUDIT_SERVICE_UNAVAILABLE: No se pudo registrar auditoría (${opts?.motivo_tarea || "operacion"}).`
+        );
+      }
+      return { success: false, reason: "AUDIT_SERVICE_UNAVAILABLE" };
+    }
+
+    try {
+      const res = await auditSvc.record(opts);
+      if (!res || res.success !== true) {
+        const reason = (res && res.reason) || "AUDIT_WRITE_FAILED";
+        if (
+          reason === "INVALID_OPTIONS" &&
+          typeof auditSvc._registerFailure === "function"
+        ) {
+          auditSvc._registerFailure(opts?.action || "UNKNOWN", reason);
+        }
+        if (typeof console !== "undefined" && console.warn) {
+          console.warn(
+            `[Animales] Fallo de persistencia en auditoría (${opts?.motivo_tarea || "operacion"}): ${reason}`
+          );
+        }
+        return { success: false, reason };
+      }
+      return res;
+    } catch (err) {
+      if (typeof auditSvc._registerFailure === "function") {
+        auditSvc._registerFailure(opts?.action || "UNKNOWN", err && err.name);
+      }
+      if (typeof console !== "undefined" && console.warn) {
+        console.warn(
+          `[Animales] Excepción al persistir auditoría (${opts?.motivo_tarea || "operacion"}): ${err?.message || "Error"}`
+        );
+      }
+      return { success: false, reason: "AUDIT_WRITE_FAILED" };
+    }
+  },
+
   async delete(id, motivo = "") {
     return await ErrorHandler.tryAsync(
       async () => {
@@ -285,7 +339,8 @@ const Animales = {
           );
         }
 
-        const fechaBaja = animal.fecha_baja || new Date().toISOString().split("T")[0];
+        const marcaTemporal = new Date().toISOString();
+        const fechaBaja = animal.fecha_baja || marcaTemporal.split("T")[0];
         const motivoAnulacion = (motivo || "").trim() || "anulacion_registro";
         const animalAnulado = {
           ...animal,
@@ -293,33 +348,54 @@ const Animales = {
           motivo_baja: animal.motivo_baja || motivoAnulacion,
           fecha_baja: fechaBaja,
           anulado: true,
-          anuladoEn: new Date().toISOString(),
+          anuladoEn: marcaTemporal,
           anuladoMotivo: motivoAnulacion,
-          actualizadoEn: new Date().toISOString(),
+          actualizadoEn: marcaTemporal,
         };
+        const camposCandidatos = [
+          "estado",
+          "motivo_baja",
+          "fecha_baja",
+          "anulado",
+          "anuladoEn",
+          "anuladoMotivo",
+          "actualizadoEn",
+        ];
+        const fieldsModified = camposCandidatos.filter(
+          (campo) => animal[campo] !== animalAnulado[campo]
+        );
         await window.db.put("animales", animalAnulado);
-        await window.db.add("registro_eventos", {
-          fincaId: await Fincas.getActiveId().catch(() => null),
+
+        const activeFincaId =
+          typeof Fincas !== "undefined" && typeof Fincas.getActiveId === "function"
+            ? await Fincas.getActiveId().catch(() => null)
+            : null;
+        const fincaId = activeFincaId ?? animal.fincaId ?? null;
+        const identificadorAnimal = animal.numero_identificacion || "#" + numId;
+
+        const auditAnulacion = await this._registrarAuditoria({
+          fincaId,
           entidad_id: numId,
           tipo_entidad: "animal",
-          tipo: "auditoria",
+          actor_type: "user",
+          action: "DELETE_LOGICAL",
           motivo_tarea: "anulacion_registro",
-          fecha: fechaBaja,
-          descripcion: `Anulación de ficha animal ${animal.numero_identificacion || "#" + numId}`,
-          observaciones: motivoAnulacion,
-          creadoEn: new Date().toISOString(),
+          resultado: "SUCCESS",
+          descripcion: `Anulación de ficha animal ${identificadorAnimal} (motivo: ${motivoAnulacion})`,
+          fields_modified: fieldsModified,
         });
+
+        let auditHistorico = null;
         if (eventos.length > 0 || prodCarne.length > 0) {
-          await window.db.add("registro_eventos", {
-            fincaId: await Fincas.getActiveId().catch(() => null),
+          auditHistorico = await this._registrarAuditoria({
+            fincaId,
             entidad_id: numId,
             tipo_entidad: "animal",
-            tipo: "auditoria",
+            actor_type: "user",
+            action: "UPDATE",
             motivo_tarea: "rectificacion_historico",
-            fecha: new Date().toISOString().split("T")[0],
-            descripcion: "Conservación histórica aplicada (sin borrado físico)",
-            observaciones: `Histórico protegido: ${eventos.length} eventos, ${prodCarne.length} pesajes`,
-            creadoEn: new Date().toISOString(),
+            resultado: "SUCCESS",
+            descripcion: `Conservación histórica aplicada (sin borrado físico) para ${identificadorAnimal}: ${eventos.length} eventos, ${prodCarne.length} pesajes`,
           });
         }
 
@@ -331,6 +407,15 @@ const Animales = {
             anulacion: true,
           });
         }
+
+        return {
+          id: numId,
+          anulado: true,
+          audit: {
+            anulacion: auditAnulacion,
+            historico: auditHistorico,
+          },
+        };
       },
       { entity: "Animales", action: "delete" }
     );
