@@ -37,7 +37,7 @@ Consecuencias prácticas:
 Esta distribución de escritorio (Tauri/MSIX) forma parte de la **Sdog Farm Software Factory**:
 
 - El frontend se sincroniza desde `LIVESTOCK-MANAGER`; la gobernanza de tareas, agentes y autorización de integración de Pull Requests corresponde al repositorio Factory (`Autonomous-AI-Dev-Infrastructure`).
-- Fuentes de verdad del diseño: `docs/OWNER_AUTHORIZATION.md`, `docs/security/DEV_OPERATIONS_INTERMEDIARY.md` y `docs/specifications/doi/` del repositorio Factory.
+- Fuentes de verdad del diseño: [Owner Authorization](https://github.com/SADOCKDOG/Autonomous-AI-Dev-Infrastructure/blob/main/docs/OWNER_AUTHORIZATION.md), [Dev Operations Intermediary](https://github.com/SADOCKDOG/Autonomous-AI-Dev-Infrastructure/blob/main/docs/security/DEV_OPERATIONS_INTERMEDIARY.md) y [especificaciones DOI](https://github.com/SADOCKDOG/Autonomous-AI-Dev-Infrastructure/tree/main/docs/specifications/doi/).
 
 > **Estado de capacidades (fase D2-C, documentación):** este cambio es exclusivamente de documentación. No constituye DOI operativo, activación de Apps, credenciales, permisos, autorización operativa del propietario ni capacidad operativa de integración.
 
