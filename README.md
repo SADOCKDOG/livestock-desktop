@@ -32,6 +32,19 @@ Consecuencias prácticas:
 - Antes de subir un `.msixbundle` nuevo, comprobar que su versión es **mayor**
   que 4.11.21.0; si no, Partner Center lo rechaza. El vuelo 4.11.24.0 ya la supera.
 
+## Gobernanza con la Factoría (Software Factory) y Autorización de Propietario
+
+Esta distribución de escritorio (Tauri/MSIX) forma parte de la **Sdog Farm Software Factory**:
+
+- El frontend se sincroniza desde `LIVESTOCK-MANAGER`; la gobernanza de tareas, agentes y autorización de integración de Pull Requests corresponde al repositorio Factory (`Autonomous-AI-Dev-Infrastructure`).
+- Fuentes de verdad del diseño: [Owner Authorization](https://github.com/SADOCKDOG/Autonomous-AI-Dev-Infrastructure/blob/main/docs/OWNER_AUTHORIZATION.md), [Dev Operations Intermediary](https://github.com/SADOCKDOG/Autonomous-AI-Dev-Infrastructure/blob/main/docs/security/DEV_OPERATIONS_INTERMEDIARY.md) y [especificaciones DOI](https://github.com/SADOCKDOG/Autonomous-AI-Dev-Infrastructure/tree/main/docs/specifications/doi/).
+
+> **Estado de capacidades (fase D2-C, documentación):** este cambio es exclusivamente de documentación. No constituye DOI operativo, activación de Apps, credenciales, permisos, autorización operativa del propietario ni capacidad operativa de integración.
+
+**Estado:** Owner Authorization/DOI es diseño documentado; integración del desarrollo pendiente de revisión; validación operativa pendiente. Esta PR es solo documental: no implementa ni corrige capacidades ni valida la seguridad de Console. El gap de comportamiento específico está documentado en [Console #1](https://github.com/SADOCKDOG/Console-AI-Dev-Infrastructure/pull/1).
+
+---
+
 ## Estructura
 
 ```
