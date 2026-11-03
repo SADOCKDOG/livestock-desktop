@@ -41,6 +41,8 @@ Esta distribución de escritorio (Tauri/MSIX) forma parte de la **Sdog Farm Soft
 
 > **Estado de capacidades (fase D2-C, documentación):** este cambio es exclusivamente de documentación. No constituye DOI operativo, activación de Apps, credenciales, permisos, autorización operativa del propietario ni capacidad operativa de integración.
 
+**Estado explícito:** diseño documentado; integración del desarrollo pendiente de revisión; validación operativa pendiente. En la base revisada de Console (`c67d62ab12103752071f9fbfa2b317ae3d470062`), la aprobación local puede marcar una tarea `DONE` y la promoción contempla merge y sincronización/limpieza sin estar protegidos por el flujo FIDO/DOI documentado. Esta PR es solo documental: no implementa ni corrige ese gap ni valida la seguridad de Console.
+
 ---
 
 ## Estructura
