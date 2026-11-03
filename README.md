@@ -32,6 +32,17 @@ Consecuencias prácticas:
 - Antes de subir un `.msixbundle` nuevo, comprobar que su versión es **mayor**
   que 4.11.21.0; si no, Partner Center lo rechaza. El vuelo 4.11.24.0 ya la supera.
 
+## Gobernanza con la Factoría (Software Factory) y Autorización de Propietario
+
+Esta distribución de escritorio (Tauri/MSIX) forma parte de la **Sdog Farm Software Factory**:
+
+- El frontend se sincroniza desde `LIVESTOCK-MANAGER`; la gobernanza de tareas, agentes y autorización de integración de Pull Requests corresponde al repositorio Factory (`Autonomous-AI-Dev-Infrastructure`).
+- Fuentes de verdad del diseño: `docs/OWNER_AUTHORIZATION.md`, `docs/security/DEV_OPERATIONS_INTERMEDIARY.md` y `docs/specifications/doi/` del repositorio Factory.
+
+> **Estado de capacidades (fase D2-C, documentación):** este cambio es exclusivamente de documentación. No constituye DOI operativo, activación de Apps, credenciales, permisos, autorización operativa del propietario ni capacidad operativa de integración.
+
+---
+
 ## Estructura
 
 ```
