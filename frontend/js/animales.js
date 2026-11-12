@@ -370,7 +370,7 @@ const Animales = {
           typeof Fincas !== "undefined" && typeof Fincas.getActiveId === "function"
             ? await Fincas.getActiveId().catch(() => null)
             : null;
-        const fincaId = activeFincaId ?? animal.fincaId ?? null;
+        const fincaId = animal.fincaId ?? activeFincaId ?? null;
         const identificadorAnimal = animal.numero_identificacion || "#" + numId;
 
         const auditAnulacion = await this._registrarAuditoria({
@@ -381,7 +381,9 @@ const Animales = {
           action: "DELETE_LOGICAL",
           motivo_tarea: "anulacion_registro",
           resultado: "SUCCESS",
-          descripcion: `Anulación de ficha animal ${identificadorAnimal} (motivo: ${motivoAnulacion})`,
+          // El motivo libre se conserva en el registro ganadero, pero no se replica
+          // en la descripción de auditoría para evitar duplicar datos personales.
+          descripcion: `Anulación de ficha animal ${identificadorAnimal}`,
           fields_modified: fieldsModified,
         });
 

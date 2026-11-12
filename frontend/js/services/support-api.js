@@ -63,7 +63,7 @@
      * Reglas:
      * - Siempre retorna booleano, nunca lanza excepciones.
      * - Si la entrada es nula, undefined o no es un objeto valido -> false.
-     * - Solo se evalua si licencia.estado === 'activo'.
+     * - Solo se evalua si licencia.activa (contrato real del Worker: { activa, expira }).
      * - Si no existe fecha de expiracion (ausente, null, undefined o vacio)
      *   se considera licencia vitalicia -> false.
      * - Si la fecha de expiracion es anterior o igual a la fecha/hora actual
@@ -81,7 +81,7 @@
         if (Array.isArray(licencia)) {
           return false;
         }
-        if (licencia.estado !== 'activo') {
+        if (!licencia.activa) {
           return false;
         }
         var expira = licencia.expira;
