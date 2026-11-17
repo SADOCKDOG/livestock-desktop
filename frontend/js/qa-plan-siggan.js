@@ -104,7 +104,7 @@ const PlanSigganQA = {
   },
 
   async testValidacionEquino() {
-    const M = 'CROTAL EQUINO (microchip UELN 15 dígitos)';
+    const M = 'IDENTIFICADOR EQUINO (formato local actual de 15 cifras)';
     let ok = true;
     ok = this._assert(await this._expectValid('724901000007790', 5, 3), M, '724901000007790 (15 dígitos, microchip) es válido') && ok;
     ok = this._assert(await this._expectThrow('12345', 5, 3), M, '12345 (5 dígitos, microchip) es RECHAZADO') && ok;

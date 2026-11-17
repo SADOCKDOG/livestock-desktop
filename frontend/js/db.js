@@ -1,6 +1,6 @@
 console.log("[DB] Cargando script db.js");
 const DB_NAME = 'LivestockDB';
-const DB_VERSION = 28;
+const DB_VERSION = 31;
 
 // Datos maestros oficiales de Especie / Tipo de Identificador — ver
 // docs/NORMATIVA-CROTAL-ESPECIE.md para la fuente normativa de cada valor.
@@ -229,7 +229,9 @@ const RAZAS_SEED = [
 // Asociación especie -> tipos de identificador válidos, con el nombre del
 // patrón de validación a aplicar (ver ErrorHandler.CROTAL_FORMATOS).
 // Equino: el microchip (tipoIdentificadorId 3, "Inyectable electrónico") es
-// obligatorio siempre y tiene formato cerrado (UELN 15 dígitos); el DIE/
+// obligatorio siempre en este modelo local actual y tiene formato cerrado
+// de 15 cifras; no representa por sí solo el UELN ni el código ISO completo.
+// El DIE/
 // pasaporte (id 14) es complementario pero su formato varía por entidad
 // emisora (hay ejemplos heredados no numéricos, ver NORMATIVA-CROTAL-ESPECIE.md),
 // por eso se deja sin regex estricta (formato:null).
@@ -244,6 +246,7 @@ const ESPECIE_TIPO_IDENTIFICADOR_SEED = [
     { especieId: 4, tipoIdentificadorId: 4, formato: 'ovino_caprino_eid' },
     { especieId: 5, tipoIdentificadorId: 3, formato: 'equino_microchip' },
     { especieId: 5, tipoIdentificadorId: 14, formato: null },
+    { especieId: 5, tipoIdentificadorId: 4, casos: [{ id: 'crotal_boton_carne_directo', nombre: 'Crotal electrónico de botón para traslado directo a matadero', formato: 'equino_visual', ayuda: 'Código visual según fecha de nacimiento. El uso de este caso depende de la declaración de destino, origen REGA y traslado directo.', placeholder: 'ES21 + CCAA + 8 dígitos', maxLength: 14, contador: 14 }] },
 ];
 
 // Catálogo de tipos de instalación/edificación ganadera — subconjunto
@@ -306,7 +309,7 @@ class InMemoryMockDB {
                 'pedidos_crotales', 'movimientos_ganado', 'saneamientos', 'adsgs',
                 'config_costes_referencia', 'config_silos', 'especies', 'tipos_identificador',
                 'especie_tipo_identificador', 'razas', 'vacunaciones', 'instalaciones_tipo',
-                'config_botiquin', 'agenda_tareas', 'croquis_parcelas'
+                'config_botiquin', 'agenda_tareas', 'croquis_parcelas', 'contextos_identificacion'
             ],
             contains(name) { return this.names.includes(name); }
         };
@@ -327,9 +330,9 @@ class InMemoryMockDB {
             { id: 2, fincaId: 1, codigo: 'REB-002', nombre: 'Terneros Limusín Cebo', especie: 'Vacas', zonaActual: 'Cercado Bajo', creadoEn: new Date().toISOString() }
         ];
         this._stores['animales'] = [
-            { id: 1, rebanoId: 1, numero_identificacion: 'ES0811122233', caravana: 'ES0811122233', especie: 'Vacas', raza: 'Frisona', sexo: 'Hembra', fecha_nacimiento: '2022-04-10', estado: 'activo', categoria: 'leche', creadoEn: new Date().toISOString() },
-            { id: 2, rebanoId: 1, numero_identificacion: 'ES0811122234', caravana: 'ES0811122234', especie: 'Vacas', raza: 'Limusina', sexo: 'Hembra', fecha_nacimiento: '2021-11-15', estado: 'activo', categoria: 'carne', creadoEn: new Date().toISOString() },
-            { id: 3, rebanoId: 2, numero_identificacion: 'ES0911122235', caravana: 'ES0911122235', especie: 'Ovejas', raza: 'Assaf', sexo: 'Hembra', fecha_nacimiento: '2023-01-20', estado: 'activo', categoria: 'leche', creadoEn: new Date().toISOString() }
+            { id: 1, rebanoId: 1, numero_identificacion: 'ES081112223300', caravana: 'ES081112223300', especie: 'Vacas', especieId: 1, tipoIdentificadorId: 16, raza: 'Frisona', sexo: 'Hembra', fecha_nacimiento: '2022-04-10', estado: 'activo', categoria: 'leche', creadoEn: new Date().toISOString() },
+            { id: 2, rebanoId: 1, numero_identificacion: 'ES081112223301', caravana: 'ES081112223301', especie: 'Vacas', especieId: 1, tipoIdentificadorId: 16, raza: 'Limusina', sexo: 'Hembra', fecha_nacimiento: '2021-11-15', estado: 'activo', categoria: 'carne', creadoEn: new Date().toISOString() },
+            { id: 3, rebanoId: 2, numero_identificacion: 'ES091112223501', caravana: 'ES091112223501', especie: 'Ovejas', especieId: 3, tipoIdentificadorId: 4, raza: 'Assaf', sexo: 'Hembra', fecha_nacimiento: '2023-01-20', estado: 'activo', categoria: 'leche', creadoEn: new Date().toISOString() }
         ];
         this._stores['config_especies'] = [
             { id: 1, nombre: 'Vacas', consumoAguaL: 60, creadoEn: Date.now() },
@@ -490,6 +493,16 @@ class InMemoryMockDB {
         }
         return tx;
     }
+}
+
+function crearStoreContextosIdentificacion(database) {
+    if (database.objectStoreNames.contains('contextos_identificacion')) return;
+
+    const store = database.createObjectStore('contextos_identificacion', { keyPath: 'id', autoIncrement: true });
+    store.createIndex('animalId', 'animalId');
+    store.createIndex('fincaId', 'fincaId');
+    store.createIndex('tipo', 'tipo');
+    store.createIndex('estado', 'estado');
 }
 
 async function initDB() {
@@ -1052,6 +1065,16 @@ async function initDB() {
                     store.createIndex('creadoEn', 'creadoEn');
                 }
             }
+
+            // v29: la marca porcina ordinaria puede identificar la explotación
+            // y repetirse en varios animales; no debe tener índice único.
+            if (oldVersion < 29) {
+                migrarIndiceCaravanaCompartida(db, transaction);
+            }
+            // v30: contexto temporal y trazable de elegibilidad de identificación equina.
+            if (oldVersion < 30) {
+                crearStoreContextosIdentificacion(db);
+            }
         },
     });
     } catch (e) {
@@ -1353,7 +1376,8 @@ async function migrarEspeSiggan(windowDb) {
  * Migración de datos: añade la fila { especieId: 5, tipoIdentificadorId: 3,
  * formato: 'equino_microchip' } a `especie_tipo_identificador` en
  * instalaciones donde ya se sembró ese store antes de cerrar la normativa
- * equina (microchip UELN 15 dígitos, ISO 11784/11785). No requiere bump de
+ * equina (formato local de 15 cifras; UELN y transpondedor deben separarse).
+ * No requiere bump de
  * DB_VERSION. Ver docs/NORMATIVA-CROTAL-ESPECIE.md y
  * docs/PLAN-MEJORA-SIGGAN.md punto 4.
  */
@@ -1371,6 +1395,92 @@ async function migrarEquinoMicrochip(windowDb) {
         console.log("[DB] Migración microchip equino completada.");
     } catch (e) {
         console.warn("[DB] Error en migración microchip equino:", e);
+    }
+}
+
+/**
+ * Asegura la asociación de porcino con crotal visual en instalaciones que ya
+ * tenían poblada la tabla especie_tipo_identificador antes de incorporar la
+ * validación contextual vigente. El formato conserva su clave estable y ahora
+ * aplica el código REGA de nacimiento (RD 787/2023). No requiere bump de DB.
+ */
+async function migrarPorcinoRega(windowDb) {
+    try {
+        console.log("[DB] Migración: asociación de identificación porcina REGA...");
+
+        const existentes = await windowDb.getAllFromIndex('especie_tipo_identificador', 'especieId', 2);
+        const asociacion = existentes.find((a) => Number(a.tipoIdentificadorId) === 16);
+        if (!asociacion) {
+            await windowDb.add('especie_tipo_identificador', {
+                especieId: 2,
+                tipoIdentificadorId: 16,
+                formato: 'porcino_marca_explotacion',
+            });
+        } else if (asociacion.formato !== 'porcino_marca_explotacion') {
+            await windowDb.put('especie_tipo_identificador', {
+                ...asociacion,
+                formato: 'porcino_marca_explotacion',
+            });
+        }
+
+        await windowDb.put('meta', { key: 'migracion_porcino_rega', value: true, migradoEn: new Date().toISOString() });
+        console.log("[DB] Migración identificación porcina REGA completada.");
+    } catch (e) {
+        console.warn("[DB] Error en migración identificación porcina REGA:", e);
+    }
+}
+
+/**
+ * Ejecuta de forma independiente las migraciones de identificación equina y
+ * porcina. El historial de una especie no debe bloquear la incorporación de
+ * una asociación nueva de otra especie en bases de datos ya existentes.
+ */
+function migrarIndiceCaravanaCompartida(database, transaction) {
+    if (!database.objectStoreNames.contains('animales')) return;
+
+    const store = transaction.objectStore('animales');
+    if (store.indexNames.contains('caravana')) {
+        store.deleteIndex('caravana');
+    }
+    store.createIndex('caravana', 'numero_identificacion', { unique: false });
+}
+
+async function migrarAsociacionCrotalEquino(database) {
+    const existentes = await database.getAllFromIndex('especie_tipo_identificador', 'especieId', 5);
+    if ((existentes || []).some((item) => Number(item.tipoIdentificadorId) === 4)) return;
+    await database.add('especie_tipo_identificador', {
+        especieId: 5,
+        tipoIdentificadorId: 4,
+        casos: [{
+            id: 'crotal_boton_carne_directo',
+            nombre: 'Crotal electrónico de botón para traslado directo a matadero',
+            formato: 'equino_visual',
+            ayuda: 'Código visual según fecha de nacimiento. Este caso requiere destino de carne, origen admisible y traslado directo.',
+            placeholder: 'ES21 + CCAA + 8 dígitos',
+            maxLength: 14,
+            contador: 14,
+        }],
+    });
+}
+
+async function ejecutarMigracionesIdentificacion(database) {
+    try {
+        await migrarAsociacionCrotalEquino(database);
+    } catch (e) {
+        console.warn('[DB] No se pudo incorporar el caso equino de crotal de botón:', e);
+    }
+    try {
+        const metaEquinoMicrochip = await database.get('meta', 'migracion_equino_microchip');
+        if (!metaEquinoMicrochip) await migrarEquinoMicrochip(database);
+    } catch (e) {
+        console.log("[DB] Primera ejecución o store meta no disponible aún.");
+    }
+
+    try {
+        const metaPorcinoRega = await database.get('meta', 'migracion_porcino_rega');
+        if (!metaPorcinoRega) await migrarPorcinoRega(database);
+    } catch (e) {
+        console.log("[DB] Primera ejecución o store meta no disponible aún.");
     }
 }
 
@@ -1536,15 +1646,9 @@ window.dbPromise = Promise.race([initDB(), dbTimeout]).then(async database => {
         console.log("[DB] Primera ejecución o store meta no disponible aún.");
     }
 
-    // Ejecutar migración microchip equino si no se ha ejecutado antes
-    try {
-        const metaEquinoMicrochip = await database.get('meta', 'migracion_equino_microchip');
-        if (!metaEquinoMicrochip) {
-            await migrarEquinoMicrochip(database);
-        }
-    } catch (e) {
-        console.log("[DB] Primera ejecución o store meta no disponible aún.");
-    }
+    // Migraciones independientes para equinos y porcinos, también en upgrades
+    // donde una de las dos ya tenga su marca de ejecución.
+    await ejecutarMigracionesIdentificacion(database);
 
     // Ejecutar migración v21 (lotes de botiquin) si no se ha ejecutado antes
     try {

@@ -282,8 +282,8 @@ const SigganQA = {
 
       // --- FASE 6: Exige certificar desinsectación en Andalucía ---
       await this._expectThrow(
-        () => Movimientos.save({ ...movData, id: undefined, desinsectacion_certificada: false }),
-        M, 'Exige certificar desinsectación en Andalucía');
+        () => Movimientos.save({ ...movData, id: undefined, estado_traslado: 'ejecutado', desinsectacion_certificada: false }),
+        M, 'Exige certificar desinsectación antes de declarar ejecutado el traslado en Andalucía');
 
       this._log('PASS', M, `✅ COMPLETADO — Movimiento ${movData.numero_guia} (id=${movId})`);
       return !this._hasFail(M);

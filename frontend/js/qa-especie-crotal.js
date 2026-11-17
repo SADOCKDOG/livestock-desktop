@@ -1,5 +1,5 @@
 /**
- * Livestock Manager - Especie/Crotal QA Test Suite v1.0.0
+ * Livestock Manager - Especie/Crotal QA Test Suite v1.1.0
  *
  * Pruebas del modelo de datos maestros Especie / Tipo de Identificador y de
  * ErrorHandler.validateCrotal() contra las estructuras de código confirmadas
@@ -52,11 +52,20 @@ const EspecieCrotalQA = {
   },
 
   async testValidacionBovino() {
-    const M = 'CROTAL BOVINO (12 dígitos, sin letras)';
+    const M = 'CROTAL BOVINO (12 dígitos; prefijo heredado opcional)';
     let ok = true;
     ok = this._assert(await this._expectValid('010112345678', 1, 16), M, '010112345678 (12 dígitos) es válido') && ok;
-    ok = this._assert(await this._expectThrow('ES0112345678', 1, 16), M, 'ES0112345678 (con letras) es RECHAZADO') && ok;
+    ok = this._assert(await this._expectValid('ES010112345678', 1, 16), M, 'ES010112345678 (registro heredado con prefijo) es válido') && ok;
     ok = this._assert(await this._expectThrow('0101123456', 1, 16), M, '0101123456 (10 dígitos, corto) es RECHAZADO') && ok;
+    return ok;
+  },
+
+  async testValidacionPorcino() {
+    const M = 'IDENTIFICACION PORCINA ORDINARIA (CODIGO REGA)';
+    let ok = true;
+    ok = this._assert(await this._expectValid('ES123456789029', 2, 16), M, 'ES + 12 cifras REGA es válido') && ok;
+    ok = this._assert(await this._expectThrow('123AB4567', 2, 16), M, 'siglas provinciales alfabéticas del formato histórico son rechazadas') && ok;
+    ok = this._assert(await this._expectThrow('123456789029', 2, 16), M, 'código sin prefijo ES es rechazado') && ok;
     return ok;
   },
 
@@ -80,7 +89,7 @@ const EspecieCrotalQA = {
 
   async runAll() {
     console.log('\n' + '='.repeat(75));
-    console.log('🧪 ESPECIE/CROTAL QA SUITE v1.0');
+    console.log('🧪 ESPECIE/CROTAL QA SUITE v1.1');
     console.log('📅 ' + new Date().toLocaleString());
     console.log('='.repeat(75) + '\n');
 
@@ -94,6 +103,7 @@ const EspecieCrotalQA = {
     const tests = [
       ['testCatalogosPoblados', this.testCatalogosPoblados],
       ['testValidacionBovino', this.testValidacionBovino],
+      ['testValidacionPorcino', this.testValidacionPorcino],
       ['testValidacionOvinoCaprino', this.testValidacionOvinoCaprino],
       ['testFallbackGenerico', this.testFallbackGenerico],
     ];
@@ -109,7 +119,7 @@ const EspecieCrotalQA = {
     }
 
     console.log('\n' + '='.repeat(75));
-    console.log('📊 REPORTE FINAL — ESPECIE/CROTAL QA v1.0');
+    console.log('📊 REPORTE FINAL — ESPECIE/CROTAL QA v1.1');
     console.log(`✅ Aserciones OK: ${this._results.filter(r => r.status === 'PASS').length}`);
     console.log(`❌ Aserciones con fallo: ${this._results.filter(r => r.status === 'FAIL').length}`);
     const failures = this._results.filter(r => r.status === 'FAIL');
@@ -124,4 +134,4 @@ const EspecieCrotalQA = {
 };
 
 window.EspecieCrotalQA = EspecieCrotalQA;
-console.log('✅ Especie/Crotal QA Suite v1.0 cargado. Ejecuta: await EspecieCrotalQA.runAll()');
+console.log('✅ Especie/Crotal QA Suite v1.1 cargado. Ejecuta: await EspecieCrotalQA.runAll()');

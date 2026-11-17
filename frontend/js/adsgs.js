@@ -25,6 +25,9 @@ window.ADSGs = (() => {
       fincaId: fId,
       actualizadoEn: new Date().toISOString()
     };
+    const codigo = String(record.codigo ?? '').trim();
+    if (codigo) record.codigo = codigo;
+    else delete record.codigo; // Un índice único de IndexedDB no permite repetir "".
 
     if (record.id) {
       await window.db.put('adsgs', record);

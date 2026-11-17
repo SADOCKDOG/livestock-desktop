@@ -65,11 +65,7 @@ const Movimientos = {
         }
       }
 
-      // Requisito de desinsectación según comunidad
       const conf = CS && ccaa ? CS.getConfiguracionCCAA(ccaa) : null;
-      if (conf && conf.requiere_desinsectacion_movimiento && !data.desinsectacion_certificada) {
-        throw new Error('Esta comunidad exige certificar la desinsectación previa al movimiento.');
-      }
 
       let animalIds = Array.isArray(data.animalId)
         ? data.animalId.map(Number).filter(n => !Number.isNaN(n))
@@ -101,10 +97,18 @@ const Movimientos = {
         }
       }
 
+      const estadoTraslado = String(data.estado_traslado || 'planificado').trim().toLowerCase();
+      if (!['planificado', 'ejecutado', 'cancelado'].includes(estadoTraslado)) {
+        throw new Error('El estado del traslado debe ser planificado, ejecutado o cancelado.');
+      }
       const estadoTramite = (data.estado_tramite || 'borrador').toString().trim().toLowerCase();
       const fechaPresentacion = (data.fecha_presentacion || '').toString().trim();
       const numeroRegistroOficial = (data.numero_registro_oficial || '').toString().trim();
       const acuseRecibo = (data.acuse_recibo || '').toString().trim();
+      const esBorradorPlanificado = estadoTraslado === 'planificado' && estadoTramite === 'borrador';
+      if (conf && conf.requiere_desinsectacion_movimiento && !esBorradorPlanificado && !data.desinsectacion_certificada) {
+        throw new Error('Esta comunidad exige certificar la desinsectación para presentar la guía o declarar ejecutado el movimiento.');
+      }
       if (estadoTramite !== 'borrador' && !fechaPresentacion) {
         throw new Error('La fecha de presentación es obligatoria cuando el trámite no está en borrador.');
       }
@@ -143,6 +147,7 @@ const Movimientos = {
         comunidad_autonoma: ccaa || '',
         plataforma: conf ? conf.sistema_movimiento : (data.plataforma || ''),
         estado_tramite: estadoTramite,
+        estado_traslado: estadoTraslado,
         fecha_presentacion: fechaPresentacion || null,
         numero_registro_oficial: numeroRegistroOficial || '',
         acuse_recibo: acuseRecibo || '',
@@ -151,11 +156,12 @@ const Movimientos = {
       };
 
       let movId;
+      let movimientoAnterior = null;
       if (esEdicion) {
         movData.id = Number(data.id);
-        const previo = await this.get(movData.id);
-        movData.acuse_manual = data.acuse_manual !== undefined ? data.acuse_manual : (previo?.acuse_manual || '');
-        movData.creadoEn = previo?.creadoEn || new Date().toISOString();
+        movimientoAnterior = await this.get(movData.id);
+        movData.acuse_manual = data.acuse_manual !== undefined ? data.acuse_manual : (movimientoAnterior?.acuse_manual || '');
+        movData.creadoEn = movimientoAnterior?.creadoEn || new Date().toISOString();
         await window.db.put('movimientos_ganado', movData);
         movId = movData.id;
       } else {
@@ -164,6 +170,8 @@ const Movimientos = {
         movId = await window.db.add('movimientos_ganado', movData);
         movData.id = movId;
       }
+
+      await this._sincronizarContextosEquinos(movData, movimientoAnterior);
 
       // Registrar evento en la trazabilidad/cuaderno para cada animal afectado
       await this._registrarEventos(movData);
@@ -175,6 +183,60 @@ const Movimientos = {
     }, { entity: 'Movimientos', action: 'save' });
   },
 
+  async _sincronizarContextosEquinos(movimiento, anterior = null) {
+    if (!window.db.getAllFromIndex || !Array.isArray(movimiento.animalId)) return;
+    const idsAfectados = new Set([
+      ...(anterior?.animalId || []),
+      ...movimiento.animalId,
+    ].map(Number));
+    const rega = (value) => String(value || '').trim().toUpperCase();
+    const guiaCancelada = movimiento.anulado || movimiento.estado_traslado === 'cancelado';
+
+    for (const animalId of idsAfectados) {
+      const contextos = await window.db
+        .getAllFromIndex('contextos_identificacion', 'animalId', animalId)
+        .catch(() => []);
+      for (const contexto of contextos || []) {
+        if (contexto.tipo !== 'equino_crotal_boton' || contexto.estado === 'ejecutado') continue;
+        const enlazada = Number(contexto.guiaMovimientoId) === Number(movimiento.id);
+        const coincide = movimiento.tipo === 'salida' &&
+          movimiento.motivo === 'matadero' && Number(movimiento.fincaId) === Number(contexto.fincaId) &&
+          (movimiento.animalId || []).map(Number).includes(animalId) &&
+          rega(movimiento.rega_origen) === rega(contexto.regaOrigen) &&
+          rega(movimiento.rega_destino) === rega(contexto.regaDestinoMatadero);
+
+        if (!coincide && !enlazada) continue;
+        if (guiaCancelada && (enlazada || coincide)) {
+          contexto.guiaMovimientoId = Number(movimiento.id);
+          contexto.estado = 'cancelado';
+          contexto.canceladoEn = new Date().toISOString();
+        } else if (!coincide && enlazada) {
+          if (contexto.estado === 'planificado') {
+            delete contexto.guiaMovimientoId;
+            delete contexto.ejecutadoEn;
+          }
+        } else if (coincide) {
+          const guiaAnteriorId = contexto.guiaMovimientoId;
+          if (guiaAnteriorId && Number(guiaAnteriorId) !== Number(movimiento.id)) {
+            contexto.guiasSustituidas = [...new Set([...(contexto.guiasSustituidas || []), Number(guiaAnteriorId)])];
+          }
+          contexto.guiaMovimientoId = Number(movimiento.id);
+          contexto.guiasSustituidas = contexto.guiasSustituidas || [];
+          if (movimiento.estado_traslado === 'ejecutado') {
+            contexto.estado = 'ejecutado';
+            contexto.ejecutadoEn = new Date().toISOString();
+          } else {
+            contexto.estado = 'planificado';
+            delete contexto.ejecutadoEn;
+          }
+          delete contexto.canceladoEn;
+        }
+        contexto.actualizadoEn = new Date().toISOString();
+        await window.db.put('contextos_identificacion', contexto);
+      }
+    }
+  },
+
   async delete(id) {
     return await ErrorHandler.tryAsync(async () => {
       const mov = await window.db.get('movimientos_ganado', Number(id));
@@ -183,6 +245,7 @@ const Movimientos = {
       mov.anuladoEn = new Date().toISOString();
       mov.estado_tramite = 'anulado';
       await window.db.put('movimientos_ganado', mov);
+      await this._sincronizarContextosEquinos(mov);
       await window.db.add('registro_eventos', {
         fincaId: mov.fincaId,
         entidad_id: mov.id,
