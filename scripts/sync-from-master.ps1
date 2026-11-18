@@ -11,7 +11,9 @@
 param(
     # Escapatoria consciente: sincroniza aunque el maestro este en otra rama.
     # Pensado para casos puntuales; el aviso sigue saliendo.
-    [switch]$PermitirCualquierRama
+    [switch]$PermitirCualquierRama,
+    [string]$RutaMaestro = $env:LIVESTOCK_MASTER_PATH,
+    [string]$CommitMaestro = $env:LIVESTOCK_MASTER_COMMIT
 )
 
 $ErrorActionPreference = 'Stop'
@@ -19,10 +21,13 @@ $ErrorActionPreference = 'Stop'
 # $PSScriptRoot = <repo>\scripts -> la raiz del repo es el padre
 $repoRoot = Split-Path -Parent $PSScriptRoot
 # Join-Path anidado: compatible con Windows PowerShell 5.1 y PowerShell 7+
-$masterPath = Resolve-Path (Join-Path (Join-Path $repoRoot '..') 'LIVESTOCK-MANAGER') -ErrorAction SilentlyContinue
+if (-not $RutaMaestro) {
+    $RutaMaestro = Join-Path (Join-Path $repoRoot '..') 'LIVESTOCK-MANAGER'
+}
+$masterPath = Resolve-Path -LiteralPath $RutaMaestro -ErrorAction SilentlyContinue
 
 if (-not $masterPath) {
-    Write-Error "No se encontro el repo maestro en ..\LIVESTOCK-MANAGER. Clona/ubica LIVESTOCK-MANAGER como hermano de este repo."
+    Write-Error "No se encontro el repo maestro en $RutaMaestro. Puedes indicar su worktree con -RutaMaestro."
     exit 1
 }
 
@@ -48,7 +53,19 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($ramaMaestro)) {
 
 $ramaMaestro = $ramaMaestro.Trim()
 
-if ($ramasPermitidas -notcontains $ramaMaestro -and -not $PermitirCualquierRama) {
+$revision = & git -C $src rev-parse --verify HEAD
+if ($LASTEXITCODE -ne 0) { throw 'No se pudo determinar el commit del maestro.' }
+if ($CommitMaestro) {
+    if ($CommitMaestro -notmatch '^[a-fA-F0-9]{40}$' -or $revision -ne $CommitMaestro) {
+        throw "El HEAD del maestro ($revision) no coincide con el SHA completo solicitado ($CommitMaestro)."
+    }
+    $cambios = & git -C $src status --porcelain --untracked-files=normal
+    if ($LASTEXITCODE -ne 0 -or $cambios) {
+        throw 'El worktree del maestro seleccionado para esta revision debe estar limpio.'
+    }
+}
+
+if ($ramasPermitidas -notcontains $ramaMaestro -and -not $PermitirCualquierRama -and -not $CommitMaestro) {
     Write-Host ""
     Write-Host "  SYNC ABORTADO" -ForegroundColor Red
     Write-Host "  El maestro esta en la rama '$ramaMaestro', que no es una fuente valida." -ForegroundColor Yellow
@@ -63,7 +80,9 @@ if ($ramasPermitidas -notcontains $ramaMaestro -and -not $PermitirCualquierRama)
     exit 1
 }
 
-if ($ramasPermitidas -notcontains $ramaMaestro) {
+if ($CommitMaestro) {
+    Write-Host "  Maestro fijado a $revision ($ramaMaestro)." -ForegroundColor DarkGray
+} elseif ($ramasPermitidas -notcontains $ramaMaestro) {
     Write-Host "  AVISO: sincronizando desde '$ramaMaestro' por -PermitirCualquierRama." -ForegroundColor Yellow
 } else {
     Write-Host "  Maestro en la rama '$ramaMaestro'." -ForegroundColor DarkGray
@@ -209,7 +228,21 @@ $items = @(
     'assets'
 )
 
-if (-not (Test-Path $dst)) { New-Item -ItemType Directory -Path $dst | Out-Null }
+function Copy-FrontendFile($sourceFile, $destination) {
+    # Los clones pueden usar LF o CRLF. Una copia equivalente conserva el formato de Desktop.
+    if ((Test-Path -LiteralPath $destination -PathType Leaf) -and
+        $sourceFile.Extension -in @('.js', '.css', '.html') -and
+        $sourceFile.Length -ne (Get-Item -LiteralPath $destination).Length) {
+        # Mapeo de un byte por carácter para comparar también BOM y cualquier codificación original.
+        $bytesComoTexto = [Text.Encoding]::GetEncoding(28591)
+        $sourceText = $bytesComoTexto.GetString([IO.File]::ReadAllBytes($sourceFile.FullName))
+        $destText = $bytesComoTexto.GetString([IO.File]::ReadAllBytes($destination))
+        if ([string]::Equals($sourceText.Replace("`r`n", "`n"), $destText.Replace("`r`n", "`n"), [StringComparison]::Ordinal)) {
+            return
+        }
+    }
+    Copy-Item -LiteralPath $sourceFile.FullName -Destination $destination -Force
+}
 
 function Copy-Tree($srcPath, $dstPath, $relBase) {
     foreach ($entry in Get-ChildItem -LiteralPath $srcPath) {
@@ -221,7 +254,7 @@ function Copy-Tree($srcPath, $dstPath, $relBase) {
         } elseif ($preserved.Contains($rel)) {
             Write-Host "  preservado (desktop): $rel"
         } else {
-            Copy-Item -LiteralPath $entry.FullName -Destination $target -Force
+            Copy-FrontendFile $entry $target
         }
     }
 }
@@ -244,26 +277,64 @@ function Prune-Tree($srcPath, $dstPath, $relBase) {
     }
 }
 
-foreach ($item in $items) {
-    $s = Join-Path $src $item
-    $d = Join-Path $dst $item
-    if (-not (Test-Path -LiteralPath $s)) {
-        Write-Warning "No presente en el maestro (se omite): $item"
-        continue
+function Sync-Frontend($origen) {
+    # Las suites del consumidor prueban los archivos de la fuente antes de tocar frontend/.
+    $frontendPruebasAnterior = $env:LIVESTOCK_TEST_FRONTEND
+    try {
+        $env:LIVESTOCK_TEST_FRONTEND = $origen
+        & node --test (Join-Path $PSScriptRoot 'audit-hash-compat.test.cjs') (Join-Path $PSScriptRoot 'support-api.test.cjs')
+        if ($LASTEXITCODE -ne 0) {
+            throw 'El maestro no satisface el contrato de auditoria v1/v2 y soporte de Desktop. Se cancela la copia.'
+        }
+    } finally {
+        $env:LIVESTOCK_TEST_FRONTEND = $frontendPruebasAnterior
     }
-    if ((Get-Item -LiteralPath $s).PSIsContainer) {
-        if (-not (Test-Path $d)) { New-Item -ItemType Directory -Path $d | Out-Null }
-        Copy-Tree $s $d $item
-        Prune-Tree $s $d $item
-        Write-Host "Synced: $item"
-    } else {
-        if ($preserved.Contains($item)) {
-            Write-Host "  preservado (desktop): $item"
-        } else {
-            Copy-Item -LiteralPath $s -Destination $d -Force
+
+    if (-not (Test-Path $dst)) { New-Item -ItemType Directory -Path $dst | Out-Null }
+    foreach ($item in $items) {
+        $s = Join-Path $origen $item
+        $d = Join-Path $dst $item
+        if (-not (Test-Path -LiteralPath $s)) {
+            Write-Warning "No presente en el maestro (se omite): $item"
+            continue
+        }
+        if ((Get-Item -LiteralPath $s).PSIsContainer) {
+            if (-not (Test-Path $d)) { New-Item -ItemType Directory -Path $d | Out-Null }
+            Copy-Tree $s $d $item
+            Prune-Tree $s $d $item
             Write-Host "Synced: $item"
+        } else {
+            if ($preserved.Contains($item)) {
+                Write-Host "  preservado (desktop): $item"
+            } else {
+                Copy-FrontendFile (Get-Item -LiteralPath $s) $d
+                Write-Host "Synced: $item"
+            }
         }
     }
 }
 
-Write-Host "`nSync desde LIVESTOCK-MANAGER completado -> frontend/ (capa ERP desktop preservada)"
+if ($CommitMaestro) {
+    # Usar el arbol Git inmutable evita copiar archivos ignorados o un cambio concurrente de checkout.
+    $tempRaiz = [IO.Path]::GetFullPath([IO.Path]::GetTempPath())
+    $snapshot = Join-Path $tempRaiz ('livestock-sync-' + [Guid]::NewGuid().ToString('N'))
+    $null = New-Item -ItemType Directory -Path $snapshot -ErrorAction Stop
+    try {
+        $archivo = Join-Path $snapshot 'fuente.zip'
+        & git -C $src archive --format=zip --output=$archivo $revision -- $items
+        if ($LASTEXITCODE -ne 0) { throw 'No se pudo preparar el snapshot Git del maestro.' }
+        $extraido = Join-Path $snapshot 'fuente'
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        [IO.Compression.ZipFile]::ExtractToDirectory($archivo, $extraido)
+        Sync-Frontend $extraido
+    } finally {
+        $directorioTemporal = Get-Item -LiteralPath $snapshot
+        if ($directorioTemporal.Parent.FullName -eq $tempRaiz.TrimEnd('\', '/') -and $directorioTemporal.Name -match '^livestock-sync-[a-f0-9]{32}$') {
+            Remove-Item -LiteralPath $directorioTemporal.FullName -Recurse -Force
+        }
+    }
+} else {
+    Sync-Frontend $src
+}
+
+Write-Host "`nSync desde LIVESTOCK-MANAGER $revision completado -> frontend/ (capa ERP desktop preservada)"

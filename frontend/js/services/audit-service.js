@@ -44,8 +44,14 @@
     'RESTORE'
   ]);
 
-  // Patrón para detectar y redactar posibles secretos (tokens, hashes >32 hex, jwt, passwords)
+  // Redacta secretos y datos personales previsibles antes de persistir descripciones auditadas.
   const SENSITIVE_PATTERN = /(Bearer\s+[A-Za-z0-9\-\._~\+\/]+=*)|([A-Za-z0-9_-]{32,})|(password|token|secret|clave|jwt)[\s:=]+([^\s,;]+)/gi;
+  const EMAIL_PATTERN = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+  const SPANISH_PHONE_PATTERN = /(^|[^\w])((?:\+?34[\s().-]*)?[6789](?:[\s().-]*\d){8})(?=$|[^\w])/g;
+  const INTERNATIONAL_PHONE_PATTERN = /(^|[^\w])(\+[1-9](?:[\s().-]*\d){7,14})(?=$|[^\w])/g;
+  const IDENTITY_DOCUMENT_PATTERN = /\b(?:[XYZ]\d{7}[A-Z]|\d{8}[A-HJ-NP-TV-Z])\b/gi;
+  const IBAN_PATTERN = /\b[A-Z]{2}\d{2}(?:[\s-]?[A-Z0-9]){11,30}\b/gi;
+  const ADDRESS_PATTERN = /(^|[^\p{L}])((?:calle|c\/|c\.|avenida|avda\.?|plaza|pza\.?|paseo|camino|carretera|traves[ií]a|r[uú]a)\s+[^,;\n]{1,80}(?:,\s*\d{5})?)/giu;
 
   const AuditService = {
     _failureCount: 0,
@@ -249,11 +255,21 @@
     },
 
     /**
-     * Sanea y minimiza la descripción textual, eliminando secretos potenciales.
+     * Sanea y minimiza descripciones auditadas. El texto libre no debe utilizarse
+     * como almacén de datos personales: se redactan secretos, datos de contacto,
+     * documentos identificativos, IBAN y direcciones previsibles.
      */
     _sanitizeDescription(desc) {
       if (!desc) return 'Operación de sistema registrada';
-      let clean = String(desc).replace(SENSITIVE_PATTERN, '[REDACTED]').trim();
+      let clean = String(desc)
+        .replace(SENSITIVE_PATTERN, '[REDACTED]')
+        .replace(EMAIL_PATTERN, '[REDACTED]')
+        .replace(IDENTITY_DOCUMENT_PATTERN, '[REDACTED]')
+        .replace(IBAN_PATTERN, '[REDACTED]')
+        .replace(SPANISH_PHONE_PATTERN, '$1[REDACTED]')
+        .replace(INTERNATIONAL_PHONE_PATTERN, '$1[REDACTED]')
+        .replace(ADDRESS_PATTERN, '$1[REDACTED]')
+        .trim();
       return clean.slice(0, 120);
     },
 

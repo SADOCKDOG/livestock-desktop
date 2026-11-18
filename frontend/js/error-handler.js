@@ -307,28 +307,147 @@ const ErrorHandler = {
   CROTAL_FORMATOS: {
     // Bovino, doble crotal no electrónico: 1 dígito uso + 1 control + 2 CC.AA. + 8 animal, sin letras.
     bovino_fisico: {
-      regex: /^\d{12}$/,
-      descripcion: "12 dígitos, sin letras (ej. 010112345678)",
+      // Los datos de demostración y las fichas creadas con el formulario
+      // anterior guardan ES + 12 dígitos. Se admite como compatibilidad; el
+      // formato recomendado para crotal físico bovino sigue siendo 12 cifras.
+      regex: /^(?:ES)?\d{12}$/,
+      descripcion: "12 dígitos (se admite ES + 12 en fichas heredadas)",
+      ayuda: "Bovino: 12 dígitos. Compatibilidad de fichas heredadas: ES + 12 dígitos.",
+      placeholder: "12 dígitos",
+      maxLength: 14,
+      contador: 12,
+      componentes: [
+        { nombre: "identificación bovina", tipo: "dígitos", longitud: 12 },
+        { nombre: "prefijo heredado", tipo: "literal opcional", valor: "ES", longitud: 2 },
+      ],
+      fuente: "docs/NORMATIVA-CROTAL-ESPECIE.md — Anexo II.1 del RD 787/2023; compatibilidad local con registros heredados",
     },
-    // Ovino/caprino, identificación electrónica individual (RD 787/2023): ES + 2 dígitos CC.AA. + 10 dígitos.
+    bovino_electronico_2025: {
+      regex: /^ES22(?:0[1-9]|1[0-9])\d{8}$/,
+      descripcion: "Código visual ES + especie bovina 22 + comunidad autónoma válida (01-19, 2 dígitos) + animal (8 dígitos), con transpondedor electrónico ISO 11784 asociado",
+      ayuda: "Bovino nacido desde el 30/06/2025: ES + 22 + región válida (01-19, 2 dígitos) + animal (8 dígitos) y código electrónico ISO 11784 de 23 dígitos vinculado.",
+      placeholder: "ES22 + región + 8 dígitos",
+      maxLength: 14,
+      contador: 14,
+      componentes: [
+        { nombre: "país", tipo: "literal", valor: "ES", longitud: 2 },
+        { nombre: "especie bovina", tipo: "literal", valor: "22", longitud: 2 },
+        { nombre: "comunidad autónoma", tipo: "dígitos", longitud: 2 },
+        { nombre: "identificación individual", tipo: "dígitos", longitud: 8 },
+      ],
+      fuente: "RD 787/2023, art. 5.1.b y anexo II.2/II.3; transpondedor ISO 11784 según anexo II.9",
+    },
+    // Ovino/caprino aún sin identificar tras el periodo transitorio: código
+    // visual ES + especie 24 + comunidad autónoma + 8 dígitos individuales.
     ovino_caprino_eid: {
-      regex: /^ES\d{12}$/,
-      descripcion: "ES + 12 dígitos (ej. ES0112345678AB → ES012345678901)",
+      regex: /^ES24(?:0[1-9]|1[0-9])\d{8}$/,
+      descripcion: "ES + código de especie 24 + 2 dígitos de comunidad autónoma + 8 dígitos individuales",
+      ayuda: "Ovino/caprino: código visual ES + 24 + región (2 dígitos) + número individual (8 dígitos).",
+      placeholder: "ES24 + región + 8 dígitos",
+      maxLength: 14,
+      contador: 14,
+      componentes: [
+        { nombre: "país", tipo: "literal", valor: "ES", longitud: 2 },
+        { nombre: "especie ovino/caprino", tipo: "literal", valor: "24", longitud: 2 },
+        { nombre: "comunidad autónoma", tipo: "dígitos", longitud: 2 },
+        { nombre: "identificación individual", tipo: "dígitos", longitud: 8 },
+      ],
+      fuente: "RD 787/2023, Anexo II.5 y Anexo III, tablas I y II; DT 4",
     },
-    // Porcino / marca que identifica la explotación (RD 205/1996 modif. por RD 479/2004).
-    // Patrón best-effort: la normativa da longitudes máximas, no fijas — revisar con
-    // ejemplos reales antes de confiar en él para bloquear altas.
+    // Porcino ordinario: la marca lleva el código REGA de la explotación de
+    // nacimiento. El formato alfabético provincial del derogado RD 205/1996
+    // no debe aplicarse a nuevas altas.
     porcino_marca_explotacion: {
-      regex: /^(ES)?\d{1,3}[A-Z]{1,2}\d{1,7}$/,
-      descripcion: "(ES opcional) + municipio + siglas provincia + explotación",
+      regex: /^ES\d{12}$/,
+      descripcion: "Código REGA de la explotación de nacimiento: ES + 12 cifras (2 provincia + 3 municipio + 7 explotación); sin siglas provinciales alfabéticas",
+      ayuda: "Porcino ordinario: código REGA de la explotación de nacimiento, ES + 12 cifras (provincia 2 + municipio 3 + explotación 7); puede repetirse en animales de la misma explotación.",
+      placeholder: "ES + 12 cifras REGA",
+      maxLength: 14,
+      contador: 14,
+      componentes: [
+        { nombre: "país", tipo: "literal", valor: "ES", longitud: 2 },
+        { nombre: "provincia INE", tipo: "dígitos", longitud: 2 },
+        { nombre: "municipio INE", tipo: "dígitos", longitud: 3 },
+        { nombre: "explotación", tipo: "dígitos", longitud: 7 },
+      ],
+      caso: "Identificación ordinaria por código de explotación; no es una identificación individual del animal.",
+      fuente: "RD 787/2023, art. 7.1 y Anexo II.10; RD 479/2004, art. 5",
     },
-    // Equino, microchip obligatorio (nacidos después del 01/07/2009): Número
-    // Permanente Único / UELN, ISO 11784/11785. 3 dígitos país (724=España) +
-    // 3 dígitos organización emisora + 9 dígitos correlativo.
+    // Compatibilidad con el campo equino legado de 15 cifras. No equivale por
+    // sí solo al UELN ni al código ISO 11784 completo del transpondedor; el
+    // modelo debe separar esos datos antes de activar reglas normativas nuevas.
+    equino_visual: {
+      regex: /^ES(?:21(?:0[1-9]|1[0-9])\d{8}|(?:0[1-9]|1[0-9])\d{10})$/,
+      descripcion: "Código visual equino: régimen dependiente de fecha de nacimiento",
+      ayuda: "Se valida según el régimen visual equino aplicable a la fecha de nacimiento.",
+      placeholder: "ES21 + CCAA + 8 dígitos",
+      maxLength: 14,
+      contador: 14,
+    },
     equino_microchip: {
       regex: /^\d{15}$/,
-      descripcion: "15 dígitos (UELN + correlativo, ISO 11784, ej. 724901000007790)",
+      descripcion: "15 cifras en el formato local actual; no equivale al UELN ni al código completo del transpondedor ISO 11784",
+      ayuda: "Identificador equino (formato local actual: 15 cifras). UELN y código del transpondedor son datos distintos.",
+      placeholder: "15 dígitos",
+      maxLength: 15,
+      contador: 15,
+      componentes: [{ nombre: "identificador equino del formato local actual", tipo: "dígitos", longitud: 15 }],
+      fuente: "Compatibilidad heredada; pendiente separar UELN, número DIE y código ISO 11784 del transpondedor",
     },
+  },
+
+  /**
+   * Resuelve reglas asociadas a especie/tipo para relaciones simples y
+   * relaciones con casos explícitos. El caso no se infiere del valor del
+   * crotal: debe venir del contexto de ficha o movimiento.
+   */
+  resolverReglaCrotal(asociacion, contexto = {}) {
+    if (!Array.isArray(asociacion?.casos)) {
+      if (
+        Number(asociacion?.especieId) === 1 &&
+        Number(asociacion?.tipoIdentificadorId) === 16 &&
+        asociacion?.formato === "bovino_fisico"
+      ) {
+        const fechaNacimiento = String(contexto.fecha_nacimiento || "").trim();
+        if (!fechaNacimiento) {
+          throw new this.AppError(
+            "Indica la fecha de nacimiento para determinar el código bovino aplicable",
+            this.ERROR_TYPES.VALIDATION,
+            { field: "fecha_nacimiento", required: true }
+          );
+        }
+        return {
+          formatoKey: fechaNacimiento >= "2025-06-30"
+            ? "bovino_electronico_2025"
+            : "bovino_fisico",
+          caso: null,
+        };
+      }
+      return {
+        formatoKey: asociacion?.formato ?? null,
+        caso: null,
+      };
+    }
+
+    const casoId = String(contexto.casoIdentificacion || "").trim();
+    if (!casoId) {
+      throw new this.AppError(
+        "Selecciona el caso de identificación antes de validar el número",
+        this.ERROR_TYPES.VALIDATION,
+        { field: "casoIdentificacion", required: true }
+      );
+    }
+
+    const caso = asociacion.casos.find((item) => String(item.id) === casoId);
+    if (!caso) {
+      throw new this.AppError(
+        "El caso de identificación seleccionado no está disponible para esta especie y tipo",
+        this.ERROR_TYPES.VALIDATION,
+        { field: "casoIdentificacion", value: casoId }
+      );
+    }
+
+    return { formatoKey: caso.formato ?? null, caso };
   },
 
   /**
@@ -344,7 +463,7 @@ const ErrorHandler = {
    *   NORMATIVA-CROTAL-ESPECIE.md), solo se exige que no esté vacío, sin
    *   aplicarle por error la regex genérica de otra especie.
    */
-  async validateCrotal(numero_identificacion, especieId, tipoIdentificadorId) {
+  async validateCrotal(numero_identificacion, especieId, tipoIdentificadorId, contexto = {}) {
     if (!especieId || !tipoIdentificadorId || !window.db) {
       return this.validateCaravana(numero_identificacion);
     }
@@ -368,6 +487,19 @@ const ErrorHandler = {
       return this.validateCaravana(numero_identificacion);
     }
 
+    const reglaResuelta = this.resolverReglaCrotal(asociacion, contexto);
+    if (
+      reglaResuelta.caso &&
+      reglaResuelta.formatoKey &&
+      !this.CROTAL_FORMATOS[reglaResuelta.formatoKey]
+    ) {
+      throw new this.AppError(
+        "El formato del caso de identificación está pendiente de configuración",
+        this.ERROR_TYPES.VALIDATION,
+        { field: "formato", casoIdentificacion: reglaResuelta.caso.id }
+      );
+    }
+
     if (!numero_identificacion) {
       throw new this.AppError(
         "El número de identificación (crotal) es obligatorio",
@@ -376,7 +508,23 @@ const ErrorHandler = {
       );
     }
 
-    const formato = this.CROTAL_FORMATOS[asociacion.formato];
+    const formato = reglaResuelta.formatoKey
+      ? this.CROTAL_FORMATOS[reglaResuelta.formatoKey]
+      : null;
+    if (reglaResuelta.formatoKey === "equino_visual") {
+      const resultado = window.EquineIdentificationRules?.validarFormatoCrotalVisualEquino(
+        numero_identificacion,
+        contexto.fecha_nacimiento
+      );
+      if (!resultado?.valido) {
+        throw new this.AppError(
+          resultado?.motivo || "No se pudo resolver el código visual equino aplicable.",
+          this.ERROR_TYPES.VALIDATION,
+          { field: "numero_identificacion", format: resultado?.motivo || "código visual equino según fecha de nacimiento", value: numero_identificacion }
+        );
+      }
+      return String(numero_identificacion).trim().toUpperCase();
+    }
     if (!formato) {
       // Asociación válida pero sin regex estricta definida (ej. DIE equino):
       // solo se exige que no esté vacío, ya comprobado arriba.
@@ -395,9 +543,47 @@ const ErrorHandler = {
         {
           field: "numero_identificacion",
           format: formato.descripcion,
+          componentes: formato.componentes || [],
+          caso: reglaResuelta.caso?.descripcion || formato.caso || null,
+          fuente: formato.fuente || null,
           value: valorLimpio,
         }
       );
+    }
+
+    if (reglaResuelta.formatoKey === "bovino_electronico_2025") {
+      const identificacionCompleta =
+        String(contexto.tipo_identificacion || "").trim() === "Completa (EID + Visual)";
+      if (!identificacionCompleta) {
+        throw new this.AppError(
+          "Este bovino requiere identificación convencional y electrónica",
+          this.ERROR_TYPES.VALIDATION,
+          { field: "tipo_identificacion", required: true, value: contexto.tipo_identificacion || null }
+        );
+      }
+
+      const rfid = String(contexto.rfid_codigo || "").trim().replace(/[\s-]/g, "");
+      if (!rfid) {
+        throw new this.AppError(
+          "El bovino nacido desde el 30/06/2025 requiere el código electrónico ISO 11784 de 23 dígitos",
+          this.ERROR_TYPES.VALIDATION,
+          { field: "rfid_codigo", required: true }
+        );
+      }
+      if (!/^1[0-7]02\d{2}00724(?:22)(?:0[1-9]|1[0-9])\d{8}$/.test(rfid)) {
+        throw new this.AppError(
+          "El identificador electrónico debe tener 23 dígitos ISO 11784 para bovino en España",
+          this.ERROR_TYPES.VALIDATION,
+          { field: "rfid_codigo", format: "ISO 11784: 23 dígitos; especie 02, país 0724 y especie SIEX 22" }
+        );
+      }
+      if (rfid.slice(-10) !== valorLimpio.slice(4)) {
+        throw new this.AppError(
+          "El código electrónico no corresponde a la región y al número del crotal visual",
+          this.ERROR_TYPES.VALIDATION,
+          { field: "rfid_codigo", visual: valorLimpio, rfid }
+        );
+      }
     }
     return valorLimpio;
   },

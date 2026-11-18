@@ -141,8 +141,15 @@ const Fincas = {
                     throw new Error(validacion?.mensaje || 'Código REGA inválido');
                 }
             }
-            data.rega = regaVal;
-            data.codigo_REGA = regaVal;
+            if (regaVal) {
+                data.rega = regaVal;
+                data.codigo_REGA = regaVal;
+            } else {
+                // Los campos ausentes no entran en el índice único `rega`;
+                // una cadena vacía sí se indexa y bloquearía la siguiente finca.
+                delete data.rega;
+                delete data.codigo_REGA;
+            }
 
             // Datos geográficos (gap "Estructura -> Datos Geográficos" del mapa ADSG
             // WEB, ver docs/PLAN-MEJORA-SIGGAN.md punto 5). Opcionales, pero si se
@@ -344,11 +351,19 @@ const Fincas = {
                     let fincaId;
                     if (fincaExistente) {
                         // Actualizar finca existente manteniendo el ID
-                        const fincaActualizada = {
+                            const fincaActualizada = {
                             ...finca,
                             id: fincaExistente.id,
                             actualizadoEn: new Date().toISOString()
                         };
+                            const rega = this._normalizarREGA(fincaActualizada.rega || fincaActualizada.codigo_REGA);
+                            if (rega) {
+                                fincaActualizada.rega = rega;
+                                fincaActualizada.codigo_REGA = rega;
+                            } else {
+                                delete fincaActualizada.rega;
+                                delete fincaActualizada.codigo_REGA;
+                            }
                         await window.db.put('fincas', fincaActualizada);
                         fincaId = fincaExistente.id;
                     } else {
@@ -357,6 +372,14 @@ const Fincas = {
                             ...finca,
                             creadoEn: new Date().toISOString()
                         };
+                        const rega = this._normalizarREGA(nuevaFinca.rega || nuevaFinca.codigo_REGA);
+                        if (rega) {
+                            nuevaFinca.rega = rega;
+                            nuevaFinca.codigo_REGA = rega;
+                        } else {
+                            delete nuevaFinca.rega;
+                            delete nuevaFinca.codigo_REGA;
+                        }
                         delete nuevaFinca.id;
                         fincaId = await window.db.add('fincas', nuevaFinca);
                     }
@@ -436,9 +459,7 @@ const Fincas = {
                 telefonoContacto: (datos.telefonoContacto || '').trim(),
                 nif_cif: (datos.nif_cif || '').trim(),
                 email: (datos.email || '').trim(),
-                rega: regaNorm,
-                // Espejo para compatibilidad con vistas que leen codigo_REGA
-                codigo_REGA: regaNorm,
+                ...(regaNorm ? { rega: regaNorm, codigo_REGA: regaNorm } : {}),
                 cea: (datos.cea || '').toString().trim().toUpperCase(),
                 adsg_nombre: (datos.adsg_nombre || '').trim(),
                 comunidad_autonoma: datos.comunidad_autonoma || '',

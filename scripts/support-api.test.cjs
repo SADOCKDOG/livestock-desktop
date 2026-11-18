@@ -6,8 +6,10 @@ const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
 
+const frontendRoot = process.env.LIVESTOCK_TEST_FRONTEND || path.join(__dirname, '..', 'frontend');
+
 const supportApiSource = fs.readFileSync(
-  path.join(__dirname, '..', 'frontend', 'js', 'services', 'support-api.js'),
+  path.join(frontendRoot, 'js', 'services', 'support-api.js'),
   'utf8',
 );
 
@@ -94,7 +96,7 @@ test('estadoLicencia acepta que el servidor confirme el correo vacío', async ()
 
 test('validarSuscripcionExpirada: licencia activa con fecha futura -> false', () => {
   const { api } = crearSupportAPI(null, {});
-  const lic = { estado: 'activo', expira: '2099-12-31T23:59:59.000Z' };
+  const lic = { activa: true, expira: '2099-12-31T23:59:59.000Z' };
   const res = api.validarSuscripcionExpirada(lic);
   assert.equal(typeof res, 'boolean');
   assert.equal(res, false);
@@ -102,7 +104,7 @@ test('validarSuscripcionExpirada: licencia activa con fecha futura -> false', ()
 
 test('validarSuscripcionExpirada: licencia activa con fecha pasada -> true', () => {
   const { api } = crearSupportAPI(null, {});
-  const lic = { estado: 'activo', expira: '2000-01-01T00:00:00.000Z' };
+  const lic = { activa: true, expira: '2000-01-01T00:00:00.000Z' };
   const res = api.validarSuscripcionExpirada(lic);
   assert.equal(typeof res, 'boolean');
   assert.equal(res, true);
@@ -111,7 +113,7 @@ test('validarSuscripcionExpirada: licencia activa con fecha pasada -> true', () 
 test('validarSuscripcionExpirada: licencia activa con fecha igual a ahora -> true', () => {
   const { api } = crearSupportAPI(null, {});
   const ahoraIso = new Date().toISOString();
-  const lic = { estado: 'activo', expira: ahoraIso };
+  const lic = { activa: true, expira: ahoraIso };
   const res = api.validarSuscripcionExpirada(lic);
   assert.equal(typeof res, 'boolean');
   assert.equal(res, true);
@@ -119,7 +121,7 @@ test('validarSuscripcionExpirada: licencia activa con fecha igual a ahora -> tru
 
 test('validarSuscripcionExpirada: licencia activa sin fecha (undefined) -> false (vitalicia)', () => {
   const { api } = crearSupportAPI(null, {});
-  const lic = { estado: 'activo' };
+  const lic = { activa: true };
   const res = api.validarSuscripcionExpirada(lic);
   assert.equal(typeof res, 'boolean');
   assert.equal(res, false);
@@ -127,7 +129,7 @@ test('validarSuscripcionExpirada: licencia activa sin fecha (undefined) -> false
 
 test('validarSuscripcionExpirada: licencia activa con expira null -> false (vitalicia)', () => {
   const { api } = crearSupportAPI(null, {});
-  const lic = { estado: 'activo', expira: null };
+  const lic = { activa: true, expira: null };
   const res = api.validarSuscripcionExpirada(lic);
   assert.equal(typeof res, 'boolean');
   assert.equal(res, false);
@@ -135,7 +137,7 @@ test('validarSuscripcionExpirada: licencia activa con expira null -> false (vita
 
 test('validarSuscripcionExpirada: licencia activa con expira vacío -> false (vitalicia)', () => {
   const { api } = crearSupportAPI(null, {});
-  const lic = { estado: 'activo', expira: '' };
+  const lic = { activa: true, expira: '' };
   const res = api.validarSuscripcionExpirada(lic);
   assert.equal(typeof res, 'boolean');
   assert.equal(res, false);
@@ -149,14 +151,22 @@ test('validarSuscripcionExpirada: entradas inválidas o nulas -> false', () => {
   assert.equal(api.validarSuscripcionExpirada(undefined), false);
   assert.equal(typeof api.validarSuscripcionExpirada({}), 'boolean');
   assert.equal(api.validarSuscripcionExpirada({}), false);
-  assert.equal(typeof api.validarSuscripcionExpirada({ estado: 'inactivo', expira: '2099-01-01T00:00:00.000Z' }), 'boolean');
-  assert.equal(api.validarSuscripcionExpirada({ estado: 'inactivo', expira: '2099-01-01T00:00:00.000Z' }), false);
+  assert.equal(typeof api.validarSuscripcionExpirada({ activa: false, expira: '2099-01-01T00:00:00.000Z' }), 'boolean');
+  assert.equal(api.validarSuscripcionExpirada({ activa: false, expira: '2099-01-01T00:00:00.000Z' }), false);
   assert.equal(typeof api.validarSuscripcionExpirada('texto'), 'boolean');
   assert.equal(api.validarSuscripcionExpirada('texto'), false);
   assert.equal(typeof api.validarSuscripcionExpirada(123), 'boolean');
   assert.equal(api.validarSuscripcionExpirada(123), false);
   assert.equal(typeof api.validarSuscripcionExpirada([]), 'boolean');
   assert.equal(api.validarSuscripcionExpirada([]), false);
-  assert.equal(typeof api.validarSuscripcionExpirada({ estado: 'activo', expira: 'fecha-invalida' }), 'boolean');
-  assert.equal(api.validarSuscripcionExpirada({ estado: 'activo', expira: 'fecha-invalida' }), false);
+  assert.equal(typeof api.validarSuscripcionExpirada({ activa: true, expira: 'fecha-invalida' }), 'boolean');
+  assert.equal(api.validarSuscripcionExpirada({ activa: true, expira: 'fecha-invalida' }), false);
+});
+
+test('validarSuscripcionExpirada: licencia inactiva -> false', () => {
+  const { api } = crearSupportAPI(null, {});
+  const lic = { activa: false, expira: '2099-12-31T23:59:59.000Z' };
+  const res = api.validarSuscripcionExpirada(lic);
+  assert.equal(typeof res, 'boolean');
+  assert.equal(res, false);
 });

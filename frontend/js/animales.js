@@ -1,3 +1,129 @@
+function identificadorCompartido(data) {
+  // En el porcino ordinario el código identifica la explotación de nacimiento,
+  // por lo que puede aparecer en varios animales de esa explotación.
+  return Number(data?.especieId) === 2 && Number(data?.tipoIdentificadorId) === 16;
+}
+
+function debeComprobarUnicidadIdentificador(data, esEdicion, actual, crotal) {
+  if (identificadorCompartido(data)) return false;
+  if (!esEdicion) return true;
+  if (!actual) return false;
+
+  return actual.numero_identificacion !== crotal ||
+    Number(actual.especieId) !== Number(data?.especieId) ||
+    Number(actual.tipoIdentificadorId) !== Number(data?.tipoIdentificadorId);
+}
+
+function identificadorYContextoSinCambios(data, actual) {
+  if (!actual) return false;
+  const valorNuevo = String(data?.numero_identificacion ?? '').trim().toUpperCase();
+  const valorActual = String(actual.numero_identificacion ?? '').trim().toUpperCase();
+  if (!valorNuevo || valorNuevo !== valorActual) return false;
+
+  const especieIgual = actual.especieId != null && data?.especieId != null
+    ? Number(actual.especieId) === Number(data.especieId)
+    : !data?.especie || !actual.especie || String(data.especie).trim() === String(actual.especie).trim();
+  const tipoIgual = data?.tipoIdentificadorId == null
+    ? actual.tipoIdentificadorId == null
+    : actual.tipoIdentificadorId != null && Number(actual.tipoIdentificadorId) === Number(data.tipoIdentificadorId);
+
+  return especieIgual && tipoIgual;
+}
+
+function validarContratoIdentificacionAnimal(data) {
+  const tiposIdentificador = new Set([
+    "codigo_nacional",
+    "marca_explotacion",
+    "transpondedor_iso",
+    "ueln",
+    "otro",
+  ]);
+  const estadosIdentificador = new Set([
+    "vigente",
+    "historico",
+    "legado",
+    "pendiente",
+  ]);
+
+  if (data.identificadores !== undefined) {
+    if (!Array.isArray(data.identificadores)) {
+      throw new Error("identificadores debe ser una lista");
+    }
+
+    for (const [indice, identificador] of data.identificadores.entries()) {
+      if (!identificador || typeof identificador !== "object" || Array.isArray(identificador)) {
+        throw new Error(`identificadores[${indice}] debe ser un objeto`);
+      }
+      if (!tiposIdentificador.has(identificador.tipo)) {
+        throw new Error(`identificadores[${indice}] tiene un tipo de identificador no admitido`);
+      }
+      if (typeof identificador.valor !== "string" || !identificador.valor.trim()) {
+        throw new Error(`identificadores[${indice}].valor debe ser un texto no vacío`);
+      }
+      if (typeof identificador.principal !== "boolean") {
+        throw new Error(`identificadores[${indice}].principal debe ser booleano`);
+      }
+      if (!estadosIdentificador.has(identificador.estado)) {
+        throw new Error(`identificadores[${indice}] tiene un estado no admitido`);
+      }
+      if (
+        identificador.tipoIdentificadorId !== undefined &&
+        (!Number.isInteger(Number(identificador.tipoIdentificadorId)) || Number(identificador.tipoIdentificadorId) <= 0)
+      ) {
+        throw new Error(`identificadores[${indice}].tipoIdentificadorId debe ser un entero positivo`);
+      }
+      for (const campo of ["medio", "valorLeido", "fechaAplicacion", "fechaFin", "asignador", "verificadoPor", "fechaVerificacion", "referenciaVerificacion"]) {
+        if (identificador[campo] !== undefined && typeof identificador[campo] !== "string") {
+          throw new Error(`identificadores[${indice}].${campo} debe ser texto`);
+        }
+      }
+      if (identificador.representacion !== undefined) {
+        const representaciones = new Set(["nacional", "iso_completa"]);
+        if (identificador.tipo !== "transpondedor_iso" || !representaciones.has(identificador.representacion)) {
+          throw new Error(`identificadores[${indice}].representacion no admitida`);
+        }
+      }
+    }
+
+    if (data.identificadores.length > 0) {
+      const principales = data.identificadores.filter((identificador) => identificador.principal);
+      if (principales.length > 1) {
+        throw new Error("identificadores puede contener como máximo un identificador principal");
+      }
+      if (principales.length === 1 && (
+        typeof data.numero_identificacion !== "string" ||
+        principales[0].valor !== data.numero_identificacion
+      )) {
+        throw new Error("El identificador principal debe coincidir exactamente con numero_identificacion");
+      }
+    }
+  }
+
+  if (data.documentos_identificacion !== undefined) {
+    if (!Array.isArray(data.documentos_identificacion)) {
+      throw new Error("documentos_identificacion debe ser una lista");
+    }
+
+    const tiposDocumento = new Set(["DIE", "PASAPORTE", "OTRO"]);
+    for (const [indice, documento] of data.documentos_identificacion.entries()) {
+      if (!documento || typeof documento !== "object" || Array.isArray(documento)) {
+        throw new Error(`documentos_identificacion[${indice}] debe ser un objeto`);
+      }
+      if (!tiposDocumento.has(documento.tipo)) {
+        throw new Error(`documentos_identificacion[${indice}] tiene un tipo de documento no admitido`);
+      }
+      if (typeof documento.numero !== "string" || !documento.numero.trim()) {
+        throw new Error(`documentos_identificacion[${indice}].numero debe ser un texto no vacío`);
+      }
+      for (const campo of ["emisor", "fechaEmision", "estado", "referenciaAutorizacion", "verificadoPor", "fechaVerificacion", "referenciaVerificacion"]) {
+        if (documento[campo] !== undefined && typeof documento[campo] !== "string") {
+          throw new Error(`documentos_identificacion[${indice}].${campo} debe ser texto`);
+        }
+      }
+    }
+  }
+}
+
 const Animales = {
   async list(rebanoId = null) {
     if (rebanoId) {
@@ -29,24 +155,32 @@ const Animales = {
     return window.db.get("animales", Number(id));
   },
 
-  async save(data) {
+  async save(data, options = {}) {
     return await ErrorHandler.tryAsync(
       async () => {
-        // Validaciones (formato de crotal según especie/tipo de identificador
-        // si están disponibles; si no, cae al formato genérico)
-        const crotal = await ErrorHandler.validateCrotal(
-          data.numero_identificacion,
-          data.especieId,
-          data.tipoIdentificadorId
-        );
-        // El rebaño ya no es obligatorio según las nuevas reglas
-
         const esEdicion =
           data.id !== undefined && data.id !== null && data.id !== "";
+        const actual = esEdicion ? await this.get(data.id) : null;
+        const conservaIdentificador = identificadorYContextoSinCambios(data, actual);
+        // Fichas históricas pueden conservar códigos emitidos con regímenes
+        // anteriores. Solo se omite su revalidación si valor, especie y tipo
+        // siguen iguales; cualquier cambio pasa por la regla vigente.
+        const crotal = conservaIdentificador
+          ? actual.numero_identificacion
+          : await ErrorHandler.validateCrotal(
+              data.numero_identificacion,
+              data.especieId,
+              data.tipoIdentificadorId,
+              data
+            );
+        validarContratoIdentificacionAnimal({ ...data, numero_identificacion: crotal });
+        // El rebaño ya no es obligatorio según las nuevas reglas
 
         // Validación opcional de DIB (único)
-        if (data.dib && data.dib.trim()) {
-          const dibValue = data.dib.trim().toUpperCase();
+        // DIB es opcional. Omitir el campo vacio para que IndexedDB no
+        // indexe "" como una clave real en el indice unico `dib`.
+        const dibValue = String(data.dib ?? "").trim().toUpperCase();
+        if (dibValue) {
           const existenteDib = await window.db.getFromIndex(
             "animales",
             "dib",
@@ -68,32 +202,34 @@ const Animales = {
           }
         }
 
-        // 1. Control de Duplicados (solo si es nuevo o ha cambiado el crotal)
-        if (!esEdicion) {
-          const existente = await window.db.getFromIndex(
+        if (esEdicion) {
+          if (actual && window.PremiumManager && window.PremiumManager.isFree() && actual.demo && !data.demo) {
+            throw new Error('No puedes modificar animales de demostración en la versión gratuita');
+          }
+        }
+
+        // La marca ordinaria porcina identifica la explotación, no al animal.
+        // Para los identificadores individuales se conserva el control duplicado.
+        const debeComprobarDuplicado = debeComprobarUnicidadIdentificador(
+          data,
+          esEdicion,
+          actual,
+          crotal
+        );
+        if (debeComprobarDuplicado) {
+          const existentes = await window.db.getAllFromIndex(
             "animales",
             "caravana",
             crotal
           );
-          if (existente)
-            throw new Error(
-              `Ya existe un animal registrado con el crotal ${crotal}`
-            );
-        } else {
-          const actual = await this.get(data.id);
-          if (actual && window.PremiumManager && window.PremiumManager.isFree() && actual.demo && !data.demo) {
-            throw new Error('No puedes modificar animales de demostración en la versión gratuita');
-          }
-          if (actual && actual.numero_identificacion !== crotal) {
-            const existente = await window.db.getFromIndex(
-              "animales",
-              "caravana",
-              crotal
-            );
-            if (existente)
-              throw new Error(
-                `No se puede cambiar al crotal ${crotal} porque ya está asignado a otro animal`
-              );
+          const otroAnimal = existentes.find((existente) =>
+            !esEdicion || Number(existente.id) !== Number(data.id)
+          );
+          if (otroAnimal) {
+            const mensaje = esEdicion
+              ? `No se puede cambiar al crotal ${crotal} porque ya está asignado a otro animal`
+              : `Ya existe un animal registrado con el crotal ${crotal}`;
+            throw new Error(mensaje);
           }
         }
 
@@ -114,6 +250,12 @@ const Animales = {
           pago_pendiente: data.pago_pendiente !== undefined ? Boolean(data.pago_pendiente) : false,
           actualizadoEn: new Date().toISOString(),
         };
+
+        if (dibValue) {
+          animalData.dib = dibValue;
+        } else {
+          delete animalData.dib;
+        }
 
         // Gap 7: Mapear motivo_baja a categoría SANDACH
         if (data.motivo_baja && window.ComunidadesService) {
@@ -153,6 +295,31 @@ const Animales = {
         }
         animalData.id = animalId;
 
+        if (typeof options.afterPersist === 'function') {
+          const compensaciones = [];
+          const registrarCompensacion = (compensar) => {
+            if (typeof compensar !== 'function') throw new TypeError('La compensación debe ser una función');
+            compensaciones.push(compensar);
+          };
+          try {
+            await options.afterPersist(animalId, animalData, registrarCompensacion);
+          } catch (error) {
+            for (const compensar of compensaciones.reverse()) {
+              try {
+                await compensar();
+              } catch (errorCompensacion) {
+                console.error('[Animales] Falló una compensación de persistencia', errorCompensacion);
+              }
+            }
+            if (esEdicion) {
+              await window.db.put('animales', actual);
+            } else {
+              await window.db.delete('animales', animalId);
+            }
+            throw error;
+          }
+        }
+
         // 2. Registrar Peso Inicial si se proporciona
         if (data.peso_inicial && Number(data.peso_inicial) > 0) {
           await Pesajes.registrar({
@@ -185,6 +352,8 @@ const Animales = {
 
         // 4. Libro de registro SIGGAN: eventos de alta y baja (trazabilidad)
         await this._registrarEventoCenso(esEdicion, animalData, animalAnterior);
+
+
 
         return animalId;
       },
@@ -370,7 +539,7 @@ const Animales = {
           typeof Fincas !== "undefined" && typeof Fincas.getActiveId === "function"
             ? await Fincas.getActiveId().catch(() => null)
             : null;
-        const fincaId = activeFincaId ?? animal.fincaId ?? null;
+        const fincaId = animal.fincaId ?? activeFincaId ?? null;
         const identificadorAnimal = animal.numero_identificacion || "#" + numId;
 
         const auditAnulacion = await this._registrarAuditoria({
@@ -381,7 +550,9 @@ const Animales = {
           action: "DELETE_LOGICAL",
           motivo_tarea: "anulacion_registro",
           resultado: "SUCCESS",
-          descripcion: `Anulación de ficha animal ${identificadorAnimal} (motivo: ${motivoAnulacion})`,
+          // El motivo libre se conserva en el registro ganadero, pero no se replica
+          // en la descripción de auditoría para evitar duplicar datos personales.
+          descripcion: `Anulación de ficha animal ${identificadorAnimal}`,
           fields_modified: fieldsModified,
         });
 

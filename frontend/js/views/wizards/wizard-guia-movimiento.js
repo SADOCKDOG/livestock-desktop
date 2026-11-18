@@ -5,6 +5,42 @@
  * dirigida a la plataforma de la comunidad (SIGGAN / BADIGEX / PIMA).
  */
 window.WizardGuiaMovimiento = {
+  async _guardarDocumentoLegalGuia(mov, fincaId) {
+    const numero = String(mov?.numero_guia || '').trim().toUpperCase();
+    if (!numero) throw new Error('La guía debe tener número antes de registrar su documento legal.');
+
+    const existente = await window.db
+      .getFromIndex('documentos_legales', 'numero', numero)
+      .catch(() => null);
+    if (existente && (existente.tipo !== 'guia_movimiento' || Number(existente.fincaId) !== Number(fincaId))) {
+      throw new Error(`El número de guía ${numero} ya está asociado a otro documento legal.`);
+    }
+    const ahora = new Date().toISOString();
+    const documento = {
+      ...(existente || {}),
+      tipo: 'guia_movimiento',
+      fincaId,
+      numero,
+      fecha_emision: mov.fecha,
+      estado_tramite: mov.estado_tramite || 'borrador',
+      fecha_presentacion: mov.fecha_presentacion || null,
+      numero_registro_oficial: mov.numero_registro_oficial || '',
+      acuse_recibo: mov.acuse_recibo || '',
+      plataforma: mov.plataforma || '',
+      desinfeccion_numero_talon: mov.desinfeccion_numero_talon || '',
+      desinfeccion_fecha: mov.desinfeccion_fecha || '',
+      veterinario_autorizante: mov.veterinario_autorizante || '',
+      ...(existente ? { actualizadoEn: ahora } : { created_at: ahora }),
+    };
+
+    if (existente) {
+      documento.id = existente.id;
+      await window.db.put('documentos_legales', documento);
+      return existente.id;
+    }
+    return window.db.add('documentos_legales', documento);
+  },
+
   async abrir(borrador = null) {
     const finca = await Fincas.getActive();
     if (!finca) { App.toastError("No hay finca activa"); return; }
@@ -17,6 +53,21 @@ window.WizardGuiaMovimiento = {
 
     const especiesMaestras = await window.db.getAll("config_especies").catch(() => []);
     const animalesActivos = (await Animales.list()).filter(a => (a.estado || 'activo') === 'activo');
+    const normalizarEspecie = (valor) => String(valor || '').trim().toLocaleLowerCase('es');
+    const especiesPorNombre = new Map(especiesMaestras.map((especie) => [normalizarEspecie(especie.nombre), especie.nombre]));
+    for (const animal of animalesActivos) {
+      const nombre = String(animal.especie || '').trim();
+      if (nombre && !especiesPorNombre.has(normalizarEspecie(nombre))) {
+        especiesPorNombre.set(normalizarEspecie(nombre), nombre);
+      }
+    }
+    const especiesMovimiento = [...especiesPorNombre.values()];
+    const obtenerAnimalesDeEspecie = (especie) => {
+      const especieNormalizada = normalizarEspecie(especie);
+      return especieNormalizada
+        ? animalesActivos.filter((animal) => normalizarEspecie(animal.especie) === especieNormalizada)
+        : animalesActivos;
+    };
 
     let transportistas = [];
     try { transportistas = await Transportistas.list({ activo: true }); } catch (e) { transportistas = []; }
@@ -99,7 +150,7 @@ window.WizardGuiaMovimiento = {
                 <label class="wizard-label">ESPECIE</label>
                 <select id="w-mv-especie" class="wizard-input font-800">
                   <option value="">— SELECCIONAR —</option>
-                  ${especiesMaestras.map(e => `<option value="${e.nombre}" ${data.especie === e.nombre ? 'selected' : ''}>${e.nombre.toUpperCase()}</option>`).join('')}
+                  ${especiesMovimiento.map(nombre => `<option value="${nombre}" ${normalizarEspecie(data.especie) === normalizarEspecie(nombre) ? 'selected' : ''}>${nombre.toUpperCase()}</option>`).join('')}
                 </select>
               </div>
               <div class="wizard-input-group">
@@ -110,10 +161,10 @@ window.WizardGuiaMovimiento = {
             <div class="wizard-input-group">
               <label class="wizard-label">SELECCIONAR CROTALES (CENSO ACTIVO)</label>
               <div id="w-mv-crotales-list" class="bg-black border border-222 rounded-sm p-10 mt-5" style="max-height: 180px; overflow-y: auto;">
-                  ${animalesActivos.length > 0
-                    ? animalesActivos.map(a => `
+                  ${obtenerAnimalesDeEspecie(data.especie).length > 0
+                    ? obtenerAnimalesDeEspecie(data.especie).map(a => `
                       <label class="flex items-center gap-10 p-10 border-bottom-222 cursor-pointer">
-                        <input type="checkbox" value="${a.numero_identificacion}" class="mv-crotal-chk" ${data.crotales.includes(a.numero_identificacion) ? 'checked' : ''}>
+                        <input type="checkbox" value="${a.numero_identificacion}" data-especie="${normalizarEspecie(a.especie)}" class="mv-crotal-chk" ${data.crotales.includes(a.numero_identificacion) ? 'checked' : ''}>
                         <span class="text-white font-900 text-xs uppercase">${a.numero_identificacion} <small class="text-aaa font-700 ml-4">${a.raza || ''}</small></span>
                       </label>
                     `).join('')
@@ -130,9 +181,21 @@ window.WizardGuiaMovimiento = {
             const numInput = stepEl.querySelector('#w-mv-num');
             if (numInput) numInput.value = checks.length;
           };
-          stepEl.querySelectorAll('.mv-crotal-chk').forEach(cb => {
-            cb.addEventListener('change', updateCount);
+          const filtrarPorEspecie = () => {
+            const especieSeleccionada = normalizarEspecie(stepEl.querySelector('#w-mv-especie')?.value);
+            stepEl.querySelectorAll('.mv-crotal-chk').forEach((checkbox) => {
+              const coincide = !especieSeleccionada || checkbox.dataset.especie === especieSeleccionada;
+              const fila = checkbox.closest('label');
+              if (fila) fila.style.display = coincide ? '' : 'none';
+              if (!coincide) checkbox.checked = false;
+            });
+            updateCount();
+          };
+          stepEl.querySelectorAll('.mv-crotal-chk').forEach((checkbox) => {
+            checkbox.addEventListener('change', updateCount);
           });
+          stepEl.querySelector('#w-mv-especie')?.addEventListener('change', filtrarPorEspecie);
+          filtrarPorEspecie();
         },
         onChange: async (data) => {
           const esSalida = data.tipo === 'salida';
@@ -233,7 +296,7 @@ window.WizardGuiaMovimiento = {
             </div>` : ''}
             ${conf && conf.requiere_desinsectacion_movimiento ? `
             <div class="p-10 bg-red-900 border border-red-500 rounded-sm mb-12">
-              <div class="text-[0.55rem] text-white uppercase font-950 tracking-widest">${Icons.alerta()} ${conf.label} EXIGE CERTIFICADO DE DESINSECTACIÓN</div>
+              <div class="text-[0.55rem] text-white uppercase font-950 tracking-widest">${Icons.alerta()} ${conf.label}: CERTIFICADO REQUERIDO PARA PRESENTAR LA GUÍA O DECLARAR EL TRASLADO EJECUTADO</div>
             </div>` : ''}
             <div class="wizard-input-group">
               <label class="wizard-label">OBSERVACIONES</label>
@@ -252,10 +315,6 @@ window.WizardGuiaMovimiento = {
           data.notas = document.getElementById('w-mv-notas')?.value.trim() || '';
         },
         validate: async (data) => {
-          if (conf && conf.requiere_desinsectacion_movimiento && !data.desinsectacion_certificada) {
-            App.toastError("Debes certificar la desinsectación para esta comunidad");
-            return false;
-          }
           if (conf && conf.requiere_nif_veterinario_cebadero && data.tipo_operador_destino === 'cebadero' && !data.vet_nif) {
             App.toastError("Debes proporcionar el NIF del veterinario autorizante para operaciones con cebadero en esta comunidad");
             return false;
@@ -283,6 +342,15 @@ window.WizardGuiaMovimiento = {
           <div class="card card-accent card-accent-purple p-16 mt-10">
             <div class="section-header-theme mb-12" style="--theme-color: var(--c-purple)">TRAMITACIÓN ADMINISTRATIVA</div>
             <div class="wizard-input-group mb-12">
+              <label class="wizard-label">ESTADO DECLARADO DEL TRASLADO</label>
+              <select id="w-mv-traslado" class="wizard-input font-950">
+                <option value="planificado" ${(data.estado_traslado || 'planificado') === 'planificado' ? 'selected' : ''}>PLANIFICADO</option>
+                <option value="ejecutado" ${data.estado_traslado === 'ejecutado' ? 'selected' : ''}>EJECUTADO</option>
+                <option value="cancelado" ${data.estado_traslado === 'cancelado' ? 'selected' : ''}>CANCELADO</option>
+              </select>
+              <small class="wizard-hint">Declaración local de ejecución física, independiente del estado administrativo del trámite.</small>
+            </div>
+            <div class="wizard-input-group mb-12">
               <label class="wizard-label">ESTADO DEL TRÁMITE</label>
               <select id="w-mv-estado" class="wizard-input font-950">
                 <option value="borrador" ${data.estado_tramite === 'borrador' ? 'selected' : ''}>BORRADOR</option>
@@ -308,12 +376,18 @@ window.WizardGuiaMovimiento = {
           </div>
         `,
         onChange: async (data) => {
+          data.estado_traslado = document.getElementById('w-mv-traslado')?.value || data.estado_traslado || 'planificado';
           data.estado_tramite = document.getElementById('w-mv-estado')?.value || data.estado_tramite;
           data.fecha_presentacion = document.getElementById('w-mv-fecha-pres')?.value || '';
           data.numero_registro_oficial = document.getElementById('w-mv-reg-of')?.value.trim() || '';
           data.acuse_recibo = document.getElementById('w-mv-acuse')?.value.trim() || '';
         },
         validate: async (data) => {
+          const esBorradorPlanificado = data.estado_traslado === 'planificado' && data.estado_tramite === 'borrador';
+          if (conf && conf.requiere_desinsectacion_movimiento && !esBorradorPlanificado && !data.desinsectacion_certificada) {
+            App.toastError("Debes certificar la desinsectación para presentar la guía o declarar ejecutado el traslado.");
+            return false;
+          }
           if (data.estado_tramite !== 'borrador' && !data.fecha_presentacion) {
             App.toastError("La fecha de presentación es obligatoria.");
             return false;
@@ -351,6 +425,7 @@ window.WizardGuiaMovimiento = {
         desinfeccion_numero_talon: borrador ? (borrador.desinfeccion_numero_talon || '') : '',
         desinfeccion_fecha: borrador ? (borrador.desinfeccion_fecha || '') : '',
         veterinario_autorizante: borrador ? (borrador.veterinario_autorizante || '') : '',
+        estado_traslado: borrador ? (borrador.estado_traslado || 'planificado') : 'planificado',
         estado_tramite: borrador ? borrador.estado_tramite : 'borrador',
         fecha_presentacion: borrador ? borrador.fecha_presentacion : '',
         numero_registro_oficial: borrador ? borrador.numero_registro_oficial : '',
@@ -388,6 +463,7 @@ window.WizardGuiaMovimiento = {
             desinfeccion_fecha: data.desinfeccion_fecha,
             veterinario_autorizante: data.veterinario_autorizante,
             comunidad_autonoma: ccaa,
+            estado_traslado: data.estado_traslado || 'planificado',
             estado_tramite: data.estado_tramite || 'borrador',
             fecha_presentacion: data.fecha_presentacion || '',
             numero_registro_oficial: data.numero_registro_oficial || '',
@@ -395,21 +471,7 @@ window.WizardGuiaMovimiento = {
             notas: data.notas,
           });
           const mov = await Movimientos.get(movId);
-          await window.db.add('documentos_legales', {
-            tipo: 'guia_movimiento',
-            fincaId: await Fincas.getActiveId(),
-            numero: mov.numero_guia,
-            fecha_emision: mov.fecha,
-            estado_tramite: mov.estado_tramite || 'borrador',
-            fecha_presentacion: mov.fecha_presentacion || null,
-            numero_registro_oficial: mov.numero_registro_oficial || '',
-            acuse_recibo: mov.acuse_recibo || '',
-            plataforma: mov.plataforma || '',
-            desinfeccion_numero_talon: mov.desinfeccion_numero_talon || '',
-            desinfeccion_fecha: mov.desinfeccion_fecha || '',
-            veterinario_autorizante: mov.veterinario_autorizante || '',
-            created_at: new Date().toISOString(),
-          }).catch(() => {});
+          await this._guardarDocumentoLegalGuia(mov, await Fincas.getActiveId());
           App.toast("Guía de movimiento registrada", 'success');
           WizardGuiaMovimiento.generarDocumento(finca, mov);
         } catch (e) {

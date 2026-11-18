@@ -219,6 +219,19 @@ En `scripts/sync-from-master.ps1`, una línea **activa** significa que ese fiche
 se **preserva** (no se pisa con el del máster); comentada significa que se
 sincroniza. Es al revés de lo que sugiere la intuición.
 
+Antes de copiar, el script ejecuta las pruebas de Desktop de compatibilidad del historial
+de auditoría (v1/v2) y del contrato de soporte contra el frontend de origen. Para reproducir
+una compilación desde un worktree explícito, indica la ruta y el SHA completo previamente
+revisado. La sincronización comprobará que el worktree está limpio, que su HEAD coincide
+y copiará los ficheros versionados de ese commit. Las variables se heredan también en los
+pasos de sincronización de `build:msix` y de Tauri.
+
+```powershell
+$env:LIVESTOCK_MASTER_PATH = 'C:\ruta\al\LIVESTOCK-MANAGER'
+$env:LIVESTOCK_MASTER_COMMIT = '<SHA completo revisado>'
+npm run sync
+```
+
 ## Pruebas
 
 ```bash
