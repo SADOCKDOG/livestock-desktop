@@ -162,10 +162,19 @@ const Animales = {
           data.id !== undefined && data.id !== null && data.id !== "";
         const actual = esEdicion ? await this.get(data.id) : null;
         const conservaIdentificador = identificadorYContextoSinCambios(data, actual);
+        const rfidActual = String(actual?.rfid_codigo ?? "").trim().replace(/[\s-]/g, "");
+        const rfidNuevo = String(data.rfid_codigo ?? "").trim().replace(/[\s-]/g, "");
+        const cambiaRfidBovino = Number(data.especieId) === 1 &&
+          rfidNuevo !== rfidActual;
+        if (cambiaRfidBovino && rfidNuevo) {
+          await ErrorHandler.validateBovinoRfid(rfidNuevo);
+        }
+        const requiereRevalidarBovinoPorRfid = cambiaRfidBovino &&
+          (!data.fecha_nacimiento || String(data.fecha_nacimiento) >= "2025-06-30");
         // Fichas históricas pueden conservar códigos emitidos con regímenes
-        // anteriores. Solo se omite su revalidación si valor, especie y tipo
-        // siguen iguales; cualquier cambio pasa por la regla vigente.
-        const crotal = conservaIdentificador
+        // anteriores. Solo se omite la revalidación del crotal si valor,
+        // especie y tipo siguen iguales; el RFID bovino cambiado se valida aparte.
+        const crotal = conservaIdentificador && !requiereRevalidarBovinoPorRfid
           ? actual.numero_identificacion
           : await ErrorHandler.validateCrotal(
               data.numero_identificacion,
