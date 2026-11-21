@@ -570,13 +570,7 @@ const ErrorHandler = {
           { field: "rfid_codigo", required: true }
         );
       }
-      if (!/^1[0-7]02\d{2}00724(?:22)(?:0[1-9]|1[0-9])\d{8}$/.test(rfid)) {
-        throw new this.AppError(
-          "El identificador electrónico debe tener 23 dígitos ISO 11784 para bovino en España",
-          this.ERROR_TYPES.VALIDATION,
-          { field: "rfid_codigo", format: "ISO 11784: 23 dígitos; especie 02, país 0724 y especie SIEX 22" }
-        );
-      }
+      this.validateBovinoRfid(rfid);
       if (rfid.slice(-10) !== valorLimpio.slice(4)) {
         throw new this.AppError(
           "El código electrónico no corresponde a la región y al número del crotal visual",
@@ -586,6 +580,18 @@ const ErrorHandler = {
       }
     }
     return valorLimpio;
+  },
+
+  validateBovinoRfid(valor) {
+    const rfid = String(valor ?? "").trim().replace(/[\s-]/g, "");
+    if (!/^1[0-7]02\d{2}00724(?:22)(?:0[1-9]|1[0-9])\d{8}$/.test(rfid)) {
+      throw new this.AppError(
+        "El identificador electrónico no cumple el formato ISO 11784 para bovino en España: 23 dígitos con código de especie 02, país 0724 y código SIEX 22",
+        this.ERROR_TYPES.VALIDATION,
+        { field: "rfid_codigo", format: "ISO 11784: 23 dígitos; especie 02, país 0724 y especie SIEX 22", value: rfid }
+      );
+    }
+    return rfid;
   },
 
   /**
